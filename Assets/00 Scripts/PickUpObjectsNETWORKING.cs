@@ -75,16 +75,23 @@ public class pickUpObjectsNETWORKING : NetworkBehaviour
         other.layer = otherObjectLayer;
         Rigidbody rb = other.GetComponent<Rigidbody>();
         rb.linearVelocity = launchTraj; // Launch it
-        rb.angularVelocity = launchSpin; // Launch it
+        rb.angularVelocity = launchSpin; // Spin it
         rb.useGravity = true;
-        other = null;
         
+        if (other.name == "Tongs")
+            GetComponent<doCertainThingWith>().dropItemFromTongsCorrectly();
+
+        other = null;holdingItem = false;
         multiHandlerScript.setHelpText("");
     }
 
     void setHelpTextBasedOnObject(){
-        if (other.name == "Beaker")             multiHandlerScript.setHelpText("Right Click to view up close.");
-        if (other.name == "Fire extinguisher")  multiHandlerScript.setHelpText("Right Click to use."); 
+        if (other.name == "Beaker")             multiHandlerScript.setHelpText("Right click to view up close.");
+        if (other.name == "pipette")            multiHandlerScript.setHelpText("This is a pipette. Use on a flask/beaker.");
+        if (other.name == "Fire extinguisher")  multiHandlerScript.setHelpText("Right click to use."); 
+        if (other.name == "Tongs")              multiHandlerScript.setHelpText("Right click to grab a flask.");
+        if (other.name == "Erlenmeyer Flask")   multiHandlerScript.setHelpText("This is an Erlenmeyer flask.");
+        if (other.name == "Evaporating Dish")   multiHandlerScript.setHelpText("This is an evaporating dish.");
     }
 
 
@@ -162,7 +169,7 @@ public class pickUpObjectsNETWORKING : NetworkBehaviour
     {
         if (holdingItem)
         {   
-            targetPositionBlocked = Physics.CheckSphere(targetPosition+Vector3.up*checkRadius, checkRadius, LayerMask.GetMask("Ground"));
+            targetPositionBlocked = Physics.CheckSphere(targetPosition+Vector3.up*checkRadius, checkRadius*1.2f, LayerMask.GetMask("Ground"));
 
             if (targetPositionBlocked){
                 Ray forwardRay = new Ray(playerCamera.position, playerCamera.forward);

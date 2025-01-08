@@ -1,10 +1,14 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class doCertainThingWith : MonoBehaviour
-{
-    pickUpObjectsNETWORKING pos;
+{   
 
+    public GameObject itemHeldByTongs; int itemHeldByTongsLayer;
+    const float TONG_GRAB_DISTANCE = 3f;
+    pickUpObjectsNETWORKING pos;
+    public Vector3 offset2;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -15,6 +19,9 @@ public class doCertainThingWith : MonoBehaviour
     void Update()
     {
         checkForInput();
+
+        if (itemHeldByTongs)
+            handleTongObject();
     }
 
     void checkForInput(){
@@ -25,19 +32,21 @@ public class doCertainThingWith : MonoBehaviour
             findObjectAndPerformHeldAction();
     }
 
-    void findObjectAndPerformAction(){
+    void findObjectAndPerformAction()       // Right click once
+    { 
         if (pos.other != null){
             GameObject obj = pos.other;
 
             if (obj.name == "Fire extinguisher")
                 ShootFoam();
 
-            
-        }
+            if (obj.name == "Tongs")
+                GrabFlaskByNeck(obj);
 
+        }
     }
 
-    void findObjectAndPerformHeldAction()
+    void findObjectAndPerformHeldAction()  // Held right click
     {
         if (pos.other != null)
         {
@@ -45,10 +54,14 @@ public class doCertainThingWith : MonoBehaviour
 
             if (obj.name == "Beaker")
                 BringObjectCloser();
-
+            
+            if (obj.name == "Evaporating Dish")
+                BringObjectCloser(-1.5f);
+            
+            if (obj.name == "Erlenmeyer Flask")
+                BringObjectCloser(-1.5f);
 
         }
-
     }
 
 
@@ -58,10 +71,96 @@ public class doCertainThingWith : MonoBehaviour
 
 
 
-    void BringObjectCloser()
-    {
-        pos.distOffset = -pos.holdingDistance * 0.75f;
+
+
+    void BringObjectCloser(float dist = 0f)
+    {   
+        if (dist <= 0f)
+            pos.distOffset = -pos.holdingDistance * 0.75f;
+        else
+            pos.distOffset = dist;
     }
+
+
+
+    void GrabFlaskByNeck(GameObject tongs){
+
+        // Find Closest Flask in the room
+        float minDist = Mathf.Infinity;
+        GameObject closestFlask = null;
+        
+        foreach (GameObject currentObject in FindObjectsByType<GameObject>(FindObjectsSortMode.None)){
+            
+            if (currentObject.name == "Erlenmeyer Flask"){
+
+                float distFromTip = Vector3.Distance(tongs.transform.Find("Tip").transform.position, currentObject.transform.position);
+                
+                if (distFromTip < minDist){
+                    minDist = distFromTip;
+                    closestFlask = currentObject;
+                }
+            }
+        }
+        
+        // If we have a flask held, drop it
+        if (itemHeldByTongs){
+            tongs.transform.Find("Open").gameObject.SetActive(true);
+            tongs.transform.Find("Closed").gameObject.SetActive(false);
+            dropItemFromTongsCorrectly();
+            return;
+        }
+        
+        if (!closestFlask || minDist > TONG_GRAB_DISTANCE) // If we cannot pick up flask make sure meshes are good
+        {
+            itemHeldByTongs = null;
+            tongs.transform.Find("Open").gameObject.SetActive(true);
+            tongs.transform.Find("Closed").gameObject.SetActive(false);
+            return;
+        }
+
+        if (closestFlask && minDist <= TONG_GRAB_DISTANCE) // Now we have closest Flask
+        {
+            tongs.transform.Find("Closed").gameObject.SetActive(true); // Turn on closed mesh
+            tongs.transform.Find("Open").gameObject.SetActive(false); // Turn off open mesh
+            itemHeldByTongs = closestFlask;
+            itemHeldByTongs.GetComponent<Rigidbody>().isKinematic = true;
+            itemHeldByTongs.GetComponent<Rigidbody>().useGravity = true;
+            itemHeldByTongsLayer = itemHeldByTongs.layer;
+            itemHeldByTongs.layer = LayerMask.NameToLayer("HeldByOther");
+            var rot = itemHeldByTongs.transform.localEulerAngles;
+            itemHeldByTongs.transform.localEulerAngles = new Vector3(0f, rot.y, 0f);
+        }
+    }
+
+    void handleTongObject(){    // Here Tongs are pos.other
+        
+        Vector3 offset = Vector3.zero;
+
+        if (itemHeldByTongs.name == "Erlenmeyer Flask")
+            offset = pos.other.transform.TransformDirection(0f,-0.361f,0.1056f);
+
+        itemHeldByTongs.transform.position = pos.other.transform.Find("Tip").position + offset;
+    }
+
+    public void dropItemFromTongsCorrectly(){
+        if (itemHeldByTongs){
+            itemHeldByTongs.GetComponent<Rigidbody>().isKinematic = false;
+            itemHeldByTongs.GetComponent<Rigidbody>().useGravity = true;
+            itemHeldByTongs.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+            itemHeldByTongs.layer = itemHeldByTongsLayer;
+        }
+    
+        pos.other.transform.Find("Open").gameObject.SetActive(true);
+        pos.other.transform.Find("Closed").gameObject.SetActive(false);
+        itemHeldByTongs = null;
+
+    }
+
+
+
+
+
+
 
 
     void ShootFoam(){
@@ -72,11 +171,11 @@ public class doCertainThingWith : MonoBehaviour
             StartCoroutine(OnOrOffForDelay(pos.other.transform.Find("Not Spraying").gameObject, 5f, false));
         }
     }
-
-    IEnumerator OnOrOffForDelay(GameObject obj, float delayTime, bool boolean = true)
+    
+    IEnumerator OnOrOffForDelay(GameObject obj, float delayTime, bool initialState = true)
     {
-        obj.SetActive(boolean);
+        obj.SetActive(initialState);
         yield return new WaitForSeconds(delayTime);
-        obj.SetActive(!boolean);
+        obj.SetActive(!initialState);
     }
 }

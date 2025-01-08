@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 6566065218650350393}
   - component: {fileID: 8326369786190282455}
   - component: {fileID: 4967032431980998896}
+  - component: {fileID: 1403983341153475290}
   m_Layer: 0
   m_Name: Beaker
   m_TagString: Untagged
@@ -32,13 +33,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1264734190338136690}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.9963706, z: 0, w: 0.08512137}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.202651, y: 1.998, z: -10.116814}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -170.234, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8227203130327467861
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -153,7 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3387454010
+  GlobalObjectIdHash: 1159466799
   InScenePlacedSourceGlobalObjectIdHash: 1159466799
   DeferredDespawnTick: 0
   Ownership: 1
@@ -232,3 +233,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displacement: {x: 0, y: -0.15, z: 0}
+--- !u!65 &1403983341153475290
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1264734190338136690}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.9952338, y: 0.18084288, z: 1.9995482}
+  m_Center: {x: 0.0021573156, y: 0.042715073, z: -0.00000029802322}
