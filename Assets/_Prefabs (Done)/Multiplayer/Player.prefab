@@ -421,13 +421,13 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   playerCamera: {fileID: 2479615450925912079}
   range: 7
-  holdingDistance: 2.5
+  holdingDistance: 2.2
   blendingSensitivity: 25
   other: {fileID: 0}
-  launchTraj: {x: 0, y: 0, z: 0}
   checkForCollisions: 1
   distOffset: 0
   checkRadius: 0.25
+  multiHandlerScript: {fileID: 0}
 --- !u!114 &-1743027146822609615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -477,6 +477,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e43a4cb7023d754399a9848757be7da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  itemHeldByTongs: {fileID: 0}
+  offset2: {x: 0, y: 0, z: 0}
 --- !u!1 &1186885220638781345
 GameObject:
   m_ObjectHideFlags: 0
