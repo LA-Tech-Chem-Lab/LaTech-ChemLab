@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class doCertainThingWith : MonoBehaviour
+public class doCertainThingWith : NetworkBehaviour
 {   
 
     public GameObject itemHeldByTongs; int itemHeldByTongsLayer;
@@ -17,7 +18,9 @@ public class doCertainThingWith : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {   
+        if (!IsOwner)
+            return;
         checkForInput();
 
         if (itemHeldByTongs)
@@ -58,7 +61,7 @@ public class doCertainThingWith : MonoBehaviour
             if (obj.name == "Evaporating Dish")
                 BringObjectCloser(-1.5f);
             
-            if (obj.name == "Erlenmeyer Flask")
+            if (obj.name == "Erlenmeyer Flask" || obj.name == "Erlenmeyer Flask L")
                 BringObjectCloser(-1.5f);
 
         }
@@ -89,9 +92,9 @@ public class doCertainThingWith : MonoBehaviour
         float minDist = Mathf.Infinity;
         GameObject closestFlask = null;
         
-        foreach (GameObject currentObject in FindObjectsByType<GameObject>(FindObjectsSortMode.None)){
+        foreach (GameObject currentObject in FindObjectsOfType<GameObject>()){
             
-            if (currentObject.name == "Erlenmeyer Flask"){
+            if (currentObject.name == "Erlenmeyer Flask" || currentObject.name == "Erlenmeyer Flask L"){
 
                 float distFromTip = Vector3.Distance(tongs.transform.Find("Tip").transform.position, currentObject.transform.position);
                 
@@ -138,6 +141,11 @@ public class doCertainThingWith : MonoBehaviour
 
         if (itemHeldByTongs.name == "Erlenmeyer Flask")
             offset = pos.other.transform.TransformDirection(0f,-0.361f,0.1056f);
+            
+        if (itemHeldByTongs.name == "Erlenmeyer Flask L")
+            offset = pos.other.transform.TransformDirection(0f,-0.421f,0.1056f);
+
+
 
         itemHeldByTongs.transform.position = pos.other.transform.Find("Tip").position + offset;
     }
@@ -166,9 +174,10 @@ public class doCertainThingWith : MonoBehaviour
     void ShootFoam(){
         if (!pos.other.transform.Find("Foam").GetComponent<ParticleSystem>().isPlaying)
         {
-            pos.other.transform.Find("Foam").GetComponent<ParticleSystem>().Play();
-            StartCoroutine(OnOrOffForDelay(pos.other.transform.Find("Spraying").gameObject, 5f));
-            StartCoroutine(OnOrOffForDelay(pos.other.transform.Find("Not Spraying").gameObject, 5f, false));
+            ParticleSystem ps = pos.other.transform.Find("Foam").GetComponent<ParticleSystem>();
+            ps.Play();
+            StartCoroutine(OnOrOffForDelay(pos.other.transform.Find("Spraying").gameObject, ps.main.duration));
+            StartCoroutine(OnOrOffForDelay(pos.other.transform.Find("Not Spraying").gameObject, ps.main.duration, false));
         }
     }
     
@@ -178,4 +187,6 @@ public class doCertainThingWith : MonoBehaviour
         yield return new WaitForSeconds(delayTime);
         obj.SetActive(!initialState);
     }
+
+    
 }
