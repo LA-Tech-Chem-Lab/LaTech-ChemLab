@@ -1646,7 +1646,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1151
+  m_VersionIndex: 1160
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1694,6 +1694,7 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
+  fancy: 0
 --- !u!65 &1678860471971563748
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3506,7 +3507,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1115
+  m_VersionIndex: 1124
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -3554,6 +3555,7 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
+  fancy: 0
 --- !u!65 &7625617061767615565
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4045,7 +4047,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1249
+  m_VersionIndex: 1258
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -4094,7 +4096,7 @@ MonoBehaviour:
   doorIsClosed: 1
   closedAngle: 0
   openAngle: 120
-  blendingSensitivity: 3
+  blendingSensitivity: 5
 --- !u!114 &467101780840371220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4590,7 +4592,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1249
+  m_VersionIndex: 1258
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -4639,7 +4641,7 @@ MonoBehaviour:
   doorIsClosed: 1
   closedAngle: 0
   openAngle: -120
-  blendingSensitivity: 3
+  blendingSensitivity: 5
 --- !u!114 &7175239560139010443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6317,7 +6319,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 19
+  m_VersionIndex: 28
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -8000,7 +8002,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1664
+  m_VersionIndex: 1673
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -8178,6 +8180,7 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
+  fancy: 0
 --- !u!114 &999904498209552591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10025,7 +10028,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1700
+  m_VersionIndex: 1709
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -10203,6 +10206,7 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
+  fancy: 0
 --- !u!114 &3664615430758472255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13353,7 +13357,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 202
+  m_VersionIndex: 211
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
