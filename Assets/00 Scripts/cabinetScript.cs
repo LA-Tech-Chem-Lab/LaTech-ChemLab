@@ -9,7 +9,7 @@ public class cabinetScript : NetworkBehaviour
 
     public float cabinetMovement = 2f;
     public float blendingSensitivity = 3f;
-    public bool fancy;
+    public int num = 0;
 
     // NetworkVariable to sync door state
     private NetworkVariable<bool> cabinetState = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -58,7 +58,8 @@ public class cabinetScript : NetworkBehaviour
         }
         else
         {   
-            if (fancy) targetPosition = initialPosition + transform.up * cabinetMovement;
+            if (num == 1) targetPosition = initialPosition + transform.up * cabinetMovement;
+            if (num == 2) targetPosition = initialPosition + transform.up * cabinetMovement;
             else targetPosition = initialPosition + transform.right * cabinetMovement;
         }
 
