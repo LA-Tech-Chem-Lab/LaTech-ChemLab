@@ -9,7 +9,6 @@ public class cabinetScript : NetworkBehaviour
 
     public float cabinetMovement = 2f;
     public float blendingSensitivity = 3f;
-    public int num = 0;
 
     // NetworkVariable to sync door state
     private NetworkVariable<bool> cabinetState = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -57,10 +56,8 @@ public class cabinetScript : NetworkBehaviour
             targetPosition = initialPosition;
         }
         else
-        {   
-            if (num == 1) targetPosition = initialPosition + transform.up * cabinetMovement;
-            if (num == 2) targetPosition = initialPosition + transform.up * cabinetMovement;
-            else targetPosition = initialPosition + transform.right * cabinetMovement;
+        {
+            targetPosition = initialPosition + Vector3.forward * cabinetMovement;
         }
 
         cabinetIsClosed = isClosed;

@@ -11,9 +11,11 @@ public class doorScript : NetworkBehaviour
     public float closedAngle = 0f;
     public float openAngle = 90f;
     public float blendingSensitivity = 3f;
+    bool coroutineRunning = false;
 
     // NetworkVariable to sync door state
     private NetworkVariable<bool> doorState = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
 
     Vector3 targetRotation;
     Quaternion targetQuaternion;
@@ -58,10 +60,11 @@ public class doorScript : NetworkBehaviour
 
     void rotateHandles(){
         foreach (GameObject g in handles)
-            if (g.name == "Inside Handle Pivot")
-                StartCoroutine(RotateHandleCoroutine(g, 0.2f, 90f, 150f));
-            else
-                StartCoroutine(RotateHandleCoroutine(g, 0.2f, -90f, -30f));
+            if (!coroutineRunning)
+                if (g.name == "Inside Handle Pivot")
+                    StartCoroutine(RotateHandleCoroutine(g, 0.2f, 90f, 150f));
+                else
+                    StartCoroutine(RotateHandleCoroutine(g, 0.2f, -90f, -30f));
     }
 
     private void OnDoorStateChanged(bool previousState, bool newState)
@@ -93,6 +96,7 @@ public class doorScript : NetworkBehaviour
 
     private IEnumerator RotateHandleCoroutine(GameObject handle, float duration, float rest, float turned)
     {   
+        coroutineRunning = true;
         Quaternion startRotation = Quaternion.Euler(rest, 0, 0);
         Quaternion targetRotation = Quaternion.Euler(turned, 0, 0);
 
@@ -121,5 +125,6 @@ public class doorScript : NetworkBehaviour
         }
 
         handle.transform.localRotation = startRotation;
+        coroutineRunning = false;
     }
 }
