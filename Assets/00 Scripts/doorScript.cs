@@ -60,7 +60,6 @@ public class doorScript : NetworkBehaviour
 
     void rotateHandles(){
         foreach (GameObject g in handles)
-            if (!coroutineRunning)
                 if (g.name == "Inside Handle Pivot")
                     StartCoroutine(RotateHandleCoroutine(g, 0.2f, 90f, 150f));
                 else
@@ -127,4 +126,5 @@ public class doorScript : NetworkBehaviour
         handle.transform.localRotation = startRotation;
         coroutineRunning = false;
     }
+
 }
