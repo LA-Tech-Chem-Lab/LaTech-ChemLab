@@ -5,11 +5,13 @@ using UnityEngine;
 
 public class doCertainThingWith : NetworkBehaviour
 {   
+    const float TONG_GRAB_DISTANCE = 3f;
+    const float PIPETTE_GRAB_DISTANCE = 1.2f;
+
 
     public GameObject itemHeldByTongs; int itemHeldByTongsLayer;
-    const float TONG_GRAB_DISTANCE = 3f;
     pickUpObjectsNETWORKING pos;
-    public Vector3 offset2;
+    public Vector3 testingOffset;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -45,6 +47,9 @@ public class doCertainThingWith : NetworkBehaviour
 
             if (obj.name == "Tongs")
                 GrabFlaskByNeck(obj);
+
+            if (obj.name == "Pipette")
+                PipetteStuff(obj);
 
         }
     }
@@ -164,6 +169,41 @@ public class doCertainThingWith : NetworkBehaviour
 
     }
 
+
+
+
+    public void PipetteStuff(GameObject pipette){
+
+        // First find the closest beaker below you
+        float minDist = Mathf.Infinity;
+        GameObject closestBeakerOrFlask = null;
+        
+        foreach (GameObject currentObject in FindObjectsOfType<GameObject>()){
+            
+            if (currentObject.name == "Beaker" || currentObject.name == "Erlenmeyer Flask" || currentObject.name == "Erlenmeyer Flask L"){
+
+                var pipetteTip = pipette.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
+                var beakerOrFlask = currentObject.transform.position;              beakerOrFlask.y = 0f;
+
+                float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
+                
+                if (distFromTip < minDist){
+                    minDist = distFromTip;
+                    closestBeakerOrFlask = currentObject;
+                }
+            }
+        }
+
+        if (closestBeakerOrFlask && minDist <= PIPETTE_GRAB_DISTANCE){ // We have a beaker or flask within range
+
+            // Add or subtract liquid from beaker based on volume within pipette
+            if (closestBeakerOrFlask.transform.Find("Liquid")){
+                Material liquidMaterial = closestBeakerOrFlask.transform.Find("Liquid").GetComponent<MeshRenderer>().material;
+
+                liquidMaterial.SetFloat("_Fill_Amount", Random.Range(0f, 0.33f));
+            }
+        }
+    }
 
 
 

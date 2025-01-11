@@ -14,7 +14,7 @@ public class pickUpObjectsNETWORKING : NetworkBehaviour
     public Transform playerCamera;
     public float range = 7f;
     public float holdingDistance = 3f; 
-    float initialHoldingDistance;
+    float initialHoldingDistance; float untouchedHoldingDistance;
     public float blendingSensitivity = 3f;
     float rotationAmInDegrees = 12f;
     public GameObject other;  int otherObjectLayer;
@@ -39,7 +39,7 @@ public class pickUpObjectsNETWORKING : NetworkBehaviour
     void Start(){
         xSens = GetComponent<playerMovementNETWORKING>().xSens;
         playerCamera = transform.GetChild(0);
-        initialHoldingDistance = holdingDistance;
+        initialHoldingDistance = holdingDistance; untouchedHoldingDistance = initialHoldingDistance;
         multiHandlerScript = GameObject.FindGameObjectWithTag("GameController").GetComponent<multihandler>();
     }
 
@@ -76,6 +76,9 @@ public class pickUpObjectsNETWORKING : NetworkBehaviour
         if (other.name == "Tongs")
             SetOwnerToTongs();
 
+        if (other.name == "Pipette")
+            initialHoldingDistance = 1.3f;
+
         setHelpTextBasedOnObject();
     }
 
@@ -108,13 +111,16 @@ public class pickUpObjectsNETWORKING : NetworkBehaviour
         if (other.name == "Tongs")
             GetComponent<doCertainThingWith>().dropItemFromTongsCorrectly();
 
+        if (other.name == "Pipette")
+            initialHoldingDistance = untouchedHoldingDistance;
+
         other = null;holdingItem = false;
         multiHandlerScript.setHelpText("");
     }
 
     void setHelpTextBasedOnObject(){
         if (other.name == "Beaker")             multiHandlerScript.setHelpText("Right click to view up close.");
-        if (other.name == "pipette")            multiHandlerScript.setHelpText("This is a pipette. Use on a flask/beaker.");
+        if (other.name == "Pipette")            multiHandlerScript.setHelpText("This is a pipette. Use on a beaker/flask.");
         if (other.name == "Fire extinguisher")  multiHandlerScript.setHelpText("Right click to use."); 
         if (other.name == "Tongs")              multiHandlerScript.setHelpText("Right click to grab a flask.");
         if (other.name == "Erlenmeyer Flask")   multiHandlerScript.setHelpText("500 mL Erlenmeyer flask");

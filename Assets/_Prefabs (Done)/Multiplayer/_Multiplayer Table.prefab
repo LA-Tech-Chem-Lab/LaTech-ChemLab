@@ -1646,11 +1646,19 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1160
+  m_VersionIndex: 1172
   m_IsSelectable: 1
-  m_SelectedFaces: 
-  m_SelectedEdges: []
-  m_SelectedVertices: 
+  m_SelectedFaces: 00000000
+  m_SelectedEdges:
+  - a: 0
+    b: 0
+  - a: 0
+    b: 0
+  - a: 0
+    b: 0
+  - a: 0
+    b: 0
+  m_SelectedVertices: 00000000000000000000000000000000
 --- !u!54 &3163404931846039342
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1694,7 +1702,6 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
-  fancy: 0
 --- !u!65 &1678860471971563748
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3507,7 +3514,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1124
+  m_VersionIndex: 1136
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -3555,7 +3562,6 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
-  fancy: 0
 --- !u!65 &7625617061767615565
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4047,7 +4053,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1258
+  m_VersionIndex: 1270
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -4592,7 +4598,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1258
+  m_VersionIndex: 1270
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -6319,11 +6325,19 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 28
+  m_VersionIndex: 40
   m_IsSelectable: 1
-  m_SelectedFaces: 
-  m_SelectedEdges: []
-  m_SelectedVertices: 
+  m_SelectedFaces: 00000000
+  m_SelectedEdges:
+  - a: 0
+    b: 0
+  - a: 0
+    b: 0
+  - a: 0
+    b: 0
+  - a: 0
+    b: 0
+  m_SelectedVertices: 00000000000000000000000000000000
 --- !u!1 &4922831167449789765
 GameObject:
   m_ObjectHideFlags: 0
@@ -8002,7 +8016,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1673
+  m_VersionIndex: 1685
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -8180,7 +8194,6 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
-  fancy: 0
 --- !u!114 &999904498209552591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10028,7 +10041,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1709
+  m_VersionIndex: 1721
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -10206,7 +10219,6 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
-  fancy: 0
 --- !u!114 &3664615430758472255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10410,7 +10422,7 @@ PrefabInstance:
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 82a88ce9016a9f043a298e613cc08bd2, type: 2}
+      objectReference: {fileID: 2100000, guid: c5fbb04a456da9448a7df58dd5c3e3d7, type: 2}
     - target: {fileID: 236247415165773013, guid: 9f471814479d1a9499ed880eb676c0a5,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -10578,7 +10590,7 @@ PrefabInstance:
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 82a88ce9016a9f043a298e613cc08bd2, type: 2}
+      objectReference: {fileID: 2100000, guid: c5fbb04a456da9448a7df58dd5c3e3d7, type: 2}
     - target: {fileID: 919132149155446097, guid: b0ce8a7075cb55044b2106fd67fa3482,
         type: 3}
       propertyPath: m_Name
@@ -10951,7 +10963,7 @@ PrefabInstance:
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 82a88ce9016a9f043a298e613cc08bd2, type: 2}
+      objectReference: {fileID: 2100000, guid: c5fbb04a456da9448a7df58dd5c3e3d7, type: 2}
     - target: {fileID: 236247415165773013, guid: 9f471814479d1a9499ed880eb676c0a5,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -13357,7 +13369,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 211
+  m_VersionIndex: 223
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
