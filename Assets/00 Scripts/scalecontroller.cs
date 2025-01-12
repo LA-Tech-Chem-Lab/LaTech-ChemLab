@@ -11,6 +11,7 @@ public class WeightScale : MonoBehaviour
     public float calculatedMass;
 
     public int registeredRigidbodies;
+    private float tareTracker;
 
     Dictionary<Rigidbody, float> impulsePerRigidBody = new Dictionary<Rigidbody, float>();
 
@@ -24,6 +25,7 @@ public class WeightScale : MonoBehaviour
 
     void UpdateWeight()
     {
+        //calculates sum of forces on scale
         registeredRigidbodies = impulsePerRigidBody.Count;
         combinedForce = 0;
 
@@ -32,7 +34,9 @@ public class WeightScale : MonoBehaviour
             combinedForce += force;
         }
 
-        calculatedMass = (float)(combinedForce * forceToMass);
+        calculatedMass = (float)(combinedForce * forceToMass) - tareTracker; //calculates mass from force and tares scale appropriately
+
+        // sets scale display in grams with a max of 5 kg. 
         if (calculatedMass < 5)
         {
             massText.text = (calculatedMass * 1000).ToString("F2") + " g"; 
@@ -81,5 +85,24 @@ public class WeightScale : MonoBehaviour
             UpdateWeight();
         }
     }
+
+    public void Tare()
+    {
+        //calculates total mass on scale
+        registeredRigidbodies = impulsePerRigidBody.Count;
+        combinedForce = 0;
+
+        foreach (var force in impulsePerRigidBody.Values)
+        {
+            combinedForce += force;
+        }
+
+        calculatedMass = (float)(combinedForce * forceToMass);
+
+        // updates the tare tracker
+        tareTracker = calculatedMass;
+        UpdateWeight();
+    }
+
 }
 

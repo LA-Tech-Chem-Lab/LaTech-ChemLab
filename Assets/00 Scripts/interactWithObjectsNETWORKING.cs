@@ -21,6 +21,7 @@ public class interactWithObjectsNETWORKING : NetworkBehaviour
         {
             CheckForDoors();
             CheckForCabinets();
+            CheckForTareButton();
         }
     }
 
@@ -44,6 +45,39 @@ public class interactWithObjectsNETWORKING : NetworkBehaviour
             }
         }
     }
+
+    void CheckForTareButton()
+    {
+        Ray forwardRay = new Ray(playerCamera.transform.position, playerCamera.forward);
+        if (Physics.Raycast(forwardRay, out RaycastHit hit, range))
+        {
+            if (hit.collider.name == "Tare-Button") // We hit the Tare-Button
+            {
+                Transform tareButtonTransform = hit.collider.transform;
+                Transform parent = tareButtonTransform.parent; // Get the parent of the Tare-Button
+
+                // Find the sibling with the WeightScale script
+                WeightScale weightScaleScript = parent.GetComponentInChildren<WeightScale>();
+                if (weightScaleScript != null)
+                {
+                    if (IsServer)
+                    {
+                        weightScaleScript.Tare(); // Call the Tare method directly
+                    }
+                    else
+                    {
+                        RequestTareInteractionServerRpc(weightScaleScript.GetComponent<NetworkObject>().NetworkObjectId);
+                    }
+                }
+                else
+                {
+                    Debug.LogError("No WeightScale script found in sibling objects of Tare-Button.");
+                }
+            }
+        }
+    }
+
+
 
     void CheckForCabinets()
     {
@@ -88,6 +122,19 @@ public class interactWithObjectsNETWORKING : NetworkBehaviour
             if (cabinetScriptObject != null)
             {
                 cabinetScriptObject.InteractWithThisCabinet();
+            }
+        }
+    }
+
+    [ServerRpc]
+    private void RequestTareInteractionServerRpc(ulong networkObjectId)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out NetworkObject networkObject))
+        {
+            WeightScale weightScaleScript = networkObject.GetComponent<WeightScale>();
+            if (weightScaleScript != null)
+            {
+                weightScaleScript.Tare();
             }
         }
     }
