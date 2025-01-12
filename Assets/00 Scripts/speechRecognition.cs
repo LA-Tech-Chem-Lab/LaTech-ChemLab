@@ -6,6 +6,8 @@ namespace Samples.Whisper
 {
     public class speechRecognition : MonoBehaviour
     {
+        public bool enabled;
+
 
         private readonly string fileName = "output.wav";
         private readonly int duration = 13;
@@ -151,7 +153,7 @@ namespace Samples.Whisper
         private void Update()
         {
             // Ensure microphone is recording before accessing loudness
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1) && enabled)
             {
                 StartRecording();
             }
@@ -186,5 +188,7 @@ namespace Samples.Whisper
                 }
             }
         }
+
+
     }
 }

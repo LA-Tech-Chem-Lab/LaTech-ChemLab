@@ -9,8 +9,11 @@ public class ChatGPTManager : MonoBehaviour
     [TextArea(3, 10)] 
     public List<string> prompts;
 
+    public string question;
+
     [TextArea(5, 15)]
     public string backup;
+
 
     private OpenAIApi openAI = new OpenAIApi();
     private List<ChatMessage> messages = new List<ChatMessage>();
@@ -70,11 +73,14 @@ public class ChatGPTManager : MonoBehaviour
             wholeMessage += prompt + "\n";
 
         SendMessageToChatGPT(wholeMessage);
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Q)){
+            AskChatGPT(question);
+        }
     }
 }

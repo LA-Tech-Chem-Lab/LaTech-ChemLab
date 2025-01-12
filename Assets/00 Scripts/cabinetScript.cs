@@ -11,7 +11,8 @@ public class cabinetScript : NetworkBehaviour
 
     public float cabinetMovement = 2f;
     public float blendingSensitivity = 3f;
-
+    
+    public GameObject roomMesh;
     public Vector3 boxSize;
     public Vector3 boxOffset;
 
@@ -111,7 +112,7 @@ public class cabinetScript : NetworkBehaviour
         // Add detected objects to the list
         foreach (Collider collider in colliders)
         {
-            if (collider.gameObject != gameObject && !collider.transform.IsChildOf(transform.parent.parent) && !collider.transform.IsChildOf(transform.parent.parent.parent.parent.Find("Room Mesh")))
+            if (collider.gameObject != gameObject && !collider.transform.IsChildOf(transform.parent.parent) && !collider.transform.IsChildOf(roomMesh.transform))
                 objectsInArea.Add(collider.gameObject);
         }
 

@@ -1669,7 +1669,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1566
+  m_VersionIndex: 1268
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1717,6 +1717,8 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
+  tableCabinet: 1
+  roomMesh: {fileID: 0}
   boxSize: {x: 1.07, y: 0.25, z: 1}
   boxOffset: {x: 0.00016, y: 0.01035, z: -0.005175}
   cabinetVel: {x: 0, y: 0, z: 0}
@@ -2239,7 +2241,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 266
+  m_VersionIndex: 293
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -3969,7 +3971,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 323
+  m_VersionIndex: 172
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -5675,7 +5677,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2103
+  m_VersionIndex: 1817
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -5748,6 +5750,8 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
+  tableCabinet: 1
+  roomMesh: {fileID: 0}
   boxSize: {x: 1.07, y: 0.25, z: 1}
   boxOffset: {x: 0.00016, y: 0.01035, z: -0.005175}
   cabinetVel: {x: 0, y: 0, z: 0}
@@ -6375,7 +6379,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 266
+  m_VersionIndex: 293
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -8080,7 +8084,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2184
+  m_VersionIndex: 1853
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -8153,6 +8157,8 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
+  tableCabinet: 1
+  roomMesh: {fileID: 0}
   boxSize: {x: 1.07, y: 0.25, z: 1}
   boxOffset: {x: 0.00016, y: 0.01035, z: -0.005175}
   cabinetVel: {x: 0, y: 0, z: 0}
@@ -9884,7 +9890,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1566
+  m_VersionIndex: 1593
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -9932,6 +9938,8 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
+  tableCabinet: 1
+  roomMesh: {fileID: 0}
   boxSize: {x: 1.07, y: 0.25, z: 1}
   boxOffset: {x: 0.00016, y: 0.01035, z: -0.005175}
   cabinetVel: {x: 0, y: 0, z: 0}
@@ -13449,7 +13457,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 421
+  m_VersionIndex: 355
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
