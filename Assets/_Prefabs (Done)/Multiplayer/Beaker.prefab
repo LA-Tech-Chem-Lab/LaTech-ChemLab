@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 6566065218650350393}
   - component: {fileID: 8326369786190282455}
   - component: {fileID: 4967032431980998896}
-  - component: {fileID: 1403983341153475290}
   m_Layer: 0
   m_Name: Beaker
   m_TagString: Untagged
@@ -233,24 +232,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displacement: {x: 0, y: -0.15, z: 0}
---- !u!65 &1403983341153475290
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1264734190338136690}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.9952338, y: 0.18084288, z: 1.9995482}
-  m_Center: {x: 0.0021573156, y: 0.042715073, z: -0.00000029802322}

@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 1156346905681802888}
   - component: {fileID: 7697173930944763289}
   - component: {fileID: 6483614233863449610}
-  - component: {fileID: 2520459689951642016}
   m_Layer: 0
   m_Name: Beaker Wtih Liquid
   m_TagString: Untagged
@@ -234,27 +233,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displacement: {x: 0, y: -0.15, z: 0}
---- !u!65 &2520459689951642016
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8962521827268801055}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.9952338, y: 0.18084288, z: 1.9995482}
-  m_Center: {x: 0.0021573156, y: 0.042715073, z: -0.00000029802322}
 --- !u!1001 &8139726572022636635
 PrefabInstance:
   m_ObjectHideFlags: 0
