@@ -17,5 +17,8 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/1. Ellie/Ellie Scene.unity
     guid: 9a44b68915e0b184bb3707fcd223d0a8
+  - enabled: 1
+    path: Assets/2. Evan/Evan Scene.unity
+    guid: 93800f845f5a93e499d1d5e18487d53d
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

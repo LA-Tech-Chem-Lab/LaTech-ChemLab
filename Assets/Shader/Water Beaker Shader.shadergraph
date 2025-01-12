@@ -679,8 +679,8 @@
     "m_ObjectId": "09b1e6f3fe4d4b2ab08d7b65fd6cb424",
     "m_Title": "Fill",
     "m_Position": {
-        "x": -1543.0,
-        "y": 159.99993896484376
+        "x": -1568.0001220703125,
+        "y": 157.99998474121095
     }
 }
 
@@ -1320,9 +1320,9 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 207.00001525878907,
-            "y": -558.0000610351563,
-            "width": 208.0000457763672,
+            "x": 120.00000762939453,
+            "y": -558.0,
+            "width": 208.00003051757813,
             "height": 302.0000305175781
         }
     },
@@ -1672,9 +1672,9 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -144.99998474121095,
+            "x": -169.99998474121095,
             "y": -558.0,
-            "width": 208.00003051757813,
+            "width": 208.0,
             "height": 302.0000305175781
         }
     },
@@ -1749,10 +1749,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -1518.0,
-            "y": 218.99998474121095,
+            "x": -1543.0001220703125,
+            "y": 217.0,
             "width": 208.0,
-            "height": 315.0
+            "height": 315.00006103515627
         }
     },
     "m_Slots": [
@@ -2520,7 +2520,7 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": 0.0,
-    "m_FloatType": 0,
+    "m_FloatType": 1,
     "m_RangeValues": {
         "x": 0.0,
         "y": 1.0
@@ -3672,10 +3672,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -310.0,
-            "y": -432.0000305175781,
+            "x": -333.0,
+            "y": -436.0,
             "width": 143.00003051757813,
-            "height": 34.0
+            "height": 34.00006103515625
         }
     },
     "m_Slots": [
@@ -3717,8 +3717,8 @@
     "m_ObjectId": "e86b28b4681341dc9662dfa3a2be424a",
     "m_Title": "Color",
     "m_Position": {
-        "x": -739.0000610351563,
-        "y": -1035.0001220703125
+        "x": -739.0,
+        "y": -1035.0
     }
 }
 
