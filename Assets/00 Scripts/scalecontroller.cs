@@ -29,7 +29,14 @@ public class scalecontroller : MonoBehaviour
 
     void UpdateMassDisplay()
     {
-        massText.text = totalMass.ToString("F2") + " kg"; 
+        if (totalMass < 1)
+        {
+            massText.text = (totalMass * 1000).ToString("F2") + " g"; 
+        }
+        else 
+        {
+            massText.text = "ERR";
+        }
     }
 }
 
