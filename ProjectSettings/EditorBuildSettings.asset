@@ -13,11 +13,11 @@ EditorBuildSettings:
     guid: 60ccb3ee2e539444483848083ab45f6a
   - enabled: 0
     path: Assets/2. Evan/Evan.unity
-    guid: 2f720658d1c546444bee0ef6dc7feb14
+    guid: 95dafdc119d2ff64b971e7897f2d38a3
   - enabled: 0
     path: Assets/1. Ellie/Ellie Scene.unity
     guid: 9a44b68915e0b184bb3707fcd223d0a8
-  - enabled: 1
+  - enabled: 0
     path: Assets/2. Evan/Evan Scene.unity
     guid: 93800f845f5a93e499d1d5e18487d53d
   m_configObjects: {}

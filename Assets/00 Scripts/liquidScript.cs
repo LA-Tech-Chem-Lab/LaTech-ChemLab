@@ -54,7 +54,7 @@ public class liquidScript : MonoBehaviour
         // Now differentiate between flasks beakers and pipettes
 
         if (transform.name == "Beaker"){  // 1 to 1 in this case
-            Debug.Log(percentFull);
+            
             if (rend.material != null) {
                 // Make sure to use the instance material, not the shared one
                 rend.material.SetFloat("_FillAmount", percentFull);
@@ -75,8 +75,8 @@ public class liquidScript : MonoBehaviour
  
         // make a sine wave of the decreasing wobble
         pulse = 2 * Mathf.PI * WobbleSpeed;
-        wobbleAmountX = Mathf.Cos(transform.localEulerAngles.y * Mathf.PI/180) *  wobbleAmountToAddX * Mathf.Sin(pulse * time);
-        wobbleAmountZ = Mathf.Sin(transform.localEulerAngles.y * Mathf.PI/180) *  wobbleAmountToAddZ * Mathf.Sin(pulse * time);
+        wobbleAmountX = wobbleAmountToAddX * Mathf.Sin(pulse * time);
+        wobbleAmountZ = wobbleAmountToAddZ * Mathf.Sin(pulse * time);
  
         // send it to the shader
         rend.material.SetFloat("_WobbleX", wobbleAmountX);
