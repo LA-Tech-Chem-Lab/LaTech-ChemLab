@@ -6,11 +6,13 @@ public class liquidScript : MonoBehaviour
 {
     public float totalVolume_mL;
     public float currentVolume_mL;
+    public Color surfaceColor;
+    public Color topColor;
 
     [Header("Wobble")]
-    public float MaxWobble = 0.03f;
-    public float WobbleSpeed = 1f;
-    public float Recovery = 1f;
+    public float MaxWobble = 0.0003f; float initialMax;
+    public float WobbleSpeed = 0.9f;
+    public float Recovery = 1.4f;
     
     
 
@@ -27,6 +29,7 @@ public class liquidScript : MonoBehaviour
     void Start()
     {
         rend = transform.Find("Liquid").GetComponent<Renderer>();
+        initialMax = MaxWobble;
     }
     private void Update()
     {
@@ -38,7 +41,12 @@ public class liquidScript : MonoBehaviour
 
 
     void handleLiquid(){
+
+        // Liquid Colors
+        rend.material.SetColor("_SideColor", surfaceColor);
+        rend.material.SetColor("_TopColor", topColor);
         
+        // Liquid Volume
         currentVolume_mL = Mathf.Clamp(currentVolume_mL, 0f, totalVolume_mL);
 
         float percentFull = currentVolume_mL / totalVolume_mL;
@@ -76,7 +84,8 @@ public class liquidScript : MonoBehaviour
  
         // velocity
         velocity = (lastPos - transform.position) / Time.deltaTime;
- 
+        float percentFull = currentVolume_mL / totalVolume_mL;
+        MaxWobble = initialMax * (-Mathf.Pow(2*percentFull-1, 2)+1);
  
         // add clamped velocity to wobble
         wobbleAmountToAddX += Mathf.Clamp((velocity.x) * MaxWobble, -MaxWobble, MaxWobble);
