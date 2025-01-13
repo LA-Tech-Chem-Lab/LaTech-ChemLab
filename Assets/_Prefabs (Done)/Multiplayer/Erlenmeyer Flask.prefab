@@ -26,17 +26,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: cdab89bfded335547a384b4b9dd17b1c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.735181
+      value: -8.653
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cdab89bfded335547a384b4b9dd17b1c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.0016189
+      value: 2.0099
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cdab89bfded335547a384b4b9dd17b1c,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.1337886
+      value: 2.74
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cdab89bfded335547a384b4b9dd17b1c,
         type: 3}
@@ -149,8 +149,8 @@ Rigidbody:
   m_GameObject: {fileID: 1111167503291367984}
   serializedVersion: 4
   m_Mass: 0.122248
-  m_Drag: 0.5
-  m_AngularDrag: 1
+  m_Drag: 2
+  m_AngularDrag: 2
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -179,8 +179,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4290749170
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 778963049
+  InScenePlacedSourceGlobalObjectIdHash: 2780144888
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0

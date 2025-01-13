@@ -198,9 +198,8 @@ public class doCertainThingWith : NetworkBehaviour
 
             // Add or subtract liquid from beaker based on volume within pipette
             if (closestBeakerOrFlask.transform.Find("Liquid")){
-                Material liquidMaterial = closestBeakerOrFlask.transform.Find("Liquid").GetComponent<MeshRenderer>().material;
-
-                liquidMaterial.SetFloat("_Fill_Amount", Random.Range(0f, 0.33f));
+                
+                closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL += 50;
             }
         }
     }

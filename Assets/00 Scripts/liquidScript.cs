@@ -1,0 +1,90 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+ 
+public class liquidScript : MonoBehaviour
+{
+    public float totalVolume_mL;
+    public float currentVolume_mL;
+
+    [Header("Wobble")]
+    public float MaxWobble = 0.03f;
+    public float WobbleSpeed = 1f;
+    public float Recovery = 1f;
+    
+    
+
+
+    float wobbleAmountX; float wobbleAmountToAddX;
+    float wobbleAmountZ; float wobbleAmountToAddZ;
+    float pulse;
+    Renderer rend;
+    Vector3 lastPos;
+    Vector3 velocity;
+    float time = 0.5f;
+    
+    // Use this for initialization
+    void Start()
+    {
+        rend = transform.Find("Liquid").GetComponent<Renderer>();
+    }
+    private void Update()
+    {
+        handleLiquid();
+
+        handleWobble();
+        
+    }
+
+
+    void handleLiquid(){
+        
+        currentVolume_mL = Mathf.Clamp(currentVolume_mL, 0f, totalVolume_mL);
+
+        float percentFull = currentVolume_mL / totalVolume_mL;
+        
+        // Now differentiate between flasks beakers and pipettes
+
+        if (transform.name == "Beaker"){  // 1 to 1 in this case
+            Debug.Log(percentFull);
+            if (rend.material != null) {
+                // Make sure to use the instance material, not the shared one
+                rend.material.SetFloat("_FillAmount", percentFull);
+            }
+        }
+
+
+    }
+
+
+
+    void handleWobble(){
+        time += Time.deltaTime;
+
+        // decrease wobble over time
+        wobbleAmountToAddX = Mathf.Lerp(wobbleAmountToAddX, 0, Time.deltaTime * (Recovery));
+        wobbleAmountToAddZ = Mathf.Lerp(wobbleAmountToAddZ, 0, Time.deltaTime * (Recovery));
+ 
+        // make a sine wave of the decreasing wobble
+        pulse = 2 * Mathf.PI * WobbleSpeed;
+        wobbleAmountX = Mathf.Cos(transform.localEulerAngles.y * Mathf.PI/180) *  wobbleAmountToAddX * Mathf.Sin(pulse * time);
+        wobbleAmountZ = Mathf.Sin(transform.localEulerAngles.y * Mathf.PI/180) *  wobbleAmountToAddZ * Mathf.Sin(pulse * time);
+ 
+        // send it to the shader
+        rend.material.SetFloat("_WobbleX", wobbleAmountX);
+        rend.material.SetFloat("_WobbleZ", wobbleAmountZ);
+ 
+        // velocity
+        velocity = (lastPos - transform.position) / Time.deltaTime;
+ 
+ 
+        // add clamped velocity to wobble
+        wobbleAmountToAddX += Mathf.Clamp((velocity.x) * MaxWobble, -MaxWobble, MaxWobble);
+        wobbleAmountToAddZ += Mathf.Clamp((velocity.z) * MaxWobble, -MaxWobble, MaxWobble);
+ 
+        // keep last position
+        lastPos = transform.position;
+    }
+ 
+ 
+}
