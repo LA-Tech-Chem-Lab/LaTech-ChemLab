@@ -256,12 +256,12 @@ public class pickUpObjectsNETWORKING : NetworkBehaviour
         NetworkObject obj = NetworkManager.SpawnManager.SpawnedObjects[networkObjectId];
         if (obj != null)
         {
-            Debug.Log("Changing ownership for object: " + obj.name);
+            // Debug.Log("Changing ownership for object: " + obj.name);
 
             // Change ownership to the requesting client immediately
             obj.ChangeOwnership(rpcParams.Receive.SenderClientId);
             // Log ownership change for debugging
-            Debug.Log("New OwnerClientId: " + obj.OwnerClientId);
+            // Debug.Log("New OwnerClientId: " + obj.OwnerClientId);
 
             // Notify clients immediately to update their UI
             HandlePickUpClientRpc(networkObjectId);
@@ -275,7 +275,7 @@ public class pickUpObjectsNETWORKING : NetworkBehaviour
     {
         if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out NetworkObject obj))
         {
-            Debug.Log("Handled pick up for object: " + obj.name);
+            // Debug.Log("Handled pick up for object: " + obj.name);
             
             holdingItem = true;
             other = obj.gameObject;
@@ -285,7 +285,7 @@ public class pickUpObjectsNETWORKING : NetworkBehaviour
         }
         else
         {
-            Debug.LogWarning("Object not found on client.");
+            // Debug.LogWarning("Object not found on client.");
         }
     }
 
@@ -302,7 +302,7 @@ public class pickUpObjectsNETWORKING : NetworkBehaviour
             if (networkObject.OwnerClientId == newOwnerClientId)
             {
                 // Log that the ownership change is unnecessary
-                Debug.Log($"Ownership of object {networkObject.name} is already held by client {newOwnerClientId}, skipping ownership change.");
+                // Debug.Log($"Ownership of object {networkObject.name} is already held by client {newOwnerClientId}, skipping ownership change.");
                 return;
             }
 
@@ -310,11 +310,11 @@ public class pickUpObjectsNETWORKING : NetworkBehaviour
             networkObject.ChangeOwnership(newOwnerClientId);
 
             // Optionally, log the action for debugging purposes
-            Debug.Log($"Ownership of object {networkObject.name} changed to client {newOwnerClientId}");
+            // Debug.Log($"Ownership of object {networkObject.name} changed to client {newOwnerClientId}");
         }
         else
         {
-            Debug.LogError($"NetworkObject with ID {networkObjectId} not found!");
+            // Debug.LogError($"NetworkObject with ID {networkObjectId} not found!");
         }
     }
 

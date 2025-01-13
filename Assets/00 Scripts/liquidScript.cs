@@ -6,6 +6,7 @@ public class liquidScript : MonoBehaviour
 {
     public float totalVolume_mL;
     public float currentVolume_mL;
+    public float scaleDown = 1f;
     public Color surfaceColor;
     public Color topColor;
 
@@ -50,6 +51,7 @@ public class liquidScript : MonoBehaviour
         currentVolume_mL = Mathf.Clamp(currentVolume_mL, 0f, totalVolume_mL);
 
         float percentFull = currentVolume_mL / totalVolume_mL;
+        float scaledPercentRender = percentFull / scaleDown;
         
         // Now differentiate between flasks beakers and pipettes
 
@@ -57,7 +59,7 @@ public class liquidScript : MonoBehaviour
             
             if (rend.material != null) {
                 // Make sure to use the instance material, not the shared one
-                rend.material.SetFloat("_FillAmount", percentFull);
+                rend.material.SetFloat("_FillAmount", scaledPercentRender);
             }
         }
 
