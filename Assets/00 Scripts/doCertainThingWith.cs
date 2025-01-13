@@ -23,6 +23,7 @@ public class doCertainThingWith : NetworkBehaviour
     {   
         if (!IsOwner)
             return;
+            
         checkForInput();
 
         if (itemHeldByTongs)
@@ -148,7 +149,7 @@ public class doCertainThingWith : NetworkBehaviour
             offset = pos.other.transform.TransformDirection(0f,-0.361f,0.1056f);
             
         if (itemHeldByTongs.name == "Erlenmeyer Flask L")
-            offset = pos.other.transform.TransformDirection(0f,-0.421f,0.1056f);
+            offset = pos.other.transform.TransformDirection(0f,-0.452f,0.1056f);
 
 
 
