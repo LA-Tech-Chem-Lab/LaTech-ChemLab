@@ -17,7 +17,12 @@ public class liquidScript : MonoBehaviour
     public float WobbleSpeed = 0.9f;
     public float Recovery = 1.4f;
     
+    [Header("Spillage")]
     
+    public float dotProduct; 
+    public float maxSpillRate;
+
+
 
     float wobbleAmountX; float wobbleAmountToAddX;  
     float wobbleAmountZ; float wobbleAmountToAddZ;
@@ -28,6 +33,7 @@ public class liquidScript : MonoBehaviour
     float time = 0.5f;
     Rigidbody objectRigidbody;
     float initialObjectMass;
+
     
     // Use this for initialization
     void Start()
@@ -40,6 +46,17 @@ public class liquidScript : MonoBehaviour
 
     private void Update()
     {
+        
+        dotProduct = Vector3.Dot(transform.up.normalized, Vector3.up);
+        if (dotProduct <= 0.25f){
+            float loss = (-0.8f * dotProduct + 0.2f) * maxSpillRate * Time.deltaTime;
+            currentVolume_mL -= loss;
+            if (gameObject.name.StartsWith("Erlenmeyer") && currentVolume_mL/totalVolume_mL < 0.45f) // Bad but works for now
+                currentVolume_mL = 0f;
+            if (gameObject.name.StartsWith("Beaker") && currentVolume_mL/totalVolume_mL < 0.19f) // Bad but works for now
+                currentVolume_mL = 0f;
+        }
+
         handleLiquid();
 
         handleWobble();
