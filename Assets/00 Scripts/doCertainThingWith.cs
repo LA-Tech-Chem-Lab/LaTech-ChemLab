@@ -201,6 +201,7 @@ public class doCertainThingWith : NetworkBehaviour
             if (closestBeakerOrFlask.transform.Find("Liquid")){
                 
                 closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL += 50;
+                closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
             }
         }
     }
