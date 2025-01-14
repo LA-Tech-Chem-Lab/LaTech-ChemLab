@@ -123,8 +123,8 @@ public class pickUpObjectsNETWORKING : NetworkBehaviour
         if (other.name == "Pipette")            multiHandlerScript.setHelpText("This is a pipette. Use on a beaker/flask.");
         if (other.name == "Fire extinguisher")  multiHandlerScript.setHelpText("Right click to use."); 
         if (other.name == "Tongs")              multiHandlerScript.setHelpText("Right click to grab a flask.");
-        if (other.name == "Erlenmeyer Flask")   multiHandlerScript.setHelpText("500 mL Erlenmeyer flask");
-        if (other.name == "Erlenmeyer Flask L")   multiHandlerScript.setHelpText("750 mL Erlenmeyer flask");
+        if (other.name == "Erlenmeyer Flask")   multiHandlerScript.setHelpText("250 mL Erlenmeyer flask");
+        if (other.name == "Erlenmeyer Flask L") multiHandlerScript.setHelpText("500 mL Erlenmeyer flask");
         if (other.name == "Evaporating Dish")   multiHandlerScript.setHelpText("This is an evaporating dish.");
     }
 
@@ -137,7 +137,7 @@ public class pickUpObjectsNETWORKING : NetworkBehaviour
         {
             // Draw the holding position sphere
             Gizmos.color = holdingItem ? Color.green : Color.red;
-            Gizmos.DrawSphere(targetPosition+Vector3.up*checkRadius, checkRadius);
+            Gizmos.DrawSphere(targetPosition, checkRadius);
 
             // Draw the forward ray for picking up objects
             Gizmos.color = Color.blue;
@@ -203,7 +203,7 @@ public class pickUpObjectsNETWORKING : NetworkBehaviour
     {
         if (holdingItem)
         {   
-            targetPositionBlocked = Physics.CheckSphere(targetPosition+Vector3.up*checkRadius, checkRadius*1.75f, LayerMask.GetMask("Ground"));
+            targetPositionBlocked = Physics.CheckSphere(targetPosition, checkRadius, LayerMask.GetMask("Ground"));
 
             if (targetPositionBlocked){
                 Ray forwardRay = new Ray(playerCamera.position, playerCamera.forward);

@@ -63,6 +63,15 @@ public class liquidScript : MonoBehaviour
             }
         }
 
+        if (transform.name == "Erlenmeyer Flask" || transform.name == "Erlenmeyer Flask L"){
+            
+            float x = percentFull;
+            float heightFromVolume = Mathf.Pow(x, 1.5f);
+            float scaledHeight = heightFromVolume/scaleDown;
+
+            rend.material.SetFloat("_FillAmount", scaledHeight);
+        }
+
 
     }
 

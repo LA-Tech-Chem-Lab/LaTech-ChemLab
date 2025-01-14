@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 5394644422416086548}
   - component: {fileID: 6198633205046017134}
   - component: {fileID: 727691114652288599}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cabinet BR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1669,7 +1669,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1268
+  m_VersionIndex: 1277
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1717,7 +1717,6 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
-  tableCabinet: 1
   roomMesh: {fileID: 0}
   boxSize: {x: 1.07, y: 0.25, z: 1}
   boxOffset: {x: 0.00016, y: 0.01035, z: -0.005175}
@@ -1823,7 +1822,7 @@ GameObject:
   - component: {fileID: 2669855627104201652}
   - component: {fileID: 4598658567060848795}
   - component: {fileID: 5793188038012422752}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door 1L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2241,7 +2240,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 293
+  m_VersionIndex: 302
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -3971,7 +3970,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 172
+  m_VersionIndex: 181
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -5677,7 +5676,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1817
+  m_VersionIndex: 1826
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -5750,7 +5749,6 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
-  tableCabinet: 1
   roomMesh: {fileID: 0}
   boxSize: {x: 1.07, y: 0.25, z: 1}
   boxOffset: {x: 0.00016, y: 0.01035, z: -0.005175}
@@ -5921,8 +5919,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 8, y: 0.15, z: 1.2}
-  m_Center: {x: 0, y: 1.3, z: 1}
+  m_Size: {x: 8, y: 0.05501914, z: 1.2}
+  m_Center: {x: -3.3881318e-21, y: 1.2525095, z: 1}
 --- !u!65 &6077258324578163748
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5942,8 +5940,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 8, y: 0.15, z: 1.2}
-  m_Center: {x: 0, y: 1.3, z: -1}
+  m_Size: {x: 8, y: 0.049989343, z: 1.2}
+  m_Center: {x: 3.3881318e-21, y: 1.2499945, z: -1}
 --- !u!1 &6930608824250258763
 GameObject:
   m_ObjectHideFlags: 0
@@ -5961,7 +5959,7 @@ GameObject:
   - component: {fileID: 384666670044674922}
   - component: {fileID: 4976563222365271374}
   - component: {fileID: 1071779839471139343}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door 1R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6379,7 +6377,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 293
+  m_VersionIndex: 302
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -8084,7 +8082,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1853
+  m_VersionIndex: 1862
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -8157,7 +8155,6 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
-  tableCabinet: 1
   roomMesh: {fileID: 0}
   boxSize: {x: 1.07, y: 0.25, z: 1}
   boxOffset: {x: 0.00016, y: 0.01035, z: -0.005175}
@@ -8238,7 +8235,7 @@ GameObject:
   - component: {fileID: 4320556865808627280}
   - component: {fileID: 8899921375878945939}
   - component: {fileID: 4749155846417757876}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cabinet TR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9890,7 +9887,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1593
+  m_VersionIndex: 1602
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -9938,7 +9935,6 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
-  tableCabinet: 1
   roomMesh: {fileID: 0}
   boxSize: {x: 1.07, y: 0.25, z: 1}
   boxOffset: {x: 0.00016, y: 0.01035, z: -0.005175}
@@ -10219,6 +10215,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sink L
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 30e401b96d522cc41abcf81dc35a7c16,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: -6604235661410160854, guid: 30e401b96d522cc41abcf81dc35a7c16, type: 3}
@@ -10294,11 +10295,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6604235661410160854, guid: 9f471814479d1a9499ed880eb676c0a5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: -4470750409426213135, guid: 9f471814479d1a9499ed880eb676c0a5,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: c5fbb04a456da9448a7df58dd5c3e3d7, type: 2}
+    - target: {fileID: -3820133778957375705, guid: 9f471814479d1a9499ed880eb676c0a5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 236247415165773013, guid: 9f471814479d1a9499ed880eb676c0a5,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -10308,6 +10319,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Sink + Drain (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9f471814479d1a9499ed880eb676c0a5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10457,6 +10473,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7441104192749311660, guid: b0ce8a7075cb55044b2106fd67fa3482,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: -5438490624318281947, guid: b0ce8a7075cb55044b2106fd67fa3482,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -10467,10 +10488,25 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: c5fbb04a456da9448a7df58dd5c3e3d7, type: 2}
+    - target: {fileID: -516098083770646512, guid: b0ce8a7075cb55044b2106fd67fa3482,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b0ce8a7075cb55044b2106fd67fa3482,
         type: 3}
       propertyPath: m_Name
       value: OutletBox
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b0ce8a7075cb55044b2106fd67fa3482,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8057983786602287147, guid: b0ce8a7075cb55044b2106fd67fa3482,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10601,6 +10637,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Sink R
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 30e401b96d522cc41abcf81dc35a7c16,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -10838,6 +10879,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Faucet (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fa573d30501831d4aa561e62a36b51e1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10939,11 +10985,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6604235661410160854, guid: 9f471814479d1a9499ed880eb676c0a5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: -4470750409426213135, guid: 9f471814479d1a9499ed880eb676c0a5,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: c5fbb04a456da9448a7df58dd5c3e3d7, type: 2}
+    - target: {fileID: -3820133778957375705, guid: 9f471814479d1a9499ed880eb676c0a5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 236247415165773013, guid: 9f471814479d1a9499ed880eb676c0a5,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -10953,6 +11009,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Sink + Drain
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9f471814479d1a9499ed880eb676c0a5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11216,6 +11277,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Faucet (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fa573d30501831d4aa561e62a36b51e1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11346,6 +11412,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: DeskMain
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 67ff15033717cf741934aa4b33022db0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -13457,7 +13528,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 355
+  m_VersionIndex: 364
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -13677,6 +13748,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Faucet (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fa573d30501831d4aa561e62a36b51e1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13802,6 +13878,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Faucet
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fa573d30501831d4aa561e62a36b51e1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

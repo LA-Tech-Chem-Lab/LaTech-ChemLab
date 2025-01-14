@@ -400,7 +400,7 @@ MonoBehaviour:
   cameraTransform: {fileID: 2479615450925912079}
   targetCamPosition: {fileID: 545637864248046340}
   walkSpeed: 5
-  runSpeed: 28
+  runSpeed: 16
   realWorldMoveSpeed: 0
   jumpHeight: 1.4
   xSens: 250
