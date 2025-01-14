@@ -112,7 +112,7 @@ public class cabinetScript : NetworkBehaviour
         // Add detected objects to the list
         foreach (Collider collider in colliders)
         {
-            if (collider.gameObject != gameObject && !collider.transform.IsChildOf(transform.parent.parent) && !collider.transform.IsChildOf(roomMesh.transform))
+            if (collider.gameObject.tag != "Terrain" && collider.gameObject != gameObject && !collider.transform.IsChildOf(transform.parent.parent) && !collider.transform.IsChildOf(roomMesh.transform))
                 objectsInArea.Add(collider.gameObject);
         }
 
