@@ -9,6 +9,8 @@ public class liquidScript : MonoBehaviour
     public float scaleDown = 1f;
     public Color surfaceColor;
     public Color topColor;
+    public float densityOfLiquid = 1f;
+
 
     [Header("Wobble")]
     public float MaxWobble = 0.0003f; float initialMax;
@@ -17,21 +19,25 @@ public class liquidScript : MonoBehaviour
     
     
 
-
-    float wobbleAmountX; float wobbleAmountToAddX;
+    float wobbleAmountX; float wobbleAmountToAddX;  
     float wobbleAmountZ; float wobbleAmountToAddZ;
     float pulse;
     Renderer rend;
     Vector3 lastPos;
     Vector3 velocity;
     float time = 0.5f;
+    Rigidbody objectRigidbody;
+    float initialObjectMass;
     
     // Use this for initialization
     void Start()
     {
         rend = transform.Find("Liquid").GetComponent<Renderer>();
         initialMax = MaxWobble;
+        objectRigidbody = GetComponent<Rigidbody>();
+        initialObjectMass = objectRigidbody.mass;
     }
+
     private void Update()
     {
         handleLiquid();
@@ -72,6 +78,8 @@ public class liquidScript : MonoBehaviour
             rend.material.SetFloat("_FillAmount", scaledHeight);
         }
 
+        // Simulate new object mass now containing liquid
+        objectRigidbody.mass = initialObjectMass + currentVolume_mL * densityOfLiquid / 1000f;
 
     }
 
