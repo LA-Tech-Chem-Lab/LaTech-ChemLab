@@ -4,6 +4,8 @@ using TMPro;
 
 public class WeightScale : MonoBehaviour
 {
+    public List<GameObject> allObjectsContainingLiquids = new List<GameObject>();
+
     float forceToMass;
     public TextMeshProUGUI massText; 
 
@@ -57,6 +59,11 @@ public class WeightScale : MonoBehaviour
     {
         if (collision.rigidbody != null)
         {
+            if (collision.transform.Find("Liquid"))
+                allObjectsContainingLiquids.Add(collision.gameObject);
+            
+
+
             if (impulsePerRigidBody.ContainsKey(collision.rigidbody))
                 impulsePerRigidBody[collision.rigidbody] = collision.impulse.y / lastDeltaTime;
             else
@@ -81,6 +88,16 @@ public class WeightScale : MonoBehaviour
     {
         if (collision.rigidbody != null)
         {
+            if (collision.transform.Find("Liquid") && !allObjectsContainingLiquids.Exists(c => c.gameObject == collision.gameObject))
+            {
+                // If "Liquid" is found and it's not already in the list, add it.
+                allObjectsContainingLiquids.Add(collision.gameObject);
+            }
+            else
+            {
+                // Remove from list if it's already present
+                allObjectsContainingLiquids.Remove(collision.gameObject);
+            }
             impulsePerRigidBody.Remove(collision.rigidbody);
             UpdateWeight();
         }

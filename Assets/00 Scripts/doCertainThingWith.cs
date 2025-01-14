@@ -10,12 +10,12 @@ public class doCertainThingWith : NetworkBehaviour
 
 
     public GameObject itemHeldByTongs; int itemHeldByTongsLayer;
-    pickUpObjectsNETWORKING pos;
+    pickUpObjects pos;
     public Vector3 testingOffset;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        pos = GetComponent<pickUpObjectsNETWORKING>();
+        pos = GetComponent<pickUpObjects>();
     }
 
     // Update is called once per frame
