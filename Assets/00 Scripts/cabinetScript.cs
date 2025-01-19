@@ -86,17 +86,17 @@ public class cabinetScript : NetworkBehaviour
 
 
 
-    private void OnDrawGizmos()
-    {
-        // Set the color of the gizmo
-        Gizmos.color = Color.green;
+    // private void OnDrawGizmos()
+    // {
+    //     // Set the color of the gizmo
+    //     Gizmos.color = Color.green;
 
-        // Calculate the center of the box with the offset
-        Vector3 boxCenter = transform.position + transform.TransformVector(boxOffset);
+    //     // Calculate the center of the box with the offset
+    //     Vector3 boxCenter = transform.position + transform.TransformVector(boxOffset);
 
-        // Draw the wireframe box
-        Gizmos.DrawWireCube(boxCenter, boxSize);
-    }
+    //     // Draw the wireframe box
+    //     Gizmos.DrawWireCube(boxCenter, boxSize);
+    // }
 
     private void DetectObjectsInBox()
     {
