@@ -14,27 +14,29 @@ public class pickUpObjects : NetworkBehaviour
     public Transform playerCamera;
     public float range = 7f;
     public float holdingDistance = 3f; 
-    float initialHoldingDistance; float untouchedHoldingDistance;
     public float blendingSensitivity = 3f;
     float rotationAmInDegrees = 12f;
     public GameObject other;  int otherObjectLayer;
 
-    bool holdingItem;
-    Vector3 prev;
-    Vector3 previousRotation;
-    Vector3 launchTraj;
-    
-    Vector3 launchSpin;
-    Vector3 targetRotation;
-    Vector3 meshOffset;
+    public Vector3 targetRotation;
+    public Vector3 meshOffset;
     Vector3 targetPosition;
-    Quaternion targetQuaternion;
-    float xSens;
     public bool checkForCollisions;
     public float distOffset = 0f;
     public float checkRadius = 0.5f;
-    bool targetPositionBlocked;
     public multihandler multiHandlerScript;
+    
+    // Def dont need to touch
+    bool holdingItem;
+    Quaternion targetQuaternion;
+    float initialHoldingDistance; float untouchedHoldingDistance;
+    float xSens;
+    Vector3 prev;
+    Vector3 previousRotation;
+    Vector3 launchTraj;
+    Vector3 launchSpin;
+
+
 
     void Start(){
         xSens = GetComponent<playerMovement>().xSens;
@@ -60,18 +62,28 @@ public class pickUpObjects : NetworkBehaviour
 
         holdingItem = true;
         other = otherObject;
+        
+        ChangeOwnershipServerRpc(other.GetComponent<NetworkObject>().NetworkObjectId, NetworkManager.Singleton.LocalClientId);
+
         otherObjectLayer = other.layer;
         other.layer = LayerMask.NameToLayer("HeldObject");
         other.GetComponent<Rigidbody>().useGravity = false;
         targetRotation = new Vector3(0f, other.transform.localEulerAngles.y, 0f);
         targetQuaternion = Quaternion.Euler(targetRotation);
 
+        Renderer renderer = other.GetComponent<Renderer>();
+        if (renderer){
+            Bounds bounds = renderer.bounds;
+            Vector3 extents = bounds.extents; 
+            checkRadius = (extents.x + extents.z) / 2f;
+        
+        } else checkRadius = 0.2f;
+
         if (other.GetComponent<shiftBy>())
             meshOffset = other.GetComponent<shiftBy>().GetOffset();
         else
             meshOffset = Vector3.zero;
 
-        ChangeOwnershipServerRpc(other.GetComponent<NetworkObject>().NetworkObjectId, NetworkManager.Singleton.LocalClientId);
 
         if (other.name == "Tongs")
             SetOwnerToTongs();
@@ -84,6 +96,7 @@ public class pickUpObjects : NetworkBehaviour
 
     void SetOwnerToTongs()
     {
+        other.layer = LayerMask.NameToLayer("HeldObject");
         foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
             if (currentObject.name == "Erlenmeyer Flask" || currentObject.name == "Erlenmeyer Flask L")
             {   
@@ -203,7 +216,7 @@ public class pickUpObjects : NetworkBehaviour
     {
         if (holdingItem)
         {   
-            targetPositionBlocked = Physics.CheckSphere(targetPosition, checkRadius, LayerMask.GetMask("Ground"));
+            bool targetPositionBlocked = Physics.CheckSphere(targetPosition, checkRadius, LayerMask.GetMask("Ground"));
 
             if (targetPositionBlocked){
                 Ray forwardRay = new Ray(playerCamera.position, playerCamera.forward);
@@ -260,6 +273,9 @@ public class pickUpObjects : NetworkBehaviour
 
             // Change ownership to the requesting client immediately
             obj.ChangeOwnership(rpcParams.Receive.SenderClientId);
+
+                
+
             // Log ownership change for debugging
             // Debug.Log("New OwnerClientId: " + obj.OwnerClientId);
 
@@ -275,11 +291,23 @@ public class pickUpObjects : NetworkBehaviour
     {
         if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out NetworkObject obj))
         {
-            // Debug.Log("Handled pick up for object: " + obj.name);
-            
+
             holdingItem = true;
             other = obj.gameObject;
-            if (IsOwner) setHelpTextBasedOnObject();
+            if (IsOwner)
+            {
+                // Ensure offset is recalculated for the new owner
+                if (other.GetComponent<shiftBy>())
+                    meshOffset = other.GetComponent<shiftBy>().GetOffset();
+                else
+                    meshOffset = Vector3.zero;
+
+                setHelpTextBasedOnObject();
+
+                
+                if (obj.name == "Tongs")
+                    SetOwnerToTongs();
+            }
             // DropItem();
             // PickUpItem(obj.gameObject);
         }
@@ -299,22 +327,11 @@ public class pickUpObjects : NetworkBehaviour
         if (networkObject != null)
         {
             // Check if the current owner is already the requested owner
-            if (networkObject.OwnerClientId == newOwnerClientId)
-            {
-                // Log that the ownership change is unnecessary
-                // Debug.Log($"Ownership of object {networkObject.name} is already held by client {newOwnerClientId}, skipping ownership change.");
+            if (networkObject.OwnerClientId == newOwnerClientId)  // Debug.Log($"Ownership of object {networkObject.name} is already held by client {newOwnerClientId}, skipping ownership change.");
                 return;
-            }
 
             // Change ownership on the server
             networkObject.ChangeOwnership(newOwnerClientId);
-
-            // Optionally, log the action for debugging purposes
-            // Debug.Log($"Ownership of object {networkObject.name} changed to client {newOwnerClientId}");
-        }
-        else
-        {
-            // Debug.LogError($"NetworkObject with ID {networkObjectId} not found!");
         }
     }
 

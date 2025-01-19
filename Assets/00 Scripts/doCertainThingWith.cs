@@ -10,12 +10,12 @@ public class doCertainThingWith : NetworkBehaviour
 
 
     public GameObject itemHeldByTongs; int itemHeldByTongsLayer;
-    pickUpObjects pos;
+    pickUpObjects pickUpScript;
     public Vector3 testingOffset;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        pos = GetComponent<pickUpObjects>();
+        pickUpScript = GetComponent<pickUpObjects>();
     }
 
     // Update is called once per frame
@@ -40,8 +40,8 @@ public class doCertainThingWith : NetworkBehaviour
 
     void findObjectAndPerformAction()       // Right click once
     { 
-        if (pos.other != null){
-            GameObject obj = pos.other;
+        if (pickUpScript.other != null){
+            GameObject obj = pickUpScript.other;
 
             if (obj.name == "Fire extinguisher")
                 ShootFoam();
@@ -57,9 +57,9 @@ public class doCertainThingWith : NetworkBehaviour
 
     void findObjectAndPerformHeldAction()  // Held right click
     {
-        if (pos.other != null)
+        if (pickUpScript.other != null)
         {
-            GameObject obj = pos.other;
+            GameObject obj = pickUpScript.other;
 
             if (obj.name == "Beaker")
                 BringObjectCloser();
@@ -85,9 +85,9 @@ public class doCertainThingWith : NetworkBehaviour
     void BringObjectCloser(float dist = 0f)
     {   
         if (dist <= 0f)
-            pos.distOffset = -pos.holdingDistance * 0.75f;
+            pickUpScript.distOffset = -pickUpScript.holdingDistance * 0.75f;
         else
-            pos.distOffset = dist;
+            pickUpScript.distOffset = dist;
     }
 
 
@@ -146,14 +146,14 @@ public class doCertainThingWith : NetworkBehaviour
         Vector3 offset = Vector3.zero;
 
         if (itemHeldByTongs.name == "Erlenmeyer Flask")
-            offset = pos.other.transform.TransformDirection(0f,-0.361f,0.1056f);
+            offset = pickUpScript.other.transform.TransformDirection(0f,-0.361f,0.1056f);
             
         if (itemHeldByTongs.name == "Erlenmeyer Flask L")
-            offset = pos.other.transform.TransformDirection(0f,-0.452f,0.1056f);
+            offset = pickUpScript.other.transform.TransformDirection(0f,-0.452f,0.1056f);
 
 
 
-        itemHeldByTongs.transform.position = pos.other.transform.Find("Tip").position + offset;
+        itemHeldByTongs.transform.position = pickUpScript.other.transform.Find("Tip").position + offset;
     }
 
     public void dropItemFromTongsCorrectly(){
@@ -164,8 +164,8 @@ public class doCertainThingWith : NetworkBehaviour
             itemHeldByTongs.layer = itemHeldByTongsLayer;
         }
     
-        pos.other.transform.Find("Open").gameObject.SetActive(true);
-        pos.other.transform.Find("Closed").gameObject.SetActive(false);
+        pickUpScript.other.transform.Find("Open").gameObject.SetActive(true);
+        pickUpScript.other.transform.Find("Closed").gameObject.SetActive(false);
         itemHeldByTongs = null;
 
     }
@@ -175,7 +175,7 @@ public class doCertainThingWith : NetworkBehaviour
 
     public void PipetteStuff(GameObject pipette){
 
-        // First find the closest beaker below you
+        // First find the closest beaker/flask below you
         float minDist = Mathf.Infinity;
         GameObject closestBeakerOrFlask = null;
         
@@ -213,12 +213,12 @@ public class doCertainThingWith : NetworkBehaviour
 
 
     void ShootFoam(){
-        if (!pos.other.transform.Find("Foam").GetComponent<ParticleSystem>().isPlaying)
+        if (!pickUpScript.other.transform.Find("Foam").GetComponent<ParticleSystem>().isPlaying)
         {
-            ParticleSystem ps = pos.other.transform.Find("Foam").GetComponent<ParticleSystem>();
-            ps.Play();
-            StartCoroutine(OnOrOffForDelay(pos.other.transform.Find("Spraying").gameObject, ps.main.duration));
-            StartCoroutine(OnOrOffForDelay(pos.other.transform.Find("Not Spraying").gameObject, ps.main.duration, false));
+            ParticleSystem foamSpray = pickUpScript.other.transform.Find("Foam").GetComponent<ParticleSystem>();
+            foamSpray.Play();
+            StartCoroutine(OnOrOffForDelay(pickUpScript.other.transform.Find("Spraying").gameObject, foamSpray.main.duration));
+            StartCoroutine(OnOrOffForDelay(pickUpScript.other.transform.Find("Not Spraying").gameObject, foamSpray.main.duration, false));
         }
     }
     
