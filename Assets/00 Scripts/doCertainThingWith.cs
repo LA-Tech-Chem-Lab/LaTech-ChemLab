@@ -52,6 +52,9 @@ public class doCertainThingWith : NetworkBehaviour
             if (obj.name == "Pipette")
                 PipetteStuff(obj);
 
+            if (obj.name == "Matchbox")
+                LightMatchAndTossForward(obj);
+
         }
     }
 
@@ -72,6 +75,15 @@ public class doCertainThingWith : NetworkBehaviour
 
         }
     }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -229,5 +241,10 @@ public class doCertainThingWith : NetworkBehaviour
         obj.SetActive(!initialState);
     }
 
-    
+    void LightMatchAndTossForward(GameObject obj){
+        matchBoxScript matchScript = obj.GetComponent<matchBoxScript>();
+
+        if (!matchScript.animationPlaying)
+            matchScript.LightMatch();
+    }
 }

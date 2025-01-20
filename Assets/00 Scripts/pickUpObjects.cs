@@ -25,6 +25,7 @@ public class pickUpObjects : NetworkBehaviour
     public float distOffset = 0f;
     public float checkRadius = 0.5f;
     public multihandler multiHandlerScript;
+    public bool canRotateItem;
     
     // Def dont need to touch
     bool holdingItem;
@@ -35,7 +36,7 @@ public class pickUpObjects : NetworkBehaviour
     Vector3 previousRotation;
     Vector3 launchTraj;
     Vector3 launchSpin;
-
+    
 
 
     void Start(){
@@ -43,6 +44,7 @@ public class pickUpObjects : NetworkBehaviour
         playerCamera = transform.GetChild(0);
         initialHoldingDistance = holdingDistance; untouchedHoldingDistance = initialHoldingDistance;
         multiHandlerScript = GameObject.FindGameObjectWithTag("GameController").GetComponent<multihandler>();
+        canRotateItem = true;
     }
 
     void Update()
@@ -91,6 +93,7 @@ public class pickUpObjects : NetworkBehaviour
         if (other.name == "Pipette")
             initialHoldingDistance = 1.3f;
 
+
         setHelpTextBasedOnObject();
     }
 
@@ -114,6 +117,7 @@ public class pickUpObjects : NetworkBehaviour
         if (!other) return;
 
         holdingItem = false;
+        canRotateItem = true;
         other.layer = otherObjectLayer;
         Rigidbody rb = other.GetComponent<Rigidbody>();
         rb.linearVelocity = launchTraj; // Launch it
@@ -167,9 +171,10 @@ public class pickUpObjects : NetworkBehaviour
                     DropItem();
         }
         
-        // Rotation Stuff Please Ignore these 4 lines
+        
+        // Rotation Stuff Please Ignore these 3 lines
+        if (canRotateItem) targetRotation.y -= Mathf.Min(1f, Input.mouseScrollDelta.y) * rotationAmInDegrees;
         if (!Cursor.visible) targetRotation.y += Input.GetAxis("Mouse X") * xSens * Time.deltaTime;
-        targetRotation.y -= Mathf.Min(1f, Input.mouseScrollDelta.y) * rotationAmInDegrees;
         targetRotation.y = (targetRotation.y % 360f + 360f) % 360f;
         targetQuaternion = Quaternion.Euler(targetRotation);
         
@@ -238,7 +243,7 @@ public class pickUpObjects : NetworkBehaviour
 
     void maintainObject(){
         if (holdingItem && other){
-
+            
             other.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
             other.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             // Debug.DrawRay(other.transform.position, targetPosition - other.transform.position);
@@ -254,6 +259,10 @@ public class pickUpObjects : NetworkBehaviour
                 targetQuaternion,
                 Time.deltaTime * blendingSensitivity
             );
+
+
+
+
 
             launchTraj = (other.transform.position - prev) / Time.deltaTime;            
             prev = other.transform.position;
