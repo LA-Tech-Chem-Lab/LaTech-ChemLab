@@ -205,7 +205,8 @@ public class pickUpObjects : NetworkBehaviour
 
             if (rb && !rb.GetComponent<Rigidbody>().isKinematic)                //  ITEM PICKUP
             {
-                PickUpItem(hit.collider.gameObject);
+                if (rb.gameObject.name != "Glass Fragment")
+                    PickUpItem(hit.collider.gameObject);
             }
         }
     }
