@@ -2,6 +2,7 @@
   "dependencies": {
     "com.huggingface.api": "https://github.com/huggingface/unity-api.git",
     "com.srcnalt.openai-unity": "https://github.com/srcnalt/OpenAI-Unity.git",
+    "com.tripolygon.umodeler-x": "file:com.tripolygon.umodeler-x-1.0.3-basic/com.tripolygon.umodeler-x-1.0.3-basic.tgz",
     "com.unity.animation.rigging": "1.3.0",
     "com.unity.collab-proxy": "2.6.0",
     "com.unity.feature.development": "1.0.2",

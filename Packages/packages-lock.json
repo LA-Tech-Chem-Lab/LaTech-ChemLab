@@ -19,6 +19,12 @@
       },
       "hash": "054467e2a2daccf7f23ff8f7165f1d832815dc70"
     },
+    "com.tripolygon.umodeler-x": {
+      "version": "file:com.tripolygon.umodeler-x-1.0.3-basic/com.tripolygon.umodeler-x-1.0.3-basic.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {}
+    },
     "com.unity.animation.rigging": {
       "version": "1.3.0",
       "depth": 0,
