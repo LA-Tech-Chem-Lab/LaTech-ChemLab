@@ -3,17 +3,25 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEditor;
 using TMPro;
+using Palmmedia.ReportGenerator.Core;
+using UnityEngine.Rendering;
 
 public class multihandler : MonoBehaviour
 {   
     public GameObject JoinCanvas;
     public GameObject InGameCanvas;
     public GameObject PauseCanvas;
+    public GameObject Notebook;
+    public GameObject SettingsPanel;
+    public GameObject Finder;
+    public GameObject Search;
     public GameObject microphoneSelectionDropdown;
     public bool isPaused;
-    
+    public bool notebookOpen;
+    public bool searchOpen;
+    public bool settingsOpen;
+    public bool finderOpen;
     public TextMeshProUGUI helpText;
-
     private void Start()
     {
         JoinCanvas.SetActive(true);
@@ -81,6 +89,26 @@ public class multihandler : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+    }
+
+    public void toggleNotebook(){
+        notebookOpen = !notebookOpen;
+        Notebook.SetActive(notebookOpen);
+    }
+
+    public void toggleSettings(){
+        settingsOpen = !settingsOpen;
+        SettingsPanel.SetActive(settingsOpen);
+    }
+
+    public void toggleFinder(){
+        finderOpen = !finderOpen;
+        Finder.SetActive(finderOpen);
+    }
+
+    public void toggleSearch(){
+        searchOpen = !searchOpen;
+        Search.SetActive(searchOpen);
     }
 
     public void PauseOrUnpause(){
