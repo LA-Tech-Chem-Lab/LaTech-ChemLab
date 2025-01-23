@@ -226,14 +226,14 @@ public class doCertainThingWith : NetworkBehaviour
 
     void ShootFoam()
     {
-        // Ensure there's an object being interacted with and it's a fire extinguisher
+        
         if (pickUpScript.other != null && pickUpScript.other.name == "Fire extinguisher")
         {
-            // Get the Foam particle system and check if it's not already playing
+            
             ParticleSystem foam = pickUpScript.other.transform.Find("Foam").GetComponent<ParticleSystem>();
             if (!foam.isPlaying)
             {
-                // Trigger the server RPC and pass the NetworkObjectId of the fire extinguisher
+                
                 TriggerFoamServerRpc(pickUpScript.other.GetComponent<NetworkObject>().NetworkObjectId);
             }
         }
@@ -242,7 +242,7 @@ public class doCertainThingWith : NetworkBehaviour
     [ServerRpc]
     private void TriggerFoamServerRpc(ulong networkObjectId)
     {
-        // Check if the object exists in the server's SpawnManager
+       
         if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out NetworkObject netObj))
         {
             // Call the ClientRpc to trigger the foam effect for all clients
@@ -253,14 +253,14 @@ public class doCertainThingWith : NetworkBehaviour
     [ClientRpc]
     private void TriggerFoamClientRpc(ulong networkObjectId)
     {
-        // Resolve the object on the client side
+        
         if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out NetworkObject netObj))
         {
-            // Find the Foam particle system and play it
+            
             ParticleSystem foam = netObj.transform.Find("Foam").GetComponent<ParticleSystem>();
             foam.Play();
 
-            // Handle the on/off delay of the spraying states
+            
             StartCoroutine(OnOrOffForDelay(netObj.transform.Find("Spraying").gameObject, foam.main.duration));
             StartCoroutine(OnOrOffForDelay(netObj.transform.Find("Not Spraying").gameObject, foam.main.duration, false));
         }
@@ -274,10 +274,42 @@ public class doCertainThingWith : NetworkBehaviour
         obj.SetActive(!initialState);
     }
 
-    void LightMatchAndTossForward(GameObject obj){
+    void LightMatchAndTossForward(GameObject obj)
+    {
+        
         matchBoxScript matchScript = obj.GetComponent<matchBoxScript>();
 
+        
         if (!matchScript.animationPlaying)
-            matchScript.LightMatch();
+        {
+            
+            LightMatchServerRpc(obj.GetComponent<NetworkObject>().NetworkObjectId);
+        }
+    }
+
+    [ServerRpc]
+    void LightMatchServerRpc(ulong matchboxNetworkObjectId)
+    {
+        
+        if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(matchboxNetworkObjectId, out NetworkObject matchboxNetworkObject))
+        {
+            // Call the ClientRpc to trigger the Light Match for all clients
+            LightMatchClientRpc(matchboxNetworkObjectId);
+        }
+    }
+
+    [ClientRpc]
+    void LightMatchClientRpc(ulong matchboxNetworkObjectId)
+    {
+        
+        if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(matchboxNetworkObjectId, out NetworkObject matchboxNetworkObject))
+        {
+            
+            matchBoxScript matchScript = matchboxNetworkObject.GetComponent<matchBoxScript>();
+            if (matchScript != null && !matchScript.animationPlaying)
+            {
+                matchScript.LightMatch();
+            }
+        }
     }
 }
