@@ -1643,7 +1643,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2918
+  m_VersionIndex: 2960
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1716,7 +1716,7 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
-  tableCabinet: 0
+  roomMesh: {fileID: 0}
   boxSize: {x: 1.96, y: 0.18, z: 1.13}
   boxOffset: {x: 0, y: 0.01014, z: -0.0033}
   cabinetVel: {x: 0, y: 0, z: 0}
@@ -1793,7 +1793,8 @@ GameObject:
   - component: {fileID: 5016803182785243722}
   - component: {fileID: 1416815289118930600}
   - component: {fileID: 826749016372505606}
-  m_Layer: 0
+  - component: {fileID: 5974431186640014995}
+  m_Layer: 3
   m_Name: Counter Top L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2323,7 +2324,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 242
+  m_VersionIndex: 284
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2372,6 +2373,24 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &5974431186640014995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272059090201034114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6757b231cedd544c583ef8aeaf773b2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thickness: 0
+  inverted: 0
+  material: {fileID: 0}
+  filter: -65535
+  m_SourceCollider: {fileID: 1416815289118930600}
+  m_DistanceField: {fileID: 0}
 --- !u!1 &371098151619923605
 GameObject:
   m_ObjectHideFlags: 0
@@ -2381,7 +2400,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3038158153465981352}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: 6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4048,7 +4067,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3144
+  m_VersionIndex: 3186
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -4121,7 +4140,7 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
-  tableCabinet: 0
+  roomMesh: {fileID: 0}
   boxSize: {x: 1.96, y: 0.18, z: 1.13}
   boxOffset: {x: 0, y: 0.01014, z: -0.0033}
   cabinetVel: {x: 0, y: 0, z: 0}
@@ -4201,7 +4220,7 @@ GameObject:
   - component: {fileID: 1512053183229916945}
   - component: {fileID: 7681902569131910204}
   - component: {fileID: 7158001376829666647}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door 1R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4619,7 +4638,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 233
+  m_VersionIndex: 275
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -4633,7 +4652,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7135649427761538312}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4674,7 +4693,7 @@ GameObject:
   - component: {fileID: 2437565424958171310}
   - component: {fileID: 7712807235452017720}
   - component: {fileID: 4360964258806099013}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door 1L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5092,7 +5111,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 233
+  m_VersionIndex: 275
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -6740,7 +6759,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2932
+  m_VersionIndex: 2974
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -6813,7 +6832,7 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
-  tableCabinet: 0
+  roomMesh: {fileID: 0}
   boxSize: {x: 1.96, y: 0.18, z: 1.13}
   boxOffset: {x: 0, y: 0.01014, z: -0.0033}
   cabinetVel: {x: 0, y: 0, z: 0}
@@ -6885,7 +6904,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5057666978986377509}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door Hinge 1 R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6917,7 +6936,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7995435986121761949}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door Hinge 1 L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6949,7 +6968,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3043140508275840044}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door Hinge 1 R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6981,7 +7000,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8101780882772543199}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door Hinge 1 R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7013,7 +7032,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4890889910740048227}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door Hinge L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8679,7 +8698,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3512
+  m_VersionIndex: 3554
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -8752,7 +8771,7 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
-  tableCabinet: 0
+  roomMesh: {fileID: 0}
   boxSize: {x: 1.96, y: 0.18, z: 1.13}
   boxOffset: {x: 0, y: 0.01014, z: -0.0033}
   cabinetVel: {x: 0, y: 0, z: 0}
@@ -8832,7 +8851,7 @@ GameObject:
   - component: {fileID: 5693554427405192453}
   - component: {fileID: 8280457149434087587}
   - component: {fileID: 756742381411903391}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door 1L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9250,7 +9269,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 233
+  m_VersionIndex: 275
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -9272,7 +9291,7 @@ GameObject:
   - component: {fileID: 3658970537828439820}
   - component: {fileID: 7367825700497648386}
   - component: {fileID: 2691698171745971369}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door 1R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9690,7 +9709,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 233
+  m_VersionIndex: 275
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -9712,7 +9731,7 @@ GameObject:
   - component: {fileID: 1246381786575481633}
   - component: {fileID: 1921752050832562143}
   - component: {fileID: 85789909404809811}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door 1R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10130,7 +10149,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 233
+  m_VersionIndex: 275
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -10144,7 +10163,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1642102753520798997}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door Hinge 1 L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10184,7 +10203,7 @@ GameObject:
   - component: {fileID: 1607487214242106600}
   - component: {fileID: 8424235847258069610}
   - component: {fileID: 8847935187315517649}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door 1L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10602,7 +10621,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 233
+  m_VersionIndex: 275
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -10624,7 +10643,7 @@ GameObject:
   - component: {fileID: 529645820299857916}
   - component: {fileID: 1139063951761831489}
   - component: {fileID: 5175894706686004857}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door 1R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11042,7 +11061,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 233
+  m_VersionIndex: 275
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -11060,7 +11079,8 @@ GameObject:
   - component: {fileID: 6869641348414909727}
   - component: {fileID: 7191357646099529871}
   - component: {fileID: 962213308824440969}
-  m_Layer: 0
+  - component: {fileID: 6749759649246308369}
+  m_Layer: 3
   m_Name: Counter Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14769,7 +14789,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 388
+  m_VersionIndex: 430
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -14796,6 +14816,24 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &6749759649246308369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3742005333386348832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6757b231cedd544c583ef8aeaf773b2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thickness: 0
+  inverted: 0
+  material: {fileID: 0}
+  filter: -65535
+  m_SourceCollider: {fileID: 962213308824440969}
+  m_DistanceField: {fileID: 0}
 --- !u!1 &4679495517246518561
 GameObject:
   m_ObjectHideFlags: 0
@@ -14810,7 +14848,8 @@ GameObject:
   - component: {fileID: 2241649340329989270}
   - component: {fileID: 3881920589822196590}
   - component: {fileID: 5402789480796537477}
-  m_Layer: 0
+  - component: {fileID: 2493123799872343349}
+  m_Layer: 3
   m_Name: Counter Top R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15340,7 +15379,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 233
+  m_VersionIndex: 275
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -15389,6 +15428,24 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &2493123799872343349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4679495517246518561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6757b231cedd544c583ef8aeaf773b2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thickness: 0
+  inverted: 0
+  material: {fileID: 0}
+  filter: -65535
+  m_SourceCollider: {fileID: 3881920589822196590}
+  m_DistanceField: {fileID: 0}
 --- !u!1 &4711302049595944514
 GameObject:
   m_ObjectHideFlags: 0
@@ -15398,7 +15455,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4918952106215186614}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door Hinge 1 R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15430,7 +15487,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2343443148415466621}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: 7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15463,7 +15520,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3308785676125512739}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door Hinge R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15495,7 +15552,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4950474540186461186}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15528,7 +15585,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1906476525376680276}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door Hinge 1 L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15568,7 +15625,7 @@ GameObject:
   - component: {fileID: 4966978300578002392}
   - component: {fileID: 4745900226130329919}
   - component: {fileID: 7722256244618880811}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door 1L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15986,7 +16043,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 233
+  m_VersionIndex: 275
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -16000,7 +16057,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6162886076386758026}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door Hinge L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16037,7 +16094,8 @@ GameObject:
   - component: {fileID: 6955154431543829729}
   - component: {fileID: 3637479597538638038}
   - component: {fileID: 3759932401134115985}
-  m_Layer: 0
+  - component: {fileID: 2606856342914554236}
+  m_Layer: 3
   m_Name: Counter Top M
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16567,7 +16625,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 242
+  m_VersionIndex: 284
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -16616,6 +16674,24 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &2606856342914554236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6405391619738953501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6757b231cedd544c583ef8aeaf773b2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thickness: 0
+  inverted: 0
+  material: {fileID: 0}
+  filter: -65535
+  m_SourceCollider: {fileID: 3637479597538638038}
+  m_DistanceField: {fileID: 0}
 --- !u!1 &6588129073676476988
 GameObject:
   m_ObjectHideFlags: 0
@@ -16633,7 +16709,7 @@ GameObject:
   - component: {fileID: 3482223829543165481}
   - component: {fileID: 803819991055366612}
   - component: {fileID: 5480694573781527123}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door 1R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17051,7 +17127,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 233
+  m_VersionIndex: 275
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -17065,7 +17141,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1754896055650388790}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: 8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17135,7 +17211,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 627800250651889120}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door Hinge 1 L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17175,7 +17251,7 @@ GameObject:
   - component: {fileID: 4106178920536495095}
   - component: {fileID: 6954140910986161563}
   - component: {fileID: 390931441682312354}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door 1L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17593,7 +17669,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 233
+  m_VersionIndex: 275
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -19241,7 +19317,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3848
+  m_VersionIndex: 3890
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -19314,7 +19390,7 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
-  tableCabinet: 0
+  roomMesh: {fileID: 0}
   boxSize: {x: 1.96, y: 0.18, z: 1.13}
   boxOffset: {x: 0, y: 0.01014, z: -0.0033}
   cabinetVel: {x: 0, y: 0, z: 0}
@@ -19386,7 +19462,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2382175085356013056}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19419,7 +19495,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1183855685430611445}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door Hinge R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19459,7 +19535,7 @@ GameObject:
   - component: {fileID: 6721127256767271463}
   - component: {fileID: 5872202536851547787}
   - component: {fileID: 4533069124624695690}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door 1L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19877,7 +19953,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 233
+  m_VersionIndex: 275
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -21525,7 +21601,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3436
+  m_VersionIndex: 3478
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -21598,7 +21674,7 @@ MonoBehaviour:
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
-  tableCabinet: 0
+  roomMesh: {fileID: 0}
   boxSize: {x: 1.96, y: 0.18, z: 1.13}
   boxOffset: {x: 0, y: 0.01014, z: -0.0033}
   cabinetVel: {x: 0, y: 0, z: 0}
@@ -21678,7 +21754,7 @@ GameObject:
   - component: {fileID: 8763657379613079121}
   - component: {fileID: 5768775976549720136}
   - component: {fileID: 4072191114526727809}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Door 1R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22096,7 +22172,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 233
+  m_VersionIndex: 275
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -22110,7 +22186,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1559690638924558370}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Counter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22156,7 +22232,8 @@ GameObject:
   - component: {fileID: 2409726786254947653}
   - component: {fileID: 8295747650794441801}
   - component: {fileID: 3942711167395003156}
-  m_Layer: 0
+  - component: {fileID: 5135470376980792372}
+  m_Layer: 3
   m_Name: Feet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22252,6 +22329,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5135470376980792372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9136082726429187073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6757b231cedd544c583ef8aeaf773b2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thickness: 0
+  inverted: 0
+  material: {fileID: 0}
+  filter: -65535
+  m_SourceCollider: {fileID: 3942711167395003156}
+  m_DistanceField: {fileID: 0}
 --- !u!1001 &1650160005873174984
 PrefabInstance:
   m_ObjectHideFlags: 0
