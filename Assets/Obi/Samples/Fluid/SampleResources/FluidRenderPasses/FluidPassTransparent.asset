@@ -29,7 +29,7 @@ MonoBehaviour:
   turbidity: {r: 0, g: 0, b: 0, a: 0}
   thickness: 8
   indexOfRefraction: 1.1
-  diffuseMap: {fileID: 2800000, guid: d8391b5b6bb76314fb6e26a4726d79e5, type: 3}
+  diffuseMap: {fileID: 0}
   diffuseColor: {r: 1, g: 1, b: 1, a: 1}
   normalMap: {fileID: 0}
   normalMapIntensity: 1
