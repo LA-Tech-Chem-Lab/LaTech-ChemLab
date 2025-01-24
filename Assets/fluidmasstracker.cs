@@ -5,8 +5,15 @@ public class FluidVolumeCalculator : MonoBehaviour
 {
     public ObiSolver solver; // Reference to the ObiSolver handling the fluid simulation.
     public Collider container; // Reference to the container's collider.
-    public Collider floor;
+    public Rigidbody objectRigidbody;
+    float initialObjectMass;
 
+    void Start()
+    {
+        initialObjectMass = objectRigidbody.mass;
+        container = gameObject.GetComponent<Collider>(); 
+        objectRigidbody = gameObject.GetComponent<Rigidbody>();
+    }
     void Update()
     {
         float totalFluidMass = 0f;
@@ -24,13 +31,11 @@ public class FluidVolumeCalculator : MonoBehaviour
                 // Add the particle's mass (if invMass > 0)
                 totalFluidMass += solver.invMasses[particleIndex] > 0 ? 1f / solver.invMasses[particleIndex] : 0;
             }
-            else if (floor.bounds.Contains(worldPosition))
-            {
-                solver.life[particleIndex] = 0;
-            }
         }
 
-        Debug.Log("Total Fluid Mass in Container: " + totalFluidMass);
+        totalFluidMass = totalFluidMass / 100;
+        objectRigidbody.mass = initialObjectMass + totalFluidMass;
+
     }
 }
 
