@@ -5,6 +5,7 @@ public class FluidVolumeCalculator : MonoBehaviour
 {
     public ObiSolver solver; // Reference to the ObiSolver handling the fluid simulation.
     public Collider container; // Reference to the container's collider.
+    public Collider floor;
 
     void Update()
     {
@@ -22,6 +23,10 @@ public class FluidVolumeCalculator : MonoBehaviour
             {
                 // Add the particle's mass (if invMass > 0)
                 totalFluidMass += solver.invMasses[particleIndex] > 0 ? 1f / solver.invMasses[particleIndex] : 0;
+            }
+            else if (floor.bounds.Contains(worldPosition))
+            {
+                solver.life[particleIndex] = 0;
             }
         }
 
