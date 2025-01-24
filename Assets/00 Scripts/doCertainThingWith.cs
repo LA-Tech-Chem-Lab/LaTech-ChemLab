@@ -95,11 +95,12 @@ public class doCertainThingWith : NetworkBehaviour
     
     void findObjectAndPerformLiftedMouseAction(){  // Lifted Right Click
 
-        GameObject obj = pickUpScript.other;
+        if (pickUpScript.other != null) {
+            GameObject obj = pickUpScript.other;
 
-        if (obj.name == "Pipette")
-            SetPippetteSpeed(obj, 0f);
-    
+            if (obj.name == "Pipette")
+                SetPippetteSpeed(obj, 0f);
+        }
     }
 
 

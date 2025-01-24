@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Runtime.InteropServices;
 using Unity.Multiplayer.Center.NetcodeForGameObjectsExample;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -188,8 +189,8 @@ public class pickUpObjects : NetworkBehaviour
         if (Physics.Raycast(forwardRay, out hit, range))
         {
             NetworkRigidbody rb = hit.collider.GetComponent<NetworkRigidbody>();
-            if (!rb)
-                return;
+            // if (!rb)
+            //     return;
 
             NetworkObject netObj = hit.collider.GetComponent<NetworkObject>();
             if (netObj)
@@ -207,6 +208,10 @@ public class pickUpObjects : NetworkBehaviour
             {
                 if (rb.gameObject.name != "Glass Fragment")
                     PickUpItem(hit.collider.gameObject);
+            }
+
+            if (hit.collider.gameObject.tag == "LiquidHolder"){
+                PickUpItem(hit.collider.gameObject);
             }
         }
     }
