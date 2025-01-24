@@ -2557,13 +2557,13 @@ MonoBehaviour:
   groups: []
   capacity: 2500
   resolution: 1
-  restDensity: 1000
+  restDensity: 500
   smoothing: 2
   viscosity: 0
   polarity: 1
   vorticity: 0
   buoyancy: -1
   atmosphericDrag: 2
-  atmosphericPressure: 0
+  atmosphericPressure: 2
   miscibility: 0
   userData: {x: 0, y: 0, z: 0, w: 0}

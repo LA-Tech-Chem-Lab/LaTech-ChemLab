@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Obi;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -10,8 +11,13 @@ public class doCertainThingWith : NetworkBehaviour
 
 
     public GameObject itemHeldByTongs; int itemHeldByTongsLayer;
+    
+    public GameObject heldPipette; public float pipetteSpeed;
+
+
     pickUpObjects pickUpScript;
     public Vector3 testingOffset;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -36,6 +42,10 @@ public class doCertainThingWith : NetworkBehaviour
 
         if (Input.GetMouseButton(1))
             findObjectAndPerformHeldAction();
+
+        if (Input.GetMouseButtonUp(1)){
+            findObjectAndPerformLiftedMouseAction();
+        }
     }
 
     void findObjectAndPerformAction()       // Right click once
@@ -49,9 +59,6 @@ public class doCertainThingWith : NetworkBehaviour
             if (obj.name == "Tongs")
                 GrabFlaskByNeck(obj);
 
-            if (obj.name == "Pipette")
-                PipetteStuff(obj);
-
             if (obj.name == "Matchbox")
                 LightMatchAndTossForward(obj);
 
@@ -63,6 +70,15 @@ public class doCertainThingWith : NetworkBehaviour
         if (pickUpScript.other != null)
         {
             GameObject obj = pickUpScript.other;
+
+            if (obj.name == "Pipette"){
+                if (!heldPipette) {
+                    heldPipette = obj;
+                    pipetteSpeed = heldPipette.GetComponent<pipetteScript>().flowSpeed;
+                }
+
+                SetPippetteSpeed(obj, pipetteSpeed);
+            }
 
             if (obj.name == "Beaker")
                 BringObjectCloser();
@@ -76,7 +92,15 @@ public class doCertainThingWith : NetworkBehaviour
         }
     }
 
+    
+    void findObjectAndPerformLiftedMouseAction(){  // Lifted Right Click
 
+        GameObject obj = pickUpScript.other;
+
+        if (obj.name == "Pipette")
+            SetPippetteSpeed(obj, 0f);
+    
+    }
 
 
 
@@ -185,37 +209,40 @@ public class doCertainThingWith : NetworkBehaviour
 
 
 
-    public void PipetteStuff(GameObject pipette){
+    public void SetPippetteSpeed(GameObject pipette, float speed){
 
-        // First find the closest beaker/flask below you
-        float minDist = Mathf.Infinity;
-        GameObject closestBeakerOrFlask = null;
+        // // First find the closest beaker/flask below you
+        // float minDist = Mathf.Infinity;
+        // GameObject closestBeakerOrFlask = null;
         
-        foreach (GameObject currentObject in FindObjectsOfType<GameObject>()){
+        // foreach (GameObject currentObject in FindObjectsOfType<GameObject>()){
             
-            if (currentObject.name == "Beaker" || currentObject.name == "Erlenmeyer Flask" || currentObject.name == "Erlenmeyer Flask L"){
+        //     if (currentObject.name == "Beaker" || currentObject.name == "Erlenmeyer Flask" || currentObject.name == "Erlenmeyer Flask L"){
 
-                var pipetteTip = pipette.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
-                var beakerOrFlask = currentObject.transform.position;              beakerOrFlask.y = 0f;
+        //         var pipetteTip = pipette.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
+        //         var beakerOrFlask = currentObject.transform.position;              beakerOrFlask.y = 0f;
 
-                float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
+        //         float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
                 
-                if (distFromTip < minDist){
-                    minDist = distFromTip;
-                    closestBeakerOrFlask = currentObject;
-                }
-            }
-        }
+        //         if (distFromTip < minDist){
+        //             minDist = distFromTip;
+        //             closestBeakerOrFlask = currentObject;
+        //         }
+        //     }
+        // }
 
-        if (closestBeakerOrFlask && minDist <= PIPETTE_GRAB_DISTANCE){ // We have a beaker or flask within range
+        // if (closestBeakerOrFlask && minDist <= PIPETTE_GRAB_DISTANCE){ // We have a beaker or flask within range
 
-            // Add or subtract liquid from beaker based on volume within pipette
-            if (closestBeakerOrFlask.transform.Find("Liquid")){
+        //     // Add or subtract liquid from beaker based on volume within pipette
+        //     if (closestBeakerOrFlask.transform.Find("Liquid")){
                 
-                closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL += 50;
-                closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
-            }
-        }
+        //         closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL += 50;
+        //         closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+        //     }
+        // }
+
+        pipette.transform.Find("Tip").GetComponent<ObiEmitter>().speed = speed;
+
     }
 
 
