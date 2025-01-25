@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Obi;
@@ -34,6 +35,10 @@ public class doCertainThingWith : NetworkBehaviour
 
         if (itemHeldByTongs)
             handleTongObject();
+
+        if (heldPipette){
+            pipetteSpeed = heldPipette.GetComponent<pipetteScript>().flowSpeed;
+        }
     }
 
     void checkForInput(){
@@ -76,6 +81,7 @@ public class doCertainThingWith : NetworkBehaviour
                     heldPipette = obj;
                     pipetteSpeed = heldPipette.GetComponent<pipetteScript>().flowSpeed;
                 }
+                heldPipette.GetComponent<pipetteScript>().pipetteFlowing = true;
 
                 SetPippetteSpeed(obj, pipetteSpeed);
             }
@@ -93,8 +99,9 @@ public class doCertainThingWith : NetworkBehaviour
     }
 
     
-    void findObjectAndPerformLiftedMouseAction(){  // Lifted Right Click
-
+    void findObjectAndPerformLiftedMouseAction()
+    {  // Lifted Right Click
+        heldPipette.GetComponent<pipetteScript>().pipetteFlowing = false;
         if (pickUpScript.other != null) {
             GameObject obj = pickUpScript.other;
 
@@ -102,22 +109,6 @@ public class doCertainThingWith : NetworkBehaviour
                 SetPippetteSpeed(obj, 0f);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     void BringObjectCloser(float dist = 0f)
     {   
@@ -237,25 +228,23 @@ public class doCertainThingWith : NetworkBehaviour
             pipette.transform.Find("Tip").GetComponent<ObiEmitter>().speed = 0f;
             
             // Add or subtract liquid from beaker based on volume within pipette
-            if (closestBeakerOrFlask.transform.Find("Liquid")){
-                
-                closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL += 50f * Time.deltaTime;
-                closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+            if (closestBeakerOrFlask.transform.Find("Liquid"))
+            {
+                if (heldPipette.GetComponent<pipetteScript>().pipetteVollume > 0f) // stop adding liquid if the pipette runs out
+                {
+                    closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL += 50f * Time.deltaTime;
+                    closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+                }
             }
         }
 
         // We arent within range of a liquid holder
         else{
             pipette.transform.Find("Tip").GetComponent<ObiEmitter>().speed = speed;
+            //pipette.GetComponent<pipetteScript>().pipetteFlowing = speed > 0f;
         }
 
     }
-
-
-
-
-
-
 
     void ShootFoam()
     {

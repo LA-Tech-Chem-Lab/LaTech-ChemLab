@@ -21,9 +21,6 @@ public class liquidScript : MonoBehaviour
     
     public float dotProduct; 
     public float maxSpillRate;
-
-
-
     float wobbleAmountX; float wobbleAmountToAddX;  
     float wobbleAmountZ; float wobbleAmountToAddZ;
     float pulse;
@@ -33,7 +30,6 @@ public class liquidScript : MonoBehaviour
     float time = 0.5f;
     Rigidbody objectRigidbody;
     float initialObjectMass;
-
     
     // Use this for initialization
     void Start()
