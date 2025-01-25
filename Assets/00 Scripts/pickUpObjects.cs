@@ -28,6 +28,9 @@ public class pickUpObjects : NetworkBehaviour
     public float checkRadius = 0.5f;
     public multihandler multiHandlerScript;
     public bool canRotateItem;
+
+    public Transform shadowCastPoint;
+    public Vector3 objExtents;
     
     // Def dont need to touch
     bool holdingItem;
@@ -46,6 +49,7 @@ public class pickUpObjects : NetworkBehaviour
         playerCamera = transform.GetChild(0);
         initialHoldingDistance = holdingDistance; untouchedHoldingDistance = initialHoldingDistance;
         multiHandlerScript = GameObject.FindGameObjectWithTag("GameController").GetComponent<multihandler>();
+        shadowCastPoint = GameObject.Find("Shadow For Held Object").transform;
         canRotateItem = true;
     }
 
@@ -74,6 +78,7 @@ public class pickUpObjects : NetworkBehaviour
         other.GetComponent<Rigidbody>().useGravity = false;
         targetRotation = new Vector3(0f, other.transform.localEulerAngles.y, 0f);
         targetQuaternion = Quaternion.Euler(targetRotation);
+        objExtents = other.GetComponent<Collider>().bounds.extents;
 
         Renderer renderer = other.GetComponent<Renderer>();
         if (renderer){
@@ -92,8 +97,10 @@ public class pickUpObjects : NetworkBehaviour
         if (other.name == "Tongs")
             SetOwnerToTongs();
 
-        if (other.name == "Pipette")
+        if (other.name == "Pipette"){
             initialHoldingDistance = 1.3f;
+            canRotateItem = false;
+        }
 
 
         setHelpTextBasedOnObject();
@@ -127,6 +134,7 @@ public class pickUpObjects : NetworkBehaviour
         rb.angularVelocity = launchSpin; // Spin it
         rb.useGravity = true;
         meshOffset = Vector3.zero;
+        objExtents = Vector3.zero;
         
         if (other.name == "Tongs")
             GetComponent<doCertainThingWith>().dropItemFromTongsCorrectly();
@@ -179,6 +187,7 @@ public class pickUpObjects : NetworkBehaviour
         
         // Rotation Stuff Please Ignore these 3 lines
         if (canRotateItem) targetRotation.y -= Mathf.Min(1f, Input.mouseScrollDelta.y) * rotationAmInDegrees;
+        else initialHoldingDistance += Input.mouseScrollDelta.y / 10f;
         if (!Cursor.visible) targetRotation.y += Input.GetAxis("Mouse X") * xSens * Time.deltaTime;
         targetRotation.y = (targetRotation.y % 360f + 360f) % 360f;
         targetQuaternion = Quaternion.Euler(targetRotation);
@@ -267,7 +276,10 @@ public class pickUpObjects : NetworkBehaviour
                 Time.deltaTime * blendingSensitivity
             );
 
-
+            if (holdingItem)
+                shadowCastPoint.position = targetPosition + Vector3.down * objExtents.y;
+            else
+                shadowCastPoint.position = targetPosition;
 
 
 
