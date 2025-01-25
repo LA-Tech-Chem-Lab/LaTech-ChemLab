@@ -19,20 +19,18 @@ public class pipetteScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
-        if (Time.time >= timeOfNextCheck){
+        // if (Time.time >= timeOfNextCheck){
             
-            timeOfNextCheck = Time.time + checkTimeOut;
-            ObiSolver thissolver = emitter.solver;
+        //     timeOfNextCheck = Time.time + checkTimeOut;
+        //     ObiSolver thissolver = emitter.solver;
             
-            foreach (int particleIndex in thissolver.activeParticles)
-            {
-                Vector4 particlePosition = thissolver.positions[particleIndex];
-                Vector3 worldPosition = emitter.solver.transform.TransformPoint(particlePosition);
+        //     foreach (int particleIndex in thissolver.activeParticles)
+        //     {
+        //         Vector4 particlePosition = thissolver.positions[particleIndex];
+        //         Vector3 worldPosition = emitter.solver.transform.TransformPoint(particlePosition);
+        //     }
 
-                if (worldPosition.y <= 0.2f) emitter.solver.life[particleIndex] = 0f;
-            }
-
-        }
+        // }
 
     }
 }

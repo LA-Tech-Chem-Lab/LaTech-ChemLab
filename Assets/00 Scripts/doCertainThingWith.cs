@@ -7,7 +7,7 @@ using UnityEngine;
 public class doCertainThingWith : NetworkBehaviour
 {   
     const float TONG_GRAB_DISTANCE = 3f;
-    const float PIPETTE_GRAB_DISTANCE = 1.2f;
+    const float PIPETTE_GRAB_DISTANCE = 0.3f;
 
 
     public GameObject itemHeldByTongs; int itemHeldByTongsLayer;
@@ -212,37 +212,42 @@ public class doCertainThingWith : NetworkBehaviour
 
     public void SetPippetteSpeed(GameObject pipette, float speed){
 
-        // // First find the closest beaker/flask below you
-        // float minDist = Mathf.Infinity;
-        // GameObject closestBeakerOrFlask = null;
+        // First find the closest beaker/flask below you
+        float minDist = Mathf.Infinity;
+        GameObject closestBeakerOrFlask = null;
         
-        // foreach (GameObject currentObject in FindObjectsOfType<GameObject>()){
+        foreach (GameObject currentObject in FindObjectsOfType<GameObject>()){
             
-        //     if (currentObject.name == "Beaker" || currentObject.name == "Erlenmeyer Flask" || currentObject.name == "Erlenmeyer Flask L"){
+            if (currentObject.tag == "LiquidHolder"){
 
-        //         var pipetteTip = pipette.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
-        //         var beakerOrFlask = currentObject.transform.position;              beakerOrFlask.y = 0f;
+                var pipetteTip = pipette.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
+                var beakerOrFlask = currentObject.transform.position;              beakerOrFlask.y = 0f;
 
-        //         float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
+                float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
                 
-        //         if (distFromTip < minDist){
-        //             minDist = distFromTip;
-        //             closestBeakerOrFlask = currentObject;
-        //         }
-        //     }
-        // }
-
-        // if (closestBeakerOrFlask && minDist <= PIPETTE_GRAB_DISTANCE){ // We have a beaker or flask within range
-
-        //     // Add or subtract liquid from beaker based on volume within pipette
-        //     if (closestBeakerOrFlask.transform.Find("Liquid")){
+                if (distFromTip < minDist){
+                    minDist = distFromTip;
+                    closestBeakerOrFlask = currentObject;
+                }
+            }
+        }
+        
+        if (closestBeakerOrFlask && minDist <= PIPETTE_GRAB_DISTANCE){ // We have a beaker or flask within range
+            
+            pipette.transform.Find("Tip").GetComponent<ObiEmitter>().speed = 0f;
+            
+            // Add or subtract liquid from beaker based on volume within pipette
+            if (closestBeakerOrFlask.transform.Find("Liquid")){
                 
-        //         closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL += 50;
-        //         closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
-        //     }
-        // }
+                closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL += 50f * Time.deltaTime;
+                closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+            }
+        }
 
-        pipette.transform.Find("Tip").GetComponent<ObiEmitter>().speed = speed;
+        // We arent within range of a liquid holder
+        else{
+            pipette.transform.Find("Tip").GetComponent<ObiEmitter>().speed = speed;
+        }
 
     }
 

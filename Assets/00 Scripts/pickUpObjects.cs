@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.InteropServices;
+using Obi;
 using Unity.Multiplayer.Center.NetcodeForGameObjectsExample;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -119,6 +120,7 @@ public class pickUpObjects : NetworkBehaviour
 
         holdingItem = false;
         canRotateItem = true;
+        Debug.Log(otherObjectLayer);
         other.layer = otherObjectLayer;
         Rigidbody rb = other.GetComponent<Rigidbody>();
         rb.linearVelocity = launchTraj; // Launch it
@@ -129,8 +131,10 @@ public class pickUpObjects : NetworkBehaviour
         if (other.name == "Tongs")
             GetComponent<doCertainThingWith>().dropItemFromTongsCorrectly();
 
-        if (other.name == "Pipette")
+        if (other.name == "Pipette"){
             initialHoldingDistance = untouchedHoldingDistance;
+            other.transform.Find("Tip").GetComponent<ObiEmitter>().speed = 0f;    
+        }
 
         other = null;holdingItem = false;
         multiHandlerScript.setHelpText("");
@@ -210,9 +214,6 @@ public class pickUpObjects : NetworkBehaviour
                     PickUpItem(hit.collider.gameObject);
             }
 
-            if (hit.collider.gameObject.tag == "LiquidHolder"){
-                PickUpItem(hit.collider.gameObject);
-            }
         }
     }
 

@@ -485,6 +485,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   itemHeldByTongs: {fileID: 0}
+  heldPipette: {fileID: 0}
+  pipetteSpeed: 0
   testingOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &3771954789903716741
 MonoBehaviour:
