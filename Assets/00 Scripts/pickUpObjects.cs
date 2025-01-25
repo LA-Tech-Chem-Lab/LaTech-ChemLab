@@ -30,6 +30,7 @@ public class pickUpObjects : NetworkBehaviour
     public bool canRotateItem;
 
     public Transform shadowCastPoint;
+    public Renderer objRenderer;
     public Vector3 objExtents;
     public Vector3 objShift;
     
@@ -80,6 +81,7 @@ public class pickUpObjects : NetworkBehaviour
         other.GetComponent<Rigidbody>().useGravity = false;
         targetRotation = new Vector3(0f, other.transform.localEulerAngles.y, 0f);
         targetQuaternion = Quaternion.Euler(targetRotation);
+        objRenderer = other.GetComponent<Renderer>();
         objExtents = other.GetComponent<Collider>().bounds.extents;
         objShift = other.GetComponent<shiftBy>().GetOffset();
 
@@ -136,6 +138,7 @@ public class pickUpObjects : NetworkBehaviour
         rb.linearVelocity = launchTraj; // Launch it
         rb.angularVelocity = launchSpin; // Spin it
         rb.useGravity = true;
+        objRenderer = null;
         meshOffset = Vector3.zero;
         objExtents = Vector3.zero;
         objShift = Vector3.zero;
@@ -280,8 +283,14 @@ public class pickUpObjects : NetworkBehaviour
                 Time.deltaTime * blendingSensitivity
             );
 
-            if (holdingItem)
-                shadowCastPoint.position = targetPosition + Vector3.down * (objExtents.y + objShift.y);
+            if (holdingItem){
+                float yDistance = 0f;
+                if (objRenderer)    {
+                    Bounds bounds = objRenderer.bounds;
+                    yDistance = Mathf.Abs(bounds.center.y - other.transform.position.y);
+                }
+                shadowCastPoint.position = targetPosition + Vector3.down * (objExtents.y - yDistance);
+            }
             else
                 shadowCastPoint.position = targetPosition;
 
