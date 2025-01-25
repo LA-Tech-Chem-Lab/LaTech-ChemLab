@@ -31,6 +31,7 @@ public class pickUpObjects : NetworkBehaviour
 
     public Transform shadowCastPoint;
     public Vector3 objExtents;
+    public Vector3 objShift;
     
     // Def dont need to touch
     bool holdingItem;
@@ -61,6 +62,7 @@ public class pickUpObjects : NetworkBehaviour
             checkForInput();
             if (checkForCollisions) PreventWeirdIntersections();
             maintainObject();
+            handleObjectShadow();
         }
     }
 
@@ -79,6 +81,7 @@ public class pickUpObjects : NetworkBehaviour
         targetRotation = new Vector3(0f, other.transform.localEulerAngles.y, 0f);
         targetQuaternion = Quaternion.Euler(targetRotation);
         objExtents = other.GetComponent<Collider>().bounds.extents;
+        objShift = other.GetComponent<shiftBy>().GetOffset();
 
         Renderer renderer = other.GetComponent<Renderer>();
         if (renderer){
@@ -135,6 +138,7 @@ public class pickUpObjects : NetworkBehaviour
         rb.useGravity = true;
         meshOffset = Vector3.zero;
         objExtents = Vector3.zero;
+        objShift = Vector3.zero;
         
         if (other.name == "Tongs")
             GetComponent<doCertainThingWith>().dropItemFromTongsCorrectly();
@@ -277,9 +281,11 @@ public class pickUpObjects : NetworkBehaviour
             );
 
             if (holdingItem)
-                shadowCastPoint.position = targetPosition + Vector3.down * objExtents.y;
+                shadowCastPoint.position = targetPosition + Vector3.down * (objExtents.y + objShift.y);
             else
                 shadowCastPoint.position = targetPosition;
+
+            initialHoldingDistance = Mathf.Clamp(initialHoldingDistance, 0.5f, 3f);
 
 
 
@@ -290,6 +296,23 @@ public class pickUpObjects : NetworkBehaviour
             previousRotation = other.transform.eulerAngles;
         }
     }
+
+    void handleObjectShadow(){
+        if (holdingItem){
+            RaycastHit hit;
+            if (Physics.Raycast(shadowCastPoint.position, Vector3.down, out hit, LayerMask.NameToLayer("Ground")))
+            {
+                // Print the distance to the console.
+                Debug.Log($"Distance to ground: {hit.distance} units.");
+            }
+        }
+    }
+
+
+
+
+
+
 
     [ServerRpc(RequireOwnership = false)]
     void RequestPickUpServerRpc(ulong networkObjectId, ServerRpcParams rpcParams = default)
