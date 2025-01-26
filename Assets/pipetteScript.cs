@@ -10,6 +10,7 @@ public class pipetteScript : MonoBehaviour
     public float pipetteMaxVollume = 100f;
     public float pipetteVollume;
     public bool pipetteFlowing;
+    public bool pipetteExtracting;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

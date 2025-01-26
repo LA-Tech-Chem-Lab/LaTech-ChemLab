@@ -14,7 +14,7 @@ public class doCertainThingWith : NetworkBehaviour
     public GameObject itemHeldByTongs; int itemHeldByTongsLayer;
     
     public GameObject heldPipette; public float pipetteSpeed;
-
+    private bool flowLock = false;
 
     pickUpObjects pickUpScript;
     public Vector3 testingOffset;
@@ -81,8 +81,18 @@ public class doCertainThingWith : NetworkBehaviour
                     heldPipette = obj;
                     pipetteSpeed = heldPipette.GetComponent<pipetteScript>().flowSpeed;
                 }
-                heldPipette.GetComponent<pipetteScript>().pipetteFlowing = true;
-
+                if (flowLock == false)
+                {
+                    if (heldPipette.GetComponent<pipetteScript>().pipetteVollume > 0) //is the pipette flowing?
+                    {
+                        heldPipette.GetComponent<pipetteScript>().pipetteFlowing = true;
+                    }
+                    else
+                    {
+                        heldPipette.GetComponent<pipetteScript>().pipetteExtracting = true;
+                    }
+                    flowLock = true;
+                }
                 SetPippetteSpeed(obj, pipetteSpeed);
             }
 
@@ -102,6 +112,8 @@ public class doCertainThingWith : NetworkBehaviour
     void findObjectAndPerformLiftedMouseAction()
     {  // Lifted Right Click
         heldPipette.GetComponent<pipetteScript>().pipetteFlowing = false;
+        heldPipette.GetComponent<pipetteScript>().pipetteExtracting = false;
+        flowLock = false;
         if (pickUpScript.other != null) {
             GameObject obj = pickUpScript.other;
 
@@ -197,10 +209,6 @@ public class doCertainThingWith : NetworkBehaviour
         itemHeldByTongs = null;
 
     }
-
-
-
-
     public void SetPippetteSpeed(GameObject pipette, float speed){
 
         // First find the closest beaker/flask below you
@@ -230,10 +238,22 @@ public class doCertainThingWith : NetworkBehaviour
             // Add or subtract liquid from beaker based on volume within pipette
             if (closestBeakerOrFlask.transform.Find("Liquid"))
             {
-                if (heldPipette.GetComponent<pipetteScript>().pipetteVollume > 0f) // stop adding liquid if the pipette runs out
+                if (heldPipette.GetComponent<pipetteScript>().pipetteFlowing) // stop adding liquid if the pipette runs out
                 {
-                    closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL += 50f * Time.deltaTime;
-                    closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+                    if (heldPipette.GetComponent<pipetteScript>().pipetteVollume > 0)
+                    {
+                        closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL += 50f * Time.deltaTime;
+                        closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+                    }
+                }
+                else if (heldPipette.GetComponent<pipetteScript>().pipetteExtracting)
+                {
+                    if (closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL > 0f && heldPipette.GetComponent<pipetteScript>().pipetteMaxVollume > heldPipette.GetComponent<pipetteScript>().pipetteVollume)
+                    {
+                        closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL -= 50f * Time.deltaTime;
+                        heldPipette.GetComponent<pipetteScript>().pipetteVollume += 50f * Time.deltaTime;
+                        closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+                    }
                 }
             }
         }
@@ -243,7 +263,6 @@ public class doCertainThingWith : NetworkBehaviour
             pipette.transform.Find("Tip").GetComponent<ObiEmitter>().speed = speed;
             //pipette.GetComponent<pipetteScript>().pipetteFlowing = speed > 0f;
         }
-
     }
 
     void ShootFoam()
