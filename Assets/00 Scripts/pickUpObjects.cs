@@ -176,7 +176,7 @@ public class pickUpObjects : NetworkBehaviour
         if (other.name == "Pipette"){
             pipetteScript ps = other.GetComponent<pipetteScript>();
             bool flowing = ps.flowSpeed > 0f;
-            multiHandlerScript.setHelpText($"{ps.pipetteVollume} / {ps.pipetteMaxVollume} mL");
+            multiHandlerScript.setHelpText($"{ps.pipetteVolume} / {ps.pipetteMaxVolume} mL");
         }
     }
 
@@ -329,9 +329,7 @@ public class pickUpObjects : NetworkBehaviour
                 shadowGameobject.SetActive(true);
 
             RaycastHit hit;
-            int layerMask = ~(1 << LayerMask.NameToLayer("HeldObject")); // Inverts to exclude the layer
-
-            if (Physics.Raycast(shadowCastPoint.position, Vector3.down, out hit, Mathf.Infinity, layerMask))
+            if (Physics.Raycast(shadowCastPoint.position, Vector3.down, out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Ground")))
             {
                 float dist = hit.distance;
                 // Debug.Log($"Distance to ground: {hit.distance} units.");

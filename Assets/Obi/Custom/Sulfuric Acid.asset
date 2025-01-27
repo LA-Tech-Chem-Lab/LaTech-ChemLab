@@ -4063,7 +4063,7 @@ MonoBehaviour:
   polarity: 1
   vorticity: 0
   buoyancy: -1
-  atmosphericDrag: 0
+  atmosphericDrag: 50
   atmosphericPressure: 0
   miscibility: 0
   userData: {x: 0, y: 0, z: 0, w: 0}

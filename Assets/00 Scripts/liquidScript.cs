@@ -10,6 +10,7 @@ public class liquidScript : MonoBehaviour
     public Color surfaceColor;
     public Color topColor;
     public float densityOfLiquid = 1f;
+    public Material liquidMaterial;
 
 
     [Header("Wobble")]
@@ -38,6 +39,7 @@ public class liquidScript : MonoBehaviour
         initialMax = MaxWobble;
         objectRigidbody = GetComponent<Rigidbody>();
         initialObjectMass = objectRigidbody.mass;
+        transform.Find("Liquid").GetComponent<Renderer>().material = liquidMaterial;
     }
 
     private void Update()
@@ -86,6 +88,15 @@ public class liquidScript : MonoBehaviour
             
             float x = percentFull;
             float heightFromVolume = Mathf.Pow(x, 1.5f);
+            float scaledHeight = heightFromVolume/scaleDown;
+
+            rend.material.SetFloat("_FillAmount", scaledHeight);
+        }
+
+        if (transform.name == "Pipette"){  // 1 to 1 in this case
+            
+            float x = percentFull;
+            float heightFromVolume = Mathf.Pow(x, 0.8f);
             float scaledHeight = heightFromVolume/scaleDown;
 
             rend.material.SetFloat("_FillAmount", scaledHeight);

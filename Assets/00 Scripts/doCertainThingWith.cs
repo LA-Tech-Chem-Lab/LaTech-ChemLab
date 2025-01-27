@@ -83,7 +83,7 @@ public class doCertainThingWith : NetworkBehaviour
                 }
                 if (flowLock == false)
                 {
-                    if (heldPipette.GetComponent<pipetteScript>().pipetteVollume > 0) //is the pipette flowing?
+                    if (heldPipette.GetComponent<pipetteScript>().pipetteVolume > 0) //is the pipette flowing?
                     {
                         heldPipette.GetComponent<pipetteScript>().pipetteFlowing = true;
                     }
@@ -97,6 +97,9 @@ public class doCertainThingWith : NetworkBehaviour
             }
 
             if (obj.name == "Beaker")
+                BringObjectCloser();
+
+            if (obj.name == "Iron Mesh")
                 BringObjectCloser();
             
             if (obj.name == "Evaporating Dish")
@@ -238,20 +241,22 @@ public class doCertainThingWith : NetworkBehaviour
             // Add or subtract liquid from beaker based on volume within pipette
             if (closestBeakerOrFlask.transform.Find("Liquid"))
             {
-                if (heldPipette.GetComponent<pipetteScript>().pipetteFlowing) // stop adding liquid if the pipette runs out
+                pipetteScript PS = heldPipette.GetComponent<pipetteScript>();
+
+                if (PS.pipetteFlowing) // stop adding liquid if the pipette runs out
                 {
-                    if (heldPipette.GetComponent<pipetteScript>().pipetteVollume > 0)
+                    if (PS.pipetteVolume > 0)
                     {
                         closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL += 50f * Time.deltaTime;
                         closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
                     }
                 }
-                else if (heldPipette.GetComponent<pipetteScript>().pipetteExtracting)
+                else if (PS.pipetteExtracting)
                 {
-                    if (closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL > 0f && heldPipette.GetComponent<pipetteScript>().pipetteMaxVollume > heldPipette.GetComponent<pipetteScript>().pipetteVollume)
+                    if (closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL > 0f && PS.pipetteMaxVolume > PS.pipetteVolume)
                     {
                         closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL -= 50f * Time.deltaTime;
-                        heldPipette.GetComponent<pipetteScript>().pipetteVollume += 50f * Time.deltaTime;
+                        PS.pipetteVolume += 50f * Time.deltaTime;
                         closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
                     }
                 }
