@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Obi;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,11 +11,16 @@ public class doCertainThingWith : NetworkBehaviour
 {   
     const float TONG_GRAB_DISTANCE = 3f;
     const float PIPETTE_GRAB_DISTANCE = 0.3f;
+    const float IRON_RING_SNAP_DISTANCE = 0.5f;
+
+
 
 
     public GameObject itemHeldByTongs; int itemHeldByTongsLayer;
     
     public GameObject heldPipette; public float pipetteSpeed;
+    public GameObject closestIronStand;
+    
     private bool flowLock = false;
 
     pickUpObjects pickUpScript;
@@ -40,6 +46,9 @@ public class doCertainThingWith : NetworkBehaviour
         if (heldPipette){
             pipetteSpeed = heldPipette.GetComponent<pipetteScript>().flowSpeed;
         }
+
+        if (pickUpScript.other && pickUpScript.other.name == "Iron Ring")
+            checkForIronStandNearby(pickUpScript.other);
     }
 
     void checkForInput(){
@@ -67,6 +76,9 @@ public class doCertainThingWith : NetworkBehaviour
 
             if (obj.name == "Matchbox")
                 LightMatchAndTossForward(obj);
+            
+            if (obj.name == "Iron Ring")
+                SnapIronRingToStand();
 
         }
     }
@@ -98,10 +110,10 @@ public class doCertainThingWith : NetworkBehaviour
             }
 
             if (obj.name == "Beaker")
-                BringObjectCloser();
+                BringObjectCloser(-1.5f);
 
             if (obj.name == "Iron Mesh")
-                BringObjectCloser();
+                BringObjectCloser(-1.5f);
             
             if (obj.name == "Evaporating Dish")
                 BringObjectCloser(-1.5f);
@@ -115,23 +127,22 @@ public class doCertainThingWith : NetworkBehaviour
     
     void findObjectAndPerformLiftedMouseAction()
     {  // Lifted Right Click
-        heldPipette.GetComponent<pipetteScript>().pipetteFlowing = false;
-        heldPipette.GetComponent<pipetteScript>().pipetteExtracting = false;
-        flowLock = false;
+        
         if (pickUpScript.other != null) {
             GameObject obj = pickUpScript.other;
 
-            if (obj.name == "Pipette")
+            if (obj.name == "Pipette"){
                 SetPippetteSpeed(obj, 0f);
+                heldPipette.GetComponent<pipetteScript>().pipetteFlowing = false;
+                heldPipette.GetComponent<pipetteScript>().pipetteExtracting = false;
+                flowLock = false;
+            }
         }
     }
 
-    void BringObjectCloser(float dist = 0f)
+    void BringObjectCloser(float dist)
     {   
-        if (dist <= 0f)
-            pickUpScript.distOffset = -pickUpScript.holdingDistance * 0.75f;
-        else
-            pickUpScript.distOffset = dist;
+        pickUpScript.distOffset = dist;
     }
 
 
@@ -211,8 +222,18 @@ public class doCertainThingWith : NetworkBehaviour
         pickUpScript.other.transform.Find("Open").gameObject.SetActive(true);
         pickUpScript.other.transform.Find("Closed").gameObject.SetActive(false);
         itemHeldByTongs = null;
-
     }
+
+    public void dropIronRingCorrectly(){
+        pickUpScript.other.transform.Find("Screw").gameObject.SetActive(true); 
+        pickUpScript.other.transform.Find("Ring").gameObject.SetActive(true);
+        pickUpScript.other.transform.Find("Ghost").gameObject.SetActive(false);
+        pickUpScript.other.GetComponent<BoxCollider>().enabled = true;
+        pickUpScript.other.tag = "Untagged";
+    }
+
+
+
     public void SetPippetteSpeed(GameObject pipette, float speed){
 
         // First find the closest beaker/flask below you
@@ -295,6 +316,87 @@ public class doCertainThingWith : NetworkBehaviour
             heldPipette.GetComponent<pipetteScript>().pipetteVolume -= 50 * Time.deltaTime;
         }
     }
+
+
+    void checkForIronStandNearby(GameObject ironRing){ // Here iron ring is heldObject
+
+        float minDist = float.MaxValue;
+        closestIronStand = null;
+
+        foreach (GameObject currentObject in GameObject.FindGameObjectsWithTag("IronStand"))
+        {   
+            var ironRingPos = ironRing.transform.position; ironRingPos.y = 0f;
+            var ironStandPos = currentObject.transform.position; ironStandPos.y = 0f;
+
+            float distFromRing = Vector3.Distance(ironRingPos, ironStandPos);
+
+            if (distFromRing < minDist)
+            {
+                minDist = distFromRing;
+                closestIronStand = currentObject;
+            }
+        }
+
+        float yDist = Vector3.Distance(ironRing.transform.Find("Pivot").position, closestIronStand.transform.Find("Base").position);
+
+        // No Go
+        if (!closestIronStand || minDist > IRON_RING_SNAP_DISTANCE || yDist > 1.35f){
+            
+            closestIronStand = null;
+            ironRing.transform.Find("Screw").gameObject.SetActive(true); 
+            ironRing.transform.Find("Ring").gameObject.SetActive(true);
+            ironRing.transform.Find("Ghost").gameObject.SetActive(false);
+            ironRing.GetComponent<BoxCollider>().enabled = true;
+            pickUpScript.other.tag = "Untagged";
+        }
+
+        // Now we have closest stand
+        if (closestIronStand && minDist <= IRON_RING_SNAP_DISTANCE && yDist < 1.35f) {
+            
+            ironRing.transform.Find("Screw").gameObject.SetActive(false); 
+            ironRing.transform.Find("Ring").gameObject.SetActive(false);
+            ironRing.transform.Find("Ghost").gameObject.SetActive(true);
+            ironRing.GetComponent<BoxCollider>().enabled = false;
+            pickUpScript.other.tag = "NoShadow";
+
+            var ghostRestingPoint = closestIronStand.transform.Find("Base").position;
+            ghostRestingPoint += closestIronStand.transform.up * yDist;
+
+            ironRing.transform.Find("Ghost").gameObject.transform.position = ghostRestingPoint;
+        }
+        
+
+    }
+
+    void SnapIronRingToStand(){
+        GameObject ironRing = pickUpScript.other;
+
+        if (ironRing.transform.Find("Ghost").gameObject.activeInHierarchy){ // We are ready to snap and we right clicked
+
+            Vector3 realMeshOffset = ironRing.transform.Find("Ghost").Find("Ghost Screw").position - ironRing.transform.Find("Screw").position;
+
+
+            ironRing.transform.Find("Screw").position += realMeshOffset;
+            ironRing.transform.Find("Ring").position += realMeshOffset;
+            ironRing.GetComponent<BoxCollider>().center += realMeshOffset;
+
+            ironRing.transform.Find("Screw").gameObject.SetActive(true); 
+            ironRing.transform.Find("Ring").gameObject.SetActive(true);
+            ironRing.transform.Find("Ghost").gameObject.SetActive(false);
+            ironRing.GetComponent<BoxCollider>().enabled = true;
+
+            ironRing.GetComponent<Rigidbody>().isKinematic = true;
+            ironRing.transform.SetParent(closestIronStand.transform);
+            
+            pickUpScript.DropItem(); // prob the only way
+        }
+    }
+
+
+
+
+
+
 
     void ShootFoam()
     {

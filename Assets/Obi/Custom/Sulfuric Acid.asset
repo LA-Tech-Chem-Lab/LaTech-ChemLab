@@ -4062,7 +4062,7 @@ MonoBehaviour:
   viscosity: 0
   polarity: 1
   vorticity: 0
-  buoyancy: -1
+  buoyancy: -2
   atmosphericDrag: 50
   atmosphericPressure: 0
   miscibility: 0

@@ -92,7 +92,10 @@ public class pickUpObjects : NetworkBehaviour
         targetQuaternion = Quaternion.Euler(targetRotation);
         objRenderer = other.GetComponent<Renderer>();
         objExtents = other.GetComponent<Collider>().bounds.extents;
-        objShift = other.GetComponent<shiftBy>().GetOffset();
+        if (other.GetComponent<shiftBy>())
+            objShift = other.GetComponent<shiftBy>().GetOffset();
+        else
+            objShift = Vector3.zero;
 
         Renderer renderer = other.GetComponent<Renderer>();
         if (renderer){
@@ -135,7 +138,7 @@ public class pickUpObjects : NetworkBehaviour
             }
     }
 
-    void DropItem(){
+    public void DropItem(){
 
         if (!other) return;
 
@@ -153,6 +156,9 @@ public class pickUpObjects : NetworkBehaviour
         
         if (other.name == "Tongs")
             GetComponent<doCertainThingWith>().dropItemFromTongsCorrectly();
+        
+        if (other.name == "Iron Ring")
+            GetComponent<doCertainThingWith>().dropIronRingCorrectly();
 
         if (other.name == "Pipette"){
             initialHoldingDistance = untouchedHoldingDistance;
@@ -324,7 +330,7 @@ public class pickUpObjects : NetworkBehaviour
     }
 
     void handleObjectShadow(){
-        if (holdingItem){
+        if (holdingItem && other.tag != "NoShadow"){
             if (!shadowGameobject.activeInHierarchy)
                 shadowGameobject.SetActive(true);
 
