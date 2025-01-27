@@ -9,6 +9,7 @@ using Unity.Netcode.Components;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using static UnityEngine.GraphicsBuffer;
 
 public class pickUpObjects : NetworkBehaviour
@@ -23,6 +24,7 @@ public class pickUpObjects : NetworkBehaviour
     public Vector3 targetRotation;
     public Vector3 meshOffset;
     Vector3 targetPosition;
+    public Vector3 heldObjPosition;
     public bool checkForCollisions;
     public float distOffset = 0f;
     public float checkRadius = 0.5f;
@@ -33,6 +35,9 @@ public class pickUpObjects : NetworkBehaviour
     public Renderer objRenderer;
     public Vector3 objExtents;
     public Vector3 objShift;
+    public GameObject shadowGameobject;
+    public DecalProjector shadowProjector;
+
     
     // Def dont need to touch
     bool holdingItem;
@@ -53,6 +58,8 @@ public class pickUpObjects : NetworkBehaviour
         multiHandlerScript = GameObject.FindGameObjectWithTag("GameController").GetComponent<multihandler>();
         shadowCastPoint = GameObject.Find("Shadow For Held Object").transform;
         canRotateItem = true;
+        shadowGameobject = transform.Find("Shadow For Held Object").gameObject;
+        shadowProjector = shadowGameobject.GetComponent<DecalProjector>();
     }
 
     void Update()
@@ -64,6 +71,8 @@ public class pickUpObjects : NetworkBehaviour
             if (checkForCollisions) PreventWeirdIntersections();
             maintainObject();
             handleObjectShadow();
+
+            if (holdingItem) setHelpTextConstantly();
         }
     }
 
@@ -132,7 +141,6 @@ public class pickUpObjects : NetworkBehaviour
 
         holdingItem = false;
         canRotateItem = true;
-        Debug.Log(otherObjectLayer);
         other.layer = otherObjectLayer;
         Rigidbody rb = other.GetComponent<Rigidbody>();
         rb.linearVelocity = launchTraj; // Launch it
@@ -157,12 +165,19 @@ public class pickUpObjects : NetworkBehaviour
 
     void setHelpTextBasedOnObject(){
         if (other.name == "Beaker")             multiHandlerScript.setHelpText("Right click to view up close.");
-        if (other.name == "Pipette")            multiHandlerScript.setHelpText("This is a pipette. Use on a beaker/flask.");
         if (other.name == "Fire extinguisher")  multiHandlerScript.setHelpText("Right click to use."); 
         if (other.name == "Tongs")              multiHandlerScript.setHelpText("Right click to grab a flask.");
         if (other.name == "Erlenmeyer Flask")   multiHandlerScript.setHelpText("250 mL Erlenmeyer flask");
         if (other.name == "Erlenmeyer Flask L") multiHandlerScript.setHelpText("500 mL Erlenmeyer flask");
         if (other.name == "Evaporating Dish")   multiHandlerScript.setHelpText("This is an evaporating dish.");
+    }
+
+    void setHelpTextConstantly(){
+        if (other.name == "Pipette"){
+            pipetteScript ps = other.GetComponent<pipetteScript>();
+            bool flowing = ps.flowSpeed > 0f;
+            multiHandlerScript.setHelpText($"{ps.pipetteVollume} / {ps.pipetteMaxVollume} mL");
+        }
     }
 
 
@@ -276,6 +291,8 @@ public class pickUpObjects : NetworkBehaviour
                 targetPosition, 
                 Time.deltaTime * blendingSensitivity
             );
+
+            heldObjPosition = other.transform.position;
             
             other.transform.localRotation = Quaternion.Slerp(
                 other.transform.localRotation,
@@ -289,7 +306,7 @@ public class pickUpObjects : NetworkBehaviour
                     Bounds bounds = objRenderer.bounds;
                     yDistance = Mathf.Abs(bounds.center.y - other.transform.position.y);
                 }
-                shadowCastPoint.position = targetPosition + Vector3.down * (objExtents.y - yDistance);
+                shadowCastPoint.position = heldObjPosition + Vector3.down * (objExtents.y - yDistance);
             }
             else
                 shadowCastPoint.position = targetPosition;
@@ -308,13 +325,28 @@ public class pickUpObjects : NetworkBehaviour
 
     void handleObjectShadow(){
         if (holdingItem){
+            if (!shadowGameobject.activeInHierarchy)
+                shadowGameobject.SetActive(true);
+
             RaycastHit hit;
-            if (Physics.Raycast(shadowCastPoint.position, Vector3.down, out hit, LayerMask.NameToLayer("Ground")))
+            int layerMask = ~(1 << LayerMask.NameToLayer("HeldObject")); // Inverts to exclude the layer
+
+            if (Physics.Raycast(shadowCastPoint.position, Vector3.down, out hit, Mathf.Infinity, layerMask))
             {
-                // Print the distance to the console.
-                Debug.Log($"Distance to ground: {hit.distance} units.");
-            }
+                float dist = hit.distance;
+                // Debug.Log($"Distance to ground: {hit.distance} units.");
+                shadowProjector.pivot = new Vector3(0f, 0f, dist);
+
+                float avgSize = objExtents.x + objExtents.z;
+
+                if (dist < 1f) 
+                    shadowProjector.size = new Vector3(avgSize, avgSize, dist);
+                else
+                    shadowProjector.size = new Vector3(avgSize, avgSize, 1f);
+            }   
         }
+        else
+            shadowGameobject.SetActive(false);
     }
 
 
