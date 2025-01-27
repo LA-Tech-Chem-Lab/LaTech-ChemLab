@@ -34,10 +34,10 @@ public class pipetteScript : MonoBehaviour
     {
         pipetteVolume = Mathf.Clamp(pipetteVolume, 0f, pipetteMaxVolume);
 
-        if (pipetteFlowing == true && pipetteVolume >= 0)
-        {
-            pipetteVolume -= 50f * Time.deltaTime;
-        }
+        //if (pipetteFlowing == true && pipetteVolume >= 0)
+        //{
+        //    pipetteVolume -= 50f * Time.deltaTime;
+        //}
 
         if (pipetteVolume <= 0f)
         {

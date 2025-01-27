@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Obi;
 using Unity.Netcode;
+using UnityEditor;
 using UnityEngine;
 
 public class doCertainThingWith : NetworkBehaviour
@@ -242,22 +243,47 @@ public class doCertainThingWith : NetworkBehaviour
             if (closestBeakerOrFlask.transform.Find("Liquid"))
             {
                 pipetteScript PS = heldPipette.GetComponent<pipetteScript>();
+                liquidScript LS = closestBeakerOrFlask.GetComponent<liquidScript>();
+                float amountToAddOrExtract = 50f * Time.deltaTime;
 
                 if (PS.pipetteFlowing) // stop adding liquid if the pipette runs out
                 {
-                    if (PS.pipetteVolume > 0)
+                    float pipetteAmountAfterAdding = PS.pipetteVolume - amountToAddOrExtract;
+                    if (pipetteAmountAfterAdding > 0)  //makes sure that the pipette does not give more than it has
                     {
-                        closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL += 50f * Time.deltaTime;
+                        //transfers liquid from the pipette to the beaker
+                        LS.currentVolume_mL += amountToAddOrExtract;
+                        PS.pipetteVolume -= amountToAddOrExtract;
+                        closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+                    }
+                    else
+                    {
+                        //transfers remaining liquid from pipette to beaker
+                        LS.currentVolume_mL += PS.pipetteVolume;
+                        PS.pipetteVolume = 0f;
                         closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
                     }
                 }
                 else if (PS.pipetteExtracting)
                 {
-                    if (closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL > 0f && PS.pipetteMaxVolume > PS.pipetteVolume)
+                    float beakerAmountAfterExtracting = LS.currentVolume_mL - amountToAddOrExtract;
+                    if (beakerAmountAfterExtracting > 0f && PS.pipetteMaxVolume > PS.pipetteVolume + amountToAddOrExtract) //checks if the beaker has liquid and the pipette has room
                     {
-                        closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL -= 50f * Time.deltaTime;
+                        //transfers liquid from the beaker to the pipette
+                        LS.currentVolume_mL -= amountToAddOrExtract;
                         PS.pipetteVolume += 50f * Time.deltaTime;
                         closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+                    }
+                    else
+                    {
+                        // transfers remaining liquid from the beaker to the pipette
+                        float amountToFillPipette = PS.pipetteMaxVolume - PS.pipetteVolume;
+                        if (LS.currentVolume_mL > (amountToFillPipette)) // checks to see what the limiting factor is: the beaker or the pipette
+                        {
+                            LS.currentVolume_mL -= amountToFillPipette;
+                            PS.pipetteVolume += amountToFillPipette;
+                            closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+                        }
                     }
                 }
             }
@@ -266,7 +292,7 @@ public class doCertainThingWith : NetworkBehaviour
         // We arent within range of a liquid holder
         else{
             pipette.transform.Find("Tip").GetComponent<ObiEmitter>().speed = speed;
-            //pipette.GetComponent<pipetteScript>().pipetteFlowing = speed > 0f;
+            heldPipette.GetComponent<pipetteScript>().pipetteVolume -= 50 * Time.deltaTime;
         }
     }
 
