@@ -10,7 +10,6 @@ public class liquidScript : MonoBehaviour
     public Color surfaceColor;
     public Color topColor;
     public float densityOfLiquid = 1f;
-    public Material liquidMaterial;
 
 
     [Header("Wobble")]
@@ -39,7 +38,6 @@ public class liquidScript : MonoBehaviour
         initialMax = MaxWobble;
         objectRigidbody = GetComponent<Rigidbody>();
         initialObjectMass = objectRigidbody.mass;
-        transform.Find("Liquid").GetComponent<Renderer>().material = liquidMaterial;
     }
 
     private void Update()
