@@ -55,7 +55,7 @@ public class liquidScript : MonoBehaviour
 
         handleLiquid();
 
-        handleWobble();
+        // handleWobble();
         
     }
 

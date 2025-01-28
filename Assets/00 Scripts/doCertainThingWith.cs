@@ -47,8 +47,11 @@ public class doCertainThingWith : NetworkBehaviour
             pipetteSpeed = heldPipette.GetComponent<pipetteScript>().flowSpeed;
         }
 
-        if (pickUpScript.other && pickUpScript.other.name == "Iron Ring")
+        if (pickUpScript.other && pickUpScript.other.name == "Iron Ring") // Snap ring to stand
             checkForIronStandNearby(pickUpScript.other);
+
+        if (pickUpScript.other && pickUpScript.other.name == "Iron Mesh") // Snap mesh to ring
+            checkForIronRingNearby(pickUpScript.other);
     }
 
     void checkForInput(){
@@ -111,14 +114,11 @@ public class doCertainThingWith : NetworkBehaviour
 
             if (obj.name == "Beaker")
                 BringObjectCloser(-1.5f);
-
-            if (obj.name == "Iron Mesh")
-                BringObjectCloser(-1.5f);
             
             if (obj.name == "Evaporating Dish")
                 BringObjectCloser(-1.5f);
             
-            if (obj.name == "Erlenmeyer Flask" || obj.name == "Erlenmeyer Flask L")
+            if (obj.name.StartsWith("Erlenmeyer Flask"))
                 BringObjectCloser(-1.5f);
 
         }
@@ -318,7 +318,7 @@ public class doCertainThingWith : NetworkBehaviour
     }
 
 
-    void checkForIronStandNearby(GameObject ironRing){ // Here iron ring is heldObject
+    void checkForIronStandNearby(GameObject ironRing){
 
         float minDist = float.MaxValue;
         closestIronStand = null;
@@ -347,7 +347,7 @@ public class doCertainThingWith : NetworkBehaviour
             ironRing.transform.Find("Ring").gameObject.SetActive(true);
             ironRing.transform.Find("Ghost").gameObject.SetActive(false);
             ironRing.GetComponent<BoxCollider>().enabled = true;
-            pickUpScript.other.tag = "Untagged";
+            pickUpScript.other.tag = "IronRing";
         }
 
         // Now we have closest stand
@@ -388,9 +388,63 @@ public class doCertainThingWith : NetworkBehaviour
             ironRing.GetComponent<Rigidbody>().isKinematic = true;
             ironRing.transform.SetParent(closestIronStand.transform);
             
+            GameObject temp = pickUpScript.other;
             pickUpScript.DropItem(); // prob the only way
+            temp.tag = "IronRing";
         }
     }
+
+    void checkForIronRingNearby(GameObject ironMesh){
+
+        float minDist = float.MaxValue;
+        closestIronStand = null;
+
+        foreach (GameObject currentObject in GameObject.FindGameObjectsWithTag("IronRing"))
+        {   
+            Vector3 ironMeshPos = ironMesh.transform.position;
+            Vector3 ironRingPos = currentObject.transform.position;
+
+            float distFromMesh = Vector3.Distance(ironMeshPos, ironRingPos);
+
+            if (distFromMesh < minDist)
+            {
+                minDist = distFromMesh;
+                closestIronStand = currentObject;
+            }
+        }
+
+        // No Go
+        if (!closestIronStand || minDist > IRON_RING_SNAP_DISTANCE){
+            ironMesh.transform.Find("Real").gameObject.SetActive(true);
+            ironMesh.transform.Find("Ghost").gameObject.SetActive(false);
+        }
+
+        // Now we have closest stand
+        if (closestIronStand && minDist <= IRON_RING_SNAP_DISTANCE) {
+            ironMesh.transform.Find("Real").gameObject.SetActive(false);
+            ironMesh.transform.Find("Ghost").gameObject.SetActive(true);
+        }
+        
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

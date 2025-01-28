@@ -247,12 +247,20 @@ public class pickUpObjects : NetworkBehaviour
 
             if (rb && !rb.GetComponent<Rigidbody>().isKinematic)                //  ITEM PICKUP
             {
-                if (rb.gameObject.name != "Glass Fragment")
+                // if (rb.gameObject.name != "Glass Fragment")
                     PickUpItem(hit.collider.gameObject);
+            }
+
+            if (rb && rb.GetComponent<Rigidbody>().isKinematic) // We are trying to pick up a kinematic object
+            {
+                if (hit.collider.gameObject.name == "Iron Ring")
+                    detachIronRingFromStand(hit.collider.gameObject);
+                // Debug.Log(hit.collider.gameObject.name);
             }
 
         }
     }
+
 
     void setTargetPosition(){
         float actualDist = holdingDistance + distOffset;
@@ -353,7 +361,14 @@ public class pickUpObjects : NetworkBehaviour
             shadowGameobject.SetActive(false);
     }
 
-
+    void detachIronRingFromStand(GameObject ironRing){
+        Debug.Log("REMOVE");
+        ironRing.GetComponent<Rigidbody>().isKinematic = false;
+        ironRing.transform.SetParent(null);
+        ironRing.transform.Find("Ring").localPosition = new Vector3(0.0256326012f, 0f, 0.0123416251f);
+        ironRing.transform.Find("Screw").localPosition = new Vector3(-0.161500007f, -0.000211842445f, 0.0122618228f);
+        ironRing.GetComponent<BoxCollider>().center = new Vector3(0f, 0f, 0.015f);
+    }
 
 
 
@@ -379,8 +394,6 @@ public class pickUpObjects : NetworkBehaviour
             HandlePickUpClientRpc(networkObjectId);
         }
     }
-
-
 
     [ClientRpc]
     void HandlePickUpClientRpc(ulong networkObjectId)
@@ -413,7 +426,6 @@ public class pickUpObjects : NetworkBehaviour
         }
     }
 
-    
     [ServerRpc(RequireOwnership = false)]
     void ChangeOwnershipServerRpc(ulong networkObjectId, ulong newOwnerClientId, ServerRpcParams rpcParams = default)
     {
