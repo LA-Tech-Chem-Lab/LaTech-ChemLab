@@ -19,7 +19,7 @@ public class doCertainThingWith : NetworkBehaviour
     public GameObject itemHeldByTongs; int itemHeldByTongsLayer;
     
     public GameObject heldPipette; public float pipetteSpeed;
-    public GameObject closestIronStand;
+    public GameObject closestIronStand; public GameObject closestIronRing;
     
     private bool flowLock = false;
 
@@ -82,6 +82,10 @@ public class doCertainThingWith : NetworkBehaviour
             
             if (obj.name == "Iron Ring")
                 SnapIronRingToStand();
+            
+            if (obj.name == "Iron Mesh")
+                SnapIronMeshToRing();
+
 
         }
     }
@@ -227,6 +231,14 @@ public class doCertainThingWith : NetworkBehaviour
     public void dropIronRingCorrectly(){
         pickUpScript.other.transform.Find("Screw").gameObject.SetActive(true); 
         pickUpScript.other.transform.Find("Ring").gameObject.SetActive(true);
+        pickUpScript.other.transform.Find("Ghost").gameObject.SetActive(false);
+        pickUpScript.other.GetComponent<BoxCollider>().enabled = true;
+        pickUpScript.other.tag = "IronRing";
+    }
+
+    
+    public void dropIronMeshCorrectly(){
+        pickUpScript.other.transform.Find("Real").gameObject.SetActive(true);
         pickUpScript.other.transform.Find("Ghost").gameObject.SetActive(false);
         pickUpScript.other.GetComponent<BoxCollider>().enabled = true;
         pickUpScript.other.tag = "Untagged";
@@ -397,7 +409,7 @@ public class doCertainThingWith : NetworkBehaviour
     void checkForIronRingNearby(GameObject ironMesh){
 
         float minDist = float.MaxValue;
-        closestIronStand = null;
+        closestIronRing = null;
 
         foreach (GameObject currentObject in GameObject.FindGameObjectsWithTag("IronRing"))
         {   
@@ -409,26 +421,57 @@ public class doCertainThingWith : NetworkBehaviour
             if (distFromMesh < minDist)
             {
                 minDist = distFromMesh;
-                closestIronStand = currentObject;
+                closestIronRing = currentObject;
             }
         }
 
         // No Go
-        if (!closestIronStand || minDist > IRON_RING_SNAP_DISTANCE){
+        if (!closestIronRing || minDist > IRON_RING_SNAP_DISTANCE){
+            
+            closestIronRing = null;
             ironMesh.transform.Find("Real").gameObject.SetActive(true);
             ironMesh.transform.Find("Ghost").gameObject.SetActive(false);
+            ironMesh.GetComponent<BoxCollider>().enabled = false;
         }
 
-        // Now we have closest stand
-        if (closestIronStand && minDist <= IRON_RING_SNAP_DISTANCE) {
+        // Now we have closest ring
+        if (closestIronRing && minDist <= IRON_RING_SNAP_DISTANCE) {
             ironMesh.transform.Find("Real").gameObject.SetActive(false);
             ironMesh.transform.Find("Ghost").gameObject.SetActive(true);
-        }
-        
+            ironMesh.GetComponent<BoxCollider>().enabled = true;
+            
+            pickUpScript.other.tag = "NoShadow"; // Give no shadow to held ghost item
 
+            Vector3 ghostRestingPoint = closestIronRing.transform.Find("Ring").Find("Center").position;
+
+            ironMesh.transform.Find("Ghost").position = ghostRestingPoint;
+            ironMesh.transform.Find("Ghost").localEulerAngles = Vector3.zero;
+        }
     }
 
+    void SnapIronMeshToRing(){
+        GameObject ironMesh = pickUpScript.other;
 
+        
+        if (ironMesh.transform.Find("Ghost").gameObject.activeInHierarchy){ // We are ready to snap and we right clicked
+            
+            ironMesh.transform.Find("Real").gameObject.SetActive(true); 
+            ironMesh.transform.Find("Ghost").gameObject.SetActive(false);
+            ironMesh.GetComponent<BoxCollider>().enabled = true;
+
+            ironMesh.transform.SetParent(closestIronRing.transform);
+            ironMesh.transform.localPosition = closestIronRing.transform.Find("Ring").localPosition + closestIronRing.transform.Find("Ring").Find("Center").localPosition;
+
+            var angles = ironMesh.transform.localEulerAngles; angles.x = 0f; angles.z = 0f;
+            ironMesh.transform.localEulerAngles = angles;
+
+            ironMesh.GetComponent<Rigidbody>().isKinematic = true;
+            
+            pickUpScript.DropItem(); // prob the only way
+        }
+    }
+
+    
 
 
 

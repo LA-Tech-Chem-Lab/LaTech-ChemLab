@@ -160,6 +160,10 @@ public class pickUpObjects : NetworkBehaviour
         if (other.name == "Iron Ring")
             GetComponent<doCertainThingWith>().dropIronRingCorrectly();
 
+        if (other.name == "Iron Mesh")
+            GetComponent<doCertainThingWith>().dropIronMeshCorrectly();
+    
+
         if (other.name == "Pipette"){
             initialHoldingDistance = untouchedHoldingDistance;
             other.transform.Find("Tip").GetComponent<ObiEmitter>().speed = 0f;    
@@ -244,20 +248,22 @@ public class pickUpObjects : NetworkBehaviour
                     return; // Exit since the request has been made
                 }
             }
+            
+
+            if (rb && rb.GetComponent<Rigidbody>().isKinematic) // We are trying to pick up a kinematic object
+            {
+                if (hit.collider.gameObject.tag == "IronRing"){
+                    detachIronRingFromStand(hit.collider.gameObject);
+                    return;
+                }
+                // Debug.Log(hit.collider.gameObject.name);
+            }
 
             if (rb && !rb.GetComponent<Rigidbody>().isKinematic)                //  ITEM PICKUP
             {
                 // if (rb.gameObject.name != "Glass Fragment")
                     PickUpItem(hit.collider.gameObject);
             }
-
-            if (rb && rb.GetComponent<Rigidbody>().isKinematic) // We are trying to pick up a kinematic object
-            {
-                if (hit.collider.gameObject.name == "Iron Ring")
-                    detachIronRingFromStand(hit.collider.gameObject);
-                // Debug.Log(hit.collider.gameObject.name);
-            }
-
         }
     }
 
@@ -365,9 +371,16 @@ public class pickUpObjects : NetworkBehaviour
         Debug.Log("REMOVE");
         ironRing.GetComponent<Rigidbody>().isKinematic = false;
         ironRing.transform.SetParent(null);
-        ironRing.transform.Find("Ring").localPosition = new Vector3(0.0256326012f, 0f, 0.0123416251f);
+        ironRing.transform.Find("Ring").localPosition = new Vector3(0.0256326012f, 0f, 0.0123416251f);      // Reset offsets to original offsets, dont touch these
         ironRing.transform.Find("Screw").localPosition = new Vector3(-0.161500007f, -0.000211842445f, 0.0122618228f);
         ironRing.GetComponent<BoxCollider>().center = new Vector3(0f, 0f, 0.015f);
+
+        if (ironRing.transform.Find("Iron Mesh")){
+            ironRing.transform.Find("Iron Mesh").gameObject.GetComponent<Rigidbody>().isKinematic = false;
+            ironRing.transform.Find("Iron Mesh").SetParent(null);
+        }
+
+        
     }
 
 
