@@ -306,7 +306,7 @@ public class doCertainThingWith : NetworkBehaviour
                         LS.currentVolume_mL += amountToAddOrExtract;
                         PS.pipetteVolume -= amountToAddOrExtract;
                         LS.addSolution(PS.pipetteSolution, amountToAddOrExtract);
-                        LS.updateSolutionMakeup();
+                        LS.updatePercentages();
                         closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
                     }
                     else
@@ -314,7 +314,7 @@ public class doCertainThingWith : NetworkBehaviour
                         //transfers remaining liquid from pipette to beaker
                         LS.currentVolume_mL += PS.pipetteVolume;
                         LS.addSolution(PS.pipetteSolution, PS.pipetteVolume);
-                        LS.updateSolutionMakeup();
+                        LS.updatePercentages();
                         PS.pipetteVolume = 0f;
                         closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
                     }
