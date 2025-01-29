@@ -3,7 +3,7 @@ using Obi;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class pipetteScript : MonoBehaviour
+public class pipetteScript : MonoBehaviour // goood luck
 {
     public float checkTimeOut = 0.2f; float timeOfNextCheck;
     public float flowSpeed = 1f;
