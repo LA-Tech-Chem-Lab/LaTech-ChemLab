@@ -27,11 +27,11 @@ public class interactWithObjects : NetworkBehaviour
     {
         // Allow the player to open doors with E while holding an object if they manage to get it in line of sight, But if they click, ONLY drop the item
 
-        if (Input.GetKeyDown(KeyCode.E)){
-            CheckForDoors();
-            CheckForCabinets();
-            CheckForTareButton();
-        }
+        // if (Input.GetKeyDown(KeyCode.E)){
+        //     CheckForDoors();
+        //     CheckForCabinets();
+        //     CheckForTareButton();
+        // }
 
         if (Input.GetMouseButtonDown(0) && !playerHoldingObject)
         {

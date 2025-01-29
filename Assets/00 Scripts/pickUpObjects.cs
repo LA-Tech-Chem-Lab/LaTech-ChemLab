@@ -21,6 +21,8 @@ public class pickUpObjects : NetworkBehaviour
     float rotationAmInDegrees = 12f;
     public GameObject other;  int otherObjectLayer;
 
+    public float targetX;
+    public float targetZ;
     public Vector3 targetRotation;
     public Vector3 meshOffset;
     Vector3 targetPosition;
@@ -30,6 +32,7 @@ public class pickUpObjects : NetworkBehaviour
     public float checkRadius = 0.5f;
     public multihandler multiHandlerScript;
     public bool canRotateItem;
+    public bool canZoomIn = true;
 
     public Transform shadowCastPoint;
     public Renderer objRenderer;
@@ -189,6 +192,13 @@ public class pickUpObjects : NetworkBehaviour
             bool flowing = ps.flowSpeed > 0f;
             multiHandlerScript.setHelpText($"{ps.pipetteVolume} / {ps.pipetteMaxVolume} mL");
         }
+
+        if (other.name == "Bunsen Burner"){
+            if (Input.GetMouseButton(1))
+                multiHandlerScript.setHelpText("Scroll to adjust airflow");
+            else
+                multiHandlerScript.setHelpText("Right Click to adjust airflow");
+        }
     }
 
 
@@ -218,9 +228,10 @@ public class pickUpObjects : NetworkBehaviour
         }
         
         
-        // Rotation Stuff Please Ignore these 3 lines
+        // Rotation Stuff Please Ignore these lines
         if (canRotateItem) targetRotation.y -= Mathf.Min(1f, Input.mouseScrollDelta.y) * rotationAmInDegrees;
-        else initialHoldingDistance += Input.mouseScrollDelta.y / 10f;
+        else if (canZoomIn) initialHoldingDistance += Input.mouseScrollDelta.y / 10f;
+
         if (!Cursor.visible) targetRotation.y += Input.GetAxis("Mouse X") * xSens * Time.deltaTime;
         targetRotation.y = (targetRotation.y % 360f + 360f) % 360f;
         targetQuaternion = Quaternion.Euler(targetRotation);
@@ -273,6 +284,13 @@ public class pickUpObjects : NetworkBehaviour
         float actualDist = holdingDistance + distOffset;
         targetPosition = playerCamera.position +  playerCamera.forward * actualDist  + playerCamera.TransformDirection(meshOffset);
         
+        if (holdingItem){
+            targetRotation = new Vector3(targetX, targetRotation.y, targetZ);
+            targetQuaternion = Quaternion.Euler(targetRotation);
+        }
+
+        
+
         distOffset /= 1.1f; // Make approach zero when not in use
     }
 

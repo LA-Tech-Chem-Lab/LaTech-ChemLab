@@ -55,33 +55,6 @@ public class doCertainThingWith : NetworkBehaviour
             checkForIronRingNearby(pickUpScript.other);
     }
 
-    void lightUpBeaker()
-    {
-        GameObject closestBeakerOrFlask = findClosestBeakerOrFlask(heldPipette);
-        if (closestBeakerOrFlask == null) return;
-    
-        // Get positions and zero out Y-axis
-        Vector3 pipetteTip = heldPipette.transform.Find("Tip").position;
-        pipetteTip.y = 0f;
-        Vector3 beakerOrFlask = closestBeakerOrFlask.transform.position;
-        beakerOrFlask.y = 0f;
-    
-        float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
-    
-        // Find "allLiquidHolders" object
-        GameObject allLiquidHolders = GameObject.Find("allLiquidHolders");
-        if (allLiquidHolders == null) return; // Avoid errors if it's missing
-    
-        foreach (Transform liquidHolder in allLiquidHolders.transform)
-        {
-            if (liquidHolder.childCount > 0) // Ensure it has children
-            {
-                GameObject whiteOutline = liquidHolder.GetChild(0).gameObject;
-                bool isClosest = liquidHolder.gameObject == closestBeakerOrFlask && distFromTip <= PIPETTE_GRAB_DISTANCE;
-                whiteOutline.SetActive(isClosest);
-            }
-        }
-    }
 
 
     void checkForInput(){
@@ -94,6 +67,8 @@ public class doCertainThingWith : NetworkBehaviour
         if (Input.GetMouseButtonUp(1)){
             findObjectAndPerformLiftedMouseAction();
         }
+
+        checkForKeyOrScrollInputs();
     }
 
     void findObjectAndPerformAction()       // Right click once
@@ -115,7 +90,9 @@ public class doCertainThingWith : NetworkBehaviour
             
             if (obj.name == "Iron Mesh")
                 SnapIronMeshToRing();
-
+            
+            if (obj.name == "Bunsen Burner")
+                faceItemAwayFromPlayer();
 
         }
     }
@@ -155,12 +132,15 @@ public class doCertainThingWith : NetworkBehaviour
             if (obj.name.StartsWith("Erlenmeyer Flask"))
                 BringObjectCloser(-1.5f);
 
+            if (obj.name == "Bunsen Burner")
+                manipulateBunsenBurner();
+
         }
     }
 
     
-    void findObjectAndPerformLiftedMouseAction()
-    {  // Lifted Right Click
+    void findObjectAndPerformLiftedMouseAction()  // Lifted Right Click
+    {  
         
         if (pickUpScript.other != null) {
             GameObject obj = pickUpScript.other;
@@ -171,7 +151,21 @@ public class doCertainThingWith : NetworkBehaviour
                 heldPipette.GetComponent<pipetteScript>().pipetteExtracting = false;
                 flowLock = false;
             }
+
+            if (obj.name == "Bunsen Burner")
+                resetRotationOffset();
         }
+    }
+
+    void checkForKeyOrScrollInputs(){
+        if (pickUpScript.other != null) {
+            GameObject obj = pickUpScript.other;
+
+            if (obj.name == "Bunsen Burner")
+                obj.GetComponent<bunsenBurnerScript>().adjustGearBasedOnInput(Input.mouseScrollDelta.y);
+
+        }
+
     }
 
     void BringObjectCloser(float dist)
@@ -275,7 +269,6 @@ public class doCertainThingWith : NetworkBehaviour
     }
 
 
-
     public void SetPippetteSpeed(GameObject pipette, float speed){
 
         // First find the closest beaker/flask below you
@@ -354,6 +347,35 @@ public class doCertainThingWith : NetworkBehaviour
             heldPipette.GetComponent<pipetteScript>().pipetteVolume -= 50 * Time.deltaTime;
         }
     }
+    
+    void lightUpBeaker()
+    {
+        GameObject closestBeakerOrFlask = findClosestBeakerOrFlask(heldPipette);
+        if (closestBeakerOrFlask == null) return;
+    
+        // Get positions and zero out Y-axis
+        Vector3 pipetteTip = heldPipette.transform.Find("Tip").position;
+        pipetteTip.y = 0f;
+        Vector3 beakerOrFlask = closestBeakerOrFlask.transform.position;
+        beakerOrFlask.y = 0f;
+    
+        float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
+    
+        // Find "allLiquidHolders" object
+        GameObject allLiquidHolders = GameObject.Find("allLiquidHolders");
+        if (allLiquidHolders == null) return; // Avoid errors if it's missing
+    
+        foreach (Transform liquidHolder in allLiquidHolders.transform)
+        {
+            if (liquidHolder.childCount > 0) // Ensure it has children
+            {
+                GameObject whiteOutline = liquidHolder.GetChild(0).gameObject;
+                bool isClosest = liquidHolder.gameObject == closestBeakerOrFlask && distFromTip <= PIPETTE_GRAB_DISTANCE;
+                whiteOutline.SetActive(isClosest);
+            }
+        }
+    }
+
 
     GameObject findClosestBeakerOrFlask(GameObject pipette){
         float minDist = Mathf.Infinity;
@@ -518,7 +540,27 @@ public class doCertainThingWith : NetworkBehaviour
         }
     }
 
-    
+
+    void faceItemAwayFromPlayer(){
+        pickUpScript.targetRotation.y = transform.localEulerAngles.y;           // When right clicked, face item away from player
+    }
+
+    void manipulateBunsenBurner(){
+
+        
+        pickUpScript.targetX = 120f;
+        pickUpScript.canZoomIn = false;
+        pickUpScript.canRotateItem = false;
+
+
+
+    }
+
+    void resetRotationOffset(){
+        pickUpScript.targetX = 0f;
+        pickUpScript.canZoomIn = true;
+        pickUpScript.canRotateItem = true;
+    }
 
 
 
