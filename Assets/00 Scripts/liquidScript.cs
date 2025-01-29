@@ -13,6 +13,9 @@ public class liquidScript : MonoBehaviour
     public float percentH2SO4 = 0f;
     public float percentKOH = 0f;
     public float percentH2O = 0f;
+    public List<float> solutionMakeup = new List<float>();
+    List<float> densities = new List<float> {1.83f, 2.12f, 1f};
+    List<float> molarMasses = new List<float> {98.079f, 56.1056f, 18.01528f};
 
 
     [Header("Wobble")]
@@ -33,7 +36,6 @@ public class liquidScript : MonoBehaviour
     float time = 0.5f;
     Rigidbody objectRigidbody;
     float initialObjectMass;
-    public List<float> solutionMakeup = new List<float>();
 
     // Use this for initialization
     void Start()
@@ -142,10 +144,33 @@ public class liquidScript : MonoBehaviour
     //adds a vollume of a given solution to the current solution
     public void addSolution(List<float> solutionToAdd, float volume){
         for (int i = 0; i < solutionMakeup.Count; i++){
-            //formula for computing new molarity of each substance
+            //formula for computing new percentage of each substance
             solutionMakeup[i] = ((solutionMakeup[i] * currentVolume_mL) + (solutionToAdd[i] * volume)) / (currentVolume_mL + volume);
-
+            updateSolutionMakeup();
         }
+    }
+
+    public void updateSolutionMakeup(){
+        percentH2SO4 = solutionMakeup[0];
+        percentKOH = solutionMakeup[1];
+        percentH2O = solutionMakeup[2];
+
+        calculateDensity();
+    }
+
+    void calculateDensity(){
+        float totalMass = 0f;
+        for (int i = 0; i < densities.Count; i++){
+            totalMass += densities[i] * solutionMakeup[i] * currentVolume_mL;
+        }
+        densityOfLiquid = totalMass / currentVolume_mL;
+    }
+
+    public void handleReactions(){
+        float molH2SO4 = percentH2SO4 / currentVolume_mL;
+        float molKOH = percentKOH / currentVolume_mL;
+
+
     }
  
 }
