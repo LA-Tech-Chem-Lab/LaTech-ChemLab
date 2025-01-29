@@ -38,7 +38,9 @@ public class liquidScript : MonoBehaviour
         objectRigidbody = GetComponent<Rigidbody>();
         initialObjectMass = objectRigidbody.mass;
         solutionMakeup.AddRange(new float[] { percentH2SO4, percentKOH , percentH2O, percentK2SO4});
-        //calculateDensity();
+        if (currentVolume_mL > 0){
+            calculateDensity();
+        }
     }
 
     private void Update()
@@ -99,7 +101,6 @@ public class liquidScript : MonoBehaviour
 
             rend.material.SetFloat("_FillAmount", scaledHeight);
         }
-
         // Simulate new object mass now containing liquid
         objectRigidbody.mass = initialObjectMass + currentVolume_mL * densityOfLiquid / 1000f;
 
