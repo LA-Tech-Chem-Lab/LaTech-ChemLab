@@ -15,8 +15,8 @@ public class floatInSpace : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        inSpace = transform.localPosition.x < -0.3f;
+    {   
+        inSpace = transform.position.x < -22f;
 
         if (inSpace && rb.useGravity)
             rb.AddForce(Vector3.left * 3f);
