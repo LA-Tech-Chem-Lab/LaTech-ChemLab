@@ -19,24 +19,15 @@ public class liquidScript : MonoBehaviour
     public List<float> solutionMakeup = new List<float>();
     List<float> densities = new List<float> {1.83f, 2.12f, 1f, 2.66f};
     List<float> molarMasses = new List<float> {98.079f, 56.1056f, 18.01528f, 174.259f};
+    List<Color> liquidColors = new List<Color> {Color.red, Color.green, Color.blue, Color.yellow};
 
 
-    [Header("Wobble")]
-    public float MaxWobble = 0.0003f; float initialMax;
-    public float WobbleSpeed = 0.9f;
-    public float Recovery = 1.4f;
     
     [Header("Spillage")]
     
     public float dotProduct; 
     public float maxSpillRate;
-    float wobbleAmountX; float wobbleAmountToAddX;  
-    float wobbleAmountZ; float wobbleAmountToAddZ;
-    float pulse;
     Renderer rend;
-    Vector3 lastPos;
-    Vector3 velocity;
-    float time = 0.5f;
     Rigidbody objectRigidbody;
     float initialObjectMass;
 
@@ -44,7 +35,6 @@ public class liquidScript : MonoBehaviour
     void Start()
     {
         rend = transform.Find("Liquid").GetComponent<Renderer>();
-        initialMax = MaxWobble;
         objectRigidbody = GetComponent<Rigidbody>();
         initialObjectMass = objectRigidbody.mass;
         solutionMakeup.AddRange(new float[] { percentH2SO4, percentKOH , percentH2O, percentK2SO4});
@@ -65,7 +55,7 @@ public class liquidScript : MonoBehaviour
 
         handleLiquid();
 
-        // handleWobble();
+        handleLiquidColor();
         
     }
 
@@ -114,33 +104,10 @@ public class liquidScript : MonoBehaviour
 
     }
 
-    void handleWobble(){
-        time += Time.deltaTime;
+    void handleLiquidColor(){
+        
 
-        // decrease wobble over time
-        wobbleAmountToAddX = Mathf.Lerp(wobbleAmountToAddX, 0, Time.deltaTime * (Recovery));
-        wobbleAmountToAddZ = Mathf.Lerp(wobbleAmountToAddZ, 0, Time.deltaTime * (Recovery));
- 
-        // make a sine wave of the decreasing wobble
-        pulse = 2 * Mathf.PI * WobbleSpeed;
-        wobbleAmountX = wobbleAmountToAddX * Mathf.Sin(pulse * time);
-        wobbleAmountZ = wobbleAmountToAddZ * Mathf.Sin(pulse * time);
- 
-        // send it to the shader
-        rend.material.SetFloat("_WobbleX", wobbleAmountX);
-        rend.material.SetFloat("_WobbleZ", wobbleAmountZ);
- 
-        // velocity
-        velocity = (lastPos - transform.position) / Time.deltaTime;
-        float percentFull = currentVolume_mL / totalVolume_mL;
-        MaxWobble = initialMax * (-Mathf.Pow(2*percentFull-1, 2)+1);
- 
-        // add clamped velocity to wobble
-        wobbleAmountToAddX += Mathf.Clamp((velocity.x) * MaxWobble, -MaxWobble, MaxWobble);
-        wobbleAmountToAddZ += Mathf.Clamp((velocity.z) * MaxWobble, -MaxWobble, MaxWobble);
- 
-        // keep last position
-        lastPos = transform.position;
+
     }
 
     //adds a vollume of a given solution to the current solution
