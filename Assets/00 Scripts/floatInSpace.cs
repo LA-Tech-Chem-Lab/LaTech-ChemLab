@@ -18,8 +18,8 @@ public class floatInSpace : MonoBehaviour
     {   
         inSpace = transform.position.x < -22f;
 
-        if (inSpace && rb.useGravity)
-            rb.AddForce(Vector3.left * 3f);
+        // if (inSpace && rb.useGravity)
+            // rb.AddForce(Vector3.left * 3f);
 
         rb.useGravity = !inSpace;
     }

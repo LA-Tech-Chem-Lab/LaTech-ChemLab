@@ -105,8 +105,27 @@ public class liquidScript : MonoBehaviour
     }
 
     void handleLiquidColor(){
-        
+        // Set surface color and top color based on percentages
 
+        Color newSurfaceColor = Color.black;
+        float totalSolution = 0f;
+
+        // Calculate the total amount of solution
+        foreach (float amount in solutionMakeup)
+        {
+            totalSolution += amount;
+        }
+
+        // Prevent division by zero
+        if (totalSolution > 0)
+        {
+            for (int i = 0; i < solutionMakeup.Count; i++)
+            {
+                newSurfaceColor += (solutionMakeup[i] / totalSolution) * liquidColors[i]; // Normalize contribution
+            }
+        }
+
+        surfaceColor = newSurfaceColor;
 
     }
 
