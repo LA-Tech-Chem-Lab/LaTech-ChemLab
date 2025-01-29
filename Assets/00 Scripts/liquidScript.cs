@@ -111,14 +111,22 @@ public class liquidScript : MonoBehaviour
     }
 
     //adds a vollume of a given solution to the current solution
-    public void addSolution(List<float> solutionToAdd, float volume){
-        for (int i = 0; i < solutionMakeup.Count; i++){
-            //formula for computing new percentage of each substance
-            solutionMakeup[i] = ((solutionMakeup[i] * currentVolume_mL) + (solutionToAdd[i] * volume)) / (currentVolume_mL + volume);
-            updatePercentages();
-          //  handleReactions();
-        }
+    public void addSolution(List<float> solutionToAdd, float volume)
+{
+    float newVolume = currentVolume_mL + volume;
+    float sum = 0f;
+
+    for (int i = 0; i < solutionMakeup.Count; i++)
+    {
+        solutionMakeup[i] = ((solutionMakeup[i] * currentVolume_mL) + (solutionToAdd[i] * volume)) / newVolume;
+        sum += solutionMakeup[i]; // Track total sum
     }
+
+    // Adjust to ensure the sum is exactly 1
+    float error = 1f - sum;
+    solutionMakeup[0] += error; // Adjust the first element to compensate for rounding
+    updatePercentages();
+}
 
     public void updatePercentages(){
         percentH2SO4 = solutionMakeup[0];
