@@ -38,6 +38,7 @@ public class liquidScript : MonoBehaviour
         objectRigidbody = GetComponent<Rigidbody>();
         initialObjectMass = objectRigidbody.mass;
         solutionMakeup.AddRange(new float[] { percentH2SO4, percentKOH , percentH2O, percentK2SO4});
+        //calculateDensity();
     }
 
     private void Update()
@@ -207,9 +208,6 @@ public class liquidScript : MonoBehaviour
             
             // Ensure they sum to 1
             float sum = solutionMakeup[0] + solutionMakeup[1] + solutionMakeup[2] + solutionMakeup[3];
-            Debug.Log($"Sum of Mass Fractions: {sum} (Should be ~1)");
-
-
             updatePercentages();
         
     }
