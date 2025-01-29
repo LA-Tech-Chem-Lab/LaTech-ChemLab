@@ -298,24 +298,31 @@ public class doCertainThingWith : NetworkBehaviour
 
                 if (PS.pipetteFlowing) // stop adding liquid if the pipette runs out
                 {
+                    //adds liquid to the beaker and extracts from pipette
                     float pipetteAmountAfterAdding = PS.pipetteVolume - amountToAddOrExtract;
                     if (pipetteAmountAfterAdding > 0)  //makes sure that the pipette does not give more than it has
                     {
                         //transfers liquid from the pipette to the beaker
                         LS.currentVolume_mL += amountToAddOrExtract;
                         PS.pipetteVolume -= amountToAddOrExtract;
+                        LS.addSolution(PS.pipetteSolution, amountToAddOrExtract);
                         closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
                     }
                     else
                     {
                         //transfers remaining liquid from pipette to beaker
                         LS.currentVolume_mL += PS.pipetteVolume;
+                        LS.addSolution(PS.pipetteSolution, PS.pipetteVolume);
                         PS.pipetteVolume = 0f;
                         closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
                     }
                 }
                 else if (PS.pipetteExtracting)
                 {
+                    //Sets the liquid type in the pipette to the liquid type in the beaker (the liquid type will not change inside the pipette)
+                    PS.pipetteSolution = LS.solutionMakeup;
+
+                    //Extracts liquid from the beaker into the pipette
                     float beakerAmountAfterExtracting = LS.currentVolume_mL - amountToAddOrExtract;
                     if (beakerAmountAfterExtracting > 0f && PS.pipetteMaxVolume > PS.pipetteVolume + amountToAddOrExtract) //checks if the beaker has liquid and the pipette has room
                     {

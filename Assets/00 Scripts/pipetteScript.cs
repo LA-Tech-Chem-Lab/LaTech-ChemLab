@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Obi;
 using UnityEngine;
 using UnityEngine.AI;
@@ -12,6 +13,8 @@ public class pipetteScript : MonoBehaviour
     public bool pipetteFlowing;
     public bool pipetteExtracting;
     float initialMaxVolume;
+    public string liquidType;
+    public List<float> pipetteSolution = new List<float> {0f, 0f, 0f};
 
     liquidScript ls;
 
@@ -20,7 +23,7 @@ public class pipetteScript : MonoBehaviour
     {
         timeOfNextCheck = Time.time + checkTimeOut;
         emitter = transform.Find("Tip").GetComponent<ObiEmitter>();
-        pipetteVolume = 100f;
+        pipetteVolume = 0f;
         initialMaxVolume = pipetteMaxVolume;
         pipetteFlowing = false;
         ls = GetComponent<liquidScript>();
@@ -34,11 +37,7 @@ public class pipetteScript : MonoBehaviour
     {
         pipetteVolume = Mathf.Clamp(pipetteVolume, 0f, pipetteMaxVolume);
 
-        //if (pipetteFlowing == true && pipetteVolume >= 0)
-        //{
-        //    pipetteVolume -= 50f * Time.deltaTime;
-        //}
-
+        //sets the flow speed of the pipette according to whether or not there is liquid in it
         if (pipetteVolume <= 0f)
         {
             flowSpeed = 0f;
@@ -52,13 +51,8 @@ public class pipetteScript : MonoBehaviour
         if (ls)
             ls.currentVolume_mL = pipetteVolume;
 
+        //fills the pipette on click of R 
         if (Input.GetKeyDown(KeyCode.R))
             pipetteVolume = initialMaxVolume;
     }
 }
-
-        // foreach (int particleIndex in thissolver.activeParticles)
-        // {
-        //     Vector4 particlePosition = thissolver.positions[particleIndex];
-        //     Vector3 worldPosition = emitter.solver.transform.TransformPoint(particlePosition);
-        // }

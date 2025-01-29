@@ -10,6 +10,9 @@ public class liquidScript : MonoBehaviour
     public Color surfaceColor;
     public Color topColor;
     public float densityOfLiquid = 1f;
+    public float percentH2SO4 = 0f;
+    public float percentKOH = 0f;
+    public float percentH2O = 0f;
 
 
     [Header("Wobble")]
@@ -30,7 +33,8 @@ public class liquidScript : MonoBehaviour
     float time = 0.5f;
     Rigidbody objectRigidbody;
     float initialObjectMass;
-    
+    public List<float> solutionMakeup = new List<float>();
+
     // Use this for initialization
     void Start()
     {
@@ -38,6 +42,7 @@ public class liquidScript : MonoBehaviour
         initialMax = MaxWobble;
         objectRigidbody = GetComponent<Rigidbody>();
         initialObjectMass = objectRigidbody.mass;
+        solutionMakeup.AddRange(new float[] { percentH2SO4, percentKOH , percentH2O});
     }
 
     private void Update()
@@ -105,8 +110,6 @@ public class liquidScript : MonoBehaviour
 
     }
 
-
-
     void handleWobble(){
         time += Time.deltaTime;
 
@@ -135,6 +138,14 @@ public class liquidScript : MonoBehaviour
         // keep last position
         lastPos = transform.position;
     }
- 
+
+    //adds a vollume of a given solution to the current solution
+    public void addSolution(List<float> solutionToAdd, float volume){
+        for (int i = 0; i < solutionMakeup.Count; i++){
+            //formula for computing new molarity of each substance
+            solutionMakeup[i] = ((solutionMakeup[i] * currentVolume_mL) + (solutionToAdd[i] * volume)) / (currentVolume_mL + volume);
+
+        }
+    }
  
 }
