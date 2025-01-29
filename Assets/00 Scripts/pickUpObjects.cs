@@ -117,6 +117,7 @@ public class pickUpObjects : NetworkBehaviour
         if (other.name == "Pipette"){
             initialHoldingDistance = 1.3f;
             canRotateItem = false;
+            GetComponent<doCertainThingWith>().heldPipette = other;
         }
 
 

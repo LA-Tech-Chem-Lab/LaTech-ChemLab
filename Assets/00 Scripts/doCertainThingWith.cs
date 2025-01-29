@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Obi;
+using Tripolygon.UModelerX.Runtime;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -25,7 +26,6 @@ public class doCertainThingWith : NetworkBehaviour
 
     pickUpObjects pickUpScript;
     public Vector3 testingOffset;
-    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -44,6 +44,7 @@ public class doCertainThingWith : NetworkBehaviour
             handleTongObject();
 
         if (heldPipette){
+            lightUpBeaker();
             pipetteSpeed = heldPipette.GetComponent<pipetteScript>().flowSpeed;
         }
 
@@ -53,6 +54,35 @@ public class doCertainThingWith : NetworkBehaviour
         if (pickUpScript.other && pickUpScript.other.name == "Iron Mesh") // Snap mesh to ring
             checkForIronRingNearby(pickUpScript.other);
     }
+
+    void lightUpBeaker()
+    {
+        GameObject closestBeakerOrFlask = findClosestBeakerOrFlask(heldPipette);
+        if (closestBeakerOrFlask == null) return;
+    
+        // Get positions and zero out Y-axis
+        Vector3 pipetteTip = heldPipette.transform.Find("Tip").position;
+        pipetteTip.y = 0f;
+        Vector3 beakerOrFlask = closestBeakerOrFlask.transform.position;
+        beakerOrFlask.y = 0f;
+    
+        float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
+    
+        // Find "allLiquidHolders" object
+        GameObject allLiquidHolders = GameObject.Find("allLiquidHolders");
+        if (allLiquidHolders == null) return; // Avoid errors if it's missing
+    
+        foreach (Transform liquidHolder in allLiquidHolders.transform)
+        {
+            if (liquidHolder.childCount > 0) // Ensure it has children
+            {
+                GameObject whiteOutline = liquidHolder.GetChild(0).gameObject;
+                bool isClosest = liquidHolder.gameObject == closestBeakerOrFlask && distFromTip <= PIPETTE_GRAB_DISTANCE;
+                whiteOutline.SetActive(isClosest);
+            }
+        }
+    }
+
 
     void checkForInput(){
         if (Input.GetMouseButtonDown(1))
@@ -249,26 +279,13 @@ public class doCertainThingWith : NetworkBehaviour
     public void SetPippetteSpeed(GameObject pipette, float speed){
 
         // First find the closest beaker/flask below you
-        float minDist = Mathf.Infinity;
-        GameObject closestBeakerOrFlask = null;
-        
-        foreach (GameObject currentObject in FindObjectsOfType<GameObject>()){
-            
-            if (currentObject.tag == "LiquidHolder"){
+        GameObject closestBeakerOrFlask = findClosestBeakerOrFlask(pipette);
+        var pipetteTip = pipette.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
+        var beakerOrFlask = closestBeakerOrFlask.transform.position;              beakerOrFlask.y = 0f;
 
-                var pipetteTip = pipette.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
-                var beakerOrFlask = currentObject.transform.position;              beakerOrFlask.y = 0f;
+        float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
 
-                float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
-                
-                if (distFromTip < minDist){
-                    minDist = distFromTip;
-                    closestBeakerOrFlask = currentObject;
-                }
-            }
-        }
-        
-        if (closestBeakerOrFlask && minDist <= PIPETTE_GRAB_DISTANCE){ // We have a beaker or flask within range
+        if (closestBeakerOrFlask && distFromTip <= PIPETTE_GRAB_DISTANCE){ // We have a beaker or flask within range
             
             pipette.transform.Find("Tip").GetComponent<ObiEmitter>().speed = 0f;
             
@@ -329,6 +346,27 @@ public class doCertainThingWith : NetworkBehaviour
         }
     }
 
+    GameObject findClosestBeakerOrFlask(GameObject pipette){
+        float minDist = Mathf.Infinity;
+        GameObject closestBeakerOrFlask = null;
+        
+        foreach (GameObject currentObject in FindObjectsOfType<GameObject>()){
+            
+            if (currentObject.tag == "LiquidHolder"){
+
+                var pipetteTip = pipette.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
+                var beakerOrFlask = currentObject.transform.position;              beakerOrFlask.y = 0f;
+
+                float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
+                
+                if (distFromTip < minDist){
+                    minDist = distFromTip;
+                    closestBeakerOrFlask = currentObject;
+                }
+            }
+        }
+        return closestBeakerOrFlask;
+    }
 
     void checkForIronStandNearby(GameObject ironRing){
 
