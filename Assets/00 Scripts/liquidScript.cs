@@ -145,6 +145,7 @@ public class liquidScript : MonoBehaviour
     float error = 1f - sum;
     solutionMakeup[0] += error; // Adjust the first element to compensate for rounding
     updatePercentages();
+    handleReactions();
 }
 
     public void updatePercentages(){
@@ -170,8 +171,8 @@ public class liquidScript : MonoBehaviour
         float molK2SO4 = percentK2SO4 * currentVolume_mL * densityOfLiquid / molarMasses[compoundNames.IndexOf("K2SO4")];
         float molH2O = percentH2O * currentVolume_mL * densityOfLiquid / molarMasses[compoundNames.IndexOf("H2O")];
 
-        float H2SO4Molarity = percentH2SO4 * densityOfLiquid / molarMasses[compoundNames.IndexOf("H2S04")];
-        float KOHMolarity = percentKOH * densityOfLiquid / molarMasses[compoundNames.IndexOf("KOH")];
+        float H2SO4Molarity = molH2SO4 / (currentVolume_mL / 1000f);
+        float KOHMolarity = molKOH / (currentVolume_mL / 1000f);
 
         //checks to see if KOH and H2SO4 are in safe concentrations to proceed
         //if (((KOHMolarity <= 1) && (H2SO4Molarity <= 1)) && ((KOHMolarity >= 0.1) && (H2SO4Molarity >= 0.1))){
@@ -181,10 +182,33 @@ public class liquidScript : MonoBehaviour
             molK2SO4 += 1 * limitingReactNum;
             molH2O += 2 * limitingReactNum;
             
-            solutionMakeup[0] = molH2SO4 / currentVolume_mL / densityOfLiquid;
-            solutionMakeup[1] = molKOH / currentVolume_mL / densityOfLiquid;
-            solutionMakeup[2] = molH2O / currentVolume_mL / densityOfLiquid;
-            solutionMakeup[3] = molK2SO4 / currentVolume_mL / densityOfLiquid;
+            // Convert moles to mass
+            float massH2SO4 = molH2SO4 * molarMasses[compoundNames.IndexOf("H2SO4")];
+            float massKOH = molKOH * molarMasses[compoundNames.IndexOf("KOH")];
+            float massH2O = molH2O * molarMasses[compoundNames.IndexOf("H2O")];
+            float massK2SO4 = molK2SO4 * molarMasses[compoundNames.IndexOf("K2SO4")];
+            
+            // Compute total mass of the solution
+            float totalMass = massH2SO4 + massKOH + massH2O + massK2SO4;
+            
+            if (totalMass <= 0) {
+                Debug.LogError("Error: Total solution mass is zero or negative.");
+                return;
+            }
+            
+            // Compute mass fractions (percentages)
+            solutionMakeup[0] = massH2SO4 / totalMass; // % H2SO4
+            solutionMakeup[1] = massKOH / totalMass;   // % KOH
+            solutionMakeup[2] = massH2O / totalMass;   // % H2O
+            solutionMakeup[3] = massK2SO4 / totalMass; // % K2SO4
+            
+            // Debugging output to verify
+            Debug.Log($"Mass Fractions: H2SO4={solutionMakeup[0]}, KOH={solutionMakeup[1]}, H2O={solutionMakeup[2]}, K2SO4={solutionMakeup[3]}");
+            
+            // Ensure they sum to 1
+            float sum = solutionMakeup[0] + solutionMakeup[1] + solutionMakeup[2] + solutionMakeup[3];
+            Debug.Log($"Sum of Mass Fractions: {sum} (Should be ~1)");
+
 
             updatePercentages();
         
