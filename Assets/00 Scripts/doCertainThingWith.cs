@@ -475,18 +475,32 @@ public class doCertainThingWith : NetworkBehaviour
                     if (!closestIronStand || minDist > IRON_RING_SNAP_DISTANCE || yDist > 1.35f)
                     {
                         closestIronStand = null;
-                        DeactivateGhostRingClientRpc(ironRing);
+                    DeactivateGhostRingServerRpc(ironRing);
                         ironRing.GetComponent<BoxCollider>().enabled = true;
+                        if (IsHost)
+                        {
+                             ironRing.transform.Find("Ghost").gameObject.SetActive(false);
+                             ironRing.transform.Find("Screw").gameObject.SetActive(true);
+                             ironRing.transform.Find("Ring").gameObject.SetActive(true);
+                        }
+                    
                         pickUpScript.other.tag = "IronRing";
-                    }
+                    } 
 
                     if (closestIronStand && minDist <= IRON_RING_SNAP_DISTANCE && yDist < 1.35f)
                     {
-                        ActivateGhostRingClientRpc(ironRing);
+                    ActivateGhostRingServerRpc(ironRing);
                         ironRing.GetComponent<BoxCollider>().enabled = false;
                         pickUpScript.other.tag = "NoShadow";
+                        if (droppedRing)
+                        {
+                            ironRing.transform.Find("Ghost").gameObject.SetActive(false);
+                            ironRing.transform.Find("Screw").gameObject.SetActive(true);
+                            ironRing.transform.Find("Ring").gameObject.SetActive(true);
+                        Debug.Log("OFF OFF");
+                        }
 
-                        var ghostRestingPoint = closestIronStand.transform.Find("Base").position;
+                    var ghostRestingPoint = closestIronStand.transform.Find("Base").position;
                         ghostRestingPoint += closestIronStand.transform.up * yDist;
 
                         ironRing.transform.Find("Ghost").gameObject.transform.position = ghostRestingPoint;
@@ -500,10 +514,6 @@ public class doCertainThingWith : NetworkBehaviour
                         {
                             NetworkObjectReference closestIronStandReference = new NetworkObjectReference(closestIronStand.GetComponent<NetworkObject>());
                             UpdateClosestIronStandClientRpc(closestIronStandReference);
-                            if (droppedRing)
-                            {
-                                DeactivateGhostRingClientRpc(ironRing);
-                            }
                         }
                 }
             }
@@ -560,22 +570,28 @@ public class doCertainThingWith : NetworkBehaviour
         if (ironRing.transform.Find("Ghost").gameObject.activeInHierarchy)
         {
             // Calculate real mesh offset for the positions
-            Vector3 realMeshOffset = ironRing.transform.Find("Ghost").Find("Ghost Screw").position - ironRing.transform.Find("Screw").position;
-
-            ironRing.transform.Find("Screw").position += realMeshOffset;
-            ironRing.transform.Find("Ring").position += realMeshOffset;
-            ironRing.GetComponent<BoxCollider>().center += realMeshOffset;
+            Vector3 realMeshOffsetScrew = ironRing.transform.Find("Ghost").Find("Ghost Screw").position - ironRing.transform.Find("Screw").position;
+            Vector3 realMeshOffsetRing = ironRing.transform.Find("Ghost").Find("Ghost Ring").position - ironRing.transform.Find("Ring").position;
+            ironRing.transform.Find("Screw").position += realMeshOffsetScrew;
+            ironRing.transform.Find("Ring").position += realMeshOffsetRing;
+            ironRing.GetComponent<BoxCollider>().center += realMeshOffsetScrew;
+            ApplyOffsetsToIronRingServerRpc(ironRing);
+            Debug.Log("Iron Ring Position" + ironRing.transform.position);
 
             // Deactivate Ghost ring and reset the collider
-            DeactivateGhostRingClientRpc(ironRing);
+            DeactivateGhostRingServerRpc(ironRing);
+
+            ironRing.transform.Find("Ghost").gameObject.SetActive(false);
+            ironRing.transform.Find("Screw").gameObject.SetActive(true);
+            ironRing.transform.Find("Ring").gameObject.SetActive(true);
             ironRing.GetComponent<BoxCollider>().enabled = true;
+
 
             // Set the Rigidbody to kinematic
             ironRing.GetComponent<Rigidbody>().isKinematic = true;
 
             // Reparent the ironRing on the server and sync it to all clients
             ReparentIronRingServerRpc(ironRing.GetComponent<NetworkObject>(), closestIronStand.GetComponent<NetworkObject>());
-            DeactivateGhostRingClientRpc(ironRing);
             // Drop the item and change the tag back
             GameObject temp = pickUpScript.other;
             // Sync the new position to all clients
@@ -583,14 +599,61 @@ public class doCertainThingWith : NetworkBehaviour
             Debug.Log("Dropped");
             droppedRing = true;
             SnapIronRingToClientsClientRpc(ironRing.transform.position);
-            DeactivateGhostRingClientRpc(ironRing);
+            DeactivateGhostRingServerRpc(ironRing);
             temp.tag = "IronRing";
 
         }
     }
-
     // ServerRpc to reparent the ironRing on the server
     [ServerRpc(RequireOwnership = false)]
+    public void ApplyOffsetsToIronRingServerRpc(NetworkObjectReference ironRingNetObjRef)
+    {
+        ApplyOffsetsToIronRingClientRpc(ironRingNetObjRef);
+    }
+
+    [ClientRpc]
+    public void ApplyOffsetsToIronRingClientRpc(NetworkObjectReference ironRingNetObjRef)
+    {
+
+        if (ironRingNetObjRef.TryGet(out NetworkObject ironRing)) 
+        {
+            Debug.Log("WORKING");
+
+            // Find the necessary parts (Ghost Screw, Ghost Ring, Screw, Ring)
+            Transform ghostTransform = ironRing.transform.Find("Ghost");
+            if (ghostTransform == null)
+            {
+                Debug.LogError("Ghost object not found.");
+                return;
+            }
+
+            Transform ghostScrew = ghostTransform.Find("Ghost Screw");
+            Transform ghostRing = ghostTransform.Find("Ghost Ring");
+            Transform screw = ironRing.transform.Find("Screw");
+            Transform ring = ironRing.transform.Find("Ring");
+
+            if (ghostScrew == null || ghostRing == null || screw == null || ring == null)
+            {
+                Debug.LogError("One or more required parts are missing.");
+                return;
+            }
+
+            // Calculate the offsets for Screw and Ring
+            Vector3 realMeshOffsetScrew = ghostScrew.position - screw.position;
+            Vector3 realMeshOffsetRing = ghostRing.position - ring.position;
+
+            // Apply the calculated offsets to the Screw, Ring, and BoxCollider
+            screw.position += realMeshOffsetScrew;
+            ring.position += realMeshOffsetRing;
+            ironRing.GetComponent<BoxCollider>().center += realMeshOffsetScrew;
+
+
+            // Debug the changes
+            Debug.Log($"Applied offsets: Screw offset: {realMeshOffsetScrew}, Ring offset: {realMeshOffsetRing}");
+        }
+    }
+// ServerRpc to reparent the ironRing on the server
+[ServerRpc(RequireOwnership = false)]
     void ReparentIronRingServerRpc(NetworkObjectReference ironRingNetObjRef, NetworkObjectReference ironStandNetObjRef)
     {
         if (ironRingNetObjRef.TryGet(out NetworkObject ironRingObj) && ironStandNetObjRef.TryGet(out NetworkObject ironStandObj))
@@ -609,6 +672,7 @@ public class doCertainThingWith : NetworkBehaviour
         // Attempt to get the NetworkObject for the new parent (iron stand)
         if (pickUpScript.other != null && newParentReference.TryGet(out NetworkObject newParentObject))
         {
+            Debug.Log("POSITION" + position);
             // Update the position of the iron ring
             pickUpScript.other.transform.position = position;
 
@@ -617,15 +681,20 @@ public class doCertainThingWith : NetworkBehaviour
         }
     }
 
+
+
     [ClientRpc]
     void SnapIronRingToClientsClientRpc(Vector3 position)
     {
         // Update the position of all clients
         if (IsClient)
         {
+            Debug.Log("POSITION" + position);
                 pickUpScript.other.transform.position = position;
         }
     }
+
+
 
     void checkForIronRingNearby(NetworkObjectReference ironMeshReference)
     {
@@ -783,11 +852,11 @@ public class doCertainThingWith : NetworkBehaviour
             ironRing.transform.Find("Ghost").gameObject.SetActive(false);
             ironRing.transform.Find("Screw").gameObject.SetActive(true);
             ironRing.transform.Find("Ring").gameObject.SetActive(true);
-            Debug.Log("Off");
+            Debug.Log("Off Client");
         }
         if (droppedRing)
         {
-            Debug.Log("True Off");
+            Debug.Log("True Off Client");
         }
     }
 
@@ -816,6 +885,51 @@ public class doCertainThingWith : NetworkBehaviour
         }
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    void DeactivateGhostRingServerRpc(NetworkObjectReference ironRingReference)
+    {
+        if (ironRingReference.TryGet(out NetworkObject ironRingObject))
+        {
+            GameObject ironRing = ironRingObject.gameObject;
+            ironRing.transform.Find("Ghost").gameObject.SetActive(false);
+            ironRing.transform.Find("Screw").gameObject.SetActive(true);
+            ironRing.transform.Find("Ring").gameObject.SetActive(true);
+            Debug.Log("Off Host");
+        }
+
+        if (droppedRing)
+        {
+            Debug.Log("True Off Host");
+        }
+
+        // Call the ClientRpc to ensure all clients update
+        DeactivateGhostRingClientRpc(ironRingReference);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void ActivateGhostRingServerRpc(NetworkObjectReference ironRingReference)
+    {
+        if (ironRingReference.TryGet(out NetworkObject ironRingObject))
+        {
+            GameObject ironRing = ironRingObject.gameObject;
+            if (droppedRing)
+            {
+                ironRing.transform.Find("Ghost").gameObject.SetActive(false);
+                ironRing.transform.Find("Screw").gameObject.SetActive(true);
+                ironRing.transform.Find("Ring").gameObject.SetActive(true);
+                Debug.Log("Off2 Host");
+            }
+            else
+            {
+                ironRing.transform.Find("Ghost").gameObject.SetActive(true);
+                ironRing.transform.Find("Screw").gameObject.SetActive(false);
+                ironRing.transform.Find("Ring").gameObject.SetActive(false);
+                Debug.Log("On Host");
+            }
+        }
+        // Call the ClientRpc to ensure all clients update
+        ActivateGhostRingClientRpc(ironRingReference);
+    }
 
 
 
