@@ -19,10 +19,7 @@ public class pickUpObjects : NetworkBehaviour
     public float holdingDistance = 3f; 
     public float blendingSensitivity = 3f;
     float rotationAmInDegrees = 12f;
-    public NetworkVariable<ulong> heldItem = new NetworkVariable<ulong>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    public GameObject other;  // The object the client is holding
-    int otherObjectLayer;
-    public Transform heldItemTransform;
+    public GameObject other;  int otherObjectLayer;
 
     public float targetX;
     public float targetZ;
@@ -57,7 +54,6 @@ public class pickUpObjects : NetworkBehaviour
     
 
 
-
     void Start(){
         xSens = GetComponent<playerMovement>().xSens;
         playerCamera = transform.GetChild(0);
@@ -71,35 +67,15 @@ public class pickUpObjects : NetworkBehaviour
 
     void Update()
     {
-        if (IsOwner)
-        {
+        if (IsOwner){
             setTargetPosition();
+
             checkForInput();
-
-            if (checkForCollisions)
-                PreventWeirdIntersections();
-
+            if (checkForCollisions) PreventWeirdIntersections();
             maintainObject();
             handleObjectShadow();
 
-            if (holdingItem)
-            {
-                // Ensure there is a held item and its ID is valid
-                if (heldItem.Value != 0)
-                {
-                    // Check if the item is spawned by its ID
-                    if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(heldItem.Value, out NetworkObject heldItemObject))
-                    {
-                        // Access the Transform of the NetworkObject
-                        Transform heldItemTransform = heldItemObject.transform;
-
-                        // Or just log the position
-                        Debug.Log("Held Item Position: " + heldItemTransform.position);
-                    }
-                }
-
-                setHelpTextConstantly();
-            }
+            if (holdingItem) setHelpTextConstantly();
         }
     }
 
@@ -108,11 +84,8 @@ public class pickUpObjects : NetworkBehaviour
         if (!otherObject) return; 
 
         holdingItem = true;
-
         other = otherObject;
-        NetworkObject networkObj = other.GetComponent<NetworkObject>();
-        heldItem.Value = networkObj.NetworkObjectId;
-
+        
         ChangeOwnershipServerRpc(other.GetComponent<NetworkObject>().NetworkObjectId, NetworkManager.Singleton.LocalClientId);
 
         otherObjectLayer = other.layer;
@@ -505,4 +478,6 @@ public class pickUpObjects : NetworkBehaviour
             networkObject.ChangeOwnership(newOwnerClientId);
         }
     }
+
+
 }

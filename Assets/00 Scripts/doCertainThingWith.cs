@@ -24,6 +24,9 @@ public class doCertainThingWith : NetworkBehaviour
     
     private bool flowLock = false;
 
+    private bool droppedRing = false;
+    private bool droppedMesh = false;
+
     public pickUpObjects pickUpScript;
     public Vector3 testingOffset;
 
@@ -488,7 +491,16 @@ public class doCertainThingWith : NetworkBehaviour
 
                     ironRing.transform.Find("Ghost").gameObject.transform.position = ghostRestingPoint;
 
-                    SnapIronStandToClientsClientRpc(ghostRestingPoint);  // ClientRpc to update other clients
+                    Debug.Log("Update 491");
+                    UpdateGhostPositionOnClientsClientRpc(ghostRestingPoint);  // ClientRpc to update other clients
+                    Debug.Log("Update 493");
+
+                    // Call the UpdateClosestIronStandClientRpc to notify all clients of the updated closest iron stand
+                    if (closestIronStand != null)
+                    {
+                        NetworkObjectReference closestIronStandReference = new NetworkObjectReference(closestIronStand.GetComponent<NetworkObject>());
+                        UpdateClosestIronStandClientRpc(closestIronStandReference);
+                    }
                 }
             }
             else
@@ -509,57 +521,7 @@ public class doCertainThingWith : NetworkBehaviour
         if (ironRingReference.TryGet(out NetworkObject ironRingObject))
         {
             GameObject ironRing = ironRingObject.gameObject;
-            if (ironRing == null) return;
-
-            float minDist = float.MaxValue;
-            closestIronStand = null;
-
-            foreach (GameObject currentObject in GameObject.FindGameObjectsWithTag("IronStand"))
-            {
-                var ironRingPos = ironRing.transform.position;
-                ironRingPos.y = 0f;
-                var ironStandPos = currentObject.transform.position;
-                ironStandPos.y = 0f;
-
-                float distFromRing = Vector3.Distance(ironRingPos, ironStandPos);
-
-                if (distFromRing < minDist)
-                {
-                    minDist = distFromRing;
-                    closestIronStand = currentObject;
-                }
-            }
-
-            // Check the distance for snapping
-            float yDist = Vector3.Distance(ironRing.transform.Find("Pivot").position, closestIronStand.transform.Find("Base").position);
-
-            if (!closestIronStand || minDist > IRON_RING_SNAP_DISTANCE || yDist > 1.35f)
-            {
-                closestIronStand = null;
-                DeactivateGhostRingClientRpc(ironRing);
-                ironRing.GetComponent<BoxCollider>().enabled = true;
-                pickUpScript.other.tag = "IronRing";
-            }
-
-            if (closestIronStand && minDist <= IRON_RING_SNAP_DISTANCE && yDist < 1.35f)
-            {
-                // Sync with clients
-                UpdateClosestIronStandClientRpc(closestIronStand);
-                ActivateGhostRingClientRpc(ironRing);
-                ironRing.GetComponent<BoxCollider>().enabled = false;
-                pickUpScript.other.tag = "NoShadow";
-
-                var ghostRestingPoint = closestIronStand.transform.Find("Base").position;
-                ghostRestingPoint += closestIronStand.transform.up * yDist;
-
-                ironRing.transform.Find("Ghost").gameObject.transform.position = ghostRestingPoint;
-
-                SnapIronStandToClientsClientRpc(ghostRestingPoint);  // Update other clients
-            }
-        }
-        else
-        {
-            Debug.LogError("Invalid NetworkObjectReference!");
+            checkForIronStandNearby(ironRing);
         }
     }
 
@@ -577,37 +539,7 @@ public class doCertainThingWith : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
-    void SnapIronStandToClientsClientRpc(Vector3 position)
-    {
-        // Ensure the pickUpScript and the object it references are not null
-        if (pickUpScript != null)
-        {
-            // Debugging check to see if pickUpScript.other is null
-            if (pickUpScript.heldItem != null)
-            {
-                Transform ghostTransform = pickUpScript.heldItemTransform.Find("Ghost");
-
-                // Check if the "Ghost" object exists before modifying its position
-                if (ghostTransform != null)
-                {
-                    ghostTransform.position = position; // Set the Ghost's position to the desired position
-                }
-                else
-                {
-                    Debug.LogError("Ghost object not found in pickUpScript.other!");
-                }
-            }
-            else
-            {
-                Debug.LogError("pickUpScript.other is null.");
-            }
-        }
-        else
-        {
-            Debug.LogError("pickUpScript is null.");
-        }
-    }
+    
 
     void SnapIronRingToStand()
     {
@@ -642,11 +574,13 @@ public class doCertainThingWith : NetworkBehaviour
 
             // Drop the item and change the tag back
             GameObject temp = pickUpScript.other;
-            pickUpScript.DropItem();
-            temp.tag = "IronRing";
-
             // Sync the new position to all clients
             SnapIronRingToClientsClientRpc(ironRing.transform.position);
+            pickUpScript.DropItem();
+            Debug.Log("Dropped");
+            droppedRing = true;
+            temp.tag = "IronRing";
+
         }
     }
 
@@ -684,7 +618,7 @@ public class doCertainThingWith : NetworkBehaviour
         // Update the position of all clients
         if (IsClient)
         {
-            pickUpScript.other.transform.position = position;
+                pickUpScript.other.transform.position = position;
         }
     }
 
@@ -730,9 +664,12 @@ public class doCertainThingWith : NetworkBehaviour
                 ironMesh.transform.Find("Ghost").position = ghostRestingPoint;
                 ironMesh.transform.Find("Ghost").localEulerAngles = Vector3.zero;
 
+                Debug.Log("Update 708");
                 UpdateGhostPositionOnClientsClientRpc(ghostRestingPoint);
+                Debug.Log("Update 710");
             }
         }
+
         else
         {
             // Clients request the server to perform proximity checks
@@ -755,12 +692,18 @@ public class doCertainThingWith : NetworkBehaviour
     [ClientRpc]
     void UpdateGhostPositionOnClientsClientRpc(Vector3 position)
     {
-        // Sync the ghost's position with all clients
+        // Log the call stack to find out where the method was called from
         if (IsClient)
         {
-            pickUpScript.heldItemTransform.Find("Ghost").position = position;
+            // Sync the ghost's position with all clients
+            if (!droppedRing)
+            {
+                pickUpScript.other.transform.Find("Ghost").position = position;
+            }
         }
     }
+
+
 
     void SnapIronMeshToRing()
     {
@@ -778,10 +721,11 @@ public class doCertainThingWith : NetworkBehaviour
             ironMesh.transform.localEulerAngles = angles;
 
             ironMesh.GetComponent<Rigidbody>().isKinematic = true;
-
-            pickUpScript.DropItem();
-
             SnapIronMeshToClientsClientRpc(ironMesh.transform.position);  // Sync with all clients
+            pickUpScript.DropItem();
+            droppedMesh = true;
+            Debug.Log("Dropped");
+
         }
     }
 
@@ -791,7 +735,7 @@ public class doCertainThingWith : NetworkBehaviour
         // Update all clients with the snapped position
         if (IsClient)
         {
-            pickUpScript.heldItemTransform.position = position;
+            pickUpScript.other.transform.position = position;
         }
     }
 
