@@ -90,9 +90,8 @@ public class matchBoxScript : MonoBehaviour
         matchMesh.SetActive(false);
         GameObject currThrownMatch = Instantiate(thrownMatch, spawnPoint.position, Quaternion.Euler(spawnPoint.localEulerAngles));
         Rigidbody matchRB = currThrownMatch.GetComponent<Rigidbody>();
-        matchRB.AddForce(transform.right * 5f, ForceMode.Impulse);
-        matchRB.AddTorque(matchRB.transform.up * 10f, ForceMode.Force);
-        Destroy(currThrownMatch, 5f); // Destroy the match after 5 seconds of being thrown
+        matchRB.AddForce(transform.right / 800f, ForceMode.Impulse);
+        matchRB.AddTorque(matchRB.transform.up, ForceMode.Force);
         
 
         sleeveDir = -1; // Return sleeve to closed

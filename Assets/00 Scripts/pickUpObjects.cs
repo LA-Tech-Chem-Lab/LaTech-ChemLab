@@ -91,6 +91,8 @@ public class pickUpObjects : NetworkBehaviour
         otherObjectLayer = other.layer;
         other.layer = LayerMask.NameToLayer("HeldObject");
         other.GetComponent<Rigidbody>().useGravity = false;
+        targetX = 0f;
+        targetZ = 0f;
         targetRotation = new Vector3(0f, other.transform.localEulerAngles.y, 0f);
         targetQuaternion = Quaternion.Euler(targetRotation);
         objRenderer = other.GetComponent<Renderer>();
@@ -106,7 +108,7 @@ public class pickUpObjects : NetworkBehaviour
             Vector3 extents = bounds.extents; 
             checkRadius = (extents.x + extents.z) / 2f;
         
-        } else checkRadius = 0.2f;
+        } else checkRadius = 0.12f;
 
         if (other.GetComponent<shiftBy>())
             meshOffset = other.GetComponent<shiftBy>().GetOffset();
@@ -123,6 +125,9 @@ public class pickUpObjects : NetworkBehaviour
             GetComponent<doCertainThingWith>().heldPipette = other;
         }
 
+        if (other.name == "Bunsen Burner")
+            initialHoldingDistance = 1.8f;
+
 
         setHelpTextBasedOnObject();
     }
@@ -131,7 +136,7 @@ public class pickUpObjects : NetworkBehaviour
     {
         other.layer = LayerMask.NameToLayer("HeldObject");
         foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
-            if (currentObject.name == "Erlenmeyer Flask" || currentObject.name == "Erlenmeyer Flask L")
+            if (currentObject.name.StartsWith("Erlenmeyer Flask"))
             {   
                 NetworkObject networkObject = currentObject.GetComponent<NetworkObject>();
                 if (networkObject != null)
@@ -157,6 +162,7 @@ public class pickUpObjects : NetworkBehaviour
         meshOffset = Vector3.zero;
         objExtents = Vector3.zero;
         objShift = Vector3.zero;
+        initialHoldingDistance = untouchedHoldingDistance;
         
         if (other.name == "Tongs")
             GetComponent<doCertainThingWith>().dropItemFromTongsCorrectly();
@@ -166,12 +172,10 @@ public class pickUpObjects : NetworkBehaviour
 
         if (other.name == "Iron Mesh")
             GetComponent<doCertainThingWith>().dropIronMeshCorrectly();
-    
 
-        if (other.name == "Pipette"){
-            initialHoldingDistance = untouchedHoldingDistance;
+        if (other.name == "Pipette")
             other.transform.Find("Tip").GetComponent<ObiEmitter>().speed = 0f;    
-        }
+        
 
         other = null;holdingItem = false;
         multiHandlerScript.setHelpText("");
@@ -195,7 +199,7 @@ public class pickUpObjects : NetworkBehaviour
 
         if (other.name == "Bunsen Burner"){
             if (Input.GetMouseButton(1))
-                multiHandlerScript.setHelpText("Scroll to adjust airflow");
+                multiHandlerScript.setHelpText($"Scroll to adjust airflow\n{other.GetComponent<bunsenBurnerScript>().airflow.ToString("F2")}/1");
             else
                 multiHandlerScript.setHelpText("Right Click to adjust airflow");
         }

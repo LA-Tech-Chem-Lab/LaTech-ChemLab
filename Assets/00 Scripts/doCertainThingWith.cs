@@ -162,7 +162,7 @@ public class doCertainThingWith : NetworkBehaviour
             GameObject obj = pickUpScript.other;
 
             if (obj.name == "Bunsen Burner")
-                obj.GetComponent<bunsenBurnerScript>().adjustGearBasedOnInput(Input.mouseScrollDelta.y);
+                obj.GetComponent<bunsenBurnerScript>().adjustGearBasedOnInput(Input.mouseScrollDelta.y * 2f);
 
         }
 
@@ -548,7 +548,7 @@ public class doCertainThingWith : NetworkBehaviour
     void manipulateBunsenBurner(){
 
         
-        pickUpScript.targetX = 120f;
+        pickUpScript.targetX = 85f;
         pickUpScript.canZoomIn = false;
         pickUpScript.canRotateItem = false;
 
