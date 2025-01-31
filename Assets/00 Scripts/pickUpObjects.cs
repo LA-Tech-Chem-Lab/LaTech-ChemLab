@@ -271,10 +271,10 @@ public class pickUpObjects : NetworkBehaviour
 
             if (rb && rb.GetComponent<Rigidbody>().isKinematic) // We are trying to pick up a kinematic object - not normal
             {
-                // if (hit.collider.gameObject.tag == "IronRing"){
-                //     detachIronRingFromStand(hit.collider.gameObject);
-                //     return;
-                // }
+                if (hit.collider.gameObject.tag == "IronRing"){
+                    detachIronRingFromStand(hit.collider.gameObject);
+                    return;
+                }
                 // Debug.Log(hit.collider.gameObject.name);
             }
 
