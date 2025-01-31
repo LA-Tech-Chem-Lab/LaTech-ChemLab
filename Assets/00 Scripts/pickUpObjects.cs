@@ -363,7 +363,7 @@ public class pickUpObjects : NetworkBehaviour
             launchTraj = (other.transform.position - prev) / Time.deltaTime;            
             prev = other.transform.position;
 
-            launchSpin = (other.transform.eulerAngles - previousRotation);
+            launchSpin = other.transform.eulerAngles - previousRotation;
             previousRotation = other.transform.eulerAngles;
         }
     }
