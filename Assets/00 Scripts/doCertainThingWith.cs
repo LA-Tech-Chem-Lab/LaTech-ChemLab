@@ -207,7 +207,8 @@ public class doCertainThingWith : NetworkBehaviour
             GameObject obj = pickUpScript.other;
 
             if (obj.name == "Bunsen Burner")
-                obj.GetComponent<bunsenBurnerScript>().adjustGearBasedOnInput(Input.mouseScrollDelta.y * 2f);
+                if (Input.GetMouseButton(1))
+                    obj.GetComponent<bunsenBurnerScript>().adjustGearBasedOnInput(Input.mouseScrollDelta.y * 2f);
 
         }
 
