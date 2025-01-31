@@ -5,7 +5,7 @@ public class GlassScript : NetworkBehaviour
 {
     GameObject unbroken;
     GameObject broken;
-    float breakThreshold = 150f; // Example threshold
+    float breakThreshold = 220f; // Example threshold
 
     private NetworkVariable<bool> isBroken = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 

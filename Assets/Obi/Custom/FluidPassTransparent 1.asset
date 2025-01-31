@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: FluidPassTransparent 1
   m_EditorClassIdentifier: 
   voxelSize: 0.02
-  isosurface: 0.05
+  isosurface: 0.5
   descentIterations: 2
   descentIsosurface: 0
   descentSpeed: 0.8
   smoothingIterations: 1
   smoothingIntensity: 1
   bevel: 1
-  materialType: 0
-  customFluidMaterial: {fileID: 0}
+  materialType: 2
+  customFluidMaterial: {fileID: 2100000, guid: a293b78a31998e242844fca27f14a59e, type: 2}
   customUnderwaterMaterial: {fileID: 0}
   reflectionCubemap: {fileID: 8900000, guid: c33edd744b24a4969856286e6004bf8f, type: 3}
   smoothness: 0

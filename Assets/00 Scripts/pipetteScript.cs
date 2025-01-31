@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class pipetteScript : MonoBehaviour // goood luck
 {
     public float checkTimeOut = 0.2f; float timeOfNextCheck;
-    public float flowSpeed = 1f;
+    public float flowSpeed = 1f; float initialFlow;
     public ObiEmitter emitter;
     public float pipetteMaxVolume = 100f;
     public float pipetteVolume;
@@ -29,7 +29,7 @@ public class pipetteScript : MonoBehaviour // goood luck
         ls = GetComponent<liquidScript>();
         if (ls)
             ls.totalVolume_mL = pipetteMaxVolume;
-
+        initialFlow = flowSpeed;
     }
 
     // Update is called once per frame
@@ -44,7 +44,7 @@ public class pipetteScript : MonoBehaviour // goood luck
             pipetteVolume = 0f;
         }
         else{
-            flowSpeed = 1f;
+            flowSpeed = initialFlow;
         }
 
 

@@ -11,6 +11,7 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
         public Transform targetCamPosition;
         [Header("Moving")]
         bool isGrounded;
+        public float crouchSpeed = 2f;
         public float walkSpeed = 8f;
         public float runSpeed = 18f;
         float moveSpeed;
@@ -78,7 +79,7 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
 
         void handleInput()
         {
-            // crouching = (Input.GetKey(KeyCode.LeftControl));
+            crouching = (Input.GetKey(KeyCode.LeftControl));
             // controller.height = crouching ? 1.2f : 3.3f;
             sprinting = (Input.GetKey(KeyCode.LeftShift));
 
@@ -93,6 +94,9 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
         void moving()
         {
             moveSpeed = sprinting ? runSpeed : walkSpeed;
+
+            moveSpeed = crouching ? crouchSpeed : moveSpeed;
+
             movement = Vector3.Normalize(transform.TransformDirection(new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"))));
             if (movement.magnitude == 0) moveSpeed = 0f;
             else actualMoveSpeed = Mathf.Lerp(actualMoveSpeed, moveSpeed, 10f * Time.deltaTime);

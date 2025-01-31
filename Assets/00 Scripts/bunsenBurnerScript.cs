@@ -15,8 +15,6 @@ public class bunsenBurnerScript : MonoBehaviour
         gear = transform.Find("Gear");
         flame = transform.Find("Flame").GetComponent<ParticleSystem>();
         
-        redFlame = colorFromHex("932D00");
-        blueFlame = colorFromHex("001EFF");
     }
 
     void Update()

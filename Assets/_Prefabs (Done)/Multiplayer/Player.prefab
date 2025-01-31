@@ -381,7 +381,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 2.4
-  m_Radius: 0.7
+  m_Radius: 0.55
   m_SlopeLimit: 55
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -402,10 +402,11 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   cameraTransform: {fileID: 2479615450925912079}
   targetCamPosition: {fileID: 545637864248046340}
+  crouchSpeed: 2
   walkSpeed: 5
   runSpeed: 16
   realWorldMoveSpeed: 0
-  jumpHeight: 1.4
+  jumpHeight: 1.5
   xSens: 250
   ySens: 180
   playerAnimator: {fileID: 3565226767402054665}
@@ -443,17 +444,23 @@ MonoBehaviour:
   holdingDistance: 2.2
   blendingSensitivity: 25
   other: {fileID: 0}
+  targetX: 0
+  targetZ: 0
   targetRotation: {x: 0, y: 0, z: 0}
   meshOffset: {x: 0, y: 0, z: 0}
+  heldObjPosition: {x: 0, y: 0, z: 0}
   checkForCollisions: 1
   distOffset: 0
   checkRadius: 0.25
   multiHandlerScript: {fileID: 0}
   canRotateItem: 0
+  canZoomIn: 1
   shadowCastPoint: {fileID: 0}
   objRenderer: {fileID: 0}
   objExtents: {x: 0, y: 0, z: 0}
   objShift: {x: 0, y: 0, z: 0}
+  shadowGameobject: {fileID: 0}
+  shadowProjector: {fileID: 0}
 --- !u!114 &1703488873047447807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -492,6 +499,9 @@ MonoBehaviour:
   itemHeldByTongs: {fileID: 0}
   heldPipette: {fileID: 0}
   pipetteSpeed: 0
+  closestIronStand: {fileID: 0}
+  closestIronRing: {fileID: 0}
+  pickUpScript: {fileID: 0}
   testingOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &3771954789903716741
 MonoBehaviour:
@@ -531,7 +541,7 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.38
-  m_Height: 2.4
+  m_Height: 2.5
   m_Direction: 1
   m_Center: {x: 0, y: 0.2, z: 0.09}
 --- !u!1 &1186885220638781345
