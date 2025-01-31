@@ -362,6 +362,7 @@ public class doCertainThingWith : NetworkBehaviour
                 {
                     //Sets the liquid type in the pipette to the liquid type in the beaker (the liquid type will not change inside the pipette)
                     PS.pipetteSolution = LS.solutionMakeup;
+                    heldPipette.GetComponent<liquidScript>().solutionMakeup = LS.solutionMakeup;
 
                     //Extracts liquid from the beaker into the pipette
                     float beakerAmountAfterExtracting = LS.currentVolume_mL - amountToAddOrExtract;
