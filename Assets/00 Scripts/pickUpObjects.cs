@@ -244,41 +244,43 @@ public class pickUpObjects : NetworkBehaviour
 
     void checkForRigidbody()
     {
-
         Ray forwardRay = new Ray(playerCamera.position, playerCamera.forward);
         RaycastHit hit;
+
         if (Physics.Raycast(forwardRay, out hit, range))
         {
-            NetworkRigidbody rb = hit.collider.GetComponent<NetworkRigidbody>();
-            // if (!rb)
-            //     return;
+            GameObject hitObject = hit.collider.gameObject;
 
-            NetworkObject netObj = hit.collider.GetComponent<NetworkObject>();
+            // Prevent pickup if the object has doorScript or cabinetScript
+            if (hitObject.GetComponent<doorScript>() || hitObject.GetComponent<cabinetScript>())
+            {
+                return; // Simply exit the function, preventing pickup
+            }
+
+            NetworkRigidbody rb = hitObject.GetComponent<NetworkRigidbody>();
+            NetworkObject netObj = hitObject.GetComponent<NetworkObject>();
+
             if (netObj)
             {
-                // Debug.Log($"NetworkObject detected. IsOwner: {netObj.IsOwner}, OwnerClientId: {netObj.OwnerClientId}");
-
                 if (!netObj.IsOwner && IsClient)
                 {
                     RequestPickUpServerRpc(netObj.NetworkObjectId);
                     return; // Exit since the request has been made
                 }
             }
-            
 
-            if (rb && rb.GetComponent<Rigidbody>().isKinematic) // We are trying to pick up a kinematic object
+            if (rb && rb.GetComponent<Rigidbody>().isKinematic) // We are trying to pick up a kinematic object - not normal
             {
-                if (hit.collider.gameObject.tag == "IronRing"){
-                    detachIronRingFromStand(hit.collider.gameObject);
-                    return;
-                }
+                // if (hit.collider.gameObject.tag == "IronRing"){
+                //     detachIronRingFromStand(hit.collider.gameObject);
+                //     return;
+                // }
                 // Debug.Log(hit.collider.gameObject.name);
             }
 
-            if (rb && !rb.GetComponent<Rigidbody>().isKinematic)                //  ITEM PICKUP
+            if (rb && !rb.GetComponent<Rigidbody>().isKinematic) // ITEM PICKUP
             {
-                // if (rb.gameObject.name != "Glass Fragment")
-                    PickUpItem(hit.collider.gameObject);
+                PickUpItem(hitObject);
             }
         }
     }
