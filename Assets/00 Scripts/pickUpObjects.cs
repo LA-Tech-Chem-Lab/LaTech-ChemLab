@@ -199,7 +199,7 @@ public class pickUpObjects : NetworkBehaviour
 
         if (other.name == "Bunsen Burner"){
             if (Input.GetMouseButton(1))
-                multiHandlerScript.setHelpText($"Scroll to adjust airflow\n{other.GetComponent<bunsenBurnerScript>().airflow.ToString("F2")}/1");
+                multiHandlerScript.setHelpText($"Scroll to adjust airflow\n{other.GetComponent<bunsenBurnerScript>().airflow.Value.ToString("F2")}/1");
             else
                 multiHandlerScript.setHelpText("Right Click to adjust airflow");
         }

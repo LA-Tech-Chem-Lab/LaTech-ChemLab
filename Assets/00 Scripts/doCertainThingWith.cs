@@ -21,7 +21,9 @@ public class doCertainThingWith : NetworkBehaviour
     
     public GameObject heldPipette; public float pipetteSpeed;
     public GameObject closestIronStand; public GameObject closestIronRing;
-    
+
+    public GameObject ironMesh;
+
     private bool flowLock = false;
 
     pickUpObjects pickUpScript;
@@ -30,6 +32,12 @@ public class doCertainThingWith : NetworkBehaviour
     void Start()
     {
         pickUpScript = GetComponent<pickUpObjects>();
+        ironMesh = GameObject.Find("Iron Mesh");
+        Rigidbody rb = ironMesh.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+        }
     }
 
     // Update is called once per frame
@@ -158,14 +166,17 @@ public class doCertainThingWith : NetworkBehaviour
     }
 
     void checkForKeyOrScrollInputs(){
-        if (pickUpScript.other != null) {
+        if (pickUpScript.other != null)
+        {
             GameObject obj = pickUpScript.other;
 
             if (obj.name == "Bunsen Burner")
                 if (Input.GetMouseButton(1))
-                    obj.GetComponent<bunsenBurnerScript>().adjustGearBasedOnInput(Input.mouseScrollDelta.y * 2f);
+                {
+                    obj.GetComponent<bunsenBurnerScript>().AdjustAirflowBasedOnInput(Input.mouseScrollDelta.y * 2f);
+                    obj.GetComponent<bunsenBurnerScript>().AdjustGearRotationServerRpc(Input.mouseScrollDelta.y * 2f);
+                }
         }
-
     }
 
     void BringObjectCloser(float dist)
