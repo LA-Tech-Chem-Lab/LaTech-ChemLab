@@ -54,7 +54,6 @@ public class liquidScript : MonoBehaviour
     {
         
         dotProduct = Vector3.Dot(transform.up.normalized, Vector3.up);
-        Debug.Log($"dotProduct: {dotProduct}");
         if (dotProduct <= 0.25f){
             float loss = (-0.8f * dotProduct + 0.2f) * maxSpillRate * Time.deltaTime;
             currentVolume_mL -= loss;
