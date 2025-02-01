@@ -79,7 +79,11 @@ public class interactWithObjects : NetworkBehaviour
                     if (IsServer)
                         weightScaleScript.Tare(); // Call the Tare method directly
                     else
-                        RequestTareInteractionServerRpc(weightScaleScript.GetComponent<NetworkObject>().NetworkObjectId);
+                    {
+                        Debug.Log("Client Request Tare Button");
+                        GameObject scaleObject = GameObject.Find("scale");
+                        RequestTareInteractionServerRpc(scaleObject.GetComponent<NetworkObject>().NetworkObjectId);
+                    }
                 }
                 else
                 {
@@ -138,14 +142,17 @@ public class interactWithObjects : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     private void RequestTareInteractionServerRpc(ulong networkObjectId)
     {
+        Debug.Log("progress checkpoint 1");
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out NetworkObject networkObject))
         {
-            WeightScale weightScaleScript = networkObject.GetComponent<WeightScale>();
+            Debug.Log("progress checkpoint 2");
+            WeightScale weightScaleScript = networkObject.GetComponentInChildren<WeightScale>();
             if (weightScaleScript != null)
             {
+                Debug.Log("progress checkpoint 3");
                 weightScaleScript.Tare();
             }
         }
