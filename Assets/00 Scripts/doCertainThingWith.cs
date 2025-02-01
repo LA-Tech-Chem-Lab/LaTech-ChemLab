@@ -401,13 +401,13 @@ public class doCertainThingWith : NetworkBehaviour
         return closestBeakerOrFlask;
     }
 
-    void checkForIronStandNearby(GameObject ironRing){
-
+    void checkForIronStandNearby(GameObject ironRing)
+    {
         float minDist = float.MaxValue;
         closestIronStand = null;
 
         foreach (GameObject currentObject in GameObject.FindGameObjectsWithTag("IronStand"))
-        {   
+        {
             var ironRingPos = ironRing.transform.position; ironRingPos.y = 0f;
             var ironStandPos = currentObject.transform.position; ironStandPos.y = 0f;
 
@@ -423,10 +423,10 @@ public class doCertainThingWith : NetworkBehaviour
         float yDist = Vector3.Distance(ironRing.transform.Find("Pivot").position, closestIronStand.transform.Find("Base").position);
 
         // No Go
-        if (!closestIronStand || minDist > IRON_RING_SNAP_DISTANCE || yDist > 1.35f){
-            
+        if (!closestIronStand || minDist > IRON_RING_SNAP_DISTANCE || yDist > 1.35f)
+        {
             closestIronStand = null;
-            ironRing.transform.Find("Screw").gameObject.SetActive(true); 
+            ironRing.transform.Find("Screw").gameObject.SetActive(true);
             ironRing.transform.Find("Ring").gameObject.SetActive(true);
             ironRing.transform.Find("Ghost").gameObject.SetActive(false);
             ironRing.GetComponent<BoxCollider>().enabled = true;
@@ -434,9 +434,9 @@ public class doCertainThingWith : NetworkBehaviour
         }
 
         // Now we have closest stand
-        if (closestIronStand && minDist <= IRON_RING_SNAP_DISTANCE && yDist < 1.35f) {
-            
-            ironRing.transform.Find("Screw").gameObject.SetActive(false); 
+        if (closestIronStand && minDist <= IRON_RING_SNAP_DISTANCE && yDist < 1.35f)
+        {
+            ironRing.transform.Find("Screw").gameObject.SetActive(false);
             ironRing.transform.Find("Ring").gameObject.SetActive(false);
             ironRing.transform.Find("Ghost").gameObject.SetActive(true);
             ironRing.GetComponent<BoxCollider>().enabled = false;
@@ -446,36 +446,164 @@ public class doCertainThingWith : NetworkBehaviour
             ghostRestingPoint += closestIronStand.transform.up * yDist;
 
             ironRing.transform.Find("Ghost").gameObject.transform.position = ghostRestingPoint;
-        }
-        
 
+            // Inform the server about the closest iron stand
+            if (IsOwner)
+            {
+                // Get the NetworkObjectIds for the iron ring and closest iron stand
+                ulong ironRingId = pickUpScript.other.GetComponent<NetworkObject>().NetworkObjectId;
+                ulong ironStandId = closestIronStand.GetComponent<NetworkObject>().NetworkObjectId;
+
+                // Call the server RPC to update the closest iron stand
+                UpdateClosestIronStandServerRpc(ironRingId, ironStandId);
+            }
+        }
     }
 
-    void SnapIronRingToStand(){
+    [ServerRpc(RequireOwnership = false)]
+    void UpdateClosestIronStandServerRpc(ulong ironRingId, ulong ironStandId, ServerRpcParams rpcParams = default)
+    {
+        // Find the iron ring by its NetworkObjectId
+        NetworkObject ironRingNetObj = NetworkManager.Singleton.SpawnManager.SpawnedObjects[ironRingId];
+        if (ironRingNetObj != null)
+        {
+            // Find the iron stand by its NetworkObjectId
+            NetworkObject ironStandNetObj = NetworkManager.Singleton.SpawnManager.SpawnedObjects[ironStandId];
+            if (ironStandNetObj != null)
+            {
+                // Now update the closest iron stand on the server
+                closestIronStand = ironStandNetObj.gameObject;
+            }
+        }
+    }
+
+    void SnapIronRingToStand()
+    {
         GameObject ironRing = pickUpScript.other;
 
-        if (ironRing.transform.Find("Ghost").gameObject.activeInHierarchy){ // We are ready to snap and we right clicked
-
+        if (ironRing.transform.Find("Ghost").gameObject.activeInHierarchy) // Ready to snap and right-clicked
+        {
+            if (IsHost)
+            {
+                Debug.Log("[SERVER] This is the host, processing iron ring snap.");
+            }
+            else
+            {
+                Debug.Log("[CLIENT] This is a client, triggering action on server.");
+            }
             Vector3 realMeshOffset = ironRing.transform.Find("Ghost").Find("Ghost Screw").position - ironRing.transform.Find("Screw").position;
 
 
-            ironRing.transform.Find("Screw").position += realMeshOffset;
-            ironRing.transform.Find("Ring").position += realMeshOffset;
-            ironRing.GetComponent<BoxCollider>().center += realMeshOffset;
-
-            ironRing.transform.Find("Screw").gameObject.SetActive(true); 
+            ironRing.transform.Find("Screw").gameObject.SetActive(true);
             ironRing.transform.Find("Ring").gameObject.SetActive(true);
             ironRing.transform.Find("Ghost").gameObject.SetActive(false);
             ironRing.GetComponent<BoxCollider>().enabled = true;
 
-            ironRing.GetComponent<Rigidbody>().isKinematic = true;
-            ironRing.transform.SetParent(closestIronStand.transform);
-            
+            ironRing.GetComponent<Rigidbody>().isKinematic = true; // Set to kinematic
+
             GameObject temp = pickUpScript.other;
-            pickUpScript.DropItem(); // prob the only way
+            pickUpScript.DropItem(); // Probably the only way
             temp.tag = "IronRing";
+
+            // Ensure the Iron Ring has a NetworkObject and is spawned before syncing
+            if (ironRing.TryGetComponent<NetworkObject>(out var netObj) && netObj.IsSpawned)
+            {
+                // If client initiated, notify the server
+                if (!IsHost)
+                {
+                    Debug.Log("Client Trying");
+                    // Call server-side function to handle syncing and actions
+                    NotifyServerToSnapIronRingServerRpc(netObj.NetworkObjectId, ironRing.transform.position, realMeshOffset, true);
+                }
+                else
+                {
+                    Debug.Log("Server Trying");
+                    // If host initiates, proceed directly
+                    SyncIronRingPositionAndOffsetServerRpc(netObj.NetworkObjectId, ironRing.transform.position, realMeshOffset, true);
+                    SetParentServerRpc(netObj.NetworkObjectId, closestIronStand.GetComponent<NetworkObject>().NetworkObjectId);
+                }
+            }
+
+            // Debug log for host only
+            if (IsHost)
+            {
+                Debug.Log($"[HOST] Iron Ring Position: {ironRing.transform.position}");
+            }
         }
     }
+
+    // ServerRpc for client to notify the server to handle the snapping and synchronization
+    [ServerRpc(RequireOwnership = false)]
+    void NotifyServerToSnapIronRingServerRpc(ulong ironRingId, Vector3 position, Vector3 offset, bool isKinematic, ServerRpcParams rpcParams = default)
+    {
+        SyncIronRingPositionAndOffsetServerRpc(ironRingId, position, offset, isKinematic);
+        // Optionally, trigger SetParentServerRpc for server-side parenting
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ironRingId, out NetworkObject ironRingNetObj))
+        {
+            SetParentServerRpc(ironRingId, closestIronStand.GetComponent<NetworkObject>().NetworkObjectId);
+        }
+    }
+
+
+
+    // ServerRpc for syncing position and offset across all clients
+    [ServerRpc(RequireOwnership = false)]
+    void SyncIronRingPositionAndOffsetServerRpc(ulong ironRingId, Vector3 position, Vector3 offset, bool isKinematic, ServerRpcParams rpcParams = default)
+    {
+        Debug.Log($"[SERVER] Iron Ring Snap Triggered on Server. Position: {position}, Offset: {offset}, Is Kinematic: {isKinematic}");
+
+        // Ensure the iron ring position is updated on the server before syncing
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ironRingId, out NetworkObject ironRingNetObj))
+        {
+            GameObject ironRing = ironRingNetObj.gameObject;
+
+            ironRing.transform.position = position;
+            ironRing.transform.Find("Screw").position += offset;
+            ironRing.transform.Find("Ring").position += offset;
+            ironRing.GetComponent<BoxCollider>().center += offset;
+            ironRing.GetComponent<Rigidbody>().isKinematic = isKinematic;
+
+            // Sync to clients
+            SyncIronRingPositionAndOffsetClientRpc(ironRingId, position, offset, isKinematic);
+        }
+    }
+
+
+    // ClientRpc to update clients with the position and offset
+    [ClientRpc]
+    void SyncIronRingPositionAndOffsetClientRpc(ulong ironRingId, Vector3 position, Vector3 offset, bool isKinematic)
+    {
+        if (!IsHost) // Only clients update (Host already has the correct position)
+        {
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ironRingId, out NetworkObject ironRingNetObj))
+            {
+                GameObject ironRing = ironRingNetObj.gameObject;
+
+                // Apply the position and offset on the client as well
+                ironRing.transform.position = position;
+                ironRing.transform.Find("Screw").position += offset;
+                ironRing.transform.Find("Ring").position += offset;
+                ironRing.GetComponent<BoxCollider>().center += offset;
+                ironRing.GetComponent<Rigidbody>().isKinematic = isKinematic;
+
+                // Debug log for clients only
+                Debug.Log($"[CLIENT] Iron Ring Position: {ironRing.transform.position}");
+            }
+        }
+    }
+
+    // ServerRpc for setting the parent on the server
+    [ServerRpc(RequireOwnership = false)]
+    void SetParentServerRpc(ulong ironRingId, ulong standId)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ironRingId, out NetworkObject ironRingNetObj) &&
+            NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(standId, out NetworkObject standNetObj))
+        {
+            ironRingNetObj.transform.SetParent(standNetObj.transform);
+        }
+    }
+
+
 
     void checkForIronRingNearby(GameObject ironMesh){
 
