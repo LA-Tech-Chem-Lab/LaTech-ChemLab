@@ -10,12 +10,13 @@ public class interactWithObjects : NetworkBehaviour
     public bool playerHoldingObject;
     pickUpObjects pos;
 
-    void Start(){
+    void Start()
+    {
         pos = GetComponent<pickUpObjects>();
     }
 
     void Update()
-    {   
+    {
         if (IsOwner)
         {
             playerHoldingObject = pos.other != null;
@@ -76,14 +77,7 @@ public class interactWithObjects : NetworkBehaviour
                 WeightScale weightScaleScript = parent.GetComponentInChildren<WeightScale>();
                 if (weightScaleScript != null)
                 {
-                    if (IsServer)
-                        weightScaleScript.Tare(); // Call the Tare method directly
-                    else
-                    {
-                        Debug.Log("Client Request Tare Button");
-                        GameObject scaleObject = GameObject.Find("scale");
-                        RequestTareInteractionServerRpc(scaleObject.GetComponent<NetworkObject>().NetworkObjectId);
-                    }
+                    weightScaleScript.RequestTareServerRpc();
                 }
                 else
                 {
@@ -138,22 +132,6 @@ public class interactWithObjects : NetworkBehaviour
             if (cabinetScriptObject != null)
             {
                 cabinetScriptObject.InteractWithThisCabinet();
-            }
-        }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void RequestTareInteractionServerRpc(ulong networkObjectId)
-    {
-        Debug.Log("progress checkpoint 1");
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out NetworkObject networkObject))
-        {
-            Debug.Log("progress checkpoint 2");
-            WeightScale weightScaleScript = networkObject.GetComponentInChildren<WeightScale>();
-            if (weightScaleScript != null)
-            {
-                Debug.Log("progress checkpoint 3");
-                weightScaleScript.Tare();
             }
         }
     }
