@@ -80,8 +80,8 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
         void handleInput()
         {
             crouching = (Input.GetKey(KeyCode.LeftControl));
-            // controller.height = crouching ? 1.2f : 3.3f;
             sprinting = (Input.GetKey(KeyCode.LeftShift));
+            controller.height = crouching ? 1.2f : 2.4f;
 
             if (Input.GetKeyDown(KeyCode.Space))
                 Jump();

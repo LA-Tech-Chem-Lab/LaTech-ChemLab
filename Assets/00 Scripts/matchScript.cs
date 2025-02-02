@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class matchScript : MonoBehaviour
 {   
-    const float MATCH_LIGHT_RADUIS = 0.7f;
+    const float MATCH_LIGHT_RADUIS = 0.4f;
     
     public GameObject closestBunsenBurner;
     public Transform tip;
@@ -53,7 +53,7 @@ public class matchScript : MonoBehaviour
             
             
 
-            if (dist < minDist){
+            if (dist < minDist && dist < MATCH_LIGHT_RADUIS){
                 minDist = dist;
                 closestBunsenBurner = currentBurner;
             }

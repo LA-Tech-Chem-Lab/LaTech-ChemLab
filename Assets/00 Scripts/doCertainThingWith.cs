@@ -12,7 +12,7 @@ public class doCertainThingWith : NetworkBehaviour
 {   
     const float TONG_GRAB_DISTANCE = 3f;
     const float PIPETTE_GRAB_DISTANCE = 0.3f;
-    const float IRON_RING_SNAP_DISTANCE = 0.5f;
+    const float IRON_RING_SNAP_DISTANCE = 0.7f;
 
 
 
@@ -643,9 +643,10 @@ public class doCertainThingWith : NetworkBehaviour
             ironMesh.transform.Find("Ghost").gameObject.SetActive(false);
             ironMesh.GetComponent<BoxCollider>().enabled = false;
         }
+        
 
         // Now we have closest ring
-        if (closestIronRing && minDist <= IRON_RING_SNAP_DISTANCE) {
+        if (closestIronRing && minDist <= IRON_RING_SNAP_DISTANCE && closestIronRing.transform.parent != null) {
             ironMesh.transform.Find("Real").gameObject.SetActive(false);
             ironMesh.transform.Find("Ghost").gameObject.SetActive(true);
             ironMesh.GetComponent<BoxCollider>().enabled = true;

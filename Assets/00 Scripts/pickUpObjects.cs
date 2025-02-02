@@ -25,6 +25,7 @@ public class pickUpObjects : NetworkBehaviour
     public float targetZ;
     public Vector3 targetRotation;
     public Vector3 meshOffset;
+    public Vector3 targetPositionShift;
     Vector3 targetPosition;
     public Vector3 heldObjPosition;
     public bool checkForCollisions;
@@ -45,7 +46,8 @@ public class pickUpObjects : NetworkBehaviour
     // Def dont need to touch
     bool holdingItem;
     Quaternion targetQuaternion;
-    float initialHoldingDistance; float untouchedHoldingDistance;
+    public float initialHoldingDistance; public float untouchedHoldingDistance; public float initialHeldDistForObject; public float distFromGroundLayer;
+    public bool readyToMoveBack;
     float xSens;
     Vector3 prev;
     Vector3 previousRotation;
@@ -57,7 +59,7 @@ public class pickUpObjects : NetworkBehaviour
     void Start(){
         xSens = GetComponent<playerMovement>().xSens;
         playerCamera = transform.GetChild(0);
-        initialHoldingDistance = holdingDistance; untouchedHoldingDistance = initialHoldingDistance;
+        initialHoldingDistance = holdingDistance; untouchedHoldingDistance = initialHoldingDistance; initialHeldDistForObject = untouchedHoldingDistance;
         multiHandlerScript = GameObject.FindGameObjectWithTag("GameController").GetComponent<multihandler>();
         shadowCastPoint = GameObject.Find("Shadow For Held Object").transform;
         canRotateItem = true;
@@ -97,10 +99,6 @@ public class pickUpObjects : NetworkBehaviour
         targetQuaternion = Quaternion.Euler(targetRotation);
         objRenderer = other.GetComponent<Renderer>();
         objExtents = other.GetComponent<Collider>().bounds.extents;
-        if (other.GetComponent<shiftBy>())
-            objShift = other.GetComponent<shiftBy>().GetOffset();
-        else
-            objShift = Vector3.zero;
 
         Renderer renderer = other.GetComponent<Renderer>();
         if (renderer){
@@ -110,11 +108,19 @@ public class pickUpObjects : NetworkBehaviour
         
         } else checkRadius = 0.12f;
 
-        if (other.GetComponent<shiftBy>())
-            meshOffset = other.GetComponent<shiftBy>().GetOffset();
-        else
-            meshOffset = Vector3.zero;
+    
+        if (other.GetComponent<shiftBy>()) {
+            meshOffset = other.GetComponent<shiftBy>().GetOffset();  objShift = meshOffset;
+            targetPositionShift = other.GetComponent<shiftBy>().GetTargetPosOffset(); 
+            if (other.GetComponent<shiftBy>().checkRadiusOverride > 0f) checkRadius = other.GetComponent<shiftBy>().checkRadiusOverride; }
+        else {
+            meshOffset = Vector3.zero;  objShift = meshOffset;
+            targetPositionShift = Vector3.zero; }
 
+
+
+
+        initialHoldingDistance = untouchedHoldingDistance;
 
         if (other.name == "Tongs")
             SetOwnerToTongs();
@@ -128,24 +134,10 @@ public class pickUpObjects : NetworkBehaviour
         if (other.name == "Bunsen Burner")
             initialHoldingDistance = 1.8f;
 
-
+        initialHeldDistForObject = initialHoldingDistance;
         setHelpTextBasedOnObject();
     }
 
-    void SetOwnerToTongs()
-    {
-        other.layer = LayerMask.NameToLayer("HeldObject");
-        foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
-            if (currentObject.name.StartsWith("Erlenmeyer Flask"))
-            {   
-                NetworkObject networkObject = currentObject.GetComponent<NetworkObject>();
-                if (networkObject != null)
-                {
-                    ulong networkObjectId = networkObject.NetworkObjectId;
-                    ChangeOwnershipServerRpc(networkObjectId, NetworkManager.Singleton.LocalClientId);
-                }
-            }
-    }
 
     public void DropItem(){
 
@@ -162,6 +154,8 @@ public class pickUpObjects : NetworkBehaviour
         meshOffset = Vector3.zero;
         objExtents = Vector3.zero;
         objShift = Vector3.zero;
+        targetPositionShift = Vector3.zero;
+        checkRadius = 0f;
         initialHoldingDistance = untouchedHoldingDistance;
         
         if (other.name == "Tongs")
@@ -207,20 +201,6 @@ public class pickUpObjects : NetworkBehaviour
 
 
 
-    void OnDrawGizmos()
-    {
-        // Ensure this Gizmo is drawn only for the owning player
-        if (IsOwner && playerCamera != null)
-        {
-            // Draw the holding position sphere
-            Gizmos.color = holdingItem ? Color.green : Color.red;
-            Gizmos.DrawSphere(targetPosition, checkRadius);
-
-            // Draw the forward ray for picking up objects
-            Gizmos.color = Color.blue;
-            Gizmos.DrawRay(playerCamera.position, playerCamera.forward * range);
-        }
-    }
 
     void checkForInput()
     {
@@ -297,14 +277,22 @@ public class pickUpObjects : NetworkBehaviour
 
         
 
-        distOffset /= 1.1f; // Make approach zero when not in use
+        distOffset /= 1.05f; // Make approach zero when not in use
     }
 
     void PreventWeirdIntersections()
     {
         if (holdingItem)
-        {   
-            bool targetPositionBlocked = Physics.CheckSphere(targetPosition, checkRadius, LayerMask.GetMask("Ground"));
+        { 
+            Ray ray = new Ray(playerCamera.position, targetPosition - playerCamera.position);
+            RaycastHit Prehit;
+
+            // Perform the raycast
+            if (Physics.Raycast(ray, out Prehit, range, LayerMask.GetMask("Ground"))){
+                distFromGroundLayer = Vector3.Distance(playerCamera.position, Prehit.point);
+            }
+            readyToMoveBack = !Physics.CheckSphere(targetPosition + other.transform.TransformDirection(targetPositionShift), checkRadius * 1.8f, LayerMask.GetMask("Ground"));
+            bool targetPositionBlocked = Physics.CheckSphere(targetPosition + targetPositionShift, checkRadius, LayerMask.GetMask("Ground"));
 
             if (targetPositionBlocked){
                 Ray forwardRay = new Ray(playerCamera.position, playerCamera.forward);
@@ -313,10 +301,15 @@ public class pickUpObjects : NetworkBehaviour
                 if (Physics.Raycast(forwardRay, out hit, holdingDistance)){
                     float distFromCamera = Vector3.Distance(playerCamera.position, hit.point);
                     // Debug.Log(distFromCamera);
-                    holdingDistance -= (holdingDistance - distFromCamera)/4f;
+                    holdingDistance -= (holdingDistance - distFromCamera)/2f;
+                    initialHoldingDistance = holdingDistance;
                 }
             } else {
-                holdingDistance = Mathf.MoveTowards(holdingDistance, initialHoldingDistance, blendingSensitivity * Time.deltaTime);
+                if (other.name != "Pipette") initialHoldingDistance = Mathf.MoveTowards(initialHoldingDistance, initialHeldDistForObject, blendingSensitivity * Time.deltaTime);
+                if (distFromGroundLayer < holdingDistance) 
+                    if (other.name != "Matchbox" && other.name != "Tongs" && other.name != "Glass Plate" && !other.name.StartsWith("Beaker")) { 
+                        Debug.Log("If you are seeing this and the item is not behind a wall, go to pickUpObjects > PreventWeirdIntersections() and add this name to the if statement"); holdingDistance = distFromGroundLayer - checkRadius; initialHoldingDistance = holdingDistance; }  // Look the tongs were a problem for some reason
+                holdingDistance = Mathf.MoveTowards(holdingDistance, initialHoldingDistance, blendingSensitivity * Time.deltaTime / 3f);
                 setTargetPosition();
             }
         }
@@ -382,6 +375,7 @@ public class pickUpObjects : NetworkBehaviour
 
                 float avgSize = objExtents.x + objExtents.z;
 
+                // NECESSARY
                 if (dist < 1f) 
                     shadowProjector.size = new Vector3(avgSize, avgSize, dist);
                 else
@@ -390,6 +384,59 @@ public class pickUpObjects : NetworkBehaviour
         }
         else
             shadowGameobject.SetActive(false);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    void OnDrawGizmos()
+    {
+        // Ensure this Gizmo is drawn only for the owning player
+        if (IsOwner && playerCamera != null)
+        {
+            // Draw the holding position sphere
+            Gizmos.color = holdingItem ? Color.green : Color.red;
+            if (other)
+                Gizmos.DrawSphere(targetPosition + other.transform.TransformDirection(targetPositionShift), checkRadius);
+            else
+                Gizmos.DrawSphere(targetPosition + targetPositionShift, checkRadius);
+        }
+    }
+
+    void SetOwnerToTongs()
+    {
+        other.layer = LayerMask.NameToLayer("HeldObject");
+        foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
+            if (currentObject.name.StartsWith("Erlenmeyer Flask"))
+            {   
+                NetworkObject networkObject = currentObject.GetComponent<NetworkObject>();
+                if (networkObject != null)
+                {
+                    ulong networkObjectId = networkObject.NetworkObjectId;
+                    ChangeOwnershipServerRpc(networkObjectId, NetworkManager.Singleton.LocalClientId);
+                }
+            }
     }
 
     void detachIronRingFromStand(GameObject ironRing){
@@ -448,6 +495,8 @@ public class pickUpObjects : NetworkBehaviour
                     meshOffset = other.GetComponent<shiftBy>().GetOffset();
                 else
                     meshOffset = Vector3.zero;
+
+                
 
                 setHelpTextBasedOnObject();
 

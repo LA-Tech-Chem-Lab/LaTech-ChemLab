@@ -4,10 +4,12 @@ using System.Collections.Generic;
 public class CheckItemsWithin : MonoBehaviour
 {
     private BoxCollider[] colliders;
+    public Transform spawnPoint;
 
     void Start()
     {
         colliders = GetComponents<BoxCollider>();
+        spawnPoint = transform.Find("SpawnPoint");
     }
 
     void Update()
@@ -38,53 +40,15 @@ public class CheckItemsWithin : MonoBehaviour
         }
 
         foreach (GameObject obj in objectsToMove)
-        {
-            MoveObjectOut(obj);
+        {   
+            if (obj.layer == LayerMask.NameToLayer("HeldObject"))
+                return;
+                
+            obj.transform.position = spawnPoint.position;
+            if (obj.GetComponent<Rigidbody>()) obj.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
         }
     }
 
-    void MoveObjectOut(GameObject obj)
-    {
-        Collider objCollider = obj.GetComponent<Collider>();
-        if (objCollider == null) return;
-
-        Vector3 closestEscapePoint = FindClosestEscape(obj.transform.position);
-        Vector3 moveDirection = (closestEscapePoint - obj.transform.position).normalized;
-        float moveDistance = Vector3.Distance(obj.transform.position, closestEscapePoint);
-
-        // Move object to the escape point
-        obj.transform.position += moveDirection * moveDistance * 1.5f;
-        Debug.Log(obj.name + " moved to escape point: " + closestEscapePoint);
-    }
-
-    Vector3 FindClosestEscape(Vector3 objectPosition)
-    {
-        Vector3 closestEscape = Vector3.zero;
-        float minDistance = float.MaxValue;
-
-        foreach (BoxCollider box in colliders)
-        {
-            Vector3[] escapePoints = new Vector3[]
-            {
-                box.bounds.center + new Vector3(box.bounds.extents.x, 0, 0),  // Right
-                box.bounds.center - new Vector3(box.bounds.extents.x, 0, 0),  // Left
-                box.bounds.center + new Vector3(0, 0, box.bounds.extents.z),  // Forward
-                box.bounds.center - new Vector3(0, 0, box.bounds.extents.z)   // Backward
-            };
-
-            foreach (Vector3 escape in escapePoints)
-            {
-                float distance = Vector3.Distance(objectPosition, escape);
-                if (distance < minDistance)
-                {
-                    minDistance = distance;
-                    closestEscape = escape;
-                }
-            }
-        }
-
-        return closestEscape;
-    }
 
     bool IsDescendantOf(Transform child, Transform potentialParent)
     {
