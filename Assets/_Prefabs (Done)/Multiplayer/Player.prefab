@@ -464,7 +464,9 @@ MonoBehaviour:
   shadowProjector: {fileID: 0}
   initialHoldingDistance: 0
   untouchedHoldingDistance: 0
-  initialDistForObj: 0
+  initialHeldDistForObject: 0
+  distFromGroundLayer: 0
+  readyToMoveBack: 0
 --- !u!114 &1703488873047447807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2851,7 +2853,7 @@ PrefabInstance:
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: f0c8973995756764dbfadbd0463ab467, type: 2}
+      objectReference: {fileID: 2100000, guid: 72414fa6135c38d4dab10326dbbbd51b, type: 2}
     - target: {fileID: 6279610263756019368, guid: 68ec52aa1668c0543b7df7cd466001d6,
         type: 3}
       propertyPath: m_LocalPosition.x
