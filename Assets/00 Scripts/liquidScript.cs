@@ -48,6 +48,7 @@ public class liquidScript : MonoBehaviour
         if (currentVolume_mL > 0){
             calculateDensity();
         }
+        maxSpillRate = totalVolume_mL * 0.2f;
     }
 
     private void Update()

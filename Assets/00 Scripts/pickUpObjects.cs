@@ -197,6 +197,26 @@ public class pickUpObjects : NetworkBehaviour
             else
                 multiHandlerScript.setHelpText("Right Click to adjust airflow");
         }
+
+        if (other.name == "Beaker" || other.name == "Flask"){
+            if (Input.GetMouseButton(1)){
+                string helpText = "Contents of Beaker: \n";
+                List<string> compoundNames = other.GetComponent<liquidScript>().compoundNames;
+                List<float> solutionMakeup = other.GetComponent<liquidScript>().solutionMakeup;
+                for (int i = 0; i < solutionMakeup.Count; i++){
+                    if (solutionMakeup[i] > 0.01){
+                        helpText += compoundNames[i];
+                        helpText += ": ";
+                        helpText += (solutionMakeup[i] * 100).ToString("F2");
+                        helpText += " %\n";
+                    }
+                }
+                multiHandlerScript.setHelpText(helpText);
+            }
+            else{
+                multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents.");
+            }
+        }
     }
 
 
