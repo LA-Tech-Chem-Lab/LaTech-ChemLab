@@ -326,9 +326,9 @@ public class pickUpObjects : NetworkBehaviour
                 }
             } else {
                 if (other.name != "Pipette") initialHoldingDistance = Mathf.MoveTowards(initialHoldingDistance, initialHeldDistForObject, blendingSensitivity * Time.deltaTime);
-                if (distFromGroundLayer < holdingDistance) 
-                    if (other.name != "Matchbox" && other.name != "Tongs" && other.name != "Glass Plate" && !other.name.StartsWith("Beaker")) { 
-                        Debug.Log("If you are seeing this and the item is not behind a wall, go to pickUpObjects > PreventWeirdIntersections() and add this name to the if statement"); holdingDistance = distFromGroundLayer - checkRadius; initialHoldingDistance = holdingDistance; }  // Look the tongs were a problem for some reason
+                // if (distFromGroundLayer < holdingDistance) 
+                //     if (other.name != "Matchbox" && other.name != "Tongs" && other.name != "Glass Plate" && !other.name.StartsWith("Beaker")) { 
+                //         Debug.Log("If you are seeing this and the item is not behind a wall, go to pickUpObjects > PreventWeirdIntersections() and add this name to the if statement"); holdingDistance = distFromGroundLayer - checkRadius; initialHoldingDistance = holdingDistance; }  // Look the tongs were a problem for some reason
                 holdingDistance = Mathf.MoveTowards(holdingDistance, initialHoldingDistance, blendingSensitivity * Time.deltaTime / 3f);
                 setTargetPosition();
             }

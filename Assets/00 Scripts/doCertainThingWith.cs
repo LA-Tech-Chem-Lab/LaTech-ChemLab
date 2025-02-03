@@ -132,7 +132,7 @@ public class doCertainThingWith : NetworkBehaviour
             }
 
             if (obj.name == "Beaker")
-                BringObjectCloser(-1.5f);
+                BringObjectCloser(-1.1f);
             
             if (obj.name == "Evaporating Dish")
                 BringObjectCloser(-1.5f);
