@@ -547,12 +547,13 @@ public class doCertainThingWith : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void NotifyServerToSnapIronRingServerRpc(ulong ironRingId, Vector3 position, Vector3 offset, bool isKinematic, ServerRpcParams rpcParams = default)
     {
-        SyncIronRingPositionAndOffsetServerRpc(ironRingId, position, offset, isKinematic);
+        
         // Optionally, trigger SetParentServerRpc for server-side parenting
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ironRingId, out NetworkObject ironRingNetObj))
         {
             SetParentServerRpc(ironRingId, closestIronStand.GetComponent<NetworkObject>().NetworkObjectId);
         }
+        SyncIronRingPositionAndOffsetServerRpc(ironRingId, position, offset, isKinematic);
     }
 
 
@@ -657,35 +658,157 @@ public class doCertainThingWith : NetworkBehaviour
 
             ironMesh.transform.Find("Ghost").position = ghostRestingPoint;
             ironMesh.transform.Find("Ghost").localEulerAngles = Vector3.zero;
+            // Inform the server about the closest iron ring
+            if (IsOwner)
+            {
+                // Get the NetworkObjectIds for the iron ring and closest iron stand
+                ulong ironMeshId = pickUpScript.other.GetComponent<NetworkObject>().NetworkObjectId;
+                ulong ironRingId = closestIronRing.GetComponent<NetworkObject>().NetworkObjectId;
+                Debug.Log("Closest Iron Ring: " + closestIronRing);
+                // Call the server RPC to update the closest iron stand
+                UpdateClosestIronRingServerRpc(ironMeshId, ironRingId);
+            }
         }
     }
 
-    void SnapIronMeshToRing(){
+    [ServerRpc(RequireOwnership = false)]
+    void UpdateClosestIronRingServerRpc(ulong ironMeshId, ulong ironRingId, ServerRpcParams rpcParams = default)
+    {
+        // Find the iron ring by its NetworkObjectId
+        NetworkObject ironMeshNetObj = NetworkManager.Singleton.SpawnManager.SpawnedObjects[ironMeshId];
+        if (ironMeshNetObj != null)
+        {
+            // Find the iron stand by its NetworkObjectId
+            NetworkObject ironRingNetObj = NetworkManager.Singleton.SpawnManager.SpawnedObjects[ironRingId];
+            if (ironRingNetObj != null)
+            {
+                // Now update the closest iron stand on the server
+                closestIronRing = ironRingNetObj.gameObject;
+                Debug.Log("Closest Iron Ring: " + closestIronRing);
+            }
+        }
+    }
+
+    void SnapIronMeshToRing()
+    {
         GameObject ironMesh = pickUpScript.other;
 
-        
-        if (ironMesh.transform.Find("Ghost").gameObject.activeInHierarchy){ // We are ready to snap and we right clicked
-            
-            ironMesh.transform.Find("Real").gameObject.SetActive(true); 
+
+        if (ironMesh.transform.Find("Ghost").gameObject.activeInHierarchy)
+        { // We are ready to snap and we right clicked
+
+            ironMesh.transform.Find("Real").gameObject.SetActive(true);
             ironMesh.transform.Find("Ghost").gameObject.SetActive(false);
             ironMesh.GetComponent<BoxCollider>().enabled = true;
 
-            ironMesh.transform.SetParent(closestIronRing.transform);
-            ironMesh.transform.localPosition = closestIronRing.transform.Find("Ring").localPosition + closestIronRing.transform.Find("Ring").Find("Center").localPosition;
-
-            var angles = ironMesh.transform.localEulerAngles; angles.x = 0f; angles.z = 0f;
-            ironMesh.transform.localEulerAngles = angles;
-
             ironMesh.GetComponent<Rigidbody>().isKinematic = true;
-            
+            var localPosition = closestIronRing.transform.Find("Ring").localPosition + closestIronRing.transform.Find("Ring").Find("Center").localPosition;
             pickUpScript.DropItem(); // prob the only way
+
+            // Ensure the Iron Mesh has a NetworkObject and is spawned before syncing
+            if (ironMesh.TryGetComponent<NetworkObject>(out var netObj) && netObj.IsSpawned)
+            {
+                // If client initiated, notify the server
+                if (!IsHost)
+                {
+                    Debug.Log("Client Trying Mesh");
+                    // Call server-side function to handle syncing and actions
+                    NotifyServerToSnapIronMeshServerRpc(netObj.NetworkObjectId, localPosition, true);
+                }
+                else
+                {
+                    Debug.Log("Server Trying Mesh ");
+                    // If host initiates, proceed directly
+                    SetParentMeshServerRpc(netObj.NetworkObjectId, closestIronRing.GetComponent<NetworkObject>().NetworkObjectId);
+                    SyncIronMeshPositionServerRpc(netObj.NetworkObjectId, localPosition, true);
+                }
+            }
+            // Debug log for host only
+            if (IsHost)
+            {
+                Debug.Log("Snap Function Debug");
+                Debug.Log($"[HOST] Iron Mesh Position: {ironMesh.transform.localPosition}");
+            }
         }
     }
 
+    // ServerRpc for client to notify the server to handle the snapping and synchronization
+    [ServerRpc(RequireOwnership = false)]
+    void NotifyServerToSnapIronMeshServerRpc(ulong ironMeshId, Vector3 position, bool isKinematic, ServerRpcParams rpcParams = default)
+    {
+
+        
+        // Optionally, trigger SetParentServerRpc for server-side parenting
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ironMeshId, out NetworkObject ironMeshNetObj))
+        {
+
+            SetParentMeshServerRpc(ironMeshId, closestIronRing.GetComponent<NetworkObject>().NetworkObjectId);
+            
+        }
+
+        SyncIronMeshPositionServerRpc(ironMeshId, position, isKinematic);
+    }
+
+    // ServerRpc for syncing position and offset across all clients
+    [ServerRpc(RequireOwnership = false)]
+    void SyncIronMeshPositionServerRpc(ulong ironMeshId, Vector3 position, bool isKinematic, ServerRpcParams rpcParams = default)
+    {
+        Debug.Log($"[SERVER] Iron Mesh Snap Triggered on Server. Position: {position}, Is Kinematic: {isKinematic}");
+
+        // Ensure the iron ring position is updated on the server before syncing
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ironMeshId, out NetworkObject ironMeshNetObj))
+        {
+            Debug.Log("Position that it should be: " + position);
+            GameObject ironMesh = ironMeshNetObj.gameObject;
+            Debug.Log("Current Position Before TRYING" + ironMesh.transform.localPosition);
+            Debug.Log("POSITION BEFORE TRYING" + position);
+            ironMesh.transform.localPosition = position; 
+            Debug.Log("Current Position AFTER TRYING" + ironMesh.transform.localPosition);
+            var angles = ironMesh.transform.localEulerAngles; angles.x = 0f; angles.z = 0f;
+            ironMesh.transform.localEulerAngles = angles;
+            ironMesh.GetComponent<Rigidbody>().isKinematic = isKinematic;
+            Debug.Log($"[SERVER] End Results, Mesh {ironMesh.transform.localPosition}");
+            // Sync to clients
+            SyncIronMeshPositionClientRpc(ironMeshId, position, isKinematic);
+        }
+    }
+
+    // ClientRpc to update clients with the position and offset
+    [ClientRpc]
+    void SyncIronMeshPositionClientRpc(ulong ironMeshId, Vector3 position, bool isKinematic)
+    {
+        if (!IsHost) // Only clients update (Host already has the correct position)
+        {
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ironMeshId, out NetworkObject ironMeshNetObj))
+            {
+                GameObject ironMesh = ironMeshNetObj.gameObject;
+                ironMesh.transform.localPosition = position;
+                var angles = ironMesh.transform.localEulerAngles; angles.x = 0f; angles.z = 0f;
+                ironMesh.transform.localEulerAngles = angles;
+                ironMesh.GetComponent<Rigidbody>().isKinematic = isKinematic;
+
+
+                // Debug log for clients only
+                Debug.Log($"[CLIENT] Iron Ring Position: {ironMesh.transform.localPosition}");
+            }
+        }
+    }
+
+    // ServerRpc for setting the parent on the server
+    [ServerRpc(RequireOwnership = false)]
+    void SetParentMeshServerRpc(ulong ironMeshId, ulong RingId)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ironMeshId, out NetworkObject ironMeshNetObj) &&
+            NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(RingId, out NetworkObject RingNetObj))
+        {
+            ironMeshNetObj.transform.SetParent(RingNetObj.transform);
+        }
+    }
 
     void faceItemAwayFromPlayer(){
         pickUpScript.targetRotation.y = transform.localEulerAngles.y;           // When right clicked, face item away from player
     }
+
 
     void manipulateBunsenBurner(){
 
