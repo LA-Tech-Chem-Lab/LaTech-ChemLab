@@ -36,7 +36,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Metallic Shiny
+  m_Name: Mirror Finish
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_Parent: {fileID: 2100000, guid: 4e794efd29a49d2479603ddd74bb5d33, type: 2}
   m_ModifiedSerializedProperties: 0
@@ -60,8 +60,8 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Metallic: 0.9
-    - _Smoothness: 0.93
+    - _Metallic: 1
+    - _Smoothness: 1
     m_Colors:
     - _BaseColor: {r: 0.8773585, g: 0.8773585, b: 0.8773585, a: 1}
     - _Color: {r: 0.8773585, g: 0.8773585, b: 0.8773585, a: 1}

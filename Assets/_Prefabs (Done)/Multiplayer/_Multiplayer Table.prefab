@@ -2659,7 +2659,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1818
+  m_VersionIndex: 1869
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -3263,7 +3263,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 518
+  m_VersionIndex: 569
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -4953,7 +4953,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &2034339075259672096
 Transform:
@@ -6521,7 +6521,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 587
+  m_VersionIndex: 638
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -8333,7 +8333,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2355
+  m_VersionIndex: 2406
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -8510,7 +8510,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5677262793821263698}
   - component: {fileID: 7839285950059703761}
-  - component: {fileID: 5551129688952082165}
   - component: {fileID: 6244772726881564064}
   - component: {fileID: 8938706199678248981}
   - component: {fileID: 9100238861716967131}
@@ -8568,29 +8567,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 8.042053, y: 1.7711799, z: 0.9899645}
-  m_Center: {x: -0.026385784, y: 0.4105898, z: -0.9983672}
---- !u!65 &5551129688952082165
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4979645434227939349}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.696172, y: 1.129482, z: 0.896602}
-  m_Center: {x: 2.6519146, y: 0.11474097, z: -0.051699013}
+  m_Size: {x: 7.948839, y: 1.701002, z: 0.9101243}
+  m_Center: {x: -0.0620265, y: 0.41058975, z: -0.9584471}
 --- !u!114 &6244772726881564064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8623,8 +8601,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.696172, y: 1.129482, z: 0.896602}
-  m_Center: {x: -2.71, y: 0.11474097, z: -0.051699013}
+  m_Size: {x: 1.4683751, y: 0.052396297, z: 0.896602}
+  m_Center: {x: -3.3019662, y: 1.1935582, z: -0.051699013}
 --- !u!65 &9100238861716967131
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8644,8 +8622,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.696172, y: 1.129482, z: 0.896602}
-  m_Center: {x: 2.6519146, y: 0.11474097, z: -0.051699013}
+  m_Size: {x: 1.4086274, y: 1.6701267, z: 0.39625695}
+  m_Center: {x: 3.2079587, y: 0.3850633, z: -0.3018716}
 --- !u!65 &721383586816145433
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8665,8 +8643,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.488218, y: 1.7482617, z: 0.896602}
-  m_Center: {x: 3.2558918, y: 0.4241308, z: -0.051699013}
+  m_Size: {x: 1.4004894, y: 0.08516598, z: 0.896602}
+  m_Center: {x: 3.2120275, y: 1.216691, z: -0.051699013}
 --- !u!65 &8989610859764294823
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8686,8 +8664,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.488218, y: 1.7450491, z: 0.896602}
-  m_Center: {x: -3.2558918, y: 0.42252475, z: -0.051699013}
+  m_Size: {x: 1.488218, y: 1.7099602, z: 0.4117439}
+  m_Center: {x: -3.2558918, y: 0.4049803, z: -0.29412812}
 --- !u!65 &4814060696763649803
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8707,8 +8685,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 8.042053, y: 0.07538128, z: 1.1675348}
-  m_Center: {x: -0.026385784, y: 1.2584891, z: 0.97266567}
+  m_Size: {x: 8.031086, y: 0.040292382, z: 1.1090528}
+  m_Center: {x: -0.020902634, y: 1.2409446, z: 0.94342464}
 --- !u!1 &5387644245787741131
 GameObject:
   m_ObjectHideFlags: 0
@@ -10567,7 +10545,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 518
+  m_VersionIndex: 569
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -12561,7 +12539,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2436
+  m_VersionIndex: 2487
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -15589,7 +15567,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1818
+  m_VersionIndex: 1869
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -15956,7 +15934,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 30e401b96d522cc41abcf81dc35a7c16,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -16041,7 +16019,7 @@ PrefabInstance:
     - target: {fileID: -6604235661410160854, guid: 9f471814479d1a9499ed880eb676c0a5,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4470750409426213135, guid: 9f471814479d1a9499ed880eb676c0a5,
         type: 3}
@@ -16056,7 +16034,7 @@ PrefabInstance:
     - target: {fileID: -3820133778957375705, guid: 9f471814479d1a9499ed880eb676c0a5,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 236247415165773013, guid: 9f471814479d1a9499ed880eb676c0a5,
         type: 3}
@@ -16076,7 +16054,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 9f471814479d1a9499ed880eb676c0a5,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16443,7 +16421,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 30e401b96d522cc41abcf81dc35a7c16,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -16664,7 +16642,7 @@ PrefabInstance:
     - target: {fileID: -6604235661410160854, guid: 9f471814479d1a9499ed880eb676c0a5,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4470750409426213135, guid: 9f471814479d1a9499ed880eb676c0a5,
         type: 3}
@@ -16679,7 +16657,7 @@ PrefabInstance:
     - target: {fileID: -3820133778957375705, guid: 9f471814479d1a9499ed880eb676c0a5,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 236247415165773013, guid: 9f471814479d1a9499ed880eb676c0a5,
         type: 3}
@@ -16699,7 +16677,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 9f471814479d1a9499ed880eb676c0a5,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -17003,7 +16981,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 67ff15033717cf741934aa4b33022db0,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -19119,7 +19097,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 673
+  m_VersionIndex: 724
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -19141,7 +19119,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
