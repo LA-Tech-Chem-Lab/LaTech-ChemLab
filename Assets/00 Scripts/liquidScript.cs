@@ -153,7 +153,10 @@ public class liquidScript : MonoBehaviour
 
     // Adjust to ensure the sum is exactly 1
     float error = 1f - sum;
-    solutionMakeup[2] += error; // Adjust the first element to compensate for rounding
+    for (int i = 0; i < solutionMakeup.Count; i++)
+        {
+            solutionMakeup[i] += error * (solutionMakeup[i] / sum);
+        }
     updatePercentages();
     handleReactions();
 }
@@ -196,18 +199,24 @@ public class liquidScript : MonoBehaviour
 
 IEnumerator react(List<string> reactants, List<float> Rratio, List<string> products, List<float> Pratio, float reactSpeed)
 {
-    // Convert percentages to mols for reactants and products
-    Debug.Log("starting reaction");
+    // Convert percentages to moles for reactants and products
+    Debug.Log("Starting reaction");
+
     List<float> reactantMols = new List<float>();
     List<float> productMols = new List<float>();
-    
+
+    // Convert percentages to moles for reactants
     for (int i = 0; i < reactants.Count; i++)
     {
-        reactantMols.Add(solutionMakeup[compoundNames.IndexOf(reactants[i])] * currentVolume_mL * densityOfLiquid / molarMasses[compoundNames.IndexOf(reactants[i])]);
+        float reactantMol = solutionMakeup[compoundNames.IndexOf(reactants[i])] * currentVolume_mL * densityOfLiquid / molarMasses[compoundNames.IndexOf(reactants[i])];
+        reactantMols.Add(reactantMol);
     }
+
+    // Convert percentages to moles for products
     for (int i = 0; i < products.Count; i++)
     {
-        productMols.Add(solutionMakeup[compoundNames.IndexOf(products[i])] * currentVolume_mL * densityOfLiquid / molarMasses[compoundNames.IndexOf(products[i])]);
+        float productMol = solutionMakeup[compoundNames.IndexOf(products[i])] * currentVolume_mL * densityOfLiquid / molarMasses[compoundNames.IndexOf(products[i])];
+        productMols.Add(productMol);
     }
 
     // Find the limiting reactant
@@ -217,6 +226,9 @@ IEnumerator react(List<string> reactants, List<float> Rratio, List<string> produ
         limreactfinder.Add(reactantMols[i] / Rratio[i]);
     }
     float limreactnum = limreactfinder.Min();
+
+    // Debug: Log the limiting reactant
+    Debug.Log($"Limiting reactant (mols): {limreactnum}");
 
     // Check for size mismatches
     if (reactantMols.Count != Rratio.Count)
@@ -234,31 +246,43 @@ IEnumerator react(List<string> reactants, List<float> Rratio, List<string> produ
     float progress = 0f;
     while (progress < 1)
     {
+        // Calculate the amount of reactant used and product formed
         for (int i = 0; i < reactantMols.Count; i++)
         {
-            reactantMols[i] -= Rratio[i] * limreactnum * Time.deltaTime / reactSpeed;
+            // Ensure we do not subtract more than we have
+            float usedMols = Rratio[i] * limreactnum * Time.deltaTime / reactSpeed;
+            reactantMols[i] = Mathf.Max(reactantMols[i] - usedMols, 0f); // Avoid negative mols
         }
         for (int i = 0; i < productMols.Count; i++)
         {
             productMols[i] += Pratio[i] * limreactnum * Time.deltaTime / reactSpeed;
         }
-            float totalMass = 0f;
 
-        // Convert mols to masses
+        // Debug: Log the reactant and product amounts during the reaction
+        Debug.Log($"Reactant Mols: {string.Join(", ", reactantMols)}");
+        Debug.Log($"Product Mols: {string.Join(", ", productMols)}");
+
+        // Update liquid color (or other visual effects)
+        handleLiquidColor();
+        progress += Time.deltaTime / reactSpeed;
+
+        // Calculate total mass after reaction progress and update percentages
         List<float> reactMasses = new List<float>();
         for (int i = 0; i < reactantMols.Count; i++)
         {
             reactMasses.Add(reactantMols[i] * molarMasses[compoundNames.IndexOf(reactants[i])]);
-            totalMass += reactMasses[i];
         }
         List<float> prodMasses = new List<float>();
         for (int i = 0; i < productMols.Count; i++)
         {
             prodMasses.Add(productMols[i] * molarMasses[compoundNames.IndexOf(products[i])]);
-            totalMass += prodMasses[i];
         }
 
-        // Convert masses to percentages
+        // Calculate the total mass after reaction progress
+        float totalMass = reactMasses.Sum() + prodMasses.Sum();
+        Debug.Log($"Total mass (react + product): {totalMass}");
+
+        // Convert masses to new percentages based on the current mass
         for (int i = 0; i < reactants.Count; i++)
         {
             solutionMakeup[compoundNames.IndexOf(reactants[i])] = reactMasses[i] / totalMass;
@@ -268,11 +292,22 @@ IEnumerator react(List<string> reactants, List<float> Rratio, List<string> produ
             solutionMakeup[compoundNames.IndexOf(products[i])] = prodMasses[i] / totalMass;
         }
 
+        // Update percentages dynamically
         updatePercentages();
-        progress += Time.deltaTime / reactSpeed;
-        Debug.Log(progress);
+
+        // Debug: Log the updated percentages
+        Debug.Log($"Updated solution makeup: {string.Join(", ", solutionMakeup)}");
+
+        // Debug: Log reaction progress
+        Debug.Log($"Reaction Progress: {progress * 100}%");
+
+        // Exit the loop when the reaction is complete
+        if (progress >= 1f)
+        {
+            Debug.Log("Reaction fully completed!");
+        }
+
         yield return null;  // Allow other game logic to continue
     }
 }
-
 }
