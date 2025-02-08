@@ -252,7 +252,7 @@ public class pickUpObjects : NetworkBehaviour
             GameObject hitObject = hit.collider.gameObject;
 
             // Prevent pickup if the object has doorScript or cabinetScript
-            if (hitObject.GetComponent<doorScript>() || hitObject.GetComponent<cabinetScript>())
+            if (hitObject.GetComponent<doorScript>() || hitObject.GetComponent<doorScriptXAxis>() || hitObject.GetComponent<cabinetScript>())
             {
                 return; // Simply exit the function, preventing pickup
             }
