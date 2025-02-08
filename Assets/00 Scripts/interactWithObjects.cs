@@ -39,6 +39,7 @@ public class interactWithObjects : NetworkBehaviour
             CheckForDoors();
             CheckForCabinets();
             CheckForTareButton();
+            CheckForFaucets();
         }
     }
 
@@ -72,6 +73,26 @@ public class interactWithObjects : NetworkBehaviour
                 else
                 {
                     RequestDoorXAxisInteractionServerRpc(doorScriptObjectX.GetComponent<NetworkObject>().NetworkObjectId);
+                }
+            }
+        }
+    }
+
+    void CheckForFaucets(){
+        Ray forwardRay = new Ray(playerCamera.transform.position, playerCamera.forward);
+        if (Physics.Raycast(forwardRay, out RaycastHit hit, range))
+        {
+            faucetHandleScript faucetObject = hit.collider.GetComponent<faucetHandleScript>();
+
+            if (faucetObject) // We hit a door
+            {
+                if (IsServer)
+                {
+                    faucetObject.InteractWithThisFaucet();
+                }
+                else
+                {
+                    RequestFaucetInteractionServerRpc(faucetObject.GetComponent<NetworkObject>().NetworkObjectId);
                 }
             }
         }
@@ -147,6 +168,18 @@ public class interactWithObjects : NetworkBehaviour
             {
                 doorScriptObjectXAxis.InteractWithThisDoor();
             }
+        }
+    }
+
+    [ServerRpc]
+    private void RequestFaucetInteractionServerRpc(ulong networkObjectId)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out NetworkObject networkObject))
+        {
+            faucetHandleScript faucetObject = networkObject.GetComponent<faucetHandleScript>();
+
+            if (faucetObject != null)
+                faucetObject.InteractWithThisFaucet();
         }
     }
 
