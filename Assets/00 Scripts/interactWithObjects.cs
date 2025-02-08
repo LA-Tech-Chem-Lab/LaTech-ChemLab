@@ -60,6 +60,20 @@ public class interactWithObjects : NetworkBehaviour
                     RequestDoorInteractionServerRpc(doorScriptObject.GetComponent<NetworkObject>().NetworkObjectId);
                 }
             }
+
+            doorScriptXAxis doorScriptObjectX = hit.collider.GetComponent<doorScriptXAxis>();
+
+            if (doorScriptObjectX) // We hit a door
+            {
+                if (IsServer)
+                {
+                    doorScriptObjectX.InteractWithThisDoor();
+                }
+                else
+                {
+                    RequestDoorXAxisInteractionServerRpc(doorScriptObjectX.GetComponent<NetworkObject>().NetworkObjectId);
+                }
+            }
         }
     }
 
@@ -119,6 +133,19 @@ public class interactWithObjects : NetworkBehaviour
             if (doorScriptObject != null)
             {
                 doorScriptObject.InteractWithThisDoor();
+            }
+        }
+    }
+
+    [ServerRpc]
+    private void RequestDoorXAxisInteractionServerRpc(ulong networkObjectId)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out NetworkObject networkObject))
+        {
+            doorScriptXAxis doorScriptObjectXAxis = networkObject.GetComponent<doorScriptXAxis>();
+            if (doorScriptObjectXAxis != null)
+            {
+                doorScriptObjectXAxis.InteractWithThisDoor();
             }
         }
     }
