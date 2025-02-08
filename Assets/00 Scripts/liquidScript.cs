@@ -7,7 +7,8 @@ using Tripolygon.UModeler.UI.Input;
 using Unity.Multiplayer.Center.Common;
 using Unity.VisualScripting;
 using UnityEngine;
- 
+using UnityEngine.UIElements;
+
 public class liquidScript : MonoBehaviour
 {
     public float totalVolume_mL;
@@ -22,12 +23,14 @@ public class liquidScript : MonoBehaviour
     public float percentK2SO4 = 0f;
     public float percentAl = 0f;
     public float percentKAlOH4 = 0f;
+    public float limreactnum;
     public List<float> solutionMakeup = new List<float>();
     public List<string> compoundNames = new List<string> {"H2SO4", "KOH", "H2O", "K2SO4", "Al", "KAl(OH)4"};
     List<float> densities = new List<float> {1.83f, 2.12f, 1f, 2.66f, 2.7f, 1.5f};
     List<float> molarMasses = new List<float> {98.079f, 56.1056f, 18.01528f, 174.259f, 26.982f, 134.12f};
     List<Color> liquidColors = new List<Color> {Color.red, Color.green, Color.blue, Color.yellow, new Color(0.6f, 0.6f, 0.6f), Color.yellow};
     //                                            H2SO4       KOH              H20        K2SO4              Al                  KAl(OH)4
+    bool reactionHappening;
 
     
     [Header("Spillage")]
@@ -181,90 +184,83 @@ public class liquidScript : MonoBehaviour
     }
 
     public void handleReactions(){
-        if (percentH2SO4 > 0.02f && percentKOH > 0.02f && percentH2O > 0.2f){
+        if (percentH2SO4 > 0.02f && percentKOH > 0.02f && percentH2O > 0.2f && !reactionHappening){
             List<string> reactants = new List<string> {"H2SO4", "KOH"};
             List<string> products = new List<string> {"K2SO4", "H2O"};
             List<float> Rratio = new List<float> {1, 2};
             List<float> Pratio = new List<float> {1, 2};
             StartCoroutine(react(reactants, Rratio, products, Pratio, 3f));
         }
-        if (percentAl > 0.02f && percentKOH > 0.02f && percentH2O > 0.1f){
+        if (percentAl > 0.02f && percentKOH > 0.02f && percentH2O > 0.1f && !reactionHappening){
             List<string> reactants = new List<string> {"Al", "KOH", "H2O"};
             List<string> products = new List<string> {"KAl(OH)4"};
             List<float> Rratio = new List<float> {2, 2, 6};
             List<float> Pratio = new List<float> {2};
-            StartCoroutine(react(reactants, Rratio, products, Pratio, 20f));
+            StartCoroutine(react(reactants, Rratio, products, Pratio, 1f));
         }
     }
 
 IEnumerator react(List<string> reactants, List<float> Rratio, List<string> products, List<float> Pratio, float reactSpeed)
 {
-    // Convert percentages to moles for reactants and products
-    Debug.Log("Starting reaction");
-
-    List<float> reactantMols = new List<float>();
-    List<float> productMols = new List<float>();
-
-    // Convert percentages to moles for reactants
-    for (int i = 0; i < reactants.Count; i++)
-    {
-        float reactantMol = solutionMakeup[compoundNames.IndexOf(reactants[i])] * currentVolume_mL * densityOfLiquid / molarMasses[compoundNames.IndexOf(reactants[i])];
-        reactantMols.Add(reactantMol);
-    }
-
-    // Convert percentages to moles for products
-    for (int i = 0; i < products.Count; i++)
-    {
-        float productMol = solutionMakeup[compoundNames.IndexOf(products[i])] * currentVolume_mL * densityOfLiquid / molarMasses[compoundNames.IndexOf(products[i])];
-        productMols.Add(productMol);
-    }
-
-    // Find the limiting reactant
-    List<float> limreactfinder = new List<float>();
-    for (int i = 0; i < reactants.Count; i++)
-    {
-        limreactfinder.Add(reactantMols[i] / Rratio[i]);
-    }
-    float limreactnum = limreactfinder.Min();
-
-    // Debug: Log the limiting reactant
-    Debug.Log($"Limiting reactant (mols): {limreactnum}");
-
-    // Check for size mismatches
-    if (reactantMols.Count != Rratio.Count)
-    {
-        Debug.LogError("Mismatch: reactantMols.Count != Rratio.Count");
-        yield break;  // Exit coroutine if there's an error
-    }
-    if (productMols.Count != Pratio.Count)
-    {
-        Debug.LogError("Mismatch: productMols.Count != Pratio.Count");
-        yield break;
-    }
-
+    reactionHappening = true;
+    limreactnum = 1f;
     // Gradually process the reaction
-    float progress = 0f;
-    while (progress < 1)
+    while (limreactnum > 0.01f)
     {
+        List<float> reactantMols = new List<float>();
+        List<float> productMols = new List<float>();
+
+        // Convert percentages to moles for reactants
+        for (int i = 0; i < reactants.Count; i++)
+        {
+            float reactantMol = solutionMakeup[compoundNames.IndexOf(reactants[i])] * currentVolume_mL * densityOfLiquid / molarMasses[compoundNames.IndexOf(reactants[i])];
+            reactantMols.Add(reactantMol);
+        }
+
+        // Convert percentages to moles for products
+        for (int i = 0; i < products.Count; i++)
+        {
+            float productMol = solutionMakeup[compoundNames.IndexOf(products[i])] * currentVolume_mL * densityOfLiquid / molarMasses[compoundNames.IndexOf(products[i])];
+            productMols.Add(productMol);
+        }
+
+        // Find the limiting reactant
+        List<float> limreactfinder = new List<float>();
+        for (int i = 0; i < reactants.Count; i++)
+        {
+            limreactfinder.Add(reactantMols[i] / Rratio[i]);
+        }
+        limreactnum = limreactfinder.Min();
+
+        // Check for size mismatches
+        if (reactantMols.Count != Rratio.Count)
+        {
+            Debug.LogError("Mismatch: reactantMols.Count != Rratio.Count");
+            yield break;  // Exit coroutine if there's an error
+        }
+        if (productMols.Count != Pratio.Count)
+        {
+            Debug.LogError("Mismatch: productMols.Count != Pratio.Count");
+            yield break;
+        }
         // Calculate the amount of reactant used and product formed
         for (int i = 0; i < reactantMols.Count; i++)
         {
             // Ensure we do not subtract more than we have
-            float usedMols = Rratio[i] * limreactnum * Time.deltaTime / reactSpeed;
+            float usedMols = Rratio[i] * limreactnum / 10f;
             reactantMols[i] = Mathf.Max(reactantMols[i] - usedMols, 0f); // Avoid negative mols
         }
+
+        // Calculate the product formation based on limiting reactant
         for (int i = 0; i < productMols.Count; i++)
         {
-            productMols[i] += Pratio[i] * limreactnum * Time.deltaTime / reactSpeed;
+            // Update products in proportion to the limiting reactant
+            productMols[i] += Pratio[i] * limreactnum / 10f;
         }
 
-        // Debug: Log the reactant and product amounts during the reaction
-        Debug.Log($"Reactant Mols: {string.Join(", ", reactantMols)}");
-        Debug.Log($"Product Mols: {string.Join(", ", productMols)}");
 
         // Update liquid color (or other visual effects)
         handleLiquidColor();
-        progress += Time.deltaTime / reactSpeed;
 
         // Calculate total mass after reaction progress and update percentages
         List<float> reactMasses = new List<float>();
@@ -280,7 +276,6 @@ IEnumerator react(List<string> reactants, List<float> Rratio, List<string> produ
 
         // Calculate the total mass after reaction progress
         float totalMass = reactMasses.Sum() + prodMasses.Sum();
-        Debug.Log($"Total mass (react + product): {totalMass}");
 
         // Convert masses to new percentages based on the current mass
         for (int i = 0; i < reactants.Count; i++)
@@ -294,20 +289,9 @@ IEnumerator react(List<string> reactants, List<float> Rratio, List<string> produ
 
         // Update percentages dynamically
         updatePercentages();
-
-        // Debug: Log the updated percentages
-        Debug.Log($"Updated solution makeup: {string.Join(", ", solutionMakeup)}");
-
-        // Debug: Log reaction progress
-        Debug.Log($"Reaction Progress: {progress * 100}%");
-
-        // Exit the loop when the reaction is complete
-        if (progress >= 1f)
-        {
-            Debug.Log("Reaction fully completed!");
-        }
-
-        yield return null;  // Allow other game logic to continue
+        yield return new WaitForSeconds(1f / reactSpeed);  // Allow other game logic to continue
     }
+    reactionHappening = false;
 }
+
 }
