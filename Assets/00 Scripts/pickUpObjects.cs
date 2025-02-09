@@ -6,6 +6,7 @@ using Obi;
 using Unity.Multiplayer.Center.NetcodeForGameObjectsExample;
 using Unity.Netcode;
 using Unity.Netcode.Components;
+using Unity.Networking.Transport;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -272,7 +273,7 @@ public class pickUpObjects : NetworkBehaviour
             if (rb && rb.GetComponent<Rigidbody>().isKinematic) // We are trying to pick up a kinematic object - not normal
             {
                 if (hit.collider.gameObject.tag == "IronRing"){
-                    detachIronRingFromStand(hit.collider.gameObject);
+                    DetachIronRingServerRpc(netObj.NetworkObjectId);
                     return;
                 }
                 // Debug.Log(hit.collider.gameObject.name);
@@ -459,20 +460,115 @@ public class pickUpObjects : NetworkBehaviour
             }
     }
 
-    void detachIronRingFromStand(GameObject ironRing){
-        Debug.Log("REMOVE");
-        ironRing.GetComponent<Rigidbody>().isKinematic = false;
-        ironRing.transform.SetParent(null);
-        ironRing.transform.Find("Ring").localPosition = new Vector3(0.0256326012f, 0f, 0.0123416251f);      // Reset offsets to original offsets, dont touch these
-        ironRing.transform.Find("Screw").localPosition = new Vector3(-0.161500007f, -0.000211842445f, 0.0122618228f);
-        ironRing.GetComponent<BoxCollider>().center = new Vector3(0f, 0f, 0.015f);
-
-        if (ironRing.transform.Find("Iron Mesh")){
-            ironRing.transform.Find("Iron Mesh").gameObject.GetComponent<Rigidbody>().isKinematic = false;
-            ironRing.transform.Find("Iron Mesh").SetParent(null);
+    public void DetachIronRingFromStand(GameObject ironRing)
+    {
+        if (!IsServer)
+        {
+            DetachIronRingServerRpc(ironRing.GetComponent<NetworkObject>().NetworkObjectId);
+            return;
         }
 
-        
+        DetachIronRing(ironRing);
+        DetachIronRingClientRpc(ironRing.GetComponent<NetworkObject>().NetworkObjectId);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void DetachIronRingServerRpc(ulong ironRingId)
+    {
+        GameObject ironRing = NetworkManager.Singleton.SpawnManager.SpawnedObjects[ironRingId].gameObject;
+        DetachIronRing(ironRing);
+        DetachIronRingClientRpc(ironRingId);
+    }
+
+    [ClientRpc]
+    private void DetachIronRingClientRpc(ulong ironRingId)
+    {
+        if (IsServer) return; // Avoid duplicate execution on the server
+
+        GameObject ironRing = NetworkManager.Singleton.SpawnManager.SpawnedObjects[ironRingId].gameObject;
+        DetachIronRing(ironRing);
+    }
+
+    private void DetachIronRing(GameObject ironRing)
+    {
+        if (ironRing == null)
+        {
+            Debug.LogError("DetachIronRing: ironRing is null!");
+            return;
+        }
+
+        Debug.Log($"DetachIronRing: Attempting to detach {ironRing.name}");
+
+        Rigidbody rb = ironRing.GetComponent<Rigidbody>();
+        if (rb)
+        {
+            rb.isKinematic = false;
+            Debug.Log($"DetachIronRing: Rigidbody found, set isKinematic to {rb.isKinematic}");
+        }
+        else
+        {
+            Debug.LogWarning("DetachIronRing: Rigidbody not found on object!");
+        }
+
+        Debug.Log($"DetachIronRing: Parent before change: {ironRing.transform.parent}");
+        ironRing.transform.SetParent(null);
+        Debug.Log($"DetachIronRing: Parent after change: {ironRing.transform.parent}");
+
+        Transform ring = ironRing.transform.Find("Ring");
+        if (ring)
+        {
+            ring.localPosition = new Vector3(0.0256326012f, 0f, 0.0123416251f);
+            Debug.Log("DetachIronRing: Ring position reset");
+        }
+        else
+        {
+            Debug.LogWarning("DetachIronRing: Ring not found!");
+        }
+
+        Transform screw = ironRing.transform.Find("Screw");
+        if (screw)
+        {
+            screw.localPosition = new Vector3(-0.161500007f, -0.000211842445f, 0.0122618228f);
+            Debug.Log("DetachIronRing: Screw position reset");
+        }
+        else
+        {
+            Debug.LogWarning("DetachIronRing: Screw not found!");
+        }
+
+        BoxCollider collider = ironRing.GetComponent<BoxCollider>();
+        if (collider)
+        {
+            collider.center = new Vector3(0f, 0.001574993f, 0.015f);
+            Debug.Log("DetachIronRing: BoxCollider center updated");
+        }
+        else
+        {
+            Debug.LogWarning("DetachIronRing: BoxCollider not found!");
+        }
+
+        Transform ironMesh = ironRing.transform.Find("Iron Mesh");
+        if (ironMesh)
+        {
+            Rigidbody ironMeshRb = ironMesh.GetComponent<Rigidbody>();
+            if (ironMeshRb)
+            {
+                ironMeshRb.isKinematic = false;
+                Debug.Log($"DetachIronRing: Iron Mesh Rigidbody set isKinematic to {ironMeshRb.isKinematic}");
+            }
+            else
+            {
+                Debug.LogWarning("DetachIronRing: Iron Mesh Rigidbody not found!");
+            }
+
+            Debug.Log($"DetachIronRing: Iron Mesh Parent before change: {ironMesh.parent}");
+            ironMesh.SetParent(null);
+            Debug.Log($"DetachIronRing: Iron Mesh Parent after change: {ironMesh.parent}");
+        }
+        else
+        {
+            Debug.LogWarning("DetachIronRing: Iron Mesh not found!");
+        }
     }
 
 

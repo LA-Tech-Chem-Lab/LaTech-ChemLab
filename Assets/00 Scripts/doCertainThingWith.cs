@@ -572,7 +572,8 @@ public class doCertainThingWith : NetworkBehaviour
             ironRing.transform.position = position;
             ironRing.transform.Find("Screw").position += offset;
             ironRing.transform.Find("Ring").position += offset;
-            ironRing.GetComponent<BoxCollider>().center += offset;
+            ironRing.GetComponent<BoxCollider>().center = ironRing.transform.Find("Ring").localPosition;
+            Debug.Log("Local Position of the iron ring child called ring" + ironRing.transform.Find("Ring").localPosition);
             ironRing.GetComponent<Rigidbody>().isKinematic = isKinematic;
 
             // Sync to clients
@@ -593,9 +594,11 @@ public class doCertainThingWith : NetworkBehaviour
 
                 // Apply the position and offset on the client as well
                 ironRing.transform.position = position;
+                Debug.Log("Offset is " + offset);
                 ironRing.transform.Find("Screw").position += offset;
                 ironRing.transform.Find("Ring").position += offset;
-                ironRing.GetComponent<BoxCollider>().center += offset;
+                ironRing.GetComponent<BoxCollider>().center = ironRing.transform.Find("Ring").localPosition;
+                Debug.Log("Local Position of the iron ring child called ring" + ironRing.transform.Find("Ring").localPosition);
                 ironRing.GetComponent<Rigidbody>().isKinematic = isKinematic;
 
                 // Debug log for clients only
