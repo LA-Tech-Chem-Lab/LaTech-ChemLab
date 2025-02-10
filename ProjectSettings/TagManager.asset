@@ -10,6 +10,7 @@ TagManager:
   - NoShadow
   - IronRing
   - BunsenBurner
+  - EyeWashStation
   layers:
   - Default
   - TransparentFX

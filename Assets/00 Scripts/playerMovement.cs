@@ -9,6 +9,11 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
     {
         public Transform cameraTransform;
         public Transform targetCamPosition;
+
+        [Header("Locks")]
+        public bool canMove = true;
+        public bool canTurn = true;
+
         [Header("Moving")]
         bool isGrounded;
         public float crouchSpeed = 2f;
@@ -32,12 +37,14 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
 
         public Animator playerAnimator;
         Vector3 prevPosition;
+        interactWithObjects interactScript;
 
 
         // Start is called before the first frame update
         public override void OnNetworkSpawn()
         {
             controller = GetComponent<CharacterController>();
+            interactScript = GetComponent<interactWithObjects>();
             cameraTransform = transform.GetChild(0);
 
             if (!IsOwner) {
@@ -56,8 +63,8 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
             if (IsOwner)
             {
                 handleInput();
-                moving();
-                turning();
+                if (canMove) moving();
+                if (canTurn) turning();
                 handleAnimations();
                 handleCamera();
                 
@@ -67,8 +74,12 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
                     transform.position = new Vector3(12f,2f,-0.91f);
                     transform.localEulerAngles = new Vector3(0f, 88.4f, 0f);
                 }
-            }
 
+
+
+
+
+            }
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +94,7 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
             sprinting = (Input.GetKey(KeyCode.LeftShift));
             // controller.height = crouching ? 1.2f : 2.4f;
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && canMove)
                 Jump();
 
             if (Input.GetKeyUp(KeyCode.Space) && playerVelocity.y > 0f) // Stop the jump if you let go of space
@@ -154,7 +165,12 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
         {
             // POV Camera
             cameraTransform.localEulerAngles = new Vector3(xRotationCam, 0f, 0f);
-            cameraTransform.position += (targetCamPosition.position-cameraTransform.position)/5f;
+            
+            Vector3 cameraTargetPosWithOffset = targetCamPosition.position + interactScript.eyeOffset;
+            
+            cameraTransform.position = Vector3.Slerp(cameraTransform.position, cameraTargetPosWithOffset, Time.deltaTime * 10f);
+
+
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
