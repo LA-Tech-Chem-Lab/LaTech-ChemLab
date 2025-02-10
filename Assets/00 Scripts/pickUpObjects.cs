@@ -169,8 +169,9 @@ public class pickUpObjects : NetworkBehaviour
             GetComponent<doCertainThingWith>().dropIronMeshCorrectly();
 
         if (other.name == "Pipette")
-            other.transform.Find("Tip").GetComponent<ObiEmitter>().speed = 0f;    
-        
+            other.transform.Find("Tip").GetComponent<ObiEmitter>().speed = 0f;   
+            GetComponent<doCertainThingWith>().turnOffBeakers();
+            other.tag = "Untagged";
 
         other = null;holdingItem = false;
         multiHandlerScript.setHelpText("");

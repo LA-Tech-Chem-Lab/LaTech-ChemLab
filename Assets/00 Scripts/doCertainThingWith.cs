@@ -51,7 +51,7 @@ public class doCertainThingWith : NetworkBehaviour
         if (itemHeldByTongs)
             handleTongObject();
 
-        if (heldPipette){
+        if (heldPipette == pickUpScript.other){
             lightUpBeaker();
             pipetteSpeed = heldPipette.GetComponent<pipetteScript>().flowSpeed;
         }
@@ -385,6 +385,20 @@ public class doCertainThingWith : NetworkBehaviour
                 GameObject whiteOutline = liquidHolder.GetChild(0).gameObject;
                 bool isClosest = liquidHolder.gameObject == closestBeakerOrFlask && distFromTip <= PIPETTE_GRAB_DISTANCE;
                 whiteOutline.SetActive(isClosest);
+            }
+        }
+    }
+
+    public void turnOffBeakers(){
+        GameObject allLiquidHolders = GameObject.Find("allLiquidHolders");
+        if (allLiquidHolders == null) return; // Avoid errors if it's missing
+    
+        foreach (Transform liquidHolder in allLiquidHolders.transform)
+        {
+            if (liquidHolder.childCount > 0) // Ensure it has children
+            {
+                GameObject whiteOutline = liquidHolder.GetChild(0).gameObject;
+                whiteOutline.SetActive(false);
             }
         }
     }
