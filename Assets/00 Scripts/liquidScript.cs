@@ -196,6 +196,7 @@ public class liquidScript : MonoBehaviour
 
     public void handleReactions(){
         if (!reactionHappening){
+            //tested and working
             if (percentAl > 0.02f){ 
                 //reaction releases 3 mols of H2 which is flamable and makes bubbles
                 //releases heat
@@ -208,21 +209,23 @@ public class liquidScript : MonoBehaviour
                     List<float> Pratio = new List<float> {2};
                     StartCoroutine(react(reactants, Rratio, products, Pratio, 1f));
                 }
-                //reaction releases 3 mols of H2 which is flamable and makes bubbles
-                //film on aluminum balls if concentrated H2SO4
-                //accelerated by heat
+                //
                 if (percentH2SO4 > 0.03f){
+                    //reaction releases 3 mols of H2 which is flamable and makes bubbles
+                    //film on aluminum balls if concentrated H2SO4
+                    //accelerated by heat
                     List<string> reactants = new List<string> {"Al", "H2SO4"};
                     List<string> products = new List<string> {"Al2(SO4)3"};
                     List<float> Rratio = new List<float> {2, 3};
                     List<float> Pratio = new List<float> {1};
+                    Debug.Log("made it to the reaction");
                     StartCoroutine(react(reactants, Rratio, products, Pratio, 1f));
                 }
             }
-            if (percentH2SO4 > 0.2f){
+            if (percentH2SO4 > 0.02f){
                 // produces heat
                 // fast
-                if (percentKOH > 0.4f){
+                if (percentKOH > 0.04f){
                     // Reaction: Potassium hydroxide (KOH) + Sulfuric acid (H2SO4)
                     // Produces potassium sulfate (K2SO4) and water (H2O)
                     List<string> reactants = new List<string> {"H2SO4", "KOH"};
@@ -230,19 +233,6 @@ public class liquidScript : MonoBehaviour
                     List<float> Rratio = new List<float> {1, 2};
                     List<float> Pratio = new List<float> {1, 2};
                     StartCoroutine(react(reactants, Rratio, products, Pratio, 20f)); // moderate heat generation
-                }
-
-                // reaction releases 3 mols of H2 which is flammable and makes bubbles
-                // film on aluminum balls if concentrated H2SO4
-                // accelerated by heat
-                if (percentAl > 0.02f){
-                    // Reaction: Aluminum (Al) + Sulfuric acid (H2SO4)
-                    // Produces aluminum sulfate (Al2(SO4)3)
-                    List<string> reactants = new List<string> {"Al", "H2SO4"};
-                    List<string> products = new List<string> {"Al2(SO4)3"};
-                    List<float> Rratio = new List<float> {2, 3};
-                    List<float> Pratio = new List<float> {1};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 1f)); // fast, highly exothermic, hydrogen gas release (flammable)
                 }
                 //GOAL PRODUCT
                 if (percentKAlOH4 > 0.03f){
@@ -282,17 +272,6 @@ public class liquidScript : MonoBehaviour
                 }
             }
             if (percentKOH > 0.02f){
-                //reaction releases 3 mols of H2 which is flamable and makes bubbles
-                //releases heat
-                //dark gritty material on the top of the solution
-                //accelerated by heat
-                if (percentAl > 0.02f){
-                    List<string> reactants = new List<string> {"Al", "KOH", "H2O"};
-                    List<string> products = new List<string> {"KAl(OH)4"};
-                    List<float> Rratio = new List<float> {2, 2, 6};
-                    List<float> Pratio = new List<float> {2};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 1f));
-                }
                 //fast
                 //produces heat
                 if (percentH2SO4 > 0.02f){
