@@ -31,6 +31,8 @@ public class InputMessage
 
 public class multihandler : NetworkBehaviour
 {   
+    public GameObject currentPlayer;
+
     public GameObject JoinCanvas;
     public GameObject InGameCanvas;
     public GameObject PauseCanvas;
@@ -74,7 +76,7 @@ public class multihandler : NetworkBehaviour
         if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab)) && !JoinCanvas.activeInHierarchy) // We are loaded in and press escape
             PauseOrUnpause();
 
-        if (Input.GetKeyDown(KeyCode.Return) && !JoinCanvas.activeInHierarchy) // We press enter ONLY when we are in game
+        if (Input.GetKeyDown(KeyCode.Return) && !JoinCanvas.activeInHierarchy && !isPaused) // We press enter ONLY when we are in game
             StartOrStopTyping();
         // if (Input.GetKeyDown(KeyCode.Tab) && !isPaused)
         //     ToggleCursor();
@@ -149,7 +151,7 @@ public class multihandler : NetworkBehaviour
         PauseCanvas.SetActive(isPaused);
         InGameCanvas.SetActive(!isPaused);
 
-        // isTyping = false;
+        if (isTyping) StartOrStopTyping();
     }
 
 
@@ -160,6 +162,8 @@ public class multihandler : NetworkBehaviour
 
     public void StartOrStopTyping(){
         isTyping = !isTyping;
+        currentPlayer.GetComponent<playerMovement>().isTyping = isTyping;
+        currentPlayer.GetComponent<playerMovement>().updateTyping();
         chatCanvas.SetActive(isTyping);
 
         if (isTyping){          // We started typing, open the chat history and open mouse
@@ -185,14 +189,20 @@ public class multihandler : NetworkBehaviour
                 chatText.text += isShiftPressed ? key.ToString() : key.ToString().ToLower();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            chatText.text += " ";
+        
+        if (Input.GetKeyDown(KeyCode.Backspace) && chatText.text.Length > 0)
+            chatText.text = chatText.text.Substring(0, chatText.text.Length - 1);
     }
 
 
     public void sendOffTextToOtherPerson(){
         // Send message off
         if  (!string.IsNullOrEmpty(chatText.text)){
-            InputMessage currentMessage = new InputMessage(chatText.text, Time.time);
-            messageList.Add(currentMessage);
+            // InputMessage currentMessage = new InputMessage(chatText.text, Time.time);
+            // messageList.Add(currentMessage);
             SendChatMessageServerRpc(chatText.text);
         }
         
@@ -222,11 +232,21 @@ public class multihandler : NetworkBehaviour
 
     public void displayMessages(){
         String allString = "";
-        foreach (InputMessage message in messageList){
-            if (Time.time < message.timestamp + 5f){
+
+        if (chatCanvas.activeInHierarchy){
+            
+            foreach (InputMessage message in messageList){
                 allString += message.message + "\n";
-            }
-        }   
+            }   
+
+        } else {
+            foreach (InputMessage message in messageList){
+                if (Time.time < message.timestamp + 5f){
+                    allString += message.message + "\n";
+                }
+            }   
+        }
+        
 
         messageListOnScreen.text = allString;
 
@@ -251,7 +271,22 @@ public class multihandler : NetworkBehaviour
         InGameCanvas.SetActive(true);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-    }
+        
+        // Find the local player instance
+        currentPlayer = FindLocalPlayer();
 
+    }
+    private GameObject FindLocalPlayer()
+    {
+        foreach (var player in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            var networkObject = player.GetComponent<NetworkObject>();
+            if (networkObject != null && networkObject.IsOwner)
+            {
+                return player;
+            }
+        }
+        return null;
+    }
 
 }

@@ -101,8 +101,6 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
             if (Input.GetKeyUp(KeyCode.Space) && playerVelocity.y > 0f) // Stop the jump if you let go of space
                 playerVelocity.y/=2f;
 
-            if (Input.GetKeyDown(KeyCode.Return))
-                StartOrStopTyping();
         }
 
 
@@ -165,8 +163,7 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
 
         }
 
-        public void StartOrStopTyping(){
-            isTyping = !isTyping;
+        public void updateTyping(){
             canMove = !isTyping;
             canTurn = canMove;
         }
