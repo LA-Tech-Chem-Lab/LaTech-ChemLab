@@ -13,6 +13,7 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
         [Header("Locks")]
         public bool canMove = true;
         public bool canTurn = true;
+        public bool isTyping = false;
 
         [Header("Moving")]
         bool isGrounded;
@@ -99,6 +100,9 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
 
             if (Input.GetKeyUp(KeyCode.Space) && playerVelocity.y > 0f) // Stop the jump if you let go of space
                 playerVelocity.y/=2f;
+
+            if (Input.GetKeyDown(KeyCode.Return))
+                StartOrStopTyping();
         }
 
 
@@ -159,6 +163,12 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
 
             ///////////////////////////////////////////////////////////
 
+        }
+
+        public void StartOrStopTyping(){
+            isTyping = !isTyping;
+            canMove = !isTyping;
+            canTurn = canMove;
         }
 
         void handleCamera()

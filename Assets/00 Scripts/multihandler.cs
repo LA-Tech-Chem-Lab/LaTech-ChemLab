@@ -4,6 +4,9 @@ using Unity.Netcode;
 using UnityEditor;
 using TMPro;
 using UnityEngine.Rendering;
+using Unity.Multiplayer.Center.NetcodeForGameObjectsExample;
+using System.Text.RegularExpressions;
+using UnityEngine.UI;
 
 public class multihandler : MonoBehaviour
 {   
@@ -21,6 +24,15 @@ public class multihandler : MonoBehaviour
     public bool settingsOpen;
     public bool finderOpen;
     public TextMeshProUGUI helpText;
+
+    [Header("Text Chat")]
+    public bool isTyping;
+    public GameObject chatCanvas;
+
+    public TMP_InputField chatInputField;
+    public TextMeshProUGUI chatText;
+    
+
     private void Start()
     {
         JoinCanvas.SetActive(true);
@@ -30,14 +42,20 @@ public class multihandler : MonoBehaviour
 
         // Subscribe to the client connection event
         NetworkManager.Singleton.OnClientConnectedCallback += OnPlayerConnected;
+
+        chatInputField = chatCanvas.GetComponent<TMP_InputField>();
     }
 
-    List<float> timeOfEscapePresses = new List<float>(); float timeOutTime = 0.66f;
     void Update()
-    {
+    {   
+        if (Input.GetKeyDown(KeyCode.Escape) && JoinCanvas.activeInHierarchy) // We are selecting server and press escape - Quit
+            QuitGame();
+
         if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab)) && !JoinCanvas.activeInHierarchy) // We are loaded in and press escape
             PauseOrUnpause();
 
+        if (Input.GetKeyDown(KeyCode.Return) && !JoinCanvas.activeInHierarchy) // We press enter ONLY when we are in game
+            StartOrStopTyping();
         // if (Input.GetKeyDown(KeyCode.Tab) && !isPaused)
         //     ToggleCursor();
 
@@ -45,25 +63,9 @@ public class multihandler : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
-
-        // Quit game fast if you spam press Escape
-        if (Input.GetKeyDown(KeyCode.BackQuote))
-            timeOfEscapePresses.Add(Time.time);
-
-        if (timeOfEscapePresses.Count > 0)
-        {
-            List<float> toRemove = new List<float>();
-            foreach (float t in timeOfEscapePresses)
-                if (Time.time - t > timeOutTime)
-                    toRemove.Add(t);
-
-            foreach (float t in toRemove)
-                timeOfEscapePresses.Remove(t);
-        }
-        // Debug.Log(timeOfEscapePresses.Count);
-        if (timeOfEscapePresses.Count > 3)
-            QuitGame();
-
+        
+        if (isTyping)
+            getTextChatFromInput();
     }
 
 
@@ -123,15 +125,36 @@ public class multihandler : MonoBehaviour
 
         PauseCanvas.SetActive(isPaused);
         InGameCanvas.SetActive(!isPaused);
+
+        // isTyping = false;
     }
+
 
     public void setHelpText(string txt){
         helpText.text = txt;
     }
 
 
+    public void StartOrStopTyping(){
+        isTyping = !isTyping;
+        chatCanvas.SetActive(isTyping);
+
+        if (!isTyping)
+            sendOffTextToOtherPerson();
+    }
+
+    public void getTextChatFromInput()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+            chatText.text += "a";
+    }
 
 
+    public void sendOffTextToOtherPerson(){
+        // Send message off
+
+        chatText.text = "";
+    }
 
 
     
@@ -155,22 +178,5 @@ public class multihandler : MonoBehaviour
         Cursor.visible = false;
     }
 
-    public void ClearAllServers()
-    {
-        Debug.Log("Clearing Servers");
 
-        // Ensure that this method is only called by the server
-        if (NetworkManager.Singleton.IsServer)
-        {
-            foreach (var client in NetworkManager.Singleton.ConnectedClients.Values)
-            {
-                Debug.Log($"Disconnecting client {client.ClientId}");
-                NetworkManager.Singleton.DisconnectClient(client.ClientId);
-            }
-        }
-        else
-        {
-            Debug.LogError("You must be the server to disconnect clients.");
-        }
-    }
 }
