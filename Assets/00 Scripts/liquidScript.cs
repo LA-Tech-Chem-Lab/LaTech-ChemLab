@@ -244,19 +244,15 @@ public class liquidScript : MonoBehaviour
                     List<float> Pratio = new List<float> {1};
                     StartCoroutine(react(reactants, Rratio, products, Pratio, 10f)); // fast, highly exothermic, hydrogen gas release (flammable)
                 }
-
-                // AlOH3 forms as a solid white precipitate
-                // might be pretty hot after reaction
-                if (percentKAlOH4 > 0.02f){
-                    // Reaction: Potassium aluminum hydroxide (KAl(OH)4) + Sulfuric acid (H2SO4)
-                    // Produces potassium sulfate (K2SO4), aluminum hydroxide (Al(OH)3), and water (H2O)
+                //GOAL PRODUCT
+                if (percentKAlOH4 > 0.03f){
+                    // forms alum as white crystals on the top of the solution
                     List<string> reactants = new List<string> {"H2SO4", "KAl(OH)4"};
-                    List<string> products = new List<string> {"K2SO4", "Al(OH)3", "H2O"};
+                    List<string> products = new List<string> {"Alum"};
                     List<float> Rratio = new List<float> {1, 2};
-                    List<float> Pratio = new List<float> {1, 2, 2};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 3f)); // moderate heat, solid white precipitate
+                    List<float> Pratio = new List<float> {1};
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 13f)); // moderate heat, solid white precipitate
                 }
-
                 // Potassium aluminate + sulfuric acid
                 // Produces potassium alum (KAl(SO4)2) and water (H2O)
                 // Fast, produces crystals as the solution cools
@@ -289,7 +285,7 @@ public class liquidScript : MonoBehaviour
                     List<string> products = new List<string> {"K2SO4", "H2O"};
                     List<float> Rratio = new List<float> {1, 2};
                     List<float> Pratio = new List<float> {1, 2};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 30f)); // moderate heat generation
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 10f)); // moderate heat generation
                 }
                 //aloh3 dissolves
                 //endothermic
@@ -298,17 +294,57 @@ public class liquidScript : MonoBehaviour
                     List<string> products = new List<string> {"KAl(OH)4"};
                     List<float> Rratio = new List<float> {1, 1};
                     List<float> Pratio = new List<float> {1};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 30f)); 
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 6f)); 
                 }
-                //
+                //aloh3 is a gel like white precipitate which forms almost immediately
+                //more dilute -> slower
                 if (percentKAlSO42 > 0.02f){
                     List<string> reactants = new List<string> {"KOH", "KAl(SO4)2"};
                     List<string> products = new List<string> {"K2SO4", "Al(OH)3"};
-                    List<float> Rratio = new List<float> {1, 1};
-                    List<float> Pratio = new List<float> {1};
+                    List<float> Rratio = new List<float> {3, 1};
+                    List<float> Pratio = new List<float> {2, 1};
                     StartCoroutine(react(reactants, Rratio, products, Pratio, 30f)); 
                 }
             }
+            if (percentKAlOH4 > 0.02f) {
+               if (percentH2SO4 > 0.03f) {
+                   // forms alum as white crystals on the top of the solution
+                   // GOAL PRODUCT
+                   // Rapid reaction with immediate precipitation
+                   // Exothermic, generates moderate heat
+                   // White solid alum crystals appear and settle on top as the solution cools
+                   List<string> reactants = new List<string> {"H2SO4", "KAl(OH)4"};
+                   List<string> products = new List<string> {"Alum"};
+                   List<float> Rratio = new List<float> {1, 2};
+                   List<float> Pratio = new List<float> {1};
+                   StartCoroutine(react(reactants, Rratio, products, Pratio, 13f)); // moderate heat, solid white precipitate
+               }
+
+               if (percentAl2SO43 > 0.01f) {
+                   // Al(OH)3 forms at the bottom as a solid white precipitate
+                   // Exothermic, significant heat released
+                   // Reaction causes the solution to become a milky, gelatinous fluid
+                   // Slow precipitation process, white solid settles at the bottom
+                   List<string> reactants = new List<string> {"KAl(OH)4", "Al2(SO4)3"};
+                   List<string> products = new List<string> {"Al(OH)3", "K2SO4"};
+                   List<float> Rratio = new List<float> {2, 1};
+                   List<float> Pratio = new List<float> {2, 1};
+                   StartCoroutine(react(reactants, Rratio, products, Pratio, 30f));
+               }
+
+               if (percentAlOH3 > 0.02f) {
+                   // KAlO2 forms as a dry powder when water is removed
+                   // Initially appears as a milky, gelatinous fluid before drying
+                   // Highly exothermic, strong heat release
+                   // Solid product forms upon evaporation, leaving behind a fine white powder
+                   List<string> reactants = new List<string> {"KAl(OH)4", "Al2(SO4)3"};
+                   List<string> products = new List<string> {"Al(OH)3", "K2SO4"};
+                   List<float> Rratio = new List<float> {2, 1};
+                   List<float> Pratio = new List<float> {2, 1};
+                   StartCoroutine(react(reactants, Rratio, products, Pratio, 5f));
+               }
+            }
+
         }
     }
 
