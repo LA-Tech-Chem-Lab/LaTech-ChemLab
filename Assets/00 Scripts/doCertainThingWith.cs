@@ -51,9 +51,11 @@ public class doCertainThingWith : NetworkBehaviour
         if (itemHeldByTongs)
             handleTongObject();
 
-        if (heldPipette == pickUpScript.other){
-            lightUpBeaker();
-            pipetteSpeed = heldPipette.GetComponent<pipetteScript>().flowSpeed;
+        if (heldPipette){
+            if (heldPipette == pickUpScript.other){
+                lightUpBeaker();
+                pipetteSpeed = heldPipette.GetComponent<pipetteScript>().flowSpeed;
+            }
         }
 
         if (pickUpScript.other && pickUpScript.other.name == "Iron Ring") // Snap ring to stand

@@ -216,7 +216,7 @@ public class liquidScript : MonoBehaviour
                     List<string> products = new List<string> {"Al2(SO4)3"};
                     List<float> Rratio = new List<float> {2, 3};
                     List<float> Pratio = new List<float> {1};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 7f));
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 1f));
                 }
             }
             if (percentH2SO4 > 0.2f){
@@ -229,7 +229,7 @@ public class liquidScript : MonoBehaviour
                     List<string> products = new List<string> {"K2SO4", "H2O"};
                     List<float> Rratio = new List<float> {1, 2};
                     List<float> Pratio = new List<float> {1, 2};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 30f)); // moderate heat generation
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 20f)); // moderate heat generation
                 }
 
                 // reaction releases 3 mols of H2 which is flammable and makes bubbles
@@ -242,7 +242,7 @@ public class liquidScript : MonoBehaviour
                     List<string> products = new List<string> {"Al2(SO4)3"};
                     List<float> Rratio = new List<float> {2, 3};
                     List<float> Pratio = new List<float> {1};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 10f)); // fast, highly exothermic, hydrogen gas release (flammable)
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 1f)); // fast, highly exothermic, hydrogen gas release (flammable)
                 }
                 //GOAL PRODUCT
                 if (percentKAlOH4 > 0.03f){
@@ -263,7 +263,22 @@ public class liquidScript : MonoBehaviour
                     List<string> products = new List<string> {"KAl(SO4)2", "H2O"};
                     List<float> Rratio = new List<float> {2, 3};
                     List<float> Pratio = new List<float> {1, 2};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 3f)); // exothermic, forms crystals over time
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 10f)); // exothermic, forms crystals over time
+                }
+                // Reaction: Aluminum hydroxide (Al(OH)3) + Sulfuric acid (H2SO4)
+                // Produces aluminum sulfate (Al2(SO4)3) and water (H2O)
+
+                // **Physical Manifestations:**
+                // - **Exothermic:** Generates moderate heat, causing a noticeable temperature rise in the solution.
+                // - **Dissolution:** The gelatinous, white Al(OH)3 precipitate dissolves upon contact with the acid.
+                // - **Clarity Change:** Initially cloudy solution becomes clear as Al(OH)3 dissolves.
+                // - **Reaction Speed:** Moderate (3/30 scale), occurs within seconds to minutes
+                if (percentAlOH3 > 0.02f){
+                    List<string> reactants = new List<string> {"Al(OH)3", "H2SO4"};
+                    List<string> products = new List<string> {"Al2(SO4)3", "H2O"};
+                    List<float> Rratio = new List<float> {2, 3};
+                    List<float> Pratio = new List<float> {1, 6};
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 3f)); 
                 }
             }
             if (percentKOH > 0.02f){
@@ -337,109 +352,136 @@ public class liquidScript : MonoBehaviour
                    // Initially appears as a milky, gelatinous fluid before drying
                    // Highly exothermic, strong heat release
                    // Solid product forms upon evaporation, leaving behind a fine white powder
+                   List<string> reactants = new List<string> {"KAl(OH)4", "Al(OH)3"};
+                   List<string> products = new List<string> {"KAlO2", "H2O"};
+                   List<float> Rratio = new List<float> {1, 1};
+                   List<float> Pratio = new List<float> {2, 4};
+                   StartCoroutine(react(reactants, Rratio, products, Pratio, 5f));
+               }
+            }
+            if (percentAl2SO43 > 0.02f){
+                if (percentKOH > 0.02f){
+                    List<string> reactants = new List<string> {"Al2(SO4)3", "KOH"};
+                    List<string> products = new List<string> {"Al(OH)3", "K2SO4"};
+                    List<float> Rratio = new List<float> {1, 6};
+                    List<float> Pratio = new List<float> {2, 3};
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 5f));
+                }
+
+                if (percentKAlOH4 > 0.02f){
+                   // Al(OH)3 forms at the bottom as a solid white precipitate
+                   // Exothermic, significant heat released
+                   // Reaction causes the solution to become a milky, gelatinous fluid
+                   // Slow precipitation process, white solid settles at the bottom
                    List<string> reactants = new List<string> {"KAl(OH)4", "Al2(SO4)3"};
                    List<string> products = new List<string> {"Al(OH)3", "K2SO4"};
                    List<float> Rratio = new List<float> {2, 1};
                    List<float> Pratio = new List<float> {2, 1};
-                   StartCoroutine(react(reactants, Rratio, products, Pratio, 5f));
-               }
+                   StartCoroutine(react(reactants, Rratio, products, Pratio, 30f));
+                }
+
+                if (percentKAlO2 > 0.06f && percentH2O > 0.06f){
+                    List<string> reactants = new List<string> {"KAlO2", "Al2(SO4)3", "H2O"};
+                    List<string> products = new List<string> {"Al(OH)3", "K2SO4", "KOH"};
+                    List<float> Rratio = new List<float> {6, 1, 6};
+                    List<float> Pratio = new List<float> {2, 3, 6};
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 30f));
+                }
+            }
+        }
+    }
+
+    IEnumerator react(List<string> reactants, List<float> Rratio, List<string> products, List<float> Pratio, float reactSpeed)
+    {
+        reactionHappening = true;
+        limreactnum = 1f;
+        // Gradually process the reaction
+        while (limreactnum > 0.01f)
+        {
+            List<float> reactantMols = new List<float>();
+            List<float> productMols = new List<float>();
+
+            // Convert percentages to moles for reactants
+            for (int i = 0; i < reactants.Count; i++)
+            {
+                float reactantMol = solutionMakeup[compoundNames.IndexOf(reactants[i])] * currentVolume_mL * densityOfLiquid / molarMasses[compoundNames.IndexOf(reactants[i])];
+                reactantMols.Add(reactantMol);
             }
 
+            // Convert percentages to moles for products
+            for (int i = 0; i < products.Count; i++)
+            {
+                float productMol = solutionMakeup[compoundNames.IndexOf(products[i])] * currentVolume_mL * densityOfLiquid / molarMasses[compoundNames.IndexOf(products[i])];
+                productMols.Add(productMol);
+            }
+
+            // Find the limiting reactant
+            List<float> limreactfinder = new List<float>();
+            for (int i = 0; i < reactants.Count; i++)
+            {
+                limreactfinder.Add(reactantMols[i] / Rratio[i]);
+            }
+            limreactnum = limreactfinder.Min();
+
+            // Check for size mismatches
+            if (reactantMols.Count != Rratio.Count)
+            {
+                Debug.LogError("Mismatch: reactantMols.Count != Rratio.Count");
+                yield break;  // Exit coroutine if there's an error
+            }
+            if (productMols.Count != Pratio.Count)
+            {
+                Debug.LogError("Mismatch: productMols.Count != Pratio.Count");
+                yield break;
+            }
+            // Calculate the amount of reactant used and product formed
+            for (int i = 0; i < reactantMols.Count; i++)
+            {
+                // Ensure we do not subtract more than we have
+                float usedMols = Rratio[i] * limreactnum / 10f;
+                reactantMols[i] = Mathf.Max(reactantMols[i] - usedMols, 0f); // Avoid negative mols
+            }
+
+            // Calculate the product formation based on limiting reactant
+            for (int i = 0; i < productMols.Count; i++)
+            {
+                // Update products in proportion to the limiting reactant
+                productMols[i] += Pratio[i] * limreactnum / 10f;
+            }
+
+
+            // Update liquid color (or other visual effects)
+            handleLiquidColor();
+
+            // Calculate total mass after reaction progress and update percentages
+            List<float> reactMasses = new List<float>();
+            for (int i = 0; i < reactantMols.Count; i++)
+            {
+                reactMasses.Add(reactantMols[i] * molarMasses[compoundNames.IndexOf(reactants[i])]);
+            }
+            List<float> prodMasses = new List<float>();
+            for (int i = 0; i < productMols.Count; i++)
+            {
+                prodMasses.Add(productMols[i] * molarMasses[compoundNames.IndexOf(products[i])]);
+            }
+
+            // Calculate the total mass after reaction progress
+            float totalMass = reactMasses.Sum() + prodMasses.Sum();
+
+            // Convert masses to new percentages based on the current mass
+            for (int i = 0; i < reactants.Count; i++)
+            {
+                solutionMakeup[compoundNames.IndexOf(reactants[i])] = reactMasses[i] / totalMass;
+            }
+            for (int i = 0; i < products.Count; i++)
+            {
+                solutionMakeup[compoundNames.IndexOf(products[i])] = prodMasses[i] / totalMass;
+            }
+
+            // Update percentages dynamically
+            updatePercentages();
+            yield return new WaitForSeconds(1f / reactSpeed);  // Allow other game logic to continue
         }
+        reactionHappening = false;
     }
-
-IEnumerator react(List<string> reactants, List<float> Rratio, List<string> products, List<float> Pratio, float reactSpeed)
-{
-    reactionHappening = true;
-    limreactnum = 1f;
-    // Gradually process the reaction
-    while (limreactnum > 0.01f)
-    {
-        List<float> reactantMols = new List<float>();
-        List<float> productMols = new List<float>();
-
-        // Convert percentages to moles for reactants
-        for (int i = 0; i < reactants.Count; i++)
-        {
-            float reactantMol = solutionMakeup[compoundNames.IndexOf(reactants[i])] * currentVolume_mL * densityOfLiquid / molarMasses[compoundNames.IndexOf(reactants[i])];
-            reactantMols.Add(reactantMol);
-        }
-
-        // Convert percentages to moles for products
-        for (int i = 0; i < products.Count; i++)
-        {
-            float productMol = solutionMakeup[compoundNames.IndexOf(products[i])] * currentVolume_mL * densityOfLiquid / molarMasses[compoundNames.IndexOf(products[i])];
-            productMols.Add(productMol);
-        }
-
-        // Find the limiting reactant
-        List<float> limreactfinder = new List<float>();
-        for (int i = 0; i < reactants.Count; i++)
-        {
-            limreactfinder.Add(reactantMols[i] / Rratio[i]);
-        }
-        limreactnum = limreactfinder.Min();
-
-        // Check for size mismatches
-        if (reactantMols.Count != Rratio.Count)
-        {
-            Debug.LogError("Mismatch: reactantMols.Count != Rratio.Count");
-            yield break;  // Exit coroutine if there's an error
-        }
-        if (productMols.Count != Pratio.Count)
-        {
-            Debug.LogError("Mismatch: productMols.Count != Pratio.Count");
-            yield break;
-        }
-        // Calculate the amount of reactant used and product formed
-        for (int i = 0; i < reactantMols.Count; i++)
-        {
-            // Ensure we do not subtract more than we have
-            float usedMols = Rratio[i] * limreactnum / 10f;
-            reactantMols[i] = Mathf.Max(reactantMols[i] - usedMols, 0f); // Avoid negative mols
-        }
-
-        // Calculate the product formation based on limiting reactant
-        for (int i = 0; i < productMols.Count; i++)
-        {
-            // Update products in proportion to the limiting reactant
-            productMols[i] += Pratio[i] * limreactnum / 10f;
-        }
-
-
-        // Update liquid color (or other visual effects)
-        handleLiquidColor();
-
-        // Calculate total mass after reaction progress and update percentages
-        List<float> reactMasses = new List<float>();
-        for (int i = 0; i < reactantMols.Count; i++)
-        {
-            reactMasses.Add(reactantMols[i] * molarMasses[compoundNames.IndexOf(reactants[i])]);
-        }
-        List<float> prodMasses = new List<float>();
-        for (int i = 0; i < productMols.Count; i++)
-        {
-            prodMasses.Add(productMols[i] * molarMasses[compoundNames.IndexOf(products[i])]);
-        }
-
-        // Calculate the total mass after reaction progress
-        float totalMass = reactMasses.Sum() + prodMasses.Sum();
-
-        // Convert masses to new percentages based on the current mass
-        for (int i = 0; i < reactants.Count; i++)
-        {
-            solutionMakeup[compoundNames.IndexOf(reactants[i])] = reactMasses[i] / totalMass;
-        }
-        for (int i = 0; i < products.Count; i++)
-        {
-            solutionMakeup[compoundNames.IndexOf(products[i])] = prodMasses[i] / totalMass;
-        }
-
-        // Update percentages dynamically
-        updatePercentages();
-        yield return new WaitForSeconds(1f / reactSpeed);  // Allow other game logic to continue
-    }
-    reactionHappening = false;
-}
-
 }
