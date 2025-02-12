@@ -13,6 +13,7 @@ public class doCertainThingWith : NetworkBehaviour
     const float TONG_GRAB_DISTANCE = 3f;
     const float PIPETTE_GRAB_DISTANCE = 0.3f;
     const float IRON_RING_SNAP_DISTANCE = 0.7f;
+    const float SCOOPULA_GRAB_DISTANCE = 1.2f;
 
 
 
@@ -25,6 +26,8 @@ public class doCertainThingWith : NetworkBehaviour
     public GameObject ironMesh;
 
     private bool flowLock = false;
+    private bool scoopulaAnimationPlaying = false;
+
 
     pickUpObjects pickUpScript;
     public Vector3 testingOffset;
@@ -104,6 +107,8 @@ public class doCertainThingWith : NetworkBehaviour
             if (obj.name == "Bunsen Burner")
                 faceItemAwayFromPlayer();
 
+            if (obj.name == "Scoopula")
+                GatherAluminumPelletsFromContainer();
         }
     }
 
@@ -848,7 +853,112 @@ public class doCertainThingWith : NetworkBehaviour
     }
 
 
+    void GatherAluminumPelletsFromContainer(){
+        GameObject scoopula = pickUpScript.other;
 
+        // Find Closest Aluminum Container in the room
+        float minDist = Mathf.Infinity;
+        GameObject closestAluminumContainer = null;
+        
+        foreach (GameObject currentObject in FindObjectsOfType<GameObject>()){
+            
+            if (currentObject.name == "Aluminum Container"){
+
+                float distFromTip = Vector3.Distance(scoopula.transform.position, currentObject.transform.position);
+                
+                if (distFromTip < minDist){
+                    minDist = distFromTip;
+                    closestAluminumContainer = currentObject;
+                }
+            }
+        }
+        
+        
+        if (!closestAluminumContainer || minDist > SCOOPULA_GRAB_DISTANCE) // There is none or we are too far
+        {
+            Debug.Log("No GO");
+        }
+
+        if (closestAluminumContainer && minDist <= TONG_GRAB_DISTANCE) // Now we have closest Flask
+        {
+            Debug.Log("Unscrew and take aluminum");
+
+            if (!scoopulaAnimationPlaying)
+                StartCoroutine(getAluminumUsingScoopula(closestAluminumContainer));
+        }
+    }
+
+    IEnumerator getAluminumUsingScoopula(GameObject container)
+    {
+        scoopulaAnimationPlaying = true;
+        Transform cap = container.transform.Find("Cap");
+
+        if (cap == null)
+        {
+            Debug.LogError("Cap not found!");
+            yield break; // Stop the coroutine if Cap is not found
+        }
+
+        Vector3 startPos = cap.position;
+        Vector3 targetPos = startPos + cap.parent.up * 0.1f; // Move up by 0.2 units
+        Vector3 leftPos = targetPos - cap.parent.right * 0.1f; // Move left by 0.15 units
+        float duration = 1f; // Time to move up/down
+        float rotationSpeed = 180f; // Degrees per second
+
+        // Move up & rotate clockwise
+        yield return StartCoroutine(MoveAndRotateOverTime(cap, startPos, targetPos, duration, rotationSpeed, Vector3.zero));
+
+        // Wait for 5 seconds
+        yield return new WaitForSeconds(3f);
+
+        // Move left & tilt around Z-axis
+        Vector3 tiltRotation = new Vector3(0f, 0f, 70f); // Tilt 30 degrees on Z-axis
+        yield return StartCoroutine(MoveAndRotateOverTime(cap, targetPos, leftPos, duration, 0, tiltRotation));
+
+        // Wait for 2 seconds
+        yield return new WaitForSeconds(2f);
+
+        // Move left & tilt back to 0
+        Vector3 tiltRotationBack = new Vector3(0f, 0f, -70f); // Tilt 30 degrees on Z-axis
+        yield return StartCoroutine(MoveAndRotateOverTime(cap, leftPos, targetPos, duration, 0, tiltRotationBack));
+
+        
+        yield return new WaitForSeconds(2f);
+
+        // Move back down & reset rotation
+        yield return StartCoroutine(MoveAndRotateOverTime(cap, targetPos, startPos, duration, -rotationSpeed, Vector3.zero));
+
+        // Wait for final position adjustment
+        yield return new WaitForSeconds(duration);
+        scoopulaAnimationPlaying = false;
+        cap.localPosition = new Vector3(0f, 0.3299f, 0f);
+        cap.localEulerAngles = new Vector3(0f, 0f, 0f);
+    }
+
+    IEnumerator MoveAndRotateOverTime(Transform obj, Vector3 start, Vector3 end, float duration, float rotationSpeed, Vector3 targetRotation)
+    {
+        float elapsedTime = 0f;
+        Quaternion startRotation = obj.rotation;
+        Quaternion endRotation = obj.rotation * Quaternion.Euler(targetRotation);
+
+        while (elapsedTime < duration)
+        {
+            float t = elapsedTime / duration;
+            obj.position = Vector3.Lerp(start, end, t);
+            
+            // Rotate smoothly if a rotation is applied
+            if (rotationSpeed != 0)
+                obj.Rotate(obj.transform.parent.up, rotationSpeed * Time.deltaTime);
+            else
+                obj.rotation = Quaternion.Lerp(startRotation, endRotation, t); // Tilt smoothly
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        obj.position = end; // Ensure final position is set
+        obj.rotation = endRotation; // Ensure final rotation is set
+    }
 
 
 
