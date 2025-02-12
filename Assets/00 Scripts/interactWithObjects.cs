@@ -24,8 +24,8 @@ public class interactWithObjects : NetworkBehaviour
     doorScriptXAxis eyeWashPushHandle;
     Transform eyeWashStation;
     Transform eyeTargetSpot;
-    public bool isNearEyeWash;
-    public bool eyeWashRunning;
+    public bool isNearEyeWash; bool previousNearEyeWash;
+    public bool eyeWashRunning; bool previousEyeWashRunning;
     public bool isWashingEyes;
 
 
@@ -86,15 +86,18 @@ public class interactWithObjects : NetworkBehaviour
                 if (multiHandlerScript.helpText.text == "") multiHandlerScript.setHelpText("Press E to Rinse Eyes.");
                 StartCoroutine(rinseEyes());
             }       
-        } else if (multiHandlerScript.helpText.text != "")
+        } else if ( (previousNearEyeWash && !isNearEyeWash) || (previousEyeWashRunning && !eyeWashRunning) )
             multiHandlerScript.setHelpText("");
+            
+        previousEyeWashRunning = eyeWashRunning;
+        previousNearEyeWash = isNearEyeWash;
     }
 
     IEnumerator rinseEyes(){
         movementScript.canMove = false; movementScript.canTurn = false;
         isWashingEyes = true;
         eyeOffset = Vector3.Lerp(playerCamera.position, eyeTargetSpot.position, 0.9f) - playerCamera.position;
-        yield return new WaitForSeconds(2f); // Wait for 2 seconds
+        yield return new WaitForSeconds(1.5f); // Wait for 2 seconds
         eyeOffset = Vector3.zero; // Reset to (0,0,0)
         isWashingEyes = false;
         movementScript.canMove = true; movementScript.canTurn = true;
