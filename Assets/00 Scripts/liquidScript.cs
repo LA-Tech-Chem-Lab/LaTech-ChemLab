@@ -76,6 +76,8 @@ public class liquidScript : MonoBehaviour
         handleLiquid();
 
         handleLiquidColor();
+
+        handleReactions();
         
     }
 
@@ -167,7 +169,6 @@ public class liquidScript : MonoBehaviour
             solutionMakeup[i] += error * (solutionMakeup[i] / sum);
         }
     updatePercentages();
-    handleReactions();
 }
 
     public void updatePercentages(){
@@ -209,7 +210,7 @@ public class liquidScript : MonoBehaviour
                     List<float> Pratio = new List<float> {2};
                     StartCoroutine(react(reactants, Rratio, products, Pratio, 1f));
                 }
-                //
+                //Tested and Working
                 if (percentH2SO4 > 0.03f){
                     //reaction releases 3 mols of H2 which is flamable and makes bubbles
                     //film on aluminum balls if concentrated H2SO4
@@ -225,6 +226,7 @@ public class liquidScript : MonoBehaviour
             if (percentH2SO4 > 0.02f){
                 // produces heat
                 // fast
+                //tested and working
                 if (percentKOH > 0.04f){
                     // Reaction: Potassium hydroxide (KOH) + Sulfuric acid (H2SO4)
                     // Produces potassium sulfate (K2SO4) and water (H2O)
@@ -235,6 +237,7 @@ public class liquidScript : MonoBehaviour
                     StartCoroutine(react(reactants, Rratio, products, Pratio, 20f)); // moderate heat generation
                 }
                 //GOAL PRODUCT
+                //tested and working
                 if (percentKAlOH4 > 0.03f){
                     // forms alum as white crystals on the top of the solution
                     List<string> reactants = new List<string> {"H2SO4", "KAl(OH)4"};
@@ -246,6 +249,7 @@ public class liquidScript : MonoBehaviour
                 // Potassium aluminate + sulfuric acid
                 // Produces potassium alum (KAl(SO4)2) and water (H2O)
                 // Fast, produces crystals as the solution cools
+                //
                 if (percentKAlO2 > 0.02f){
                     // Reaction: Potassium aluminate (KAlO2) + Sulfuric acid (H2SO4)
                     // Produces potassium alum (KAl(SO4)2) and water (H2O)
@@ -272,15 +276,6 @@ public class liquidScript : MonoBehaviour
                 }
             }
             if (percentKOH > 0.02f){
-                //fast
-                //produces heat
-                if (percentH2SO4 > 0.02f){
-                    List<string> reactants = new List<string> {"H2SO4", "KOH"};
-                    List<string> products = new List<string> {"K2SO4", "H2O"};
-                    List<float> Rratio = new List<float> {1, 2};
-                    List<float> Pratio = new List<float> {1, 2};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 10f)); // moderate heat generation
-                }
                 //aloh3 dissolves
                 //endothermic
                 if (percentAlOH3 > 0.02f){
@@ -301,19 +296,6 @@ public class liquidScript : MonoBehaviour
                 }
             }
             if (percentKAlOH4 > 0.02f) {
-               if (percentH2SO4 > 0.03f) {
-                   // forms alum as white crystals on the top of the solution
-                   // GOAL PRODUCT
-                   // Rapid reaction with immediate precipitation
-                   // Exothermic, generates moderate heat
-                   // White solid alum crystals appear and settle on top as the solution cools
-                   List<string> reactants = new List<string> {"H2SO4", "KAl(OH)4"};
-                   List<string> products = new List<string> {"Alum"};
-                   List<float> Rratio = new List<float> {1, 2};
-                   List<float> Pratio = new List<float> {1};
-                   StartCoroutine(react(reactants, Rratio, products, Pratio, 13f)); // moderate heat, solid white precipitate
-               }
-
                if (percentAl2SO43 > 0.01f) {
                    // Al(OH)3 forms at the bottom as a solid white precipitate
                    // Exothermic, significant heat released
@@ -374,6 +356,9 @@ public class liquidScript : MonoBehaviour
     {
         reactionHappening = true;
         limreactnum = 1f;
+        Debug.Log(reactants);
+        Debug.Log(products);
+        Debug.Log("");
         // Gradually process the reaction
         while (limreactnum > 0.01f)
         {
