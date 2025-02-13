@@ -22,7 +22,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -80,7 +80,112 @@ ModelImporter:
   humanDescription:
     serializedVersion: 3
     human: []
-    skeleton: []
+    skeleton:
+    - name: vents attempt 3(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cylinder.001
+      parentName: vents attempt 3(Clone)
+      position: {x: 0.034749337, y: 0.20268661, z: 1.3314375}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cylinder.002
+      parentName: vents attempt 3(Clone)
+      position: {x: 0.0979579, y: 0.70660925, z: 1.3314373}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cylinder.003
+      parentName: vents attempt 3(Clone)
+      position: {x: -0.22436513, y: 0.038437784, z: 1.3314373}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cylinder.004
+      parentName: vents attempt 3(Clone)
+      position: {x: -0.30513924, y: -0.9195838, z: 1.3314373}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cylinder.006
+      parentName: vents attempt 3(Clone)
+      position: {x: 0.10573061, y: -1.5470897, z: 1.2496688}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cylinder.007
+      parentName: vents attempt 3(Clone)
+      position: {x: -0.22522537, y: -1.5202773, z: 1.3314373}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cylinder.008
+      parentName: vents attempt 3(Clone)
+      position: {x: 0.18303455, y: -1.0023143, z: 0.70489335}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cylinder.009
+      parentName: vents attempt 3(Clone)
+      position: {x: 0.085363604, y: -0.44677207, z: 0.15770388}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cylinder.005
+      parentName: vents attempt 3(Clone)
+      position: {x: -0.30639303, y: -0.33611882, z: 0.04650271}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cylinder.010
+      parentName: vents attempt 3(Clone)
+      position: {x: -0.30639303, y: -0.33611882, z: 0.04650271}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cylinder.011
+      parentName: vents attempt 3(Clone)
+      position: {x: -0.30639303, y: -0.33611882, z: 0.04650271}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Knob 1
+      parentName: vents attempt 3(Clone)
+      position: {x: 0.27103335, y: 0.23684669, z: 1.331437}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Knob 1.001
+      parentName: vents attempt 3(Clone)
+      position: {x: -0.48669997, y: -0.002983451, z: 1.331437}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Knob 1.002
+      parentName: vents attempt 3(Clone)
+      position: {x: -0.48669997, y: -1.4521974, z: 1.331437}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Knob 1.003
+      parentName: vents attempt 3(Clone)
+      position: {x: 0.35111204, y: -1.4924645, z: 1.1882889}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Knob 1.004
+      parentName: vents attempt 3(Clone)
+      position: {x: 0.36573362, y: -0.47086012, z: 0.18985939}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Knob 1.005
+      parentName: vents attempt 3(Clone)
+      position: {x: -0.5766201, y: -0.29967844, z: 0.036429286}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Handle
+      parentName: vents attempt 3(Clone)
+      position: {x: 0.17678142, y: -0.59399414, z: 0.51461494}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Holder
+      parentName: vents attempt 3(Clone)
+      position: {x: 0.06983037, y: -0.692948, z: 0.41916907}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Holder 2
+      parentName: vents attempt 3(Clone)
+      position: {x: 0.29917616, y: -0.68096596, z: 0.43120337}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
@@ -91,13 +196,13 @@ ModelImporter:
     globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
-    hasExtraRoot: 0
+    hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 0
+  avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
