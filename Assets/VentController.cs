@@ -28,7 +28,14 @@ public class VentController : MonoBehaviour
     {   
         vacuumOn = !HandleScript.doorIsClosed;
         // Constrain Angles
+        constrainAngles();
         applyAngles();
+    }
+
+    void constrainAngles(){
+        SecondJointX = Mathf.Clamp(SecondJointX, -105f, 0f);
+        ThirdJointX = Mathf.Clamp(ThirdJointX, -135f, 15f);
+        FourthJointX = Mathf.Clamp(FourthJointX, -145f, 35f);
     }
 
     void applyAngles(){
