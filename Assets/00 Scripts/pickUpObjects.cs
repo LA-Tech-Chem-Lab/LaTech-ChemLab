@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using static UnityEngine.GraphicsBuffer;
+using System.Linq;
 
 public class pickUpObjects : NetworkBehaviour
 {
@@ -204,14 +205,22 @@ public class pickUpObjects : NetworkBehaviour
         if (other.name == "Beaker" || other.name == "Flask"){
             if (Input.GetMouseButton(1)){
                 string helpText = "Contents of Beaker: \n";
-                List<string> compoundNames = other.GetComponent<liquidScript>().compoundNames;
-                List<float> solutionMakeup = other.GetComponent<liquidScript>().solutionMakeup;
-                for (int i = 0; i < solutionMakeup.Count; i++){
-                    if (solutionMakeup[i] > 0.01){
-                        helpText += compoundNames[i];
+                liquidScript LS = other.GetComponent<liquidScript>();
+                List<float> solutionMols = Enumerable.Repeat(0f, 11).ToList();
+
+                // Convert percentages to moles for reactants
+                for (int i = 0; i < solutionMols.Count; i++)
+                {
+                    float reactantMol = LS.solutionMakeup[i] * LS.densityOfLiquid / LS.molarMasses[i] * 1000;
+                    solutionMols[i] = reactantMol;
+                }
+
+                for (int i = 0; i < LS.solutionMakeup.Count; i++){
+                    if (LS.solutionMakeup[i] > 0.01){
+                        helpText += LS.compoundNames[i];
                         helpText += ": ";
-                        helpText += (solutionMakeup[i] * 100).ToString("F2");
-                        helpText += " %\n";
+                        helpText += (solutionMols[i]).ToString("F2");
+                        helpText += " M\n";
                     }
                 }
                 multiHandlerScript.setHelpText(helpText);
