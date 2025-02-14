@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3137354499770649268}
   - component: {fileID: 8728716097784460818}
   - component: {fileID: 5426238990912460266}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 2874553052277411804}
   - component: {fileID: 2058460752175998319}
   - component: {fileID: 6439780527352818397}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -228,7 +228,7 @@ GameObject:
   - component: {fileID: 8648649846057728896}
   - component: {fileID: 6132005848210665551}
   - component: {fileID: 8884091811555391654}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Gas Spicket.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -335,7 +335,7 @@ GameObject:
   - component: {fileID: 7391172996092140396}
   - component: {fileID: 3325731985747322317}
   - component: {fileID: 3439379268698709208}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.010
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -420,7 +420,7 @@ GameObject:
   m_Component:
   - component: {fileID: 879758378055435562}
   - component: {fileID: 4378502651044666490}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: L Faucet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -483,7 +483,7 @@ GameObject:
   - component: {fileID: 4306233339573888433}
   - component: {fileID: 914460759879400567}
   - component: {fileID: 8991972924151863038}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -654,7 +654,7 @@ GameObject:
   - component: {fileID: 5567955836176341814}
   - component: {fileID: 94649859551799161}
   - component: {fileID: 420726383799537121}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Gas Spicket.009
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -759,7 +759,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5291349799444397935}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Hinge L1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -793,7 +793,7 @@ GameObject:
   - component: {fileID: 3311983935706466004}
   - component: {fileID: 6108370636873759942}
   - component: {fileID: 1628203853655707110}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -877,7 +877,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5771873767412017483}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Hinge L2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -911,7 +911,7 @@ GameObject:
   - component: {fileID: 6094915995876531991}
   - component: {fileID: 5749611901911634535}
   - component: {fileID: 2182408113372411364}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2659,7 +2659,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1869
+  m_VersionIndex: 1574
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -3263,7 +3263,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 569
+  m_VersionIndex: 599
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -3312,7 +3312,7 @@ GameObject:
   - component: {fileID: 3130302619028267194}
   - component: {fileID: 7983874134781325335}
   - component: {fileID: 310222161997460266}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3440,7 +3440,7 @@ GameObject:
   - component: {fileID: 7474343464406269498}
   - component: {fileID: 3997836814876831600}
   - component: {fileID: 987475556436943907}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3692,7 +3692,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6090926333577071340}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Hinge L1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3728,7 +3728,7 @@ GameObject:
   - component: {fileID: 5710303875891809240}
   - component: {fileID: 1522730146640998162}
   - component: {fileID: 1207227506917583182}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3852,7 +3852,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7479023297558944113}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Hinge L2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3886,7 +3886,7 @@ GameObject:
   - component: {fileID: 3894426523362986678}
   - component: {fileID: 1191418947368674316}
   - component: {fileID: 591583215531699910}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3976,7 +3976,7 @@ GameObject:
   - component: {fileID: 8839327810265860724}
   - component: {fileID: 8652285538216062046}
   - component: {fileID: 9029919333147187286}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.005
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4147,7 +4147,7 @@ GameObject:
   - component: {fileID: 8804232843662570161}
   - component: {fileID: 6122137814139595070}
   - component: {fileID: 248836697925179621}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Gas Spicket.007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4257,7 +4257,7 @@ GameObject:
   - component: {fileID: 3835123005033871581}
   - component: {fileID: 2295941643069585021}
   - component: {fileID: 642092260961252912}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.008
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4385,7 +4385,7 @@ GameObject:
   - component: {fileID: 7515563651939947550}
   - component: {fileID: 604477088300448833}
   - component: {fileID: 588104328365273292}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4578,7 +4578,7 @@ GameObject:
   - component: {fileID: 1163487881079412996}
   - component: {fileID: 3334395163394169130}
   - component: {fileID: 2268971860545917811}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4749,7 +4749,7 @@ GameObject:
   - component: {fileID: 21074054840332261}
   - component: {fileID: 460759910749606253}
   - component: {fileID: 1583584576123636216}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Gas Spicket.006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4857,7 +4857,7 @@ GameObject:
   - component: {fileID: 4657664532699863991}
   - component: {fileID: 6524267924129057546}
   - component: {fileID: 9151460104407332686}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6521,7 +6521,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 638
+  m_VersionIndex: 478
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -6555,7 +6555,7 @@ GameObject:
   - component: {fileID: 4067483125356458303}
   - component: {fileID: 6219570858486620191}
   - component: {fileID: 6974211832543359777}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.010
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8333,7 +8333,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2406
+  m_VersionIndex: 2123
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -8698,7 +8698,7 @@ GameObject:
   - component: {fileID: 8127872312779781551}
   - component: {fileID: 8241469104146664623}
   - component: {fileID: 4350041358435679352}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8785,7 +8785,7 @@ GameObject:
   - component: {fileID: 5043306791231441727}
   - component: {fileID: 6753230307708776847}
   - component: {fileID: 7882610285024213252}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Gas Spicket.009
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8894,7 +8894,7 @@ GameObject:
   - component: {fileID: 787029237809243673}
   - component: {fileID: 2850435674769192113}
   - component: {fileID: 3676839577952792010}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9021,7 +9021,7 @@ GameObject:
   - component: {fileID: 7780698602306838584}
   - component: {fileID: 5089721619177522853}
   - component: {fileID: 4395993424385031286}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Gas Spigot 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9134,7 +9134,7 @@ GameObject:
   - component: {fileID: 8765793939956044418}
   - component: {fileID: 1118154523872916986}
   - component: {fileID: 3802434749976751194}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9262,7 +9262,7 @@ GameObject:
   - component: {fileID: 8934333955947881458}
   - component: {fileID: 2935047624872293830}
   - component: {fileID: 1700919356939939998}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9388,7 +9388,7 @@ GameObject:
   - component: {fileID: 6432713823164314672}
   - component: {fileID: 7498140397127511151}
   - component: {fileID: 3153579781804826854}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9475,7 +9475,7 @@ GameObject:
   - component: {fileID: 5523887596270899572}
   - component: {fileID: 3520540259119631656}
   - component: {fileID: 6163528690612310510}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Gas Spigot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9586,7 +9586,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7263847829438680519}
   - component: {fileID: 8304596847739055316}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: R Faucet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9646,7 +9646,7 @@ GameObject:
   - component: {fileID: 8860591978548598698}
   - component: {fileID: 8034868951691722592}
   - component: {fileID: 2511809248938313953}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Gas Spicket.007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9756,7 +9756,7 @@ GameObject:
   - component: {fileID: 385481373577411293}
   - component: {fileID: 1194619095516815274}
   - component: {fileID: 2825851029605432355}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9883,7 +9883,7 @@ GameObject:
   - component: {fileID: 4640164697671676170}
   - component: {fileID: 4163733675081413385}
   - component: {fileID: 8473768272446734540}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: L Valve
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9993,7 +9993,7 @@ GameObject:
   - component: {fileID: 8336198203198052931}
   - component: {fileID: 147197785213190706}
   - component: {fileID: 7032679406491900506}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.009
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10545,7 +10545,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 569
+  m_VersionIndex: 599
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -10594,7 +10594,7 @@ GameObject:
   - component: {fileID: 3609795549564371636}
   - component: {fileID: 4090263793082849748}
   - component: {fileID: 6825524965764045834}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10757,7 +10757,7 @@ GameObject:
   - component: {fileID: 4317909447432919278}
   - component: {fileID: 1424970568200977955}
   - component: {fileID: 5542397406191251912}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.008
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12539,7 +12539,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2487
+  m_VersionIndex: 2159
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -12718,7 +12718,7 @@ GameObject:
   - component: {fileID: 8075124729767061734}
   - component: {fileID: 1871822697771255259}
   - component: {fileID: 8881934156310420936}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: L Valve
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12828,7 +12828,7 @@ GameObject:
   - component: {fileID: 2753683829685831647}
   - component: {fileID: 5115563937653084474}
   - component: {fileID: 2867711210293626113}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.009
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12955,7 +12955,7 @@ GameObject:
   - component: {fileID: 3033540758875538822}
   - component: {fileID: 8300604322346664601}
   - component: {fileID: 1879845402430639575}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Gas Spicket.006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13065,7 +13065,7 @@ GameObject:
   - component: {fileID: 293852958164601208}
   - component: {fileID: 672280922970473464}
   - component: {fileID: 2629419608589448903}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13192,7 +13192,7 @@ GameObject:
   - component: {fileID: 3099876247011666454}
   - component: {fileID: 5371739343175649952}
   - component: {fileID: 5270429080811433514}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: R Valve
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13300,7 +13300,7 @@ GameObject:
   - component: {fileID: 7545725453330421143}
   - component: {fileID: 1043552310726553745}
   - component: {fileID: 7453306418780899685}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13392,7 +13392,7 @@ GameObject:
   - component: {fileID: 2834692785874057387}
   - component: {fileID: 7803295698227004550}
   - component: {fileID: 1959155454200710572}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.005
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13563,7 +13563,7 @@ GameObject:
   - component: {fileID: 6233966248963292369}
   - component: {fileID: 7964769683066718391}
   - component: {fileID: 11662997663982079}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Gas Spicket.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13671,7 +13671,7 @@ GameObject:
   - component: {fileID: 4810937581177989170}
   - component: {fileID: 8925043756955117646}
   - component: {fileID: 4326900186968281134}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: R Valve
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13781,7 +13781,7 @@ GameObject:
   - component: {fileID: 7610764141210667643}
   - component: {fileID: 1373410389424710760}
   - component: {fileID: 3151756541987753103}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15567,7 +15567,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1869
+  m_VersionIndex: 1899
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -19097,7 +19097,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 724
+  m_VersionIndex: 661
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []

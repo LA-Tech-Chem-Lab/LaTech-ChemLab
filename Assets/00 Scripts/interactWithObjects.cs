@@ -28,6 +28,20 @@ public class interactWithObjects : NetworkBehaviour
     public bool eyeWashRunning; bool previousEyeWashRunning;
     public bool isWashingEyes;
 
+    [Header("Vent Stuff")]
+    public bool readyToDrag;
+    public GameObject currentJointObject;
+    public GameObject parentVentObject;
+    public VentController parentVentScript;
+    public Vector3 pivotPointForCurrentJoint;
+    public Vector3 playerFirstContactOnJoint;
+    public float distFromCameraForJoint;
+    public Vector3 currentMousePosition;
+    public float actualStartingJointAngle = Mathf.Infinity;
+    public float startingAngle = Mathf.Infinity;
+    public float currentAngle;
+    public float angleDifference;
+
 
     void Start()
     {
@@ -69,9 +83,170 @@ public class interactWithObjects : NetworkBehaviour
             CheckForFaucets();
         }
 
+        if (Input.GetMouseButton(0) && !playerHoldingObject)
+            DragVentsAround();
+        else {
+            readyToDrag = true;
+            currentJointObject = null;
+            parentVentObject = null;
+            parentVentScript = null;
+            pivotPointForCurrentJoint = Vector3.zero;
+            playerFirstContactOnJoint = Vector3.zero;
+            distFromCameraForJoint = 0f;
+            currentMousePosition = Vector3.zero;
+            actualStartingJointAngle = Mathf.Infinity;
+            startingAngle = Mathf.Infinity;
+            currentAngle = 0f;
+            angleDifference = 0f;
+        }
+
         eyeWashStationStuff();
 
 
+    }
+
+    void DragVentsAround(){
+
+        if (!readyToDrag){
+            currentMousePosition = playerCamera.transform.position + playerCamera.forward * distFromCameraForJoint;
+             
+            if (currentJointObject.name == "FIRST JOINT"){
+                var pivotFrom = pivotPointForCurrentJoint;
+                // pivotFrom.y = currentMousePosition.y; // Adjust height but keep XZ movement
+
+                var mouseAt = currentMousePosition;
+
+                Vector3 direction = (mouseAt - pivotFrom).normalized;
+                
+                if (actualStartingJointAngle == Mathf.Infinity)
+                    actualStartingJointAngle = parentVentScript.FirstJointY; //////////
+
+                float angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+                if (startingAngle == Mathf.Infinity)
+                    startingAngle = angle;
+                
+                currentAngle = angle;
+
+                angleDifference = Mathf.DeltaAngle(startingAngle, currentAngle);
+
+                //////////
+                parentVentScript.FirstJointY = actualStartingJointAngle + angleDifference;
+            }
+
+            if (currentJointObject.name == "SECOND JOINT"){
+                var pivotFrom = pivotPointForCurrentJoint;
+                // pivotFrom.y = currentMousePosition.y; // Adjust height but keep XZ movement
+
+                var mouseAt = currentMousePosition;
+
+                Vector3 direction = (mouseAt - pivotFrom).normalized;
+
+                
+                if (actualStartingJointAngle == Mathf.Infinity)
+                    actualStartingJointAngle = parentVentScript.SecondJointX; //////////
+
+                float angle = -Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+                if (startingAngle == Mathf.Infinity)
+                    startingAngle = angle;
+                
+                currentAngle = angle;
+
+                angleDifference = Mathf.DeltaAngle(startingAngle, currentAngle);
+
+                //////////
+                parentVentScript.SecondJointX = actualStartingJointAngle + angleDifference;
+            }
+
+
+            if (currentJointObject.name == "THIRD JOINT"){
+                var pivotFrom = pivotPointForCurrentJoint;
+                // pivotFrom.y = currentMousePosition.y; // Adjust height but keep XZ movement
+
+                var mouseAt = currentMousePosition;
+
+                Vector3 direction = (mouseAt - pivotFrom).normalized;
+
+                
+                if (actualStartingJointAngle == Mathf.Infinity)
+                    actualStartingJointAngle = parentVentScript.ThirdJointX; //////////
+
+                float angle = -Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+                if (startingAngle == Mathf.Infinity)
+                    startingAngle = angle;
+                
+                currentAngle = angle;
+
+                angleDifference = Mathf.DeltaAngle(startingAngle, currentAngle);
+
+                //////////
+                parentVentScript.ThirdJointX = actualStartingJointAngle + angleDifference;
+            }
+
+            if (currentJointObject.name == "FOURTH JOINT"){
+                var pivotFrom = pivotPointForCurrentJoint;
+                // pivotFrom.y = currentMousePosition.y; // Adjust height but keep XZ movement
+
+                var mouseAt = currentMousePosition;
+
+                Vector3 direction = (mouseAt - pivotFrom).normalized;
+
+                
+                if (actualStartingJointAngle == Mathf.Infinity)
+                    actualStartingJointAngle = parentVentScript.FourthJointX; //////////
+
+                float angle = -Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+                if (startingAngle == Mathf.Infinity)
+                    startingAngle = angle;
+                
+                currentAngle = angle;
+
+                angleDifference = Mathf.DeltaAngle(startingAngle, currentAngle);
+
+                //////////
+                parentVentScript.FourthJointX = actualStartingJointAngle + angleDifference;
+            }
+        }
+
+        Ray forwardRay = new Ray(playerCamera.transform.position, playerCamera.forward);
+        if (readyToDrag && Physics.Raycast(forwardRay, out RaycastHit hit, range))
+        {
+            GameObject hitObject = hit.collider.gameObject;
+
+            if (hitObject) // We hit a door
+            {
+                if (hitObject.name.EndsWith("JOINT")){
+                    Debug.Log("WE HIT A VENT");
+
+                    // if (hitObject.name == "FIRST JOINT"){
+                        readyToDrag = false;
+                        currentJointObject = hitObject;
+                        parentVentObject = findVentObject(hitObject);
+                        parentVentScript = parentVentObject.GetComponent<VentController>();
+                        pivotPointForCurrentJoint = hitObject.transform.Find("PivotFrom").position;
+                        playerFirstContactOnJoint = hit.point;
+                        distFromCameraForJoint = Vector3.Distance(hit.point, playerCamera.transform.position);
+                    // }
+
+                }
+
+            }
+        }   
+    }
+
+    GameObject findVentObject(GameObject currentJoint){
+        if (currentJoint.name == "FIRST JOINT")
+            return currentJoint.transform.parent.gameObject;
+        
+        if (currentJoint.name == "SECOND JOINT")
+            return currentJoint.transform.parent.parent.gameObject;
+        
+        if (currentJoint.name == "THIRD JOINT")
+            return currentJoint.transform.parent.parent.parent.gameObject;
+
+        if (currentJoint.name == "FOURTH JOINT")
+            return currentJoint.transform.parent.parent.parent.parent.gameObject;
+        
+        return null;
     }
 
 
