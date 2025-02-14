@@ -50,7 +50,7 @@ public class liquidScript : MonoBehaviour
 
     [Header("Liquid Heating")]
     public float maxHeat = 100f;  // Maximum heat at the center
-    public float currentHeat = 0f; // Heat affecting the beaker
+    public float currentHeat = 1f; // Heat affecting the beaker
 
     // Use this for initialization
     void Start()
@@ -170,7 +170,6 @@ void CalculateHeat()
     Vector3 beakerPos = transform.position;
     float heatRadius = 0.2f;
 
-    // ✅ FIX: Use XZ plane only
     float horizontalDistance = Vector2.Distance(new Vector2(beakerPos.x, beakerPos.z), new Vector2(burnerPos.x, burnerPos.z));
 
     // Get vertical height difference (beaker must be above)
@@ -180,11 +179,12 @@ void CalculateHeat()
     if (horizontalDistance <= heatRadius && heightDifference > 0 && burner.GetComponent<bunsenBurnerScript>().isLit)
     {
         float heatFactor = 1 - (horizontalDistance / heatRadius);
-        currentHeat = maxHeat * heatFactor;
+        // multiplys it by the airflow of the bunsen burner so bigger flame = more heat
+        currentHeat = maxHeat * heatFactor * burner.GetComponent<bunsenBurnerScript>().airflow.Value;
     }
     else
     {
-        currentHeat = 0f;
+        currentHeat = 1f;
     }
 }
 
@@ -258,6 +258,7 @@ void CalculateHeat()
     }
 
     public void handleReactions(){
+        //if they are crystal forming then it will ruin the crytsalization and if they produce H2 gas it needs a vent or it could catch fire those with precipitants wont precipitate with added heat (boiling)
         if (!reactionHappening){
             //tested and working
             if (percentAl > 0.02f){ 
@@ -288,6 +289,7 @@ void CalculateHeat()
                 // produces heat
                 // fast
                 //tested and working
+                //VIOLENT WITH ADDED HEAT
                 if (percentKOH > 0.04f){
                     // Reaction: Potassium hydroxide (KOH) + Sulfuric acid (H2SO4)
                     // Produces potassium sulfate (K2SO4) and water (H2O)
@@ -374,6 +376,7 @@ void CalculateHeat()
                    // Initially appears as a milky, gelatinous fluid before drying
                    // Highly exothermic, strong heat release
                    // Solid product forms upon evaporation, leaving behind a fine white powder
+                   //VIOLENT WITH ADDED HEAT
                    List<string> reactants = new List<string> {"KAl(OH)4", "Al(OH)3"};
                    List<string> products = new List<string> {"KAlO2", "H2O"};
                    List<float> Rratio = new List<float> {1, 1};
@@ -464,7 +467,7 @@ void CalculateHeat()
             // Update percentages dynamically
             updatePercentages();
             
-            yield return new WaitForSeconds(1f / reactSpeed);  // Allow other game logic to continue
+            yield return new WaitForSeconds(1f / reactSpeed / currentHeat);  // Allow other game logic to continue
         }
         reactionHappening = false;
     }
