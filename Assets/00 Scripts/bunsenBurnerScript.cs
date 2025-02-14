@@ -9,6 +9,7 @@ public class bunsenBurnerScript : NetworkBehaviour
     ParticleSystem flame;
 
     Color redFlame, blueFlame;
+    public bool isLit;
 
     // Networked variable for airflow (Server write permission)
     public NetworkVariable<float> airflow = new NetworkVariable<float>(0.2f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server); // Default airflow

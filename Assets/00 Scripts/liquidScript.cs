@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using Obi;
 using Tripolygon.UModeler.UI.Input;
+using Unity.Mathematics;
 using Unity.Multiplayer.Center.Common;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -47,6 +48,10 @@ public class liquidScript : MonoBehaviour
     Rigidbody objectRigidbody;
     float initialObjectMass;
 
+    [Header("Liquid Heating")]
+    public float maxHeat = 100f;  // Maximum heat at the center
+    public float currentHeat = 0f; // Heat affecting the beaker
+
     // Use this for initialization
     void Start()
     {
@@ -76,6 +81,8 @@ public class liquidScript : MonoBehaviour
         handleLiquid();
 
         handleLiquidColor();
+
+        CalculateHeat();
 
         handleReactions();
         
@@ -149,6 +156,61 @@ public class liquidScript : MonoBehaviour
         surfaceColor = newSurfaceColor;
 
     }
+
+void CalculateHeat()
+{
+    GameObject burner = findClosestBunsenBurner();
+    if (burner == null)
+    {
+        currentHeat = 0f;
+        return;
+    }
+
+    Vector3 burnerPos = burner.transform.position;
+    Vector3 beakerPos = transform.position;
+    float heatRadius = 0.2f;
+
+    // ✅ FIX: Use XZ plane only
+    float horizontalDistance = Vector2.Distance(new Vector2(beakerPos.x, beakerPos.z), new Vector2(burnerPos.x, burnerPos.z));
+
+    // Get vertical height difference (beaker must be above)
+    float heightDifference = beakerPos.y - burnerPos.y;
+
+    // Check if beaker is within horizontal range and burner is lit
+    if (horizontalDistance <= heatRadius && heightDifference > 0 && burner.GetComponent<bunsenBurnerScript>().isLit)
+    {
+        float heatFactor = 1 - (horizontalDistance / heatRadius);
+        currentHeat = maxHeat * heatFactor;
+    }
+    else
+    {
+        currentHeat = 0f;
+    }
+}
+
+
+
+    GameObject findClosestBunsenBurner()
+{
+    float heatRadius = 2f;
+    float minDist = Mathf.Infinity;
+    GameObject closestBurner = null; // Store the closest burner
+
+    foreach (GameObject currentBurner in GameObject.FindGameObjectsWithTag("BunsenBurner"))
+    {
+        if (!currentBurner) continue; // Skip null objects
+
+        float dist = Vector3.Distance(transform.position, currentBurner.transform.position);
+
+        if (dist < minDist && dist <= heatRadius)
+        {
+            minDist = dist;
+            closestBurner = currentBurner;
+        }
+    }
+    return closestBurner; // Return the closest one found (or null if none are within range)
+}
+
 
     //adds a vollume of a given solution to the current solution
     public void addSolution(List<float> solutionToAdd, float volume)

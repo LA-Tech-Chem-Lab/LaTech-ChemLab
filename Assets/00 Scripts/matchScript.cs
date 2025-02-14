@@ -4,7 +4,6 @@ using UnityEngine;
 public class matchScript : MonoBehaviour
 {   
     const float MATCH_LIGHT_RADUIS = 0.4f;
-    
     public GameObject closestBunsenBurner;
     public Transform tip;
     public ParticleSystem flame;
@@ -29,10 +28,12 @@ public class matchScript : MonoBehaviour
 
         findClosestBunsenBurner();
 
-        if (closestBunsenBurner && lit){ // Light the bunsen burner
-            Debug.Log("LIGHT");
-            if (!closestBunsenBurner.transform.Find("Flame").GetComponent<ParticleSystem>().isPlaying)
-                closestBunsenBurner.transform.Find("Flame").GetComponent<ParticleSystem>().Play();
+        if (closestBunsenBurner){
+            if (lit){ // Light the bunsen burner
+                closestBunsenBurner.GetComponent<bunsenBurnerScript>().isLit = lit;
+                if (!closestBunsenBurner.transform.Find("Flame").GetComponent<ParticleSystem>().isPlaying)
+                    closestBunsenBurner.transform.Find("Flame").GetComponent<ParticleSystem>().Play();
+            }
         }
     }
 
