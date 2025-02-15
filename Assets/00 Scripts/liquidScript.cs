@@ -103,10 +103,19 @@ public class liquidScript : MonoBehaviour
         // Now differentiate between flasks beakers and pipettes
 
         if (transform.name == "Beaker"){  // 1 to 1 in this case
-            
-            if (rend.material != null) {
+
+            if (rend.material != null)
+            {
                 // Make sure to use the instance material, not the shared one
-                rend.material.SetFloat("_FillAmount", scaledPercentRender);
+                if (scaledPercentRender > 0f)
+                {
+                    transform.Find("Liquid").GetComponent<MeshRenderer>().enabled = true;
+                    rend.material.SetFloat("_FillAmount", scaledPercentRender);
+                }
+                if (scaledPercentRender <= 0f)
+                {
+                    transform.Find("Liquid").GetComponent<MeshRenderer>().enabled = false;
+                }
             }
         }
 

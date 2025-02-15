@@ -189,7 +189,7 @@ Material:
     - _EnableGeometricSpecularAA: 0
     - _EnergyConservingSpecularColor: 1
     - _ExcludeFromTUAndAA: 0
-    - _FillAmount: 1
+    - _FillAmount: 0
     - _Fill_Amount: 0.15
     - _Fresnel: 2
     - _HeightAmplitude: 0.02
@@ -286,7 +286,7 @@ Material:
     - _FresnelColor: {r: 0, g: 0.12923098, b: 1, a: 0}
     - _InvPrimScale: {r: 1, g: 1, b: 0, a: 0}
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
-    - _LiquidColor: {r: 0, g: 0.90054274, b: 1, a: 1}
+    - _LiquidColor: {r: 0.115172625, g: 0, b: 0.6132076, a: 1}
     - _Liquid_Color: {r: 0, g: 0.2391901, b: 1, a: 1}
     - _SideColor: {r: 0, g: 0.003652096, b: 1, a: 1}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
