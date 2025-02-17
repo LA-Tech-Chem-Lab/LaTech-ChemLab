@@ -35,11 +35,13 @@ public class liquidScript : MonoBehaviour
     public List<string> compoundNames = new List<string> {"H2SO4", "KOH", "H2O", "K2SO4", "Al", "KAl(OH)4", "Al2(SO4)3", "Alum", "Al(OH)3", "KAl(SO4)2", "KAlO2"};
     List<float> densities = new List<float> {1.83f, 2.12f, 1f, 2.66f, 2.7f, 1.5f, 2.672f, 1.76f, 2.42f, 1.75f, 1.57f};
     public List<float> molarMasses = new List<float> {98.079f, 56.1056f, 18.01528f, 174.259f, 26.982f, 134.12f, 342.14f, 474.39f, 78f, 258.42f, 98.075f};
+    public List<float> specificHeatCapacities = new List<float> {1380f, 1300f, 4186f, 1060f, 900f, 1500f, 1300f, 1200f, 900f, 1060f, 1250f};
+    float[] boilingPoints = new float[] {611f, 1388f, 373.15f, 1685f, 2792f, 1110f, 1073f, 1383f, 773f, 1383f, 1280f};
+    public List<float> latentHeat = new List<float> {2257000f, 2000000f, 2257000f, 2500000f, 2920000f, 2200000f, 2500000f, 2400000f, 2300000f, 2300000f, 2400000f};
     List<Color> liquidColors = new List<Color> {Color.red, Color.green, Color.blue, Color.yellow, new Color(0.6f, 0.6f, 0.6f), Color.yellow, Color.red, Color.green, Color.yellow, Color.green, Color.blue};
     //                                            H2SO4       KOH              H20        K2SO4              Al                  KAl(OH)4
     public bool reactionHappening;
 
-    
     [Header("Spillage")]
     
     public float dotProduct; 
@@ -49,8 +51,12 @@ public class liquidScript : MonoBehaviour
     float initialObjectMass;
 
     [Header("Liquid Heating")]
-    public float maxHeat = 100f;  // Maximum heat at the center
+    public float maxHeat = 1200f;  // Maximum heat at the center
     public float currentHeat = 1f; // Heat affecting the beaker
+    float convectiveHeatTransferCoeff = 100f;
+    public float liquidTemperature = 293.15f;
+    float specificHeatCapacity = 4184f;
+    public float roomTemp = 293.15f;
 
     // Use this for initialization
     void Start()
@@ -103,14 +109,14 @@ public class liquidScript : MonoBehaviour
         // Now differentiate between flasks beakers and pipettes
 
         if (transform.name == "Beaker"){  // 1 to 1 in this case
-
+            
             if (rend.material != null)
             {
                 // Make sure to use the instance material, not the shared one
                 if (scaledPercentRender > 0f)
                 {
                     transform.Find("Liquid").GetComponent<MeshRenderer>().enabled = true;
-                    rend.material.SetFloat("_FillAmount", scaledPercentRender);
+                rend.material.SetFloat("_FillAmount", scaledPercentRender);
                 }
                 if (scaledPercentRender <= 0f)
                 {
@@ -169,31 +175,79 @@ public class liquidScript : MonoBehaviour
 void CalculateHeat()
 {
     GameObject burner = findClosestBunsenBurner();
-    if (burner == null)
+    float radius = transform.localScale.x / 2; // Assuming uniform scaling for X and Z
+    float beakerSurfaceArea = Mathf.PI * Mathf.Pow(radius, 2);
+
+    if (burner != null)
     {
-        currentHeat = 0f;
-        return;
+        Vector3 burnerPos = burner.transform.position;
+        Vector3 beakerPos = transform.position;
+        float heatRadius = 0.2f;
+
+        float horizontalDistance = Vector2.Distance(new Vector2(beakerPos.x, beakerPos.z), new Vector2(burnerPos.x, burnerPos.z));
+        float heightDifference = beakerPos.y - burnerPos.y;
+
+        bunsenBurnerScript burnerScript = burner.GetComponent<bunsenBurnerScript>();
+
+        if (horizontalDistance <= heatRadius && heightDifference > 0 && burnerScript.isLit)
+        {
+            float heatFactor = 1 - (horizontalDistance / heatRadius);
+            float burnerIntensity = burnerScript.airflow.Value;
+            currentHeat = (maxHeat * heatFactor * burnerIntensity) + roomTemp;
+        }
+        else
+        {
+            currentHeat = roomTemp; 
+        }
+    }
+    else{
+        currentHeat = roomTemp;
     }
 
-    Vector3 burnerPos = burner.transform.position;
-    Vector3 beakerPos = transform.position;
-    float heatRadius = 0.2f;
-
-    float horizontalDistance = Vector2.Distance(new Vector2(beakerPos.x, beakerPos.z), new Vector2(burnerPos.x, burnerPos.z));
-
-    // Get vertical height difference (beaker must be above)
-    float heightDifference = beakerPos.y - burnerPos.y;
-
-    // Check if beaker is within horizontal range and burner is lit
-    if (horizontalDistance <= heatRadius && heightDifference > 0 && burner.GetComponent<bunsenBurnerScript>().isLit)
-    {
-        float heatFactor = 1 - (horizontalDistance / heatRadius);
-        // multiplys it by the airflow of the bunsen burner so bigger flame = more heat
-        currentHeat = maxHeat * heatFactor * burner.GetComponent<bunsenBurnerScript>().airflow.Value;
+    // Apply heat transfer equation
+    specificHeatCapacity = 0f;
+    for (int i = 0; i < solutionMakeup.Count; i++){
+        specificHeatCapacity += solutionMakeup[i] * specificHeatCapacities[i];
     }
-    else
+
+    float heatTransferRate = convectiveHeatTransferCoeff * beakerSurfaceArea * (currentHeat - liquidTemperature);
+    float temperatureChange = (heatTransferRate / (GetComponent<Rigidbody>().mass * specificHeatCapacity)) * Time.deltaTime;
+
+    liquidTemperature += temperatureChange;
+
+    // Calculate total mass of the solution (assume mass of liquid is given or available)
+    float totalSolutionMass = densityOfLiquid * currentVolume_mL;
+
+    // Check for evaporation
+    for (int i = 0; i < compoundNames.Count; i++)
     {
-        currentHeat = 1f;
+        float boilingPoint = boilingPoints[i]; // Get the boiling point for the compound
+        float latentHeatOfVaporization = latentHeat[i]; // Latent heat of vaporization for each compound
+
+        // If the temperature exceeds the boiling point, calculate evaporation rate
+        if (liquidTemperature >= boilingPoint)
+        {
+            float temperatureDifference = liquidTemperature - boilingPoint;
+            
+            // Evaporation rate calculation (rate at which mass evaporates per second)
+            float evaporationRate = (convectiveHeatTransferCoeff * beakerSurfaceArea * temperatureDifference) / latentHeatOfVaporization;
+
+            // Calculate the mass of the compound based on its percent makeup in the solution
+            float compoundMass = solutionMakeup[i] * totalSolutionMass;
+
+            // Calculate the amount of mass to evaporate
+            float massToEvaporate = evaporationRate * Time.deltaTime;
+
+            // Reduce the compound's mass in the solution, based on the evaporation rate
+            compoundMass -= massToEvaporate;
+
+            // If the compound mass is reduced to 0, set it to 0 (avoid negative mass)
+            if (compoundMass < 0)
+                compoundMass = 0;
+
+            // Update the solution makeup percentage based on the new mass of the compound
+            solutionMakeup[i] = compoundMass / totalSolutionMass;
+        }
     }
 }
 
@@ -476,7 +530,7 @@ void CalculateHeat()
             // Update percentages dynamically
             updatePercentages();
             
-            yield return new WaitForSeconds(1f / reactSpeed / currentHeat);  // Allow other game logic to continue
+            yield return new WaitForSeconds(1f / reactSpeed / liquidTemperature);  // Allow other game logic to continue
         }
         reactionHappening = false;
     }
