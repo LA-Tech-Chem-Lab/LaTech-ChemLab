@@ -73,25 +73,55 @@ public class liquidScript : MonoBehaviour
 
     private void Update()
     {
-        
+        // Get the world-space up direction of the object
+        Vector3 upVector = transform.up;
+
+        // Calculate tilt based on the deviation from global up (0,1,0)
+        float tiltAmount = upVector.x + upVector.z;
+
+        // Apply a multiplier for fine control (optional)
+        tiltAmount *= 0.5f;
+
+        Debug.Log("Current Tilt Amount: " + tiltAmount);
+
+        // Ensure there's liquid before applying tilt
+        currentVolume_mL = Mathf.Clamp(currentVolume_mL, 0f, totalVolume_mL);
+        float percentFull = currentVolume_mL / totalVolume_mL;
+        float scaledPercentRender = percentFull / scaleDown;
+
+        if (scaledPercentRender > 0.0f)
+        {
+            if (rend.material != null && rend.material.HasProperty("_TiltAmount"))
+            {
+                rend.material.SetFloat("_TiltAmount", tiltAmount);
+                Debug.Log("2 Current Tilt Amount: " + tiltAmount);
+            }
+        }
+
+        // Calculate tilt using the dot product of the beaker's up direction and world up
         dotProduct = Vector3.Dot(transform.up.normalized, Vector3.up);
-        if (dotProduct <= 0.25f){
+
+        // Spill logic (you already have this)
+        if (dotProduct <= 0.25f)
+        {
             float loss = (-0.8f * dotProduct + 0.2f) * maxSpillRate * Time.deltaTime;
             currentVolume_mL -= loss;
-            if (gameObject.name.StartsWith("Erlenmeyer") && currentVolume_mL/totalVolume_mL < 0.45f) // Bad but works for now
+
+            if (gameObject.name.StartsWith("Erlenmeyer") && currentVolume_mL / totalVolume_mL < 0.45f)
                 currentVolume_mL = 0f;
-            if (gameObject.name.StartsWith("Beaker") && currentVolume_mL/totalVolume_mL < 0.19f) // Bad but works for now
+            if (gameObject.name.StartsWith("Beaker") && currentVolume_mL / totalVolume_mL < 0.19f)
                 currentVolume_mL = 0f;
         }
 
+        // Handle liquid (should only be called once)
         handleLiquid();
 
+        // Handle liquid color (if needed)
         handleLiquidColor();
 
+        // Other functions like heat and reactions
         CalculateHeat();
-
         handleReactions();
-        
     }
 
     void handleLiquid(){
