@@ -1,22 +1,25 @@
-Shader "Custom/LiquidFillWithTilt"
+Shader "Custom/LiquidFill"
 {
     Properties
     {
         _FillAmount ("Fill Amount", Range(0, 1)) = 0.8
         _LiquidColor ("Liquid Color", Color) = (0, 0, 1, 1)
-        _TiltAmount ("Tilt Amount", Range(-1, 1)) = 0.0  // Tilt amount passed from script
     }
     SubShader
     {
         Tags { "RenderType"="Opaque" }
+
         Pass
         {
             Stencil
             {
-                Ref 1
-                Comp Equal
+                Ref 1        // Must match the beaker's stencil reference
+                Comp Equal   // Only render where the stencil value is 1
                 Pass Keep
             }
+
+            ZWrite On  // Ensures proper depth sorting
+            ZTest LEqual  
 
             CGPROGRAM
             #pragma vertex vert
@@ -36,49 +39,33 @@ Shader "Custom/LiquidFillWithTilt"
 
             fixed4 _LiquidColor;
             float _FillAmount;
-            float _TiltAmount;
 
+            // Vertex shader
             v2f vert(appdata_t v)
             {
                 v2f o;
 
-                // Only apply tilt if there's liquid (i.e., _FillAmount > 0)
-                if (_FillAmount > 0.0)
-                {
-                    // Get the object's rotation in world space (to adjust for tilt)
-                    float3 worldRotation = normalize(mul((float3x3)unity_ObjectToWorld, v.vertex.xyz));
+                // Calculate liquid surface height
+                float liquidSurfaceY = lerp(-0.5, 0.5, _FillAmount); // Adjust this range for your beaker's size.
 
-                    // Determine how much tilt there is along the X and Z axes
-                    // For example, we use worldRotation.x for the forward/backward tilt and worldRotation.z for side-to-side tilt
-                    float tiltFactor = worldRotation.x + worldRotation.z;
+                // Prevent liquid from rendering outside beaker by clamping height
+                v.vertex.y = min(v.vertex.y, liquidSurfaceY);
 
-                    // Apply the tiltFactor to adjust the liquid's surface level
-                    float liquidSurfaceY = lerp(-0.5, 0.5, _FillAmount) + tiltFactor * _TiltAmount;
-
-                    // If the vertex is above the liquid surface, adjust its Y position
-                    if (v.vertex.y > liquidSurfaceY)
-                    {
-                        v.vertex.y = liquidSurfaceY;
-                    }
-                }
-                else
-                {
-                    // If there's no liquid, place the surface at the bottom
-                    v.vertex.y = -0.5; // Set to the bottom of the container when empty
-                }
-
-                // Convert the modified vertex position to clip space
                 o.pos = UnityObjectToClipPos(v.vertex);
                 o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 
                 return o;
             }
 
+            // Fragment shader
             fixed4 frag(v2f i) : SV_Target
             {
+                // Return the liquid color with full opacity
                 return _LiquidColor;
             }
+
             ENDCG
         }
     }
+    Fallback "Diffuse"
 }

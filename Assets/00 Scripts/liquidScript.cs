@@ -50,6 +50,8 @@ public class liquidScript : MonoBehaviour
     Rigidbody objectRigidbody;
     float initialObjectMass;
 
+    public Transform liquidTransform;
+
     [Header("Liquid Heating")]
     public float maxHeat = 1200f;  // Maximum heat at the center
     public float currentHeat = 1f; // Heat affecting the beaker
@@ -61,6 +63,7 @@ public class liquidScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        liquidTransform = transform.Find("Liquid").transform;
         rend = transform.Find("Liquid").GetComponent<Renderer>();
         objectRigidbody = GetComponent<Rigidbody>();
         initialObjectMass = objectRigidbody.mass;
@@ -73,16 +76,18 @@ public class liquidScript : MonoBehaviour
 
     private void Update()
     {
-        // Get the world-space up direction of the object
+        // Get the world-space up direction of the beaker
         Vector3 upVector = transform.up;
 
-        // Calculate tilt based on the deviation from global up (0,1,0)
-        float tiltAmount = upVector.x + upVector.z;
+        // Calculate tilt based on deviation from global up (0,1,0)
+        float tiltX = Mathf.Atan2(upVector.z, upVector.y) * Mathf.Rad2Deg; // Tilt around X-axis
+        float tiltZ = Mathf.Atan2(upVector.x, upVector.y) * Mathf.Rad2Deg; // Tilt around Z-axis
 
-        // Apply a multiplier for fine control (optional)
-        tiltAmount *= 0.5f;
+        // Optional: Apply multiplier for fine control
+        tiltX *= 0.5f;
+        tiltZ *= 0.5f;
 
-        Debug.Log("Current Tilt Amount: " + tiltAmount);
+        Debug.Log($"Tilt X: {tiltX}, Tilt Z: {tiltZ}");
 
         // Ensure there's liquid before applying tilt
         currentVolume_mL = Mathf.Clamp(currentVolume_mL, 0f, totalVolume_mL);
@@ -93,11 +98,13 @@ public class liquidScript : MonoBehaviour
         {
             if (rend.material != null && rend.material.HasProperty("_TiltAmount"))
             {
-                rend.material.SetFloat("_TiltAmount", tiltAmount);
-                Debug.Log("2 Current Tilt Amount: " + tiltAmount);
+                rend.material.SetFloat("_TiltAmount", tiltX + tiltZ); // Send to shader if needed
+                Debug.Log("2 Current Tilt Amount: " + (tiltX + tiltZ));
             }
-        }
 
+            // **Rotate the liquid object to counteract the beaker's tilt**
+            liquidTransform.localRotation = Quaternion.Euler(-tiltX, 0, -tiltZ);
+        }
         // Calculate tilt using the dot product of the beaker's up direction and world up
         dotProduct = Vector3.Dot(transform.up.normalized, Vector3.up);
 
