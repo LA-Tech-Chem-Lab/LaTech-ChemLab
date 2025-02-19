@@ -186,6 +186,8 @@ public class pickUpObjects : NetworkBehaviour
         if (other.name == "Erlenmeyer Flask")   multiHandlerScript.setHelpText("250 mL Erlenmeyer flask");
         if (other.name == "Erlenmeyer Flask L") multiHandlerScript.setHelpText("500 mL Erlenmeyer flask");
         if (other.name == "Evaporating Dish")   multiHandlerScript.setHelpText("This is an evaporating dish.");
+        if (other.name == "Funnel")             multiHandlerScript.setHelpText("This is a glass funnel used for filtering out solids from solutions");
+        if (other.name == "Paper Cone")         multiHandlerScript.setHelpText("This is a paper filter used with the glass funnel to filter solids from a solution.");
     }
 
     void setHelpTextConstantly(){
