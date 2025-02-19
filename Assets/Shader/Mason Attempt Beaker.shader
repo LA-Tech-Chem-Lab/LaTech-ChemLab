@@ -49,6 +49,7 @@ Shader "Custom/FullyTransparentBeaker"
         _Surface("__surface", Float) = 0.0
         _Blend("__blend", Float) = 0.0
         _Cull("__cull", Float) = 2.0
+
         [ToggleUI] _AlphaClip("__clip", Float) = 0.0
         [HideInInspector] _SrcBlend("__src", Float) = 1.0
         [HideInInspector] _DstBlend("__dst", Float) = 0.0
@@ -82,19 +83,21 @@ Shader "Custom/FullyTransparentBeaker"
         // material work with both Universal Render Pipeline and Builtin Unity Pipeline
         Tags
         {
-            "RenderType" = "Opaque"
+            "RenderType" = "Transparent"
             "RenderPipeline" = "UniversalPipeline"
             "UniversalMaterialType" = "Lit"
             "IgnoreProjector" = "True"
-            "Queue" = "Transparent" 
+            "Queue" = "Transparent"
         }
 
+        
+
         Stencil
-        {
-            Ref 1
-            Comp Always
-            Pass Replace
-        }
+            {
+                Ref 1         // Matches liquid stencil value
+                Comp Always    // Only render where the liquid exists
+                Pass Replace
+            }
 
         LOD 300
 
@@ -116,7 +119,6 @@ Shader "Custom/FullyTransparentBeaker"
             ZWrite[_ZWrite]
             Cull[_Cull]
             AlphaToMask[_AlphaToMask]
-
 
             HLSLPROGRAM
             #pragma target 2.0
@@ -191,6 +193,7 @@ Shader "Custom/FullyTransparentBeaker"
             Tags
             {
                 "LightMode" = "ShadowCaster"
+                "Queue" = "Transparent+1"
             }
 
             // -------------------------------------
@@ -527,56 +530,8 @@ Shader "Custom/FullyTransparentBeaker"
             #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ObjectMotionVectors.hlsl"
             ENDHLSL
         }
-        Pass
-        {
-            Name "Custom/FullyTransparentBeaker"
-            Tags { "RenderType"="Transparent" "Queue"="Geometry" }
-
-            Blend SrcAlpha OneMinusSrcAlpha
-            ZWrite On     // **Important**: Writes to depth buffer to occlude liquid
-            ZTest LEqual  
-
-            Stencil
-            {
-                Ref 0      
-                Comp Equal 
-                Pass Keep 
-            }
-
-            CGPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
-            #include "UnityCG.cginc"
-
-            struct appdata_t
-            {
-                float4 vertex : POSITION;
-            };
-
-            struct v2f
-            {
-                float4 pos : SV_POSITION;
-            };
-
-            fixed4 _Color;
-
-            v2f vert(appdata_t v)
-            {
-                v2f o;
-                o.pos = UnityObjectToClipPos(v.vertex);
-                return o;
-            }
-
-            // No color output, since it's just handling stencil logic
-            void frag(v2f i)
-            {
-                // No output; stencil is handled by stencil settings
-                discard;
-            }
-            ENDCG
-        }
+        
     }
-
 
 
     FallBack "Hidden/Universal Render Pipeline/FallbackError"

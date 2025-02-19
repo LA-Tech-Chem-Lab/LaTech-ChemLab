@@ -2,24 +2,26 @@ Shader "Custom/LiquidFill"
 {
     Properties
     {
-        _FillAmount ("Fill Amount", Range(0, 1)) = 0.8
         _LiquidColor ("Liquid Color", Color) = (0, 0, 1, 1)
+        _FillAmount ("Fill Amount", Range(0, 1)) = 1.0 // Control the liquid fill level
     }
+
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "RenderType"="Transparent" "Queue"="Overlay" }
 
         Pass
         {
             Stencil
             {
-                Ref 1        // Must match the beaker's stencil reference
-                Comp Equal   // Only render where the stencil value is 1
-                Pass Keep
+                Ref 1         // Read stencil value of 1
+                Comp Equal    // Only render where stencil value is 1
+                Pass Keep     // Do not overwrite stencil buffer
             }
 
-            ZWrite On  // Ensures proper depth sorting
-            ZTest LEqual  
+            Blend SrcAlpha OneMinusSrcAlpha
+            ZWrite On
+            ZTest LEqual
 
             CGPROGRAM
             #pragma vertex vert
@@ -34,38 +36,31 @@ Shader "Custom/LiquidFill"
             struct v2f
             {
                 float4 pos : SV_POSITION;
-                float3 worldPos : TEXCOORD0;
             };
 
             fixed4 _LiquidColor;
-            float _FillAmount;
+            float _FillAmount; // Liquid fill level
 
-            // Vertex shader
             v2f vert(appdata_t v)
             {
                 v2f o;
-
-                // Calculate liquid surface height
-                float liquidSurfaceY = lerp(-0.5, 0.5, _FillAmount); // Adjust this range for your beaker's size.
-
-                // Prevent liquid from rendering outside beaker by clamping height
-                v.vertex.y = min(v.vertex.y, liquidSurfaceY);
-
+                // Scale the liquid geometry based on fill amount
+                v.vertex.y *= _FillAmount; // Scale down the y position based on fill amount
                 o.pos = UnityObjectToClipPos(v.vertex);
-                o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
-
                 return o;
             }
 
-            // Fragment shader
             fixed4 frag(v2f i) : SV_Target
             {
-                // Return the liquid color with full opacity
-                return _LiquidColor;
+                if (_FillAmount == 0)
+                {
+                    discard; // Skip rendering the liquid if fill amount is 0
+                }
+
+                return _LiquidColor; // Blue liquid effect
             }
 
             ENDCG
         }
     }
-    Fallback "Diffuse"
 }
