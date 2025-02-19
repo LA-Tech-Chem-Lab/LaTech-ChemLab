@@ -36,7 +36,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: cdab89bfded335547a384b4b9dd17b1c,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.1000004
+      value: -3.799
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cdab89bfded335547a384b4b9dd17b1c,
         type: 3}
@@ -85,11 +85,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: cdab89bfded335547a384b4b9dd17b1c,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3831223989473412937}
+    m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cdab89bfded335547a384b4b9dd17b1c,
         type: 3}
@@ -119,13 +115,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 241684204418189942}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cdab89bfded335547a384b4b9dd17b1c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8261977251994825142}
   m_SourcePrefab: {fileID: 100100000, guid: cdab89bfded335547a384b4b9dd17b1c, type: 3}
---- !u!4 &297369896454690954 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: cdab89bfded335547a384b4b9dd17b1c,
-    type: 3}
-  m_PrefabInstance: {fileID: 264235893276999521}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1111167503291367984 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: cdab89bfded335547a384b4b9dd17b1c,
@@ -163,8 +157,8 @@ Rigidbody:
   m_GameObject: {fileID: 1111167503291367984}
   serializedVersion: 4
   m_Mass: 0.122248
-  m_Drag: 10
-  m_AngularDrag: 10
+  m_Drag: 0
+  m_AngularDrag: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -193,7 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2780144888
+  GlobalObjectIdHash: 778963049
   InScenePlacedSourceGlobalObjectIdHash: 2780144888
   DeferredDespawnTick: 0
   Ownership: 1
@@ -272,6 +266,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displacement: {x: 0, y: -0.1, z: 0}
+  targetPosOffset: {x: 0, y: 0.06, z: 0}
+  checkRadiusOverride: 0
 --- !u!114 &241684204418189942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -279,7 +275,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1111167503291367984}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97ad8f34bc473b24882382d3604c0509, type: 3}
   m_Name: 
@@ -289,105 +285,86 @@ MonoBehaviour:
   scaleDown: 1
   surfaceColor: {r: 1, g: 0, b: 0, a: 0}
   topColor: {r: 1, g: 0.4084027, b: 0, a: 0}
-  MaxWobble: 0.0003
-  WobbleSpeed: 0.9
-  Recovery: 1.4
---- !u!1001 &3648342953148670114
-PrefabInstance:
+  densityOfLiquid: 1
+  percentH2SO4: 0
+  percentKOH: 0
+  percentH2O: 0
+  percentK2SO4: 0
+  percentAl: 0
+  percentKAlOH4: 0
+  percentAl2SO43: 0
+  percentAlum: 0
+  percentAlOH3: 0
+  percentKAlSO42: 0
+  percentKAlO2: 0
+  limreactnum: 0
+  solutionMakeup: []
+  compoundNames:
+  - H2SO4
+  - KOH
+  - H2O
+  - K2SO4
+  - Al
+  - KAl(OH)4
+  - Al2(SO4)3
+  - Alum
+  - Al(OH)3
+  - KAl(SO4)2
+  - KAlO2
+  molarMasses:
+  - 98.079
+  - 56.1056
+  - 18.01528
+  - 174.259
+  - 26.982
+  - 134.12
+  - 342.14
+  - 474.39
+  - 78
+  - 258.42
+  - 98.075
+  specificHeatCapacities:
+  - 1380
+  - 1300
+  - 4186
+  - 1060
+  - 900
+  - 1500
+  - 1300
+  - 1200
+  - 900
+  - 1060
+  - 1250
+  latentHeat:
+  - 2257000
+  - 2000000
+  - 2257000
+  - 2500000
+  - 2920000
+  - 2200000
+  - 2500000
+  - 2400000
+  - 2300000
+  - 2300000
+  - 2400000
+  reactionHappening: 0
+  dotProduct: 0
+  maxSpillRate: 120
+  liquidTransform: {fileID: 0}
+  maxHeat: 1200
+  currentHeat: 1
+  liquidTemperature: 293.15
+  roomTemp: 293.15
+--- !u!114 &8261977251994825142
+MonoBehaviour:
   m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 297369896454690954}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: 314934607da81ec40aa07a6f21af0e35,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.95000005
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 314934607da81ec40aa07a6f21af0e35,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.95000005
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 314934607da81ec40aa07a6f21af0e35,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.95000005
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 314934607da81ec40aa07a6f21af0e35,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 314934607da81ec40aa07a6f21af0e35,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.0051
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 314934607da81ec40aa07a6f21af0e35,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 314934607da81ec40aa07a6f21af0e35,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 314934607da81ec40aa07a6f21af0e35,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.000000037748947
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 314934607da81ec40aa07a6f21af0e35,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 314934607da81ec40aa07a6f21af0e35,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 314934607da81ec40aa07a6f21af0e35,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 314934607da81ec40aa07a6f21af0e35,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 314934607da81ec40aa07a6f21af0e35,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 314934607da81ec40aa07a6f21af0e35,
-        type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -7511558181221131132, guid: 314934607da81ec40aa07a6f21af0e35,
-        type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 67ac645a28c7fff43ae7c2211f62fb8d, type: 2}
-    - target: {fileID: 919132149155446097, guid: 314934607da81ec40aa07a6f21af0e35,
-        type: 3}
-      propertyPath: m_Name
-      value: Liquid
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 314934607da81ec40aa07a6f21af0e35, type: 3}
---- !u!4 &3831223989473412937 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 314934607da81ec40aa07a6f21af0e35,
-    type: 3}
-  m_PrefabInstance: {fileID: 3648342953148670114}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1111167503291367984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bb4143185184814490b81e7047accf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inSpace: 0
