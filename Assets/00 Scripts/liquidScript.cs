@@ -297,7 +297,16 @@ void CalculateHeat()
     //function for filtering
     IEnumerator handleFiltering()
     {
-        return null;
+        // Goes until the filter is empty
+        while (currentVolume_mL > 0.01)
+        {
+            // Transfers liquid from filter to flask
+            float filteredLiquid = currentVolume_mL / densityOfLiquid;
+            currentVolume_mL -= filteredLiquid;
+            Transform Flask = gameObject.transform.parent?.parent;
+            Flask.GetComponent<liquidScript>().addSolution(solutionMakeup, filteredLiquid);
+            yield return new WaitForSeconds(.01f);  // Allow other game logic to continue
+        }
     }
 
     GameObject findClosestBunsenBurner()
