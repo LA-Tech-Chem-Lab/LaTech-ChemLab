@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using Obi;
 using Tripolygon.UModeler.UI.Input;
@@ -128,7 +129,12 @@ public class liquidScript : MonoBehaviour
 
         // Other functions like heat and reactions
         CalculateHeat();
+
         handleReactions();
+
+        if (gameObject.name == "Paper Cone"){
+            StartCoroutine(handleFiltering());
+        }
     }
 
     void handleLiquid(){
@@ -288,7 +294,11 @@ void CalculateHeat()
     }
 }
 
-
+    //function for filtering
+    IEnumerator handleFiltering()
+    {
+        return null;
+    }
 
     GameObject findClosestBunsenBurner()
 {
@@ -310,7 +320,6 @@ void CalculateHeat()
     }
     return closestBurner; // Return the closest one found (or null if none are within range)
 }
-
 
     //adds a vollume of a given solution to the current solution
     public void addSolution(List<float> solutionToAdd, float volume)
