@@ -14,6 +14,7 @@ public class doCertainThingWith : NetworkBehaviour
     const float PIPETTE_GRAB_DISTANCE = 0.3f;
     const float IRON_RING_SNAP_DISTANCE = 0.7f;
     const float SCOOPULA_GRAB_DISTANCE = 1.2f;
+    const float FUNNEL_INSERT_DISTANCE = 1.5f;
 
 
 
@@ -31,6 +32,8 @@ public class doCertainThingWith : NetworkBehaviour
 
     pickUpObjects pickUpScript;
     public Vector3 testingOffset;
+    public bool funnelIsAttatched = false;
+    public GameObject funneledFlask = null;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -109,6 +112,9 @@ public class doCertainThingWith : NetworkBehaviour
 
             if (obj.name == "Scoopula")
                 GatherAluminumPelletsFromContainer();
+            
+            if (obj.name == "Funnel")
+                insertFunnel(obj);
         }
     }
 
@@ -191,6 +197,65 @@ public class doCertainThingWith : NetworkBehaviour
         pickUpScript.distOffset = dist;
     }
 
+    void insertFunnel(GameObject funnel) {
+        float minDist = Mathf.Infinity;
+        GameObject closestFlask = null;
+        Transform flaskOpening = null;
+
+        // Find the closest Flask
+        foreach (GameObject currentObject in FindObjectsOfType<GameObject>()) {
+            if (currentObject.name == "Erlenmeyer Flask" || currentObject.name == "Erlenmeyer Flask L") {
+                float distFromFunnel = Vector3.Distance(funnel.transform.position, currentObject.transform.position);
+
+                if (distFromFunnel < minDist) {
+                    minDist = distFromFunnel;
+                    closestFlask = currentObject;
+
+                    // Find the flask's top position
+                    flaskOpening = closestFlask.transform.Find("FlaskTop");
+                }
+            }
+        }
+
+        // Attach the funnel to the flask if within range
+        if (closestFlask && flaskOpening && minDist <= FUNNEL_INSERT_DISTANCE) {
+            pickUpScript.DropItem();
+
+            // Attach funnel to flask
+            funnel.transform.position = flaskOpening.position;
+            funnel.transform.rotation = flaskOpening.rotation;
+
+            // Make it a child so it follows movement
+            funnel.transform.SetParent(closestFlask.transform);
+
+            // Disable physics and collisions so it stays attached
+            Physics.IgnoreCollision(funnel.GetComponent<Collider>(), closestFlask.GetComponent<Collider>(), true);
+
+            Rigidbody rb = funnel.GetComponent<Rigidbody>();
+            if (rb) {
+                rb.isKinematic = true;
+            }
+
+            funneledFlask = closestFlask;
+            funnelIsAttatched = true;
+        }
+    }
+
+    public void DetachFunnel(GameObject funnel) {
+        // Remove parent so it no longer follows the flask
+        funnel.transform.SetParent(null);
+
+        // Re-enable physics and collisions
+        Physics.IgnoreCollision(funnel.GetComponent<Collider>(), funneledFlask.GetComponent<Collider>(), false);
+
+        Rigidbody rb = funnel.GetComponent<Rigidbody>();
+        if (rb) {
+            rb.isKinematic = false;
+        }
+
+        funneledFlask = null;
+        funnelIsAttatched = false;
+    }
 
 
     void GrabFlaskByNeck(GameObject tongs){
@@ -959,25 +1024,6 @@ public class doCertainThingWith : NetworkBehaviour
         obj.position = end; // Ensure final position is set
         obj.rotation = endRotation; // Ensure final rotation is set
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     void ShootFoam()
     {

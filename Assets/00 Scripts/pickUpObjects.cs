@@ -135,6 +135,10 @@ public class pickUpObjects : NetworkBehaviour
 
         if (other.name == "Bunsen Burner")
             initialHoldingDistance = 1.8f;
+        
+        if (other.name == "Funnel")
+            if (GetComponent<doCertainThingWith>().funnelIsAttatched == true)
+                GetComponent<doCertainThingWith>().DetachFunnel(other);
 
         initialHeldDistForObject = initialHoldingDistance;
         setHelpTextBasedOnObject();
@@ -186,7 +190,7 @@ public class pickUpObjects : NetworkBehaviour
         if (other.name == "Erlenmeyer Flask")   multiHandlerScript.setHelpText("250 mL Erlenmeyer flask");
         if (other.name == "Erlenmeyer Flask L") multiHandlerScript.setHelpText("500 mL Erlenmeyer flask");
         if (other.name == "Evaporating Dish")   multiHandlerScript.setHelpText("This is an evaporating dish.");
-        if (other.name == "Funnel")             multiHandlerScript.setHelpText("This is a glass funnel used for filtering out solids from solutions");
+        if (other.name == "Funnel")             multiHandlerScript.setHelpText("This is a glass funnel used for filtering out solids from solutions. Right click on an Erlenmeyer flask to attatch it.");
         if (other.name == "Paper Cone")         multiHandlerScript.setHelpText("This is a paper filter used with the glass funnel to filter solids from a solution.");
     }
 
@@ -291,8 +295,8 @@ public class pickUpObjects : NetworkBehaviour
                 }
                 // Debug.Log(hit.collider.gameObject.name);
             }
-
-            if (rb && !rb.GetComponent<Rigidbody>().isKinematic) // ITEM PICKUP
+            // Can also be the funnel even if it is kinematic because we want to be able to pick it up when it is attatched to the flask
+            if (rb && (!rb.GetComponent<Rigidbody>().isKinematic || hitObject.name == "Funnel")) // ITEM PICKUP
             {
                 PickUpItem(hitObject);
             }
