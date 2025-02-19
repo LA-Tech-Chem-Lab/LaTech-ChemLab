@@ -136,9 +136,15 @@ public class pickUpObjects : NetworkBehaviour
         if (other.name == "Bunsen Burner")
             initialHoldingDistance = 1.8f;
         
-        if (other.name == "Funnel")
+        if (other.name == "Funnel"){
             if (GetComponent<doCertainThingWith>().funnelIsAttatched == true)
                 GetComponent<doCertainThingWith>().DetachFunnel(other);
+        }
+
+        if (other.name == "Paper Cone"){
+            if (GetComponent<doCertainThingWith>().filterIsAttatched == true)
+                GetComponent<doCertainThingWith>().DetachFilter(other);
+        }
 
         initialHeldDistForObject = initialHoldingDistance;
         setHelpTextBasedOnObject();
@@ -236,10 +242,6 @@ public class pickUpObjects : NetworkBehaviour
             }
         }
     }
-
-
-
-
     void checkForInput()
     {
         if (Input.GetMouseButtonDown(0) && !Cursor.visible){
@@ -296,7 +298,7 @@ public class pickUpObjects : NetworkBehaviour
                 // Debug.Log(hit.collider.gameObject.name);
             }
             // Can also be the funnel even if it is kinematic because we want to be able to pick it up when it is attatched to the flask
-            if (rb && (!rb.GetComponent<Rigidbody>().isKinematic || hitObject.name == "Funnel")) // ITEM PICKUP
+            if (rb && (!rb.GetComponent<Rigidbody>().isKinematic || hitObject.name == "Funnel" || hitObject.name == "Paper Cone")) // ITEM PICKUP
             {
                 PickUpItem(hitObject);
             }

@@ -34,6 +34,8 @@ public class doCertainThingWith : NetworkBehaviour
     public Vector3 testingOffset;
     public bool funnelIsAttatched = false;
     public GameObject funneledFlask = null;
+    public GameObject filteredFunnel = null;
+    public bool filterIsAttatched = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -115,6 +117,9 @@ public class doCertainThingWith : NetworkBehaviour
             
             if (obj.name == "Funnel")
                 insertFunnel(obj);
+
+            if (obj.name == "Paper Cone")
+                insertFilter(obj);
         }
     }
 
@@ -255,6 +260,66 @@ public class doCertainThingWith : NetworkBehaviour
 
         funneledFlask = null;
         funnelIsAttatched = false;
+    }
+
+    void insertFilter(GameObject filter) {
+        float minDist = Mathf.Infinity;
+        GameObject closestFunnel = null;
+        Transform funnelOpening = null;
+
+        // Find the closest Flask
+        foreach (GameObject currentObject in FindObjectsOfType<GameObject>()) {
+            if (currentObject.name == "Funnel" && (currentObject.transform.parent.name == "Erlenmeyer Flask" || currentObject.transform.parent.name == "Erlenmeyer Flask L")) {
+                float distFromFilter = Vector3.Distance(filter.transform.position, currentObject.transform.position);
+
+                if (distFromFilter < minDist) {
+                    minDist = distFromFilter;
+                    closestFunnel = currentObject;
+
+                    // Find the flask's top position
+                    funnelOpening = closestFunnel.transform.Find("FunnelTop");
+                }
+            }
+        }
+
+        // Attach the funnel to the flask if within range
+        if (closestFunnel && funnelOpening && minDist <= FUNNEL_INSERT_DISTANCE) {
+            pickUpScript.DropItem();
+
+            // Attach funnel to flask
+            filter.transform.position = funnelOpening.position;
+            filter.transform.rotation = funnelOpening.rotation;
+
+            // Make it a child so it follows movement
+            filter.transform.SetParent(closestFunnel.transform);
+
+            // Disable physics and collisions so it stays attached
+            Physics.IgnoreCollision(filter.GetComponent<Collider>(), closestFunnel.GetComponent<Collider>(), true);
+
+            Rigidbody rb = filter.GetComponent<Rigidbody>();
+            if (rb) {
+                rb.isKinematic = true;
+            }
+
+            filteredFunnel = closestFunnel;
+            filterIsAttatched = true;
+        }
+    }
+
+    public void DetachFilter(GameObject filter) {
+        // Remove parent so it no longer follows the flask
+        filter.transform.SetParent(null);
+
+        // Re-enable physics and collisions
+        Physics.IgnoreCollision(filter.GetComponent<Collider>(), filteredFunnel.GetComponent<Collider>(), false);
+
+        Rigidbody rb = filter.GetComponent<Rigidbody>();
+        if (rb) {
+            rb.isKinematic = false;
+        }
+
+        filteredFunnel = null;
+        filterIsAttatched = false;
     }
 
 
