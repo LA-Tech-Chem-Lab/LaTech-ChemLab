@@ -5,6 +5,7 @@ Shader "Custom/FullyTransparentBeaker"
         // Specular vs Metallic workflow
         _WorkflowMode("WorkflowMode", Float) = 1.0
 
+
         [MainTexture] _BaseMap("Albedo", 2D) = "white" {}
         [MainColor] _BaseColor("Color", Color) = (1,1,1,1)
 
@@ -85,14 +86,16 @@ Shader "Custom/FullyTransparentBeaker"
             "RenderPipeline" = "UniversalPipeline"
             "UniversalMaterialType" = "Lit"
             "IgnoreProjector" = "True"
+            "Queue" = "Transparent" 
         }
+
         Stencil
         {
             Ref 1
             Comp Always
             Pass Replace
-
         }
+
         LOD 300
 
         // ------------------------------------------------------------------
@@ -505,10 +508,10 @@ Shader "Custom/FullyTransparentBeaker"
             Tags { "LightMode" = "XRMotionVectors" }
             ColorMask RGBA
 
-            // Stencil write for obj motion pixels
+            // Stencil write for object motion pixels
             Stencil
             {
-                WriteMask 1
+                WriteMask 0
                 Ref 1
                 Comp Always
                 Pass Replace
@@ -518,13 +521,63 @@ Shader "Custom/FullyTransparentBeaker"
             #pragma shader_feature_local _ALPHATEST_ON
             #pragma multi_compile _ LOD_FADE_CROSSFADE
             #pragma shader_feature_local_vertex _ADD_PRECOMPUTED_VELOCITY
-            #define APLICATION_SPACE_WARP_MOTION 1
+            #define APPLICATION_SPACE_WARP_MOTION 1
 
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
             #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ObjectMotionVectors.hlsl"
             ENDHLSL
         }
+        Pass
+        {
+            Name "Custom/FullyTransparentBeaker"
+            Tags { "RenderType"="Transparent" "Queue"="Geometry" }
+
+            Blend SrcAlpha OneMinusSrcAlpha
+            ZWrite On     // **Important**: Writes to depth buffer to occlude liquid
+            ZTest LEqual  
+
+            Stencil
+            {
+                Ref 0      
+                Comp Equal 
+                Pass Keep 
+            }
+
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            #include "UnityCG.cginc"
+
+            struct appdata_t
+            {
+                float4 vertex : POSITION;
+            };
+
+            struct v2f
+            {
+                float4 pos : SV_POSITION;
+            };
+
+            fixed4 _Color;
+
+            v2f vert(appdata_t v)
+            {
+                v2f o;
+                o.pos = UnityObjectToClipPos(v.vertex);
+                return o;
+            }
+
+            // No color output, since it's just handling stencil logic
+            void frag(v2f i)
+            {
+                // No output; stencil is handled by stencil settings
+                discard;
+            }
+            ENDCG
+        }
     }
+
+
 
     FallBack "Hidden/Universal Render Pipeline/FallbackError"
     CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.LitShader"
