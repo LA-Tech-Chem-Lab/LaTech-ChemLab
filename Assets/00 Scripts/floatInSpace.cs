@@ -21,6 +21,8 @@ public class floatInSpace : MonoBehaviour
         // if (inSpace && rb.useGravity)
             // rb.AddForce(Vector3.left * 3f);
 
-        rb.useGravity = !inSpace;
+        if (inSpace && rb.useGravity)
+            rb.useGravity = false;
+        
     }
 }

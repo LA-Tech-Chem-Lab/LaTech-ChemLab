@@ -436,8 +436,9 @@ public class doCertainThingWith : NetworkBehaviour
             if (closestBeakerOrFlask.transform.Find("Liquid"))
             {
                 pipetteScript PS = heldPipette.GetComponent<pipetteScript>();
+                float realFlowRate = PS.flowRateML;
                 liquidScript LS = closestBeakerOrFlask.GetComponent<liquidScript>();
-                float amountToAddOrExtract = 50f * Time.deltaTime;
+                float amountToAddOrExtract = realFlowRate * Time.deltaTime;
 
                 if (PS.pipetteFlowing) // stop adding liquid if the pipette runs out
                 {
@@ -474,7 +475,7 @@ public class doCertainThingWith : NetworkBehaviour
                     {
                         //transfers liquid from the beaker to the pipette
                         LS.currentVolume_mL -= amountToAddOrExtract;
-                        PS.pipetteVolume += 50f * Time.deltaTime;
+                        PS.pipetteVolume += amountToAddOrExtract;
                         closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
                     }
                     else
@@ -495,7 +496,7 @@ public class doCertainThingWith : NetworkBehaviour
         // We arent within range of a liquid holder
         else{
             pipette.transform.Find("Tip").GetComponent<ObiEmitter>().speed = speed;
-            heldPipette.GetComponent<pipetteScript>().pipetteVolume -= 50 * Time.deltaTime;
+            heldPipette.GetComponent<pipetteScript>().pipetteVolume -= Time.deltaTime;
         }
     }
     
@@ -1015,15 +1016,18 @@ public class doCertainThingWith : NetworkBehaviour
             }
         }
 
-        // Okay, Now lets try to drop it
+        // Okay, fine lets try to drop it instead then
         GameObject closestBeakerOrFlask = findClosestBeakerOrFlask(scoopula);
         var pipetteTip = scoopula.transform.Find("Tip").transform.position;        pipetteTip.y = 0f;
         var beakerOrFlask = closestBeakerOrFlask.transform.position;              beakerOrFlask.y = 0f;
 
         float distFromTip2 = Vector3.Distance(pipetteTip, beakerOrFlask);
 
-        if (closestBeakerOrFlask && distFromTip2 <= ALUMINUM_DROPOFF_RANGE){ // We have a beaker or flask within range
+        if (closestBeakerOrFlask && distFromTip2 <= ALUMINUM_DROPOFF_RANGE && scoopula.transform.Find("Aluminum").gameObject.activeInHierarchy){ // We have a beaker or flask within range
             Debug.Log("Drop in this beaker");
+            scoopula.transform.Find("Aluminum").gameObject.SetActive(false);
+            closestBeakerOrFlask.GetComponent<liquidScript>().addSolution(new List<float>{0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}, 0.7407f);  // Add 0.37 mL of Aluminum
+            closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
         }
     }
 
@@ -1034,40 +1038,41 @@ public class doCertainThingWith : NetworkBehaviour
         GetComponent<playerMovement>().canMove = false;
         GetComponent<playerMovement>().canTurn = false;
         GetComponent<pickUpObjects>().canRotateItem = false;
-        Debug.Log(GetComponent<pickUpObjects>().targetRotation.y);
+        // Debug.Log(GetComponent<pickUpObjects>().targetRotation.y);
 
         if (cap == null)
             yield break; // Stop the coroutine if cap is not found
 
+        float speedMult = 1/2f;
         Vector3 startPos = cap.position;
         Vector3 targetPos = startPos + cap.parent.up * 0.08f; // Move up by 0.1 units
         Vector3 leftPos = targetPos - cap.parent.right * 0.14f; // Move left by 0.13 units
         float duration = 0.8f; // Time to move up/down
         float rotationSpeed = 240f; // Degrees per second
 
-        yield return StartCoroutine(MoveAndRotateOverTime(cap, startPos, targetPos, duration, -rotationSpeed, Vector3.zero));
-        yield return new WaitForSeconds(duration);
+        yield return StartCoroutine(MoveAndRotateOverTime(cap, startPos, targetPos, duration * speedMult, -rotationSpeed, Vector3.zero));
+        yield return new WaitForSeconds(duration * speedMult);
         Vector3 tiltRotation = new Vector3(0f, 0f, 70f); // Tilt 30 degrees on Z-axis
-        yield return StartCoroutine(MoveAndRotateOverTime(cap, targetPos, leftPos, duration, 0, tiltRotation));
+        yield return StartCoroutine(MoveAndRotateOverTime(cap, targetPos, leftPos, duration * speedMult, 0, tiltRotation));
 
         // Wait for 2 seconds THIS IS THE TIME WHERE THE THING DIPS IN AND OUT
         
         
-        StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 0f, 30f, 1.2f));
-        yield return new WaitForSeconds(1.2f);
+        StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 0f, 30f, 1.2f * speedMult));
+        yield return new WaitForSeconds(1.2f * speedMult);
         GetComponent<pickUpObjects>().other.transform.Find("Aluminum").gameObject.SetActive(true); // enable aluminum pellets
 
         
-        yield return new WaitForSeconds(0.7f);
-        StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 30f, 0f, 0.5f));
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(0.7f * speedMult);
+        StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 30f, 0f, 0.5f * speedMult));
+        yield return new WaitForSeconds(0.8f * speedMult);
         
 
         Vector3 tiltRotationBack = new Vector3(0f, 0f, -70f); // Tilt 30 degrees on Z-axis
-        yield return StartCoroutine(MoveAndRotateOverTime(cap, leftPos, targetPos, duration, 0, tiltRotationBack));
-        yield return new WaitForSeconds(duration);
-        yield return StartCoroutine(MoveAndRotateOverTime(cap, targetPos, startPos, duration, rotationSpeed, Vector3.zero));
-        yield return new WaitForSeconds(duration);
+        yield return StartCoroutine(MoveAndRotateOverTime(cap, leftPos, targetPos, duration * speedMult, 0, tiltRotationBack));
+        yield return new WaitForSeconds(duration * speedMult);
+        yield return StartCoroutine(MoveAndRotateOverTime(cap, targetPos, startPos, duration * speedMult, rotationSpeed, Vector3.zero));
+        yield return new WaitForSeconds(duration * speedMult);
 
         scoopulaAnimationPlaying = false;
         cap.localPosition = new Vector3(0f, 0.3299f, 0f);
