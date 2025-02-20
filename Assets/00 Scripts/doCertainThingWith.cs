@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Obi;
 using Tripolygon.UModelerX.Runtime;
+using Unity.Multiplayer.Center.NetcodeForGameObjectsExample;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -15,8 +16,7 @@ public class doCertainThingWith : NetworkBehaviour
     const float IRON_RING_SNAP_DISTANCE = 0.7f;
     const float SCOOPULA_GRAB_DISTANCE = 1.2f;
     const float FUNNEL_INSERT_DISTANCE = 1.5f;
-
-
+    const float ALUMINUM_DROPOFF_RANGE = 0.8f;
 
 
     public GameObject itemHeldByTongs; int itemHeldByTongsLayer;
@@ -113,13 +113,15 @@ public class doCertainThingWith : NetworkBehaviour
                 faceItemAwayFromPlayer();
 
             if (obj.name == "Scoopula")
-                GatherAluminumPelletsFromContainer();
+                GatherAluminumPelletsFromContainerOrDropThem();
             
             if (obj.name == "Funnel")
                 insertFunnel(obj);
 
             if (obj.name == "Paper Cone")
                 insertFilter(obj);
+
+
         }
     }
 
@@ -421,7 +423,7 @@ public class doCertainThingWith : NetworkBehaviour
 
         // First find the closest beaker/flask below you
         GameObject closestBeakerOrFlask = findClosestBeakerOrFlask(pipette);
-        var pipetteTip = pipette.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
+        var pipetteTip = pipette.transform.Find("Tip").transform.position;        pipetteTip.y = 0f;
         var beakerOrFlask = closestBeakerOrFlask.transform.position;              beakerOrFlask.y = 0f;
 
         float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
@@ -983,7 +985,7 @@ public class doCertainThingWith : NetworkBehaviour
     }
 
 
-    void GatherAluminumPelletsFromContainer(){
+    void GatherAluminumPelletsFromContainerOrDropThem(){
         GameObject scoopula = pickUpScript.other;
 
         // Find Closest Aluminum Container in the room
@@ -1004,17 +1006,24 @@ public class doCertainThingWith : NetworkBehaviour
         }
         
         
-        if (!closestAluminumContainer || minDist > SCOOPULA_GRAB_DISTANCE) // There is none or we are too far
+
+        if (closestAluminumContainer && minDist <= SCOOPULA_GRAB_DISTANCE) // Now we have closest Flask
         {
-            Debug.Log("No GO");
+            if (!scoopulaAnimationPlaying){
+                StartCoroutine(getAluminumUsingScoopula(closestAluminumContainer));
+                return;
+            }
         }
 
-        if (closestAluminumContainer && minDist <= TONG_GRAB_DISTANCE) // Now we have closest Flask
-        {
-            Debug.Log("Unscrew and take aluminum");
+        // Okay, Now lets try to drop it
+        GameObject closestBeakerOrFlask = findClosestBeakerOrFlask(scoopula);
+        var pipetteTip = scoopula.transform.Find("Tip").transform.position;        pipetteTip.y = 0f;
+        var beakerOrFlask = closestBeakerOrFlask.transform.position;              beakerOrFlask.y = 0f;
 
-            if (!scoopulaAnimationPlaying)
-                StartCoroutine(getAluminumUsingScoopula(closestAluminumContainer));
+        float distFromTip2 = Vector3.Distance(pipetteTip, beakerOrFlask);
+
+        if (closestBeakerOrFlask && distFromTip2 <= ALUMINUM_DROPOFF_RANGE){ // We have a beaker or flask within range
+            Debug.Log("Drop in this beaker");
         }
     }
 
@@ -1022,47 +1031,50 @@ public class doCertainThingWith : NetworkBehaviour
     {
         scoopulaAnimationPlaying = true;
         Transform cap = container.transform.Find("Cap");
+        GetComponent<playerMovement>().canMove = false;
+        GetComponent<playerMovement>().canTurn = false;
+        GetComponent<pickUpObjects>().canRotateItem = false;
+        Debug.Log(GetComponent<pickUpObjects>().targetRotation.y);
 
         if (cap == null)
-        {
-            Debug.LogError("Cap not found!");
-            yield break; // Stop the coroutine if Cap is not found
-        }
+            yield break; // Stop the coroutine if cap is not found
 
         Vector3 startPos = cap.position;
-        Vector3 targetPos = startPos + cap.parent.up * 0.1f; // Move up by 0.2 units
-        Vector3 leftPos = targetPos - cap.parent.right * 0.1f; // Move left by 0.15 units
-        float duration = 1f; // Time to move up/down
-        float rotationSpeed = 180f; // Degrees per second
+        Vector3 targetPos = startPos + cap.parent.up * 0.08f; // Move up by 0.1 units
+        Vector3 leftPos = targetPos - cap.parent.right * 0.14f; // Move left by 0.13 units
+        float duration = 0.8f; // Time to move up/down
+        float rotationSpeed = 240f; // Degrees per second
 
-        // Move up & rotate clockwise
-        yield return StartCoroutine(MoveAndRotateOverTime(cap, startPos, targetPos, duration, rotationSpeed, Vector3.zero));
-
-        // Wait for 5 seconds
-        yield return new WaitForSeconds(3f);
-
-        // Move left & tilt around Z-axis
+        yield return StartCoroutine(MoveAndRotateOverTime(cap, startPos, targetPos, duration, -rotationSpeed, Vector3.zero));
+        yield return new WaitForSeconds(duration);
         Vector3 tiltRotation = new Vector3(0f, 0f, 70f); // Tilt 30 degrees on Z-axis
         yield return StartCoroutine(MoveAndRotateOverTime(cap, targetPos, leftPos, duration, 0, tiltRotation));
 
-        // Wait for 2 seconds
-        yield return new WaitForSeconds(2f);
-
-        // Move left & tilt back to 0
-        Vector3 tiltRotationBack = new Vector3(0f, 0f, -70f); // Tilt 30 degrees on Z-axis
-        yield return StartCoroutine(MoveAndRotateOverTime(cap, leftPos, targetPos, duration, 0, tiltRotationBack));
+        // Wait for 2 seconds THIS IS THE TIME WHERE THE THING DIPS IN AND OUT
+        
+        
+        StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 0f, 30f, 1.2f));
+        yield return new WaitForSeconds(1.2f);
+        GetComponent<pickUpObjects>().other.transform.Find("Aluminum").gameObject.SetActive(true); // enable aluminum pellets
 
         
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.7f);
+        StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 30f, 0f, 0.5f));
+        yield return new WaitForSeconds(0.8f);
+        
 
-        // Move back down & reset rotation
-        yield return StartCoroutine(MoveAndRotateOverTime(cap, targetPos, startPos, duration, -rotationSpeed, Vector3.zero));
-
-        // Wait for final position adjustment
+        Vector3 tiltRotationBack = new Vector3(0f, 0f, -70f); // Tilt 30 degrees on Z-axis
+        yield return StartCoroutine(MoveAndRotateOverTime(cap, leftPos, targetPos, duration, 0, tiltRotationBack));
         yield return new WaitForSeconds(duration);
+        yield return StartCoroutine(MoveAndRotateOverTime(cap, targetPos, startPos, duration, rotationSpeed, Vector3.zero));
+        yield return new WaitForSeconds(duration);
+
         scoopulaAnimationPlaying = false;
         cap.localPosition = new Vector3(0f, 0.3299f, 0f);
         cap.localEulerAngles = new Vector3(0f, 0f, 0f);
+        GetComponent<playerMovement>().canMove = true;
+        GetComponent<playerMovement>().canTurn = true;
+        GetComponent<pickUpObjects>().canRotateItem = true;
     }
 
     IEnumerator MoveAndRotateOverTime(Transform obj, Vector3 start, Vector3 end, float duration, float rotationSpeed, Vector3 targetRotation)
@@ -1089,6 +1101,22 @@ public class doCertainThingWith : NetworkBehaviour
         obj.position = end; // Ensure final position is set
         obj.rotation = endRotation; // Ensure final rotation is set
     }
+
+    IEnumerator LerpValue(System.Action<float> setValue, float start, float end, float duration)
+    {
+        float elapsedTime = 0f;
+        
+        while (elapsedTime < duration)
+        {
+            float t = elapsedTime / duration;
+            setValue(Mathf.Lerp(start, end, t));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        
+        setValue(end); // Ensure it reaches the exact target value
+    }
+
 
     void ShootFoam()
     {

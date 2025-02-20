@@ -37,6 +37,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _ATDistance: 0.005
+    - _AlphaClip: 0
     - _AlphaCutoff: 0
     - _AlphaCutoffEnable: 1
     - _AlphaDstBlend: 10
@@ -62,9 +63,9 @@ Material:
     - _ZTestGBuffer: 3
     - _ZWrite: 0
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 0.2627451}
-    - _Color: {r: 1, g: 1, b: 1, a: 0.2627451}
-    - _EmissionColor: {r: 0.17129932, g: 0.18490559, b: 0.17129932, a: 1}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 0}
+    - _EmissionColor: {r: 0.021684477, g: 0.02340687, b: 0.021684477, a: 1}
     - _EmissiveColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissiveColorLDR: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 1, g: 1, b: 1, a: 1}

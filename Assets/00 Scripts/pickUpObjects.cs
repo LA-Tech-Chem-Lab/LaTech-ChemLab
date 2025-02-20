@@ -256,7 +256,7 @@ public class pickUpObjects : NetworkBehaviour
         if (canRotateItem) targetRotation.y -= Mathf.Min(1f, Input.mouseScrollDelta.y) * rotationAmInDegrees;
         else if (canZoomIn) initialHoldingDistance += Input.mouseScrollDelta.y / 10f;
 
-        if (!Cursor.visible) targetRotation.y += Input.GetAxis("Mouse X") * xSens * Time.deltaTime;
+        if (!Cursor.visible && canRotateItem) targetRotation.y += Input.GetAxis("Mouse X") * xSens * Time.deltaTime;
         targetRotation.y = (targetRotation.y % 360f + 360f) % 360f;
         targetQuaternion = Quaternion.Euler(targetRotation);
         
