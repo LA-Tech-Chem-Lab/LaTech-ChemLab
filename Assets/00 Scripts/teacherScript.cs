@@ -33,7 +33,7 @@ public class teacherScript : NetworkBehaviour
 
         checkPlayersWithinRange();
 
-        if (playerNearby) lookAt.position = Vector3.Slerp(lookAt.position, findClosestPlayer().GetChild(0).position, Time.deltaTime * lookSpeed);
+        if (playerNearby) lookAt.position = Vector3.Slerp(lookAt.position, findClosestPlayer().GetChild(0).position + Vector3.down * 0.2f, Time.deltaTime * lookSpeed);
         else lookAt.localPosition = Vector3.Slerp(lookAt.localPosition, new Vector3(0f, 1.5f, 1f), Time.deltaTime * lookSpeed);
         // lookAtClosestPlayer();
     }
