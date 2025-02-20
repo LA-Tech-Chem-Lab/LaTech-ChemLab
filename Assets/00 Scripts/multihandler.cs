@@ -91,6 +91,7 @@ public class multihandler : NetworkBehaviour
         
         if (messageList.Count > 0)
             displayMessages();
+
     }
 
 
@@ -148,6 +149,7 @@ public class multihandler : NetworkBehaviour
             Cursor.visible = false;
         }
 
+        currentPlayer.GetComponent<playerMovement>().canMove = !isPaused;
         PauseCanvas.SetActive(isPaused);
         InGameCanvas.SetActive(!isPaused);
 
