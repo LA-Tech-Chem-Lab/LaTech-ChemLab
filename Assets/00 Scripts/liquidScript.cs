@@ -104,7 +104,7 @@ public class liquidScript : MonoBehaviour
             }
 
             // **Rotate the liquid object to counteract the beaker's tilt**
-            liquidTransform.localRotation = Quaternion.Euler(-tiltX, 0, -tiltZ);
+            //liquidTransform.localRotation = Quaternion.Euler(-tiltX, 0, -tiltZ);
         }
         // Calculate tilt using the dot product of the beaker's up direction and world up
         dotProduct = Vector3.Dot(transform.up.normalized, Vector3.up);
