@@ -389,7 +389,7 @@ void CalculateHeat()
                     List<string> products = new List<string> {"KAl(OH)4"};
                     List<float> Rratio = new List<float> {2, 2, 6};
                     List<float> Pratio = new List<float> {2};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 1f));
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, .1f));
                 }
                 //Tested and Working
                 if (percentH2SO4 > 0.03f){
@@ -400,7 +400,7 @@ void CalculateHeat()
                     List<string> products = new List<string> {"Al2(SO4)3"};
                     List<float> Rratio = new List<float> {2, 3};
                     List<float> Pratio = new List<float> {1};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 1f));
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, .1f));
                 }
             }
             if (percentH2SO4 > 0.02f){
@@ -411,21 +411,26 @@ void CalculateHeat()
                 if (percentKOH > 0.04f){
                     // Reaction: Potassium hydroxide (KOH) + Sulfuric acid (H2SO4)
                     // Produces potassium sulfate (K2SO4) and water (H2O)
+                    //salt forms at the bottom if concentrates if dumped in all at once
+                    // disolves completely if heated
                     List<string> reactants = new List<string> {"H2SO4", "KOH"};
                     List<string> products = new List<string> {"K2SO4", "H2O"};
                     List<float> Rratio = new List<float> {1, 2};
                     List<float> Pratio = new List<float> {1, 2};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 20f)); // moderate heat generation
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 5f)); // moderate heat generation
                 }
                 //GOAL PRODUCT
                 //tested and working
+                //split up into steps
+                //if h2so4 goes in to fast solid will clump and reaction will slow significanlty
+                //hat solves this problem or mixing
                 if (percentKAlOH4 > 0.03f){
                     // forms alum as white crystals on the top of the solution
                     List<string> reactants = new List<string> {"H2SO4", "KAl(OH)4"};
                     List<string> products = new List<string> {"Alum"};
                     List<float> Rratio = new List<float> {1, 2};
                     List<float> Pratio = new List<float> {1};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 13f)); // moderate heat, solid white precipitate
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 6f)); // moderate heat, solid white precipitate
                 }
                 // Potassium aluminate + sulfuric acid
                 // Produces potassium alum (KAl(SO4)2) and water (H2O)
@@ -435,7 +440,7 @@ void CalculateHeat()
                     // Reaction: Potassium aluminate (KAlO2) + Sulfuric acid (H2SO4)
                     // Produces potassium alum (KAl(SO4)2) and water (H2O)
                     List<string> reactants = new List<string> {"H2SO4", "KAlO2"};
-                    List<string> products = new List<string> {"KAl(SO4)2", "H2O"};
+                    List<string> products = new List<string> {"Al(OH)3", "K2SO4"};
                     List<float> Rratio = new List<float> {2, 3};
                     List<float> Pratio = new List<float> {1, 2};
                     StartCoroutine(react(reactants, Rratio, products, Pratio, 10f)); // exothermic, forms crystals over time
@@ -464,7 +469,7 @@ void CalculateHeat()
                     List<string> products = new List<string> {"KAl(OH)4"};
                     List<float> Rratio = new List<float> {1, 1};
                     List<float> Pratio = new List<float> {1};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 6f)); 
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 15f)); 
                 }
                 //aloh3 is a gel like white precipitate which forms almost immediately
                 //more dilute -> slower
@@ -473,7 +478,7 @@ void CalculateHeat()
                     List<string> products = new List<string> {"K2SO4", "Al(OH)3"};
                     List<float> Rratio = new List<float> {3, 1};
                     List<float> Pratio = new List<float> {2, 1};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 30f)); 
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 6f)); 
                 }
             }
             if (percentKAlOH4 > 0.02f) {
@@ -486,21 +491,21 @@ void CalculateHeat()
                    List<string> products = new List<string> {"Al(OH)3", "K2SO4"};
                    List<float> Rratio = new List<float> {2, 1};
                    List<float> Pratio = new List<float> {2, 1};
-                   StartCoroutine(react(reactants, Rratio, products, Pratio, 30f));
+                   StartCoroutine(react(reactants, Rratio, products, Pratio, 8f));
                }
-
-               if (percentAlOH3 > 0.02f) {
-                   // KAlO2 forms as a dry powder when water is removed
-                   // Initially appears as a milky, gelatinous fluid before drying
-                   // Highly exothermic, strong heat release
-                   // Solid product forms upon evaporation, leaving behind a fine white powder
-                   //VIOLENT WITH ADDED HEAT
-                   List<string> reactants = new List<string> {"KAl(OH)4", "Al(OH)3"};
-                   List<string> products = new List<string> {"KAlO2", "H2O"};
-                   List<float> Rratio = new List<float> {1, 1};
-                   List<float> Pratio = new List<float> {2, 4};
-                   StartCoroutine(react(reactants, Rratio, products, Pratio, 5f));
-               }
+//does not occur
+              // if (percentAlOH3 > 0.02f) {
+              //     // KAlO2 forms as a dry powder when water is removed
+              //     // Initially appears as a milky, gelatinous fluid before drying
+              //     // Highly exothermic, strong heat release
+              //     // Solid product forms upon evaporation, leaving behind a fine white powder
+              //     //VIOLENT WITH ADDED HEAT
+              //     List<string> reactants = new List<string> {"KAl(OH)4", "Al(OH)3"};
+              //     List<string> products = new List<string> {"KAlO2", "H2O"};
+              //     List<float> Rratio = new List<float> {1, 1};
+              //     List<float> Pratio = new List<float> {2, 4};
+              //     StartCoroutine(react(reactants, Rratio, products, Pratio, 5f));
+              // }
             }
             if (percentAl2SO43 > 0.02f){
                 if (percentKOH > 0.02f){
@@ -508,15 +513,7 @@ void CalculateHeat()
                     List<string> products = new List<string> {"Al(OH)3", "K2SO4"};
                     List<float> Rratio = new List<float> {1, 6};
                     List<float> Pratio = new List<float> {2, 3};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 5f));
-                }
-
-                if (percentKAlO2 > 0.06f && percentH2O > 0.06f){
-                    List<string> reactants = new List<string> {"KAlO2", "Al2(SO4)3", "H2O"};
-                    List<string> products = new List<string> {"Al(OH)3", "K2SO4", "KOH"};
-                    List<float> Rratio = new List<float> {6, 1, 6};
-                    List<float> Pratio = new List<float> {2, 3, 6};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 30f));
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 8f));
                 }
             }
         }

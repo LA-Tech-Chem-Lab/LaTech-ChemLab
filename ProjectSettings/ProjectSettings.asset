@@ -941,10 +941,10 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: df6d3b03-ac82-4e2a-b9c4-a05e542a4785
+  cloudProjectId: dae5c0ac-1adb-49f8-afec-9d122f5e1a40
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: HDRP
+  projectName: LaTech-ChemLab
   organizationId: carlrox555
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
