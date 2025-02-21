@@ -40,6 +40,8 @@ public class liquidScript : MonoBehaviour
     float[] boilingPoints = new float[] {611f, 1388f, 373.15f, 1685f, 2792f, 1110f, 1073f, 1383f, 773f, 1383f, 1280f};
     public List<float> latentHeat = new List<float> {2257000f, 2000000f, 2257000f, 2500000f, 2920000f, 2200000f, 2500000f, 2400000f, 2300000f, 2300000f, 2400000f};
     List<Color> liquidColors = new List<Color> {Color.red, Color.green, Color.blue, Color.yellow, new Color(0.6f, 0.6f, 0.6f), Color.yellow, Color.red, Color.green, Color.yellow, Color.green, Color.blue};
+    public List<char> compoundStates = new List<char> { 'a', 'a', 'l', 'a', 's', 'a', 's', 's', 's', 's', 's' };
+
     //                                            H2SO4       KOH              H20        K2SO4              Al                  KAl(OH)4
     public bool reactionHappening;
 
@@ -131,7 +133,7 @@ public class liquidScript : MonoBehaviour
                 if (scaledPercentRender > 0f)
                 {
                     transform.Find("Liquid").GetComponent<MeshRenderer>().enabled = true;
-                rend.material.SetFloat("_FillAmount", scaledPercentRender);
+                    rend.material.SetFloat("_FillAmount", scaledPercentRender);
                 }
                 if (scaledPercentRender <= 0f)
                 {
@@ -269,14 +271,30 @@ void CalculateHeat()
     //function for filtering
     IEnumerator handleFiltering()
     {
+        List<float> solidSolution = Enumerable.Repeat(0f, 11).ToList();
+        List<float> liquidSolution = Enumerable.Repeat(0f, 11).ToList();
+        float liquidPercent = 0f;
+        for (int i = 0; i < solutionMakeup.Count; i++){
+            if (compoundStates[i] == 'l' || compoundStates[i] == 'a'){
+                liquidSolution[i] = solutionMakeup[i];
+                liquidPercent += solutionMakeup[i];
+            }
+            else{
+                solidSolution[i] = solutionMakeup[i];
+            }
+        }
+        float liquidVolume = liquidPercent * currentVolume_mL;
+        for (int i = 0; i < solutionMakeup.Count; i++){
+            liquidSolution[i] = liquidSolution[i] * currentVolume_mL / liquidVolume;
+        }
         // Goes until the filter is empty
-        while (currentVolume_mL > 0.01)
+        while (liquidVolume > 0.01)
         {
             // Transfers liquid from filter to flask
-            float filteredLiquid = currentVolume_mL / densityOfLiquid;
-            currentVolume_mL -= filteredLiquid;
             Transform Flask = gameObject.transform.parent?.parent;
-            Flask.GetComponent<liquidScript>().addSolution(solutionMakeup, filteredLiquid);
+            float filteredLiquid = currentVolume_mL * Time.deltaTime;
+            currentVolume_mL -= filteredLiquid;
+            Flask.GetComponent<liquidScript>().addSolution(liquidSolution, filteredLiquid);
             yield return new WaitForSeconds(.01f);  // Allow other game logic to continue
         }
     }
