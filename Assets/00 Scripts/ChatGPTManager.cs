@@ -17,6 +17,8 @@ public class ChatGPTManager : MonoBehaviour
 
     private OpenAIApi openAI = new OpenAIApi();
     private List<ChatMessage> messages = new List<ChatMessage>();
+
+    public multihandler multiHandlerScript; 
     
 
     public async void SendMessageToChatGPT(string newText)
@@ -43,6 +45,11 @@ public class ChatGPTManager : MonoBehaviour
 
 
     public async void AskChatGPT(string newText){
+
+        if (multiHandlerScript.timeSinceLastQuestion < 3f)
+            return;
+        
+        multiHandlerScript.updateQuestionTime();
         ChatMessage newMessage = new ChatMessage();
         newMessage.Content = newText;
         newMessage.Role = "user";
@@ -59,14 +66,18 @@ public class ChatGPTManager : MonoBehaviour
         if (response.Choices != null && response.Choices.Count > 0){
             var chatResponse = response.Choices[0].Message;
             messages.Add(chatResponse);
-
-            Debug.Log(chatResponse.Content);
+            
+            multiHandlerScript.ReceiveResponseFromTeacher(chatResponse.Content);
         }
     }
+
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {   
+        multiHandlerScript = GameObject.FindGameObjectWithTag("GameController").GetComponent<multihandler>();
+        
         string wholeMessage = "";
         
         foreach (string prompt in prompts)

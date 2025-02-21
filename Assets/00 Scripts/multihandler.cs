@@ -56,6 +56,17 @@ public class multihandler : NetworkBehaviour
     public List<InputMessage> messageList = new List<InputMessage>();
     public TextMeshProUGUI messageListOnScreen;
     
+    [Header("Teacher Chat")]
+    public ChatGPTManager teacherAI;
+    public GameObject TeacherAskInputFieldObject;
+    public TMP_InputField inputField;
+    public TextMeshProUGUI inputFieldText;
+    public GameObject TeacherResponseCanvas;
+    public TextMeshProUGUI teacherResponseTextBox;
+    float timeOfLastResponse; float timeOfLastQuestion;
+    public float timeSinceLastQuestion;
+    public float timeSinceLastResponse;
+    
 
     private void Start()
     {
@@ -66,6 +77,8 @@ public class multihandler : NetworkBehaviour
 
         // Subscribe to the client connection event
         NetworkManager.Singleton.OnClientConnectedCallback += OnPlayerConnected;
+
+        timeOfLastResponse = Time.time - 11f; timeOfLastQuestion = timeOfLastResponse;
     }
 
     void Update()
@@ -78,6 +91,15 @@ public class multihandler : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.Return) && !JoinCanvas.activeInHierarchy && !isPaused) // We press enter ONLY when we are in game
             StartOrStopTyping();
+
+        if (Input.GetKeyDown(KeyCode.T)){
+            if (!isPaused) PauseOrUnpause();
+            TeacherAskInputFieldObject.SetActive(true);
+            inputField.Select();
+            inputField.ActivateInputField();
+        }
+
+
         // if (Input.GetKeyDown(KeyCode.Tab) && !isPaused)
         //     ToggleCursor();
 
@@ -86,14 +108,22 @@ public class multihandler : NetworkBehaviour
             Cursor.visible = true;
         }
         
+        textChatAndAIChat();
+        
+    }
+
+    void textChatAndAIChat(){
         if (isTyping)
             getTextChatFromInput();
         
         if (messageList.Count > 0)
             displayMessages();
 
-    }
+        timeSinceLastResponse = Time.time - timeOfLastResponse;
+        timeSinceLastQuestion = Time.time - timeOfLastQuestion;
 
+        TeacherResponseCanvas.SetActive(timeSinceLastResponse <= 15f);
+    }
 
     public void QuitGame()
     {
@@ -255,6 +285,22 @@ public class multihandler : NetworkBehaviour
         messageListOnScreen.transform.parent.gameObject.SetActive(allString.Length > 0 || chatCanvas.activeInHierarchy);
     }
     
+    public void updateQuestionTime(){
+        timeOfLastQuestion = Time.time;
+    }
+
+    public void sendQuestionToTeacher(String textInput){
+        teacherAI.AskChatGPT(textInput);
+        inputField.text = ""; // Clear the input field
+        inputField.ActivateInputField(); // Keep focus
+    }
+
+    public void ReceiveResponseFromTeacher(String response){
+        teacherResponseTextBox.text = response;
+        timeOfLastResponse = Time.time;
+    }
+
+
 
 
 
