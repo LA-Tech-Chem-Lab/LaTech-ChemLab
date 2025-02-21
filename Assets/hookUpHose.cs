@@ -15,7 +15,7 @@ public class hookUpHose : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(intakeTip.position);
+        
         endOfTube.position = intakeTip.position;
     }
 }
