@@ -242,8 +242,8 @@ public class doCertainThingWith : NetworkBehaviour
             if (rb) {
                 rb.isKinematic = true;
             }
-
             funneledFlask = closestFlask;
+            funneledFlask.tag = "Untagged";
             funnelIsAttatched = true;
         }
     }
@@ -259,7 +259,7 @@ public class doCertainThingWith : NetworkBehaviour
         if (rb) {
             rb.isKinematic = false;
         }
-
+        funneledFlask.tag = "LiquidHolder";
         funneledFlask = null;
         funnelIsAttatched = false;
     }
@@ -320,7 +320,6 @@ public class doCertainThingWith : NetworkBehaviour
         if (rb) {
             rb.isKinematic = false;
         }
-
         filteredFunnel = null;
         filterIsAttatched = false;
     }

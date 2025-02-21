@@ -274,18 +274,26 @@ void CalculateHeat()
         List<float> solidSolution = Enumerable.Repeat(0f, 11).ToList();
         List<float> liquidSolution = Enumerable.Repeat(0f, 11).ToList();
         float liquidPercent = 0f;
+        float solidPercent = 0f; //solid solution stuff may not be needed 
         for (int i = 0; i < solutionMakeup.Count; i++){
             if (compoundStates[i] == 'l' || compoundStates[i] == 'a'){
                 liquidSolution[i] = solutionMakeup[i];
                 liquidPercent += solutionMakeup[i];
             }
             else{
-                solidSolution[i] = solutionMakeup[i];
+                solidSolution[i] = solutionMakeup[i]; //felt cute may delete later
+                solidPercent += solutionMakeup[i];
             }
         }
+        //adjust the liquid solution to be the full 100 percent
         float liquidVolume = liquidPercent * currentVolume_mL;
         for (int i = 0; i < solutionMakeup.Count; i++){
             liquidSolution[i] = liquidSolution[i] * currentVolume_mL / liquidVolume;
+        }
+        //adjust the solid solution to be the full 100 percent (may not be needed)
+        float solidVolume = solidPercent * currentVolume_mL;
+        for (int i = 0; i < solutionMakeup.Count; i++){
+            solidSolution[i] = solidSolution[i] * currentVolume_mL / liquidVolume;
         }
         // Goes until the filter is empty
         while (liquidVolume > 0.01)
@@ -294,50 +302,55 @@ void CalculateHeat()
             Transform Flask = gameObject.transform.parent?.parent;
             float filteredLiquid = currentVolume_mL * Time.deltaTime;
             currentVolume_mL -= filteredLiquid;
-            Flask.GetComponent<liquidScript>().addSolution(liquidSolution, filteredLiquid);
+            if (Flask.GetComponent<liquidScript>()){
+                 Flask.GetComponent<liquidScript>().addSolution(liquidSolution, filteredLiquid);
+            }
+            else{
+                Debug.Log("flask no have liquid script");
+            }
+            Debug.Log(liquidSolution);
             yield return new WaitForSeconds(.01f);  // Allow other game logic to continue
         }
     }
 
     GameObject findClosestBunsenBurner()
-{
-    float heatRadius = 2f;
-    float minDist = Mathf.Infinity;
-    GameObject closestBurner = null; // Store the closest burner
-
-    foreach (GameObject currentBurner in GameObject.FindGameObjectsWithTag("BunsenBurner"))
     {
-        if (!currentBurner) continue; // Skip null objects
+        float heatRadius = 2f;
+        float minDist = Mathf.Infinity;
+        GameObject closestBurner = null; // Store the closest burner
 
-        float dist = Vector3.Distance(transform.position, currentBurner.transform.position);
-
-        if (dist < minDist && dist <= heatRadius)
+        foreach (GameObject currentBurner in GameObject.FindGameObjectsWithTag("BunsenBurner"))
         {
-            minDist = dist;
-            closestBurner = currentBurner;
+            if (!currentBurner) continue; // Skip null objects
+
+            float dist = Vector3.Distance(transform.position, currentBurner.transform.position);
+
+            if (dist < minDist && dist <= heatRadius)
+            {
+                minDist = dist;
+                closestBurner = currentBurner;
+            }
         }
+        return closestBurner; // Return the closest one found (or null if none are within range)
     }
-    return closestBurner; // Return the closest one found (or null if none are within range)
-}
 
     //adds a vollume of a given solution to the current solution
     public void addSolution(List<float> solutionToAdd, float volume)
     {
         float newVolume = currentVolume_mL + volume;
         float sum = 0f;
-
         for (int i = 0; i < solutionMakeup.Count; i++)
         {
             solutionMakeup[i] = ((solutionMakeup[i] * currentVolume_mL) + (solutionToAdd[i] * volume)) / newVolume;
             sum += solutionMakeup[i]; // Track total sum
         }
-
         // Adjust to ensure the sum is exactly 1
         float error = 1f - sum;
         for (int i = 0; i < solutionMakeup.Count; i++)
             {
                 solutionMakeup[i] += error * (solutionMakeup[i] / sum);
             }
+        
         updatePercentages();
     }
 
