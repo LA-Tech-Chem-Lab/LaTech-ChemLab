@@ -64,7 +64,7 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
             if (IsOwner)
             {
                 handleInput();
-                if (canMove) moving();
+                moving();
                 if (canTurn) turning();
                 handleAnimations();
                 handleCamera();
@@ -115,7 +115,7 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
             else actualMoveSpeed = Mathf.Lerp(actualMoveSpeed, moveSpeed, 10f * Time.deltaTime);
 
 
-            controller.Move(movement * actualMoveSpeed * Time.deltaTime);
+            if (canMove) controller.Move(movement * actualMoveSpeed * Time.deltaTime);
             
 
             if (!isGrounded) playerVelocity.y += Time.deltaTime * Physics.gravity.y;
