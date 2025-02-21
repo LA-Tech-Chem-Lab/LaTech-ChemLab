@@ -115,7 +115,7 @@ public class doCertainThingWith : NetworkBehaviour
             if (obj.name == "Scoopula")
                 GatherAluminumPelletsFromContainerOrDropThem();
             
-            if (obj.name == "Funnel")
+            if (obj.name == "Glass Funnel")
                 insertFunnel(obj);
 
             if (obj.name == "Paper Cone")
@@ -271,7 +271,7 @@ public class doCertainThingWith : NetworkBehaviour
 
         // Find the closest Flask
         foreach (GameObject currentObject in FindObjectsOfType<GameObject>()) {
-            if (currentObject.name == "Funnel" && (currentObject.transform.parent.name == "Erlenmeyer Flask" || currentObject.transform.parent.name == "Erlenmeyer Flask L")) {
+            if (currentObject.name == "Glass Funnel" && (currentObject.transform.parent.name == "Erlenmeyer Flask" || currentObject.transform.parent.name == "Erlenmeyer Flask L")) {
                 float distFromFilter = Vector3.Distance(filter.transform.position, currentObject.transform.position);
 
                 if (distFromFilter < minDist) {
@@ -292,6 +292,7 @@ public class doCertainThingWith : NetworkBehaviour
             filter.transform.position = funnelOpening.position;
             filter.transform.rotation = funnelOpening.rotation;
 
+            Debug.Log(closestFunnel.name);
             // Make it a child so it follows movement
             filter.transform.SetParent(closestFunnel.transform);
 
