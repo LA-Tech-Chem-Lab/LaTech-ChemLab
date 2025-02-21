@@ -146,6 +146,15 @@ public class pickUpObjects : NetworkBehaviour
                 GetComponent<doCertainThingWith>().DetachFilter(other);
         }
 
+        if (other.name == "Buchner Funnel"){
+            if (GetComponent<doCertainThingWith>().funnelIsAttatched == true)
+                GetComponent<doCertainThingWith>().DetachBuchnerFunnel(other);
+        }
+
+        if (other.name == "Buchner Paper Cone"){
+            if (GetComponent<doCertainThingWith>().filterIsAttatched == true)
+                GetComponent<doCertainThingWith>().DetachBuchnerFilter(other);
+        }
         initialHeldDistForObject = initialHoldingDistance;
         setHelpTextBasedOnObject();
     }
@@ -198,6 +207,8 @@ public class pickUpObjects : NetworkBehaviour
         if (other.name == "Evaporating Dish")   multiHandlerScript.setHelpText("This is an evaporating dish.");
         if (other.name == "Glass Funnel")             multiHandlerScript.setHelpText("This is a glass funnel used for filtering out solids from solutions. Right click on an Erlenmeyer flask to attatch it.");
         if (other.name == "Paper Cone")         multiHandlerScript.setHelpText("This is a paper filter used with the glass funnel to filter solids from a solution.");
+        if (other.name == "Buchner Funnel")             multiHandlerScript.setHelpText("This is a Buchner funnel used for filtering out solids from solutions. Right click on an Buchner flask to attatch it.");
+        if (other.name == "Buchner Paper Cone")         multiHandlerScript.setHelpText("This is a paper filter used with the buchner funnel to filter solids from a solution.");
     }
 
     void setHelpTextConstantly(){
