@@ -243,6 +243,7 @@ public class doCertainThingWith : NetworkBehaviour
                 rb.isKinematic = true;
             }
             funneledFlask = closestFlask;
+            funnel.GetComponent<Rigidbody>().useGravity = false;
             funneledFlask.tag = "Untagged";
             funnelIsAttatched = true;
         }
@@ -260,6 +261,7 @@ public class doCertainThingWith : NetworkBehaviour
             rb.isKinematic = false;
         }
         funneledFlask.tag = "LiquidHolder";
+        funnel.GetComponent<Rigidbody>().useGravity = true;
         funneledFlask = null;
         funnelIsAttatched = false;
     }
@@ -298,6 +300,7 @@ public class doCertainThingWith : NetworkBehaviour
 
             // Disable physics and collisions so it stays attached
             Physics.IgnoreCollision(filter.GetComponent<Collider>(), closestFunnel.GetComponent<Collider>(), true);
+            filter.GetComponent<Rigidbody>().useGravity = false;
 
             Rigidbody rb = filter.GetComponent<Rigidbody>();
             if (rb) {
@@ -315,6 +318,7 @@ public class doCertainThingWith : NetworkBehaviour
 
         // Re-enable physics and collisions
         Physics.IgnoreCollision(filter.GetComponent<Collider>(), filteredFunnel.GetComponent<Collider>(), false);
+        filter.GetComponent<Rigidbody>().useGravity = true;
 
         Rigidbody rb = filter.GetComponent<Rigidbody>();
         if (rb) {

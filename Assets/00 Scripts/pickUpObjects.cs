@@ -235,6 +235,7 @@ public class pickUpObjects : NetworkBehaviour
                         helpText += " M\n";
                     }
                 }
+                helpText += (LS.liquidTemperature-273.15f) + "°C.\n";
                 multiHandlerScript.setHelpText(helpText);
             }
             else{

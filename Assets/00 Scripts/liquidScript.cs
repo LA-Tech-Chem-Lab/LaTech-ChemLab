@@ -230,7 +230,7 @@ void CalculateHeat()
     float heatTransferRate = convectiveHeatTransferCoeff * beakerSurfaceArea * (currentHeat - liquidTemperature);
     float temperatureChange = (heatTransferRate / (GetComponent<Rigidbody>().mass * specificHeatCapacity)) * Time.deltaTime;
 
-    liquidTemperature += temperatureChange;
+    liquidTemperature = Mathf.Lerp(liquidTemperature, currentHeat, Time.deltaTime / 15f);
 
     // Calculate total mass of the solution (assume mass of liquid is given or available)
     float totalSolutionMass = densityOfLiquid * currentVolume_mL;
@@ -526,6 +526,7 @@ void CalculateHeat()
     {
         reactionHappening = true;
         limreactnum = 1f;
+
         // Gradually process the reaction
         while (limreactnum > 0.01f)
         {
@@ -574,19 +575,38 @@ void CalculateHeat()
             // Calculate the total mass after reaction progress
             float totalMass = solutionMasses.Sum();
 
+            // Check for invalid total mass
+            if (totalMass <= 0f)
+            {
+                Debug.LogError("Total mass is zero/negative. Resetting solution.");
+                break; // Exit the loop to prevent NaN
+            }
+
             // Convert masses to new percentages based on the current mass
             for (int i = 0; i < solutionMakeup.Count; i++)
             {
                 solutionMakeup[i] = solutionMasses[i] / totalMass;
+
+                // Ensure no NaN values
+                if (float.IsNaN(solutionMakeup[i]))
+                {
+                    solutionMakeup[i] = 0f;
+                }
             }
-        
-            Debug.Log(solutionMakeup.Sum());
 
             // Update percentages dynamically
             updatePercentages();
-            
-            yield return new WaitForSeconds(1f / reactSpeed / liquidTemperature);  // Allow other game logic to continue
+
+            // Validate duration to prevent NaN/negative
+            float duration = (1f / reactSpeed) / liquidTemperature;
+            if (float.IsNaN(duration) || duration <= 0f || float.IsInfinity(duration))
+            {
+                duration = 0.1f; // Default to a safe value
+            }
+
+            yield return new WaitForSeconds(duration);  // Allow other game logic to continue
         }
+
         reactionHappening = false;
     }
 }

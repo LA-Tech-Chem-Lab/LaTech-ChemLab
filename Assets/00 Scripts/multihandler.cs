@@ -92,7 +92,7 @@ public class multihandler : NetworkBehaviour
         if (Input.GetKeyDown(KeyCode.Return) && !JoinCanvas.activeInHierarchy && !isPaused) // We press enter ONLY when we are in game
             StartOrStopTyping();
 
-        if (Input.GetKeyDown(KeyCode.T)){
+        if (Input.GetKeyDown(KeyCode.T) && !isTyping){
             if (!isPaused) PauseOrUnpause();
             TeacherAskInputFieldObject.SetActive(true);
             inputField.Select();
@@ -221,9 +221,27 @@ public class multihandler : NetworkBehaviour
                 chatText.text += isShiftPressed ? key.ToString() : key.ToString().ToLower();
             }
         }
+        // Handle digits
+        for (KeyCode key = KeyCode.Alpha0; key <= KeyCode.Alpha9; key++)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                bool isShiftPressed = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+                string keyStr = key.ToString().Replace("Alpha", ""); // Convert KeyCode.AlphaX to "X"
+                
+                if (isShiftPressed)
+                {
+                    string[] shiftSymbols = { ")", "!", "@", "#", "$", "%", "^", "&", "*", "(" };
+                    chatText.text += shiftSymbols[int.Parse(keyStr)];
+                }
+                else
+                    chatText.text += keyStr;
+            }
+        }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-            chatText.text += " ";
+        if (Input.GetKeyDown(KeyCode.Period))  chatText.text += ".";
+        if (Input.GetKeyDown(KeyCode.Space))  chatText.text += " ";
+        if (Input.GetKeyDown(KeyCode.Comma))  chatText.text += ",";
         
         if (Input.GetKeyDown(KeyCode.Backspace) && chatText.text.Length > 0)
             chatText.text = chatText.text.Substring(0, chatText.text.Length - 1);
