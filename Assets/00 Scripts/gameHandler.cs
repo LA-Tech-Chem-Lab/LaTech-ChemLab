@@ -6,14 +6,13 @@ using UnityEngine;
 public class gameHandler : MonoBehaviour
 {
 
-    public GameObject dropDown;
 
     // Start is called before the first frame update
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
+        ToggleCursor();
     }
 
     // Update is called once per frame
@@ -27,18 +26,17 @@ public class gameHandler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab))
             ToggleCursor();
 
-        if (dropDown) dropDown.SetActive(Cursor.visible);
     }
 
     /////////////////////////////////////////////////////////////  
 
-    void QuitGame()
+    public void QuitGame()
     {
 
         Application.Quit();
 
         #if UNITY_EDITOR
-                EditorApplication.isPlaying = false;
+            EditorApplication.isPlaying = false;
         #endif
     }
 
