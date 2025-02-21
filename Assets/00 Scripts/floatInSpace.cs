@@ -4,6 +4,7 @@ public class floatInSpace : MonoBehaviour
 {
 
     public bool inSpace;
+    bool prev;
     Rigidbody rb;
 
 
@@ -23,6 +24,10 @@ public class floatInSpace : MonoBehaviour
 
         if (inSpace && rb.useGravity)
             rb.useGravity = false;
+
+        if (!inSpace && prev)
+            rb.useGravity = true;
         
+        prev = inSpace;
     }
 }
