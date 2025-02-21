@@ -227,6 +227,13 @@ void CalculateHeat()
         specificHeatCapacity += solutionMakeup[i] * specificHeatCapacities[i];
     }
 
+    if (currentHeat < liquidTemperature)
+    {
+        float ambientCoolingRate = 0.05f; // Adjust for faster cooling
+        float coolingLoss = ambientCoolingRate * beakerSurfaceArea * (liquidTemperature - roomTemp) * 1000;
+        liquidTemperature -= coolingLoss / (GetComponent<Rigidbody>().mass * specificHeatCapacity);
+    }
+
     float heatTransferRate = convectiveHeatTransferCoeff * beakerSurfaceArea * (currentHeat - liquidTemperature);
     float temperatureChange = (heatTransferRate / (GetComponent<Rigidbody>().mass * specificHeatCapacity)) * Time.deltaTime;
 
