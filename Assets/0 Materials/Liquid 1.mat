@@ -286,7 +286,7 @@ Material:
     - _FresnelColor: {r: 0, g: 0.12923098, b: 1, a: 0}
     - _InvPrimScale: {r: 1, g: 1, b: 0, a: 0}
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
-    - _LiquidColor: {r: 0.09119492, g: 0, b: 0.49056602, a: 1}
+    - _LiquidColor: {r: 0.352234, g: 0, b: 0.49019608, a: 1}
     - _Liquid_Color: {r: 0, g: 0.2391901, b: 1, a: 1}
     - _SideColor: {r: 0, g: 0.003652096, b: 1, a: 1}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
