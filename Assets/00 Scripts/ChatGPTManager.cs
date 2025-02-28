@@ -67,7 +67,6 @@ public class ChatGPTManager : MonoBehaviour
             var chatResponse = response.Choices[0].Message;
             messages.Add(chatResponse);
             
-            Debug.Log(chatResponse.Content);
             multiHandlerScript.ReceiveResponseFromTeacher(chatResponse.Content);
         }
     }
