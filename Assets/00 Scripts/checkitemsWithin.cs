@@ -34,7 +34,7 @@ public class CheckItemsWithin : MonoBehaviour
 
                 if (obj != gameObject && !IsDescendantOf(obj.transform, transform)) // Ignore self & descendants
                 {
-                    if (obj.layer != LayerMask.NameToLayer("IgnoreGround"))
+                    if (obj.layer != LayerMask.NameToLayer("IgnoreGround") && obj.layer != LayerMask.NameToLayer("Ignore Raycast"))
                         objectsToMove.Add(obj);
                 }
             }

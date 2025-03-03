@@ -41,6 +41,16 @@ public class interactWithObjects : NetworkBehaviour
     public float startingAngle = Mathf.Infinity;
     public float currentAngle;
     public float angleDifference;
+    public bool ventColliding;
+    public int angleDirection3 = 1;
+    public float past3;
+    public int cantGoThisWay3;
+    public int angleDirection4 = 1;
+    public float past4;
+    public int cantGoThisWay4;
+    public bool readyToAssignDir3 = true;
+    public bool readyToAssignDir4 = true;
+    public bool cameOff;
 
 
     void Start()
@@ -98,6 +108,12 @@ public class interactWithObjects : NetworkBehaviour
             startingAngle = Mathf.Infinity;
             currentAngle = 0f;
             angleDifference = 0f;
+            ventColliding = false;
+            readyToAssignDir3 = true;
+            readyToAssignDir4 = true;
+            angleDirection3 = 0;
+            angleDirection4 = 0;
+
         }
 
         eyeWashStationStuff();
@@ -110,6 +126,9 @@ public class interactWithObjects : NetworkBehaviour
         if (!readyToDrag){
             currentMousePosition = playerCamera.transform.position + playerCamera.forward * distFromCameraForJoint;
              
+             
+            ventColliding = parentVentScript.colliding;
+
             if (currentJointObject.name == "FIRST JOINT"){
                 var pivotFrom = pivotPointForCurrentJoint;
                 // pivotFrom.y = currentMousePosition.y; // Adjust height but keep XZ movement
@@ -167,6 +186,8 @@ public class interactWithObjects : NetworkBehaviour
                 Vector3 direction = (mouseAt - pivotFrom).normalized;
 
                 
+
+                
                 if (actualStartingJointAngle == Mathf.Infinity)
                     actualStartingJointAngle = parentVentScript.ThirdJointX; //////////
 
@@ -179,7 +200,27 @@ public class interactWithObjects : NetworkBehaviour
                 angleDifference = Mathf.DeltaAngle(startingAngle, currentAngle);
 
                 //////////
-                parentVentScript.ThirdJointX = actualStartingJointAngle + angleDifference;
+                past3 = parentVentScript.ThirdJointX;
+
+                
+                if (!ventColliding)
+                    parentVentScript.ThirdJointX = actualStartingJointAngle + angleDifference;
+                if (ventColliding){
+                    if (readyToAssignDir3 && angleDirection3 != 0) cantGoThisWay3 = angleDirection3;
+                    readyToAssignDir3 = false;
+                    if (angleDirection3 == -cantGoThisWay3)
+                        parentVentScript.ThirdJointX = actualStartingJointAngle + angleDifference;
+                }
+
+                if (!readyToAssignDir3)
+                    cameOff = !ventColliding;
+
+            
+                if (past3 > actualStartingJointAngle + angleDifference)
+                    angleDirection3 = 1;
+                else
+                    angleDirection3 = -1;
+                
             }
 
             if (currentJointObject.name == "FOURTH JOINT"){
@@ -203,7 +244,27 @@ public class interactWithObjects : NetworkBehaviour
                 angleDifference = Mathf.DeltaAngle(startingAngle, currentAngle);
 
                 //////////
-                parentVentScript.FourthJointX = actualStartingJointAngle + angleDifference;
+                // parentVentScript.FourthJointX = actualStartingJointAngle + angleDifference;
+                past4 = parentVentScript.FourthJointX;
+
+                
+                if (!ventColliding)
+                    parentVentScript.FourthJointX = actualStartingJointAngle + angleDifference;
+                if (ventColliding){
+                    if (readyToAssignDir4 && angleDirection4 != 0) cantGoThisWay4 = angleDirection4;
+                    readyToAssignDir4 = false;
+                    if (angleDirection4 == -cantGoThisWay4)
+                        parentVentScript.FourthJointX = actualStartingJointAngle + angleDifference;
+                }
+
+                if (!readyToAssignDir4)
+                    cameOff = !ventColliding;
+
+            
+                if (past4 > actualStartingJointAngle + angleDifference)
+                    angleDirection4 = 1;
+                else
+                    angleDirection4 = -1;
             }
         }
 

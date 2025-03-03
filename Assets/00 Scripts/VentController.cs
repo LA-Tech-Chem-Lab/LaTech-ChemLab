@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class VentController : MonoBehaviour
@@ -11,6 +13,12 @@ public class VentController : MonoBehaviour
     public float SecondJointX;
     public float ThirdJointX;
     public float FourthJointX;
+
+    [Header("Collisions")]
+    public bool colliding;
+
+    public List<isColliding> collisionScripts = new List<isColliding>();
+
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -30,6 +38,7 @@ public class VentController : MonoBehaviour
         // Constrain Angles
         constrainAngles();
         applyAngles();
+        checkForCollisions();
     }
 
     void constrainAngles(){
@@ -43,5 +52,16 @@ public class VentController : MonoBehaviour
         SECOND_JOINT.localEulerAngles = new Vector3(SecondJointX, 0f, 0f);
         THIRD_JOINT.localEulerAngles = new Vector3(ThirdJointX, 0f, 0f);
         FOURTH_JOINT.localEulerAngles = new Vector3(FourthJointX, 0f, 0f);
+    }
+
+    void checkForCollisions(){
+        bool frameCheck = false;
+        foreach (isColliding script in collisionScripts){
+            if (script.isCurrentlyColliding){
+                frameCheck = true;
+                break;
+            }
+        }
+        colliding = frameCheck;
     }
 }
