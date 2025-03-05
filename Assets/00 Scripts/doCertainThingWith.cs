@@ -576,18 +576,14 @@ public class doCertainThingWith : NetworkBehaviour
                     if (pipetteAmountAfterAdding > 0)  //makes sure that the pipette does not give more than it has
                     {
                         //transfers liquid from the pipette to the beaker
-                        LS.currentVolume_mL += amountToAddOrExtract;
                         PS.pipetteVolume -= amountToAddOrExtract;
                         LS.addSolution(PS.pipetteSolution, amountToAddOrExtract);
-                        LS.updatePercentages();
                         closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
                     }
                     else
                     {
                         //transfers remaining liquid from pipette to beaker
-                        LS.currentVolume_mL += PS.pipetteVolume;
                         LS.addSolution(PS.pipetteSolution, PS.pipetteVolume);
-                        LS.updatePercentages();
                         PS.pipetteVolume = 0f;
                         closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
                     }
@@ -1155,7 +1151,6 @@ public class doCertainThingWith : NetworkBehaviour
         if (closestBeakerOrFlask && distFromTip2 <= ALUMINUM_DROPOFF_RANGE && scoopula.transform.Find("Aluminum").gameObject.activeInHierarchy){ // We have a beaker or flask within range
             Debug.Log("Drop in this beaker");
             scoopula.transform.Find("Aluminum").gameObject.SetActive(false);
-            closestBeakerOrFlask.GetComponent<liquidScript>().currentVolume_mL += 0.7407f;
             closestBeakerOrFlask.GetComponent<liquidScript>().addSolution(new List<float>{0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f}, 0.7407f);  // Add 0.37 mL of Aluminum
             closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
         }

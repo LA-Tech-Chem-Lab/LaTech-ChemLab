@@ -83,7 +83,7 @@ public class liquidScript : MonoBehaviour
         // Calculate tilt using the dot product of the beaker's up direction and world up
         dotProduct = Vector3.Dot(transform.up.normalized, Vector3.up);
 
-        // Spill logic (you already have this)
+        // Spill logic
         if (dotProduct <= 0.25f)
         {
             float loss = (-0.8f * dotProduct + 0.2f) * maxSpillRate * Time.deltaTime;
@@ -305,12 +305,22 @@ void CalculateHeat()
         // Goes until the filter is empty
         while (liquidVolume > 0.01)
         {
+            Debug.Log("new loop");
             // Transfers liquid from filter to flask
             Transform Flask = gameObject.transform.parent?.parent;
+            Debug.Log(Flask.name);
             float filteredLiquid = currentVolume_mL * Time.deltaTime;
-            currentVolume_mL -= filteredLiquid;
             if (Flask.GetComponent<liquidScript>()){
-                 Flask.GetComponent<liquidScript>().addSolution(liquidSolution, filteredLiquid);
+                removeSolution(liquidSolution, filteredLiquid);
+                for (int i = 0; i < liquidSolution.Count; i++){
+                    Debug.Log(i);
+                    Debug.Log(liquidSolution[i]);
+                }
+                Debug.Log("new solution");
+                Debug.Log(filteredLiquid);
+                Flask.GetComponent<liquidScript>().addSolution(liquidSolution, filteredLiquid);
+                Flask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+                Debug.Log("Added Solution to flask");
             }
             else{
                 Debug.Log("flask no have liquid script");
@@ -357,6 +367,29 @@ void CalculateHeat()
             {
                 solutionMakeup[i] += error * (solutionMakeup[i] / sum);
             }
+        
+        currentVolume_mL += volume;
+        
+        updatePercentages();
+    }
+
+    //removes a volume from a given solution 
+    public void removeSolution(List<float> solutionToRemove, float volume){
+        float newVolume = currentVolume_mL + volume;
+        float sum = 0f;
+        for (int i = 0; i < solutionMakeup.Count; i++)
+        {
+            solutionMakeup[i] = ((solutionMakeup[i] * currentVolume_mL) - (solutionToRemove[i] * volume)) / newVolume;
+            sum += solutionMakeup[i]; // Track total sum
+        }
+        // Adjust to ensure the sum is exactly 1
+        float error = 1f - sum;
+        for (int i = 0; i < solutionMakeup.Count; i++)
+            {
+                solutionMakeup[i] += error * (solutionMakeup[i] / sum);
+            }
+        
+        currentVolume_mL -= volume;
         
         updatePercentages();
     }
