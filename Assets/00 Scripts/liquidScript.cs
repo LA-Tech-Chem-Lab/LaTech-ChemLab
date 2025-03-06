@@ -305,27 +305,17 @@ void CalculateHeat()
         // Goes until the filter is empty
         while (liquidVolume > 0.01)
         {
-            Debug.Log("new loop");
             // Transfers liquid from filter to flask
             Transform Flask = gameObject.transform.parent?.parent;
-            Debug.Log(Flask.name);
             float filteredLiquid = currentVolume_mL * Time.deltaTime;
             if (Flask.GetComponent<liquidScript>()){
                 removeSolution(liquidSolution, filteredLiquid);
-                for (int i = 0; i < liquidSolution.Count; i++){
-                    Debug.Log(i);
-                    Debug.Log(liquidSolution[i]);
-                }
-                Debug.Log("new solution");
-                Debug.Log(filteredLiquid);
                 Flask.GetComponent<liquidScript>().addSolution(liquidSolution, filteredLiquid);
                 Flask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
-                Debug.Log("Added Solution to flask");
             }
             else{
                 Debug.Log("flask no have liquid script");
             }
-            Debug.Log(liquidSolution);
             yield return new WaitForSeconds(.01f);  // Allow other game logic to continue
         }
     }
@@ -375,7 +365,7 @@ void CalculateHeat()
 
     //removes a volume from a given solution 
     public void removeSolution(List<float> solutionToRemove, float volume){
-        float newVolume = currentVolume_mL + volume;
+        float newVolume = currentVolume_mL - volume;
         float sum = 0f;
         for (int i = 0; i < solutionMakeup.Count; i++)
         {
