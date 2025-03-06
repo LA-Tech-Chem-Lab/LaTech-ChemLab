@@ -225,9 +225,9 @@ public class pickUpObjects : NetworkBehaviour
                 multiHandlerScript.setHelpText("Right Click to adjust airflow");
         }
 
-        if (other.name == "Beaker" || other.name == "Flask"){
+        if (other.name.StartsWith("Beaker") || other.name.StartsWith("Erlenmeyer Flask") || other.name.StartsWith("Paper Cone")){
             if (Input.GetMouseButton(1)){
-                string helpText = "Contents of Beaker: \n";
+                string helpText = "Contents: \n";
                 liquidScript LS = other.GetComponent<liquidScript>();
                 List<float> solutionMols = Enumerable.Repeat(0f, 11).ToList();
 
@@ -437,31 +437,6 @@ public class pickUpObjects : NetworkBehaviour
         else
             shadowGameobject.SetActive(false);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     void OnDrawGizmos()
     {
         // Ensure this Gizmo is drawn only for the owning player

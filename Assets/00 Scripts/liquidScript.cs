@@ -106,8 +106,11 @@ public class liquidScript : MonoBehaviour
 
         handleReactions();
 
-        if (gameObject.name == "Paper Cone"){
-            StartCoroutine(handleFiltering());
+        //Finds the flask
+        //is the filter in the funneled flask?
+        if (gameObject.name == "Paper Cone" && gameObject.transform.parent?.parent){
+            Transform Flask = gameObject.transform.parent?.parent;
+            StartCoroutine(handleFiltering(Flask));
         }
     }
 
@@ -276,20 +279,15 @@ void CalculateHeat()
 }
 
     //function for filtering
-    IEnumerator handleFiltering()
+    IEnumerator handleFiltering(Transform Flask)
     {
-        List<float> solidSolution = Enumerable.Repeat(0f, 11).ToList();
+        //finds which compounds will be filtered
         List<float> liquidSolution = Enumerable.Repeat(0f, 11).ToList();
         float liquidPercent = 0f;
-        float solidPercent = 0f; //solid solution stuff may not be needed 
         for (int i = 0; i < solutionMakeup.Count; i++){
             if (compoundStates[i] == 'l' || compoundStates[i] == 'a'){
                 liquidSolution[i] = solutionMakeup[i];
                 liquidPercent += solutionMakeup[i];
-            }
-            else{
-                solidSolution[i] = solutionMakeup[i]; //felt cute may delete later
-                solidPercent += solutionMakeup[i];
             }
         }
         //adjust the liquid solution to be the full 100 percent
@@ -297,26 +295,32 @@ void CalculateHeat()
         for (int i = 0; i < solutionMakeup.Count; i++){
             liquidSolution[i] = liquidSolution[i] * currentVolume_mL / liquidVolume;
         }
-        //adjust the solid solution to be the full 100 percent (may not be needed)
-        float solidVolume = solidPercent * currentVolume_mL;
-        for (int i = 0; i < solutionMakeup.Count; i++){
-            solidSolution[i] = solidSolution[i] * currentVolume_mL / liquidVolume;
-        }
+
         // Goes until the filter is empty
         while (liquidVolume > 0.01)
         {
-            // Transfers liquid from filter to flask
-            Transform Flask = gameObject.transform.parent?.parent;
-            float filteredLiquid = currentVolume_mL * Time.deltaTime;
-            if (Flask.GetComponent<liquidScript>()){
-                removeSolution(liquidSolution, filteredLiquid);
-                Flask.GetComponent<liquidScript>().addSolution(liquidSolution, filteredLiquid);
-                Flask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+            //Does the filter have a grandparent?
+            if (gameObject.transform.parent?.parent)
+            {
+                //is the grandparent the erlenmeyer flask (is it attatched properly)?
+                if (gameObject.transform.parent.parent.name.StartsWith("Erlenmeyer Flask")){
+                    // Transfers liquid from filter to flask
+                    float filteredLiquid = currentVolume_mL * Time.deltaTime;
+                    removeSolution(liquidSolution, filteredLiquid);
+                    Flask.GetComponent<liquidScript>().addSolution(liquidSolution, filteredLiquid);
+                    Flask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+                }
+                else
+                {
+                    //the cone is not attatched to the filtering apparatus
+                    yield break;
+                }
             }
             else{
-                Debug.Log("flask no have liquid script");
+                //the cone is not attatched to the filtering apparatus
+                yield break;
             }
-            yield return new WaitForSeconds(.01f);  // Allow other game logic to continue
+            yield return new WaitForSeconds(.1f);  // Allow other game logic to continue
         }
     }
 
@@ -526,19 +530,6 @@ void CalculateHeat()
                    List<float> Pratio = new List<float> {2, 1};
                    StartCoroutine(react(reactants, Rratio, products, Pratio, 8f));
                }
-//does not occur
-              // if (percentAlOH3 > 0.02f) {
-              //     // KAlO2 forms as a dry powder when water is removed
-              //     // Initially appears as a milky, gelatinous fluid before drying
-              //     // Highly exothermic, strong heat release
-              //     // Solid product forms upon evaporation, leaving behind a fine white powder
-              //     //VIOLENT WITH ADDED HEAT
-              //     List<string> reactants = new List<string> {"KAl(OH)4", "Al(OH)3"};
-              //     List<string> products = new List<string> {"KAlO2", "H2O"};
-              //     List<float> Rratio = new List<float> {1, 1};
-              //     List<float> Pratio = new List<float> {2, 4};
-              //     StartCoroutine(react(reactants, Rratio, products, Pratio, 5f));
-              // }
             }
             if (percentAl2SO43 > 0.02f){
                 if (percentKOH > 0.02f){

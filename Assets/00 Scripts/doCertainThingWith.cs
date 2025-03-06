@@ -281,15 +281,17 @@ public class doCertainThingWith : NetworkBehaviour
 
         // Find the closest Flask
         foreach (GameObject currentObject in FindObjectsOfType<GameObject>()) {
-            if (currentObject.name == "Glass Funnel" && (currentObject.transform.parent.name == "Erlenmeyer Flask" || currentObject.transform.parent.name == "Erlenmeyer Flask L")) {
-                float distFromFilter = Vector3.Distance(filter.transform.position, currentObject.transform.position);
+            if (currentObject.name == "Glass Funnel" && currentObject.transform.parent != null){
+                if (currentObject.transform.parent.name.StartsWith("Erlenmeyer Flask")) {
+                    float distFromFilter = Vector3.Distance(filter.transform.position, currentObject.transform.position);
 
-                if (distFromFilter < minDist) {
-                    minDist = distFromFilter;
-                    closestFunnel = currentObject;
+                    if (distFromFilter < minDist) {
+                        minDist = distFromFilter;
+                        closestFunnel = currentObject;
 
-                    // Find the flask's top position
-                    funnelOpening = closestFunnel.transform.Find("FunnelTop");
+                        // Find the flask's top position
+                        funnelOpening = closestFunnel.transform.Find("FunnelTop");
+                    }
                 }
             }
         }
