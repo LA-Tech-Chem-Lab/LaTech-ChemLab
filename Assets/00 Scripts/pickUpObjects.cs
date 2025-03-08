@@ -155,6 +155,10 @@ public class pickUpObjects : NetworkBehaviour
             if (GetComponent<doCertainThingWith>().filterIsAttatched == true)
                 GetComponent<doCertainThingWith>().DetachBuchnerFilter(other);
         }
+
+        if (other.name == "Stir Rod"){
+            initialHoldingDistance = 1.3f;
+        }
         initialHeldDistForObject = initialHoldingDistance;
         setHelpTextBasedOnObject();
     }
