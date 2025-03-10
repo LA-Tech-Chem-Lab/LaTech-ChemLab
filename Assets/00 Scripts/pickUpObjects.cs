@@ -44,6 +44,7 @@ public class pickUpObjects : NetworkBehaviour
     public GameObject shadowGameobject;
     public DecalProjector shadowProjector;
 
+
     
     // Def dont need to touch
     bool holdingItem;
@@ -158,7 +159,10 @@ public class pickUpObjects : NetworkBehaviour
 
         if (other.name == "Stir Rod"){
             initialHoldingDistance = 1.3f;
+            if (GetComponent<doCertainThingWith>().isRodInBeaker == true)
+                GetComponent<doCertainThingWith>().removeStirRod(other);
         }
+
         initialHeldDistForObject = initialHoldingDistance;
         setHelpTextBasedOnObject();
     }

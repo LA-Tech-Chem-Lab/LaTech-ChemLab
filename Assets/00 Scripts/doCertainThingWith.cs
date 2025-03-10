@@ -40,6 +40,10 @@ public class doCertainThingWith : NetworkBehaviour
     public GameObject buchnerfunneledFlask = null;
     public GameObject buchnerfilteredFunnel = null;
     public bool buchnerfilterIsAttached = false; 
+
+    public bool isRodInBeaker = false;
+    public GameObject rodInBeaker = null;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -131,6 +135,9 @@ public class doCertainThingWith : NetworkBehaviour
             if (obj.name == "Buchner Paper Cone")
                 insertBuchnerFilter(obj);
 
+            if (obj.name == "Stir Rod")
+                stirFromBeaker(obj);
+
 
         }
     }
@@ -213,6 +220,8 @@ public class doCertainThingWith : NetworkBehaviour
     {   
         pickUpScript.distOffset = dist;
     }
+
+
 
     void insertFunnel(GameObject funnel) {
         float minDist = Mathf.Infinity;
@@ -503,6 +512,66 @@ public class doCertainThingWith : NetworkBehaviour
             var rot = itemHeldByTongs.transform.localEulerAngles;
             itemHeldByTongs.transform.localEulerAngles = new Vector3(0f, rot.y, 0f);
         }
+    }
+
+    void stirFromBeaker(GameObject stirRod){
+        float minDist = Mathf.Infinity;
+        GameObject closestBeaker = null;
+        Transform stirPosition = null;
+
+        // Find the closest Flask
+        foreach (GameObject currentObject in FindObjectsOfType<GameObject>()) {
+            if (currentObject.name == "Beaker") {
+                float distFromBeaker = Vector3.Distance(stirRod.transform.position, currentObject.transform.position);
+
+                if (distFromBeaker < minDist) {
+                    minDist = distFromBeaker;
+                    closestBeaker = currentObject;
+
+                    // Find the flask's top position
+                    stirPosition = closestBeaker.transform.Find("StirPos");
+                }
+            }
+        }
+
+        // teleport stir rod to animation position if in range
+        if (closestBeaker && stirPosition && minDist <= FUNNEL_INSERT_DISTANCE) {
+            pickUpScript.DropItem();
+
+            stirRod.transform.position = stirPosition.position;
+            stirRod.transform.rotation = stirPosition.rotation;
+
+            // Make it a child so it follows movement
+            stirRod.transform.SetParent(closestBeaker.transform);
+
+            // Disable physics and collisions so it stays attached
+            Physics.IgnoreCollision(stirRod.GetComponent<Collider>(), closestBeaker.GetComponent<Collider>(), true);
+
+            Rigidbody rb = stirRod.GetComponent<Rigidbody>();
+            if (rb) {
+                rb.isKinematic = true;
+            }
+
+            rodInBeaker = closestBeaker;
+            rodInBeaker.tag = "Untagged";
+            isRodInBeaker = true;
+        }
+    }
+    
+    public void removeStirRod(GameObject stirRod) {
+        // Remove parent so it no longer follows the flask
+        stirRod.transform.SetParent(null);
+
+        // Re-enable physics and collisions
+        Physics.IgnoreCollision(stirRod.GetComponent<Collider>(), rodInBeaker.GetComponent<Collider>(), false);
+
+        Rigidbody rb = stirRod.GetComponent<Rigidbody>();
+        if (rb) {
+            rb.isKinematic = false;
+        }
+        rodInBeaker.tag = "StirRod";
+        rodInBeaker = null;
+        isRodInBeaker = false;
     }
 
     void handleTongObject(){    // Here Tongs are pos.other
