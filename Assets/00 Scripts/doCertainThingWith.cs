@@ -716,6 +716,19 @@ public class doCertainThingWith : NetworkBehaviour
     
         foreach (Transform liquidHolder in allLiquidHolders.transform)
         {
+            if (liquidHolder.name.StartsWith("Erlenmeyer Flask")){
+                foreach (Transform flaskChild in liquidHolder.transform){
+                    if (flaskChild.name.StartsWith("Glass Funnel")){
+                        foreach (Transform funnelChild in flaskChild.transform){
+                            if (funnelChild.name.StartsWith("Paper Cone")){
+                                GameObject whiteOutline = funnelChild.GetChild(0).gameObject;
+                                bool isClosest = funnelChild.gameObject == closestBeakerOrFlask && distFromTip <= PIPETTE_GRAB_DISTANCE;
+                                whiteOutline.SetActive(isClosest);
+                            }
+                        }
+                    }
+                }
+            }
             if (liquidHolder.childCount > 0) // Ensure it has children
             {
                 GameObject whiteOutline = liquidHolder.GetChild(0).gameObject;
