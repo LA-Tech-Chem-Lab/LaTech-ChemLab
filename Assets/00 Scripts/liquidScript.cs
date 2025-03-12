@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
+using Microsoft.Unity.VisualStudio.Editor;
 using Obi;
 using Tripolygon.UModeler.UI.Input;
 using Unity.Mathematics;
@@ -63,6 +64,9 @@ public class liquidScript : MonoBehaviour
     float specificHeatCapacity = 4184f;
     public float roomTemp = 293.15f;
 
+    [Header("Filtering")]
+    public bool isFiltering = false;
+
     // Use this for initialization
     void Start()
     {
@@ -108,7 +112,7 @@ public class liquidScript : MonoBehaviour
 
         //Finds the flask
         //is the filter in the funneled flask?
-        if (gameObject.name == "Paper Cone" && gameObject.transform.parent?.parent){
+        if (gameObject.name == "Paper Cone" && gameObject.transform.parent?.parent && !isFiltering && currentVolume_mL > 1f){
             Transform Flask = gameObject.transform.parent?.parent;
             StartCoroutine(handleFiltering(Flask));
         }
@@ -278,50 +282,76 @@ void CalculateHeat()
     }
 }
 
-    //function for filtering
     IEnumerator handleFiltering(Transform Flask)
     {
-        //finds which compounds will be filtered
+        isFiltering = true;
+        float liquidVolume = 10f;
         List<float> liquidSolution = Enumerable.Repeat(0f, 11).ToList();
-        float liquidPercent = 0f;
-        for (int i = 0; i < solutionMakeup.Count; i++){
-            if (compoundStates[i] == 'l' || compoundStates[i] == 'a'){
-                liquidSolution[i] = solutionMakeup[i];
-                liquidPercent += solutionMakeup[i];
-            }
-        }
-        //adjust the liquid solution to be the full 100 percent
-        float liquidVolume = liquidPercent * currentVolume_mL;
-        for (int i = 0; i < solutionMakeup.Count; i++){
-            liquidSolution[i] = liquidSolution[i] * currentVolume_mL / liquidVolume;
-        }
 
-        // Goes until the filter is empty
-        while (liquidVolume > 0.01)
+        // Filtering continues while there is enough solution
+        while (liquidVolume > 0.1f && currentVolume_mL > 0.1f)
         {
-            //Does the filter have a grandparent?
-            if (gameObject.transform.parent?.parent)
+            float liquidPercent = 0f; // Reset inside loop to prevent accumulation
+
+            // Identify which compounds are being filtered
+            for (int i = 0; i < solutionMakeup.Count; i++)
             {
-                //is the grandparent the erlenmeyer flask (is it attatched properly)?
-                if (gameObject.transform.parent.parent.name.StartsWith("Erlenmeyer Flask")){
-                    // Transfers liquid from filter to flask
-                    float filteredLiquid = currentVolume_mL * Time.deltaTime;
-                    removeSolution(liquidSolution, filteredLiquid);
-                    Flask.GetComponent<liquidScript>().addSolution(liquidSolution, filteredLiquid);
-                    Flask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+                if (compoundStates[i] == 'l' || compoundStates[i] == 'a')
+                {
+                    liquidSolution[i] = solutionMakeup[i];
+                    liquidPercent += solutionMakeup[i];
                 }
                 else
                 {
-                    //the cone is not attatched to the filtering apparatus
+                    liquidSolution[i] = 0f;  // Ensure only liquids are transferred
+                }
+            }
+
+            // Avoid division by zero when calculating liquidVolume
+            if (liquidPercent == 0f)
+            {
+                Debug.LogWarning("No liquid components found for filtering. Stopping.");
+                isFiltering = false;
+                yield break;
+            }
+
+            liquidVolume = liquidPercent * currentVolume_mL;  // Calculate volume of liquid part
+
+            // Normalize `liquidSolution` to sum to 100%
+            for (int i = 0; i < solutionMakeup.Count; i++)
+            {
+                liquidSolution[i] = (liquidSolution[i] * currentVolume_mL) / liquidVolume;
+            }
+
+            // Ensure filtering is connected properly
+            if (gameObject.transform.parent?.parent)
+            {
+                if (gameObject.transform.parent.parent.name.StartsWith("Erlenmeyer Flask"))
+                {
+                    // Perform the filtering step
+                    //float filteredLiquid = Mathf.Min(liquidVolume * Time.deltaTime, currentVolume_mL); // Prevent over-filtering
+                    float filteredLiquid = liquidVolume * Time.deltaTime;
+                    filterSolution(liquidSolution, filteredLiquid, Flask);
+                }
+                else
+                {
+                    Debug.LogWarning("Filtering stopped: Apparatus is not properly attached.");
+                    isFiltering = false;
                     yield break;
                 }
             }
-            else{
-                //the cone is not attatched to the filtering apparatus
+            else
+            {
+                Debug.LogWarning("Filtering stopped: Apparatus is not properly attached.");
+                isFiltering = false;
                 yield break;
             }
-            yield return new WaitForSeconds(.1f);  // Allow other game logic to continue
+
+            yield return new WaitForSeconds(0.1f);  // Allow other processes to run
         }
+
+        Debug.Log("Filtering completed.");
+        isFiltering = false;
     }
 
     GameObject findClosestBunsenBurner()
@@ -367,25 +397,83 @@ void CalculateHeat()
         updatePercentages();
     }
 
-    //removes a volume from a given solution 
-    public void removeSolution(List<float> solutionToRemove, float volume){
-        float newVolume = currentVolume_mL - volume;
-        float sum = 0f;
+    public void filterSolution(List<float> solutionToFilter, float volume, Transform Flask)
+    {
+        liquidScript flaskScript = Flask.GetComponent<liquidScript>();
+
+        // Prevent filtering if there is too little solution left
+        if (currentVolume_mL < 0.1f)  // Adjust threshold as needed
+        {
+            //Debug.LogWarning("Filtering stopped: Solution too low to continue.");
+            return;
+        }
+
+        // Ensure we don't try to filter more than available
+        if (volume > currentVolume_mL)
+        {
+            volume = currentVolume_mL;  // Adjust to only filter what's available
+        }
+
+        float newVolumeTop = currentVolume_mL - volume;
+        float newVolumeBottom = flaskScript.currentVolume_mL + volume;
+
+        if (newVolumeTop <= 0)
+        {
+            //Debug.LogWarning("Filtering stopped: Not enough solution to filter.");
+            return;
+        }
+
+        float sumTop = 0f;
+        float sumBottom = 0f;
+
         for (int i = 0; i < solutionMakeup.Count; i++)
         {
-            solutionMakeup[i] = ((solutionMakeup[i] * currentVolume_mL) - (solutionToRemove[i] * volume)) / newVolume;
-            sum += solutionMakeup[i]; // Track total sum
-        }
-        // Adjust to ensure the sum is exactly 1
-        float error = 1f - sum;
-        for (int i = 0; i < solutionMakeup.Count; i++)
+            float originalSolutionMakeup = solutionMakeup[i] * currentVolume_mL;
+            float transferAmount = solutionToFilter[i] * volume;
+            float newConcentrationTop = (originalSolutionMakeup - transferAmount) / newVolumeTop;
+
+            if (newConcentrationTop > 0)
             {
-                solutionMakeup[i] += error * (solutionMakeup[i] / sum);
+                solutionMakeup[i] = newConcentrationTop;
+                flaskScript.solutionMakeup[i] = (flaskScript.solutionMakeup[i] * flaskScript.currentVolume_mL + transferAmount) / newVolumeBottom;
             }
-        
+            else
+            {
+                solutionMakeup[i] = 0;
+            }
+
+            sumTop += solutionMakeup[i];
+            sumBottom += flaskScript.solutionMakeup[i];
+        }
+
+        // Normalize to ensure the total sum remains 1
+        if (sumTop > 0)
+        {
+            for (int i = 0; i < solutionMakeup.Count; i++)
+            {
+                solutionMakeup[i] /= sumTop;
+            }
+        }
+
+        if (sumBottom > 0)
+        {
+            for (int i = 0; i < flaskScript.solutionMakeup.Count; i++)
+            {
+                flaskScript.solutionMakeup[i] /= sumBottom;
+            }
+        }
+
+        // Update volumes
         currentVolume_mL -= volume;
-        
+        flaskScript.currentVolume_mL += volume;
+
+        // Prevent floating-point underflow
+        if (currentVolume_mL < 0.01f) currentVolume_mL = 0f;
+        if (flaskScript.currentVolume_mL < 0.01f) flaskScript.currentVolume_mL = 0f;
+
+        // Update percentages
         updatePercentages();
+        flaskScript.updatePercentages();
     }
 
     public void updatePercentages(){
