@@ -143,7 +143,9 @@ public class pickUpObjects : NetworkBehaviour
         }
 
         if (other.name == "Paper Cone"){
-            if (GetComponent<doCertainThingWith>().filterIsAttatched == true)
+            Debug.Log("Picked up paper cone");
+            if (GetComponent<doCertainThingWith>().filterIsAttatched == true || GetComponent<doCertainThingWith>().buchnerfilterIsAttached == true)
+                Debug.Log("Made it here last night");
                 GetComponent<doCertainThingWith>().DetachFilter(other);
         }
 
@@ -152,10 +154,10 @@ public class pickUpObjects : NetworkBehaviour
                 GetComponent<doCertainThingWith>().DetachBuchnerFunnel(other);
         }
 
-        if (other.name == "Buchner Paper Cone"){
-            if (GetComponent<doCertainThingWith>().filterIsAttatched == true)
-                GetComponent<doCertainThingWith>().DetachBuchnerFilter(other);
-        }
+        //if (other.name == "Buchner Paper Cone"){
+        //    if (GetComponent<doCertainThingWith>().filterIsAttatched == true)
+        //        GetComponent<doCertainThingWith>().DetachBuchnerFilter(other);
+        //}
 
         if (other.name == "Stir Rod"){
             initialHoldingDistance = 1.3f;
@@ -214,9 +216,9 @@ public class pickUpObjects : NetworkBehaviour
         if (other.name == "Erlenmeyer Flask L") multiHandlerScript.setHelpText("500 mL Erlenmeyer flask");
         if (other.name == "Evaporating Dish")   multiHandlerScript.setHelpText("This is an evaporating dish.");
         if (other.name == "Glass Funnel")             multiHandlerScript.setHelpText("This is a glass funnel used for filtering out solids from solutions. Right click on an Erlenmeyer flask to attatch it.");
-        if (other.name == "Paper Cone")         multiHandlerScript.setHelpText("This is a paper filter used with the glass funnel to filter solids from a solution.");
+        if (other.name == "Paper Cone")         multiHandlerScript.setHelpText("This is a paper filter used with a funnel to filter solids from a solution.");
         if (other.name == "Buchner Funnel")             multiHandlerScript.setHelpText("This is a Buchner funnel used for filtering out solids from solutions. Right click on an Buchner flask to attatch it.");
-        if (other.name == "Buchner Paper Cone")         multiHandlerScript.setHelpText("This is a paper filter used with the buchner funnel to filter solids from a solution.");
+        //if (other.name == "Buchner Paper Cone")         multiHandlerScript.setHelpText("This is a paper filter used with the buchner funnel to filter solids from a solution.");
     }
 
     void setHelpTextConstantly(){
@@ -318,7 +320,7 @@ public class pickUpObjects : NetworkBehaviour
                 // Debug.Log(hit.collider.gameObject.name);
             }
             // Can also be the funnel even if it is kinematic because we want to be able to pick it up when it is attatched to the flask
-            if (rb && (!rb.GetComponent<Rigidbody>().isKinematic || hitObject.name == "Glass Funnel" || hitObject.name == "Paper Cone")) // ITEM PICKUP
+            if (rb && (!rb.GetComponent<Rigidbody>().isKinematic || hitObject.name == "Glass Funnel" || hitObject.name == "Paper Cone" || hitObject.name == "Buchner Funnel")) // ITEM PICKUP
             {
                 PickUpItem(hitObject);
             }
