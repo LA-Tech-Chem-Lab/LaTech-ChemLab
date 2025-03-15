@@ -47,6 +47,8 @@ public class multihandler : NetworkBehaviour
     public bool settingsOpen;
     public bool finderOpen;
     public TextMeshProUGUI helpText;
+    public GameObject helpTextBG;
+    public float helpAreaWhiteness;
 
     [Header("Text Chat")]
     public bool isTyping;
@@ -86,7 +88,7 @@ public class multihandler : NetworkBehaviour
         if (Input.GetKeyDown(KeyCode.Escape) && JoinCanvas.activeInHierarchy) // We are selecting server and press escape - Quit
             QuitGame();
 
-        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab)) && !JoinCanvas.activeInHierarchy) // We are loaded in and press escape
+        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab)) && !JoinCanvas.activeInHierarchy) // We are loaded in and press escape - pause or unpause
             PauseOrUnpause();
 
         if (Input.GetKeyDown(KeyCode.Return) && !JoinCanvas.activeInHierarchy && !isPaused) // We press enter ONLY when we are in game
@@ -110,6 +112,8 @@ public class multihandler : NetworkBehaviour
         
         textChatAndAIChat();
         
+        
+
     }
 
     void textChatAndAIChat(){
