@@ -310,7 +310,6 @@ void CalculateHeat()
             // Avoid division by zero when calculating liquidVolume
             if (liquidPercent == 0f)
             {
-                Debug.LogWarning("No liquid components found for filtering. Stopping.");
                 isFiltering = false;
                 yield break;
             }
@@ -335,22 +334,18 @@ void CalculateHeat()
                 }
                 else
                 {
-                    Debug.LogWarning("Filtering stopped: Apparatus is not properly attached.");
                     isFiltering = false;
                     yield break;
                 }
             }
             else
             {
-                Debug.LogWarning("Filtering stopped: Apparatus is not properly attached.");
                 isFiltering = false;
                 yield break;
             }
 
             yield return new WaitForSeconds(0.1f);  // Allow other processes to run
         }
-
-        Debug.Log("Filtering completed.");
         isFiltering = false;
     }
 

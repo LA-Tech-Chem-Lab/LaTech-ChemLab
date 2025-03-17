@@ -143,15 +143,16 @@ public class pickUpObjects : NetworkBehaviour
         }
 
         if (other.name == "Paper Cone"){
-            Debug.Log("Picked up paper cone");
             if (GetComponent<doCertainThingWith>().filterIsAttatched == true || GetComponent<doCertainThingWith>().buchnerfilterIsAttached == true)
-                Debug.Log("Made it here last night");
                 GetComponent<doCertainThingWith>().DetachFilter(other);
         }
 
         if (other.name == "Buchner Funnel"){
-            if (GetComponent<doCertainThingWith>().funnelIsAttatched == true)
+            Debug.Log("MightCall detach funtion");
+            if (GetComponent<doCertainThingWith>().buchnerfunnelIsAttached == true){
+                Debug.Log("Calling detatch funtion");
                 GetComponent<doCertainThingWith>().DetachBuchnerFunnel(other);
+            }
         }
 
         //if (other.name == "Buchner Paper Cone"){

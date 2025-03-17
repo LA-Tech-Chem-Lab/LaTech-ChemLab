@@ -33,12 +33,12 @@ public class doCertainThingWith : NetworkBehaviour
     pickUpObjects pickUpScript;
     public Vector3 testingOffset;
     public bool funnelIsAttatched = false;
-    public GameObject funneledFlask = null;
-    public GameObject filteredFunnel = null;
+    public GameObject funneledFlask;
+    public GameObject filteredFunnel;
     public bool filterIsAttatched = false;
     public bool buchnerfunnelIsAttached = false;
-    public GameObject buchnerfunneledFlask = null;
-    public GameObject buchnerfilteredFunnel = null;
+    public GameObject buchnerfunneledFlask;
+    public GameObject buchnerfilteredFunnel;
     public bool buchnerfilterIsAttached = false; 
 
     public bool isRodInBeaker = false;
@@ -313,7 +313,6 @@ public class doCertainThingWith : NetworkBehaviour
             filter.transform.position = funnelOpening.position;
             filter.transform.rotation = funnelOpening.rotation;
 
-            Debug.Log(closestFunnel.name);
             // Make it a child so it follows movement
             filter.transform.SetParent(closestFunnel.transform);
 
@@ -337,25 +336,28 @@ public class doCertainThingWith : NetworkBehaviour
     }
 
     public void DetachFilter(GameObject filter) {
-        // Remove parent so it no longer follows the flask
-        filter.transform.SetParent(null);
-
-        // Re-enable physics and collisions
-        Physics.IgnoreCollision(filter.GetComponent<Collider>(), filteredFunnel.GetComponent<Collider>(), false);
+        Debug.Log(filter.transform.name);
 
         Rigidbody rb = filter.GetComponent<Rigidbody>();
         if (rb) {
             rb.isKinematic = false;
         }
 
+        Debug.Log(filter.transform.parent.name);
         if (filter.transform.parent.name == "Glass Funnel"){
+                // Re-enable physics and collisions
+                Physics.IgnoreCollision(filter.GetComponent<Collider>(), filteredFunnel.GetComponent<Collider>(), false);
                 filteredFunnel = null;
                 filterIsAttatched = false;
             }
             else{
+                // Re-enable physics and collisions
+                Physics.IgnoreCollision(filter.GetComponent<Collider>(), buchnerfilteredFunnel.GetComponent<Collider>(), false);
                 buchnerfilteredFunnel = null;
                 buchnerfilterIsAttached = false;
             }
+        // Remove parent so it no longer follows the flask
+        filter.transform.SetParent(null);
     }
 
     void insertBuchnerFunnel(GameObject funnel) {
@@ -404,10 +406,11 @@ public class doCertainThingWith : NetworkBehaviour
 
     public void DetachBuchnerFunnel(GameObject funnel) {
         // Remove parent so it no longer follows the flask
+        Debug.Log("detatching funnel");
         funnel.transform.SetParent(null);
 
         // Re-enable physics and collisions
-        Physics.IgnoreCollision(funnel.GetComponent<Collider>(), funneledFlask.GetComponent<Collider>(), false);
+        Physics.IgnoreCollision(funnel.GetComponent<Collider>(), buchnerfunneledFlask.GetComponent<Collider>(), false);
 
         Rigidbody rb = funnel.GetComponent<Rigidbody>();
         if (rb) {
@@ -417,66 +420,6 @@ public class doCertainThingWith : NetworkBehaviour
         buchnerfunneledFlask = null;
         buchnerfunnelIsAttached = false;
     }
-
-//    void insertBuchnerFilter(GameObject filter) {
-//        float minDist = Mathf.Infinity;
-//        GameObject closestFunnel = null;
-//        Transform funnelOpening = null;
-//
-//        // Find the closest Flask
-//        foreach (GameObject currentObject in FindObjectsOfType<GameObject>()) {
-//            if (currentObject.name == "Buchner Funnel" && currentObject.transform.parent.name == "Buchner Flask") {
-//                float distFromFilter = Vector3.Distance(filter.transform.position, currentObject.transform.position);
-//
-//                if (distFromFilter < minDist) {
-//                    minDist = distFromFilter;
-//                    closestFunnel = currentObject;
-//
-//                    // Find the flask's top position
-//                    funnelOpening = closestFunnel.transform.Find("FunnelTop");
-//                }
-//            }
-//        }
-//
-//        // Attach the funnel to the flask if within range
-//        if (closestFunnel && funnelOpening && minDist <= FUNNEL_INSERT_DISTANCE) {
-//            pickUpScript.DropItem();
-//
-//            // Attach funnel to flask
-//            filter.transform.position = funnelOpening.position;
-//            filter.transform.rotation = funnelOpening.rotation;
-//
-//            Debug.Log(closestFunnel.name);
-//            // Make it a child so it follows movement
-//            filter.transform.SetParent(closestFunnel.transform);
-//
-//            // Disable physics and collisions so it stays attached
-//            Physics.IgnoreCollision(filter.GetComponent<Collider>(), closestFunnel.GetComponent<Collider>(), true);
-//
-//            Rigidbody rb = filter.GetComponent<Rigidbody>();
-//            if (rb) {
-//                rb.isKinematic = true;
-//            }
-//
-//            buchnerfilteredFunnel = closestFunnel;
-//            buchnerfilterIsAttached = true;
-//        }
-//    }
-//
-//    public void DetachBuchnerFilter(GameObject filter) {
-//        // Remove parent so it no longer follows the flask
-//        filter.transform.SetParent(null);
-//
-//        // Re-enable physics and collisions
-//        Physics.IgnoreCollision(filter.GetComponent<Collider>(), filteredFunnel.GetComponent<Collider>(), false);
-//
-//        Rigidbody rb = filter.GetComponent<Rigidbody>();
-//        if (rb) {
-//            rb.isKinematic = false;
-//        }
-//        buchnerfilteredFunnel = null;
-//        buchnerfilterIsAttached = false;
-//    }
 
     void GrabFlaskByNeck(GameObject tongs){
 
