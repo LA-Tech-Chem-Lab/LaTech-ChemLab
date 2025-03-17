@@ -33,7 +33,7 @@ public class multihandler : NetworkBehaviour
 {   
     public GameObject currentPlayer;
 
-    public GameObject JoinCanvas;
+    //public GameObject JoinCanvas;
     public GameObject InGameCanvas;
     public GameObject PauseCanvas;
     public GameObject Notebook;
@@ -52,11 +52,11 @@ public class multihandler : NetworkBehaviour
 
     [Header("Text Chat")]
     public bool isTyping;
-    public GameObject chatCanvas;
+    // public GameObject chatCanvas;
 
-    public TextMeshProUGUI chatText;
-    public List<InputMessage> messageList = new List<InputMessage>();
-    public TextMeshProUGUI messageListOnScreen;
+    // public TextMeshProUGUI chatText;
+    // public List<InputMessage> messageList = new List<InputMessage>();
+    // public TextMeshProUGUI messageListOnScreen;
     
     [Header("Teacher Chat")]
     public ChatGPTManager teacherAI;
@@ -72,26 +72,24 @@ public class multihandler : NetworkBehaviour
 
     private void Start()
     {
-        JoinCanvas.SetActive(true);
         
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        // Cursor.lockState = CursorLockMode.None;
+        // Cursor.visible = true;
 
         // Subscribe to the client connection event
-        NetworkManager.Singleton.OnClientConnectedCallback += OnPlayerConnected;
 
         timeOfLastResponse = Time.time - 11f; timeOfLastQuestion = timeOfLastResponse;
     }
 
     void Update()
     {   
-        if (Input.GetKeyDown(KeyCode.Escape) && JoinCanvas.activeInHierarchy) // We are selecting server and press escape - Quit
+        if (Input.GetKeyDown(KeyCode.Escape)) // We are selecting server and press escape - Quit
             QuitGame();
 
-        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab)) && !JoinCanvas.activeInHierarchy) // We are loaded in and press escape - pause or unpause
+        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab))) // We are loaded in and press escape - pause or unpause
             PauseOrUnpause();
 
-        if (Input.GetKeyDown(KeyCode.Return) && !JoinCanvas.activeInHierarchy && !isPaused) // We press enter ONLY when we are in game
+        if (Input.GetKeyDown(KeyCode.Return)&& !isPaused) // We press enter ONLY when we are in game
             StartOrStopTyping();
 
         if (Input.GetKeyDown(KeyCode.T) && !isTyping){
@@ -105,29 +103,29 @@ public class multihandler : NetworkBehaviour
         // if (Input.GetKeyDown(KeyCode.Tab) && !isPaused)
         //     ToggleCursor();
 
-        if (JoinCanvas.activeInHierarchy) { // Always show the mouse when selecting a server
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
+        // if (JoinCanvas.activeInHierarchy) { // Always show the mouse when selecting a server
+        //     Cursor.lockState = CursorLockMode.None;
+        //     Cursor.visible = true;
+        // }
         
-        textChatAndAIChat();
+        // textChatAndAIChat();
         
         
 
     }
 
-    void textChatAndAIChat(){
-        if (isTyping)
-            getTextChatFromInput();
+    // void textChatAndAIChat(){
+    //     if (isTyping)
+    //         getTextChatFromInput();
         
-        if (messageList.Count > 0)
-            displayMessages();
+    //     if (messageList.Count > 0)
+    //         displayMessages();
 
-        timeSinceLastResponse = Time.time - timeOfLastResponse;
-        timeSinceLastQuestion = Time.time - timeOfLastQuestion;
+    //     timeSinceLastResponse = Time.time - timeOfLastResponse;
+    //     timeSinceLastQuestion = Time.time - timeOfLastQuestion;
 
-        TeacherResponseCanvas.SetActive(timeSinceLastResponse <= 15f);
-    }
+    //     TeacherResponseCanvas.SetActive(timeSinceLastResponse <= 15f);
+    // }
 
     public void QuitGame()
     {
@@ -200,7 +198,7 @@ public class multihandler : NetworkBehaviour
         isTyping = !isTyping;
         currentPlayer.GetComponent<playerMovement>().isTyping = isTyping;
         currentPlayer.GetComponent<playerMovement>().updateTyping();
-        chatCanvas.SetActive(isTyping);
+        // chatCanvas.SetActive(isTyping);
 
         if (isTyping){          // We started typing, open the chat history and open mouse
             Cursor.lockState = CursorLockMode.None;
@@ -211,101 +209,101 @@ public class multihandler : NetworkBehaviour
         }
 
 
-        if (!isTyping) // We pressed enter and ended our typing spree, send it off
-            sendOffTextToOtherPerson();
+        // if (!isTyping) // We pressed enter and ended our typing spree, send it off
+        //     sendOffTextToOtherPerson();
     }
 
-    public void getTextChatFromInput()
-    {
-        for (KeyCode key = KeyCode.A; key <= KeyCode.Z; key++)
-        {
-            if (Input.GetKeyDown(key))
-            {
-                bool isShiftPressed = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-                chatText.text += isShiftPressed ? key.ToString() : key.ToString().ToLower();
-            }
-        }
-        // Handle digits
-        for (KeyCode key = KeyCode.Alpha0; key <= KeyCode.Alpha9; key++)
-        {
-            if (Input.GetKeyDown(key))
-            {
-                bool isShiftPressed = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-                string keyStr = key.ToString().Replace("Alpha", ""); // Convert KeyCode.AlphaX to "X"
+    // public void getTextChatFromInput()
+    // {
+    //     for (KeyCode key = KeyCode.A; key <= KeyCode.Z; key++)
+    //     {
+    //         if (Input.GetKeyDown(key))
+    //         {
+    //             bool isShiftPressed = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+    //             chatText.text += isShiftPressed ? key.ToString() : key.ToString().ToLower();
+    //         }
+    //     }
+    //     // Handle digits
+    //     for (KeyCode key = KeyCode.Alpha0; key <= KeyCode.Alpha9; key++)
+    //     {
+    //         if (Input.GetKeyDown(key))
+    //         {
+    //             bool isShiftPressed = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+    //             string keyStr = key.ToString().Replace("Alpha", ""); // Convert KeyCode.AlphaX to "X"
                 
-                if (isShiftPressed)
-                {
-                    string[] shiftSymbols = { ")", "!", "@", "#", "$", "%", "^", "&", "*", "(" };
-                    chatText.text += shiftSymbols[int.Parse(keyStr)];
-                }
-                else
-                    chatText.text += keyStr;
-            }
-        }
+    //             if (isShiftPressed)
+    //             {
+    //                 string[] shiftSymbols = { ")", "!", "@", "#", "$", "%", "^", "&", "*", "(" };
+    //                 chatText.text += shiftSymbols[int.Parse(keyStr)];
+    //             }
+    //             else
+    //                 chatText.text += keyStr;
+    //         }
+    //     }
 
-        if (Input.GetKeyDown(KeyCode.Period))  chatText.text += ".";
-        if (Input.GetKeyDown(KeyCode.Space))  chatText.text += " ";
-        if (Input.GetKeyDown(KeyCode.Comma))  chatText.text += ",";
+    //     if (Input.GetKeyDown(KeyCode.Period))  chatText.text += ".";
+    //     if (Input.GetKeyDown(KeyCode.Space))  chatText.text += " ";
+    //     if (Input.GetKeyDown(KeyCode.Comma))  chatText.text += ",";
         
-        if (Input.GetKeyDown(KeyCode.Backspace) && chatText.text.Length > 0)
-            chatText.text = chatText.text.Substring(0, chatText.text.Length - 1);
-    }
+    //     if (Input.GetKeyDown(KeyCode.Backspace) && chatText.text.Length > 0)
+    //         chatText.text = chatText.text.Substring(0, chatText.text.Length - 1);
+    // }
 
 
-    public void sendOffTextToOtherPerson(){
-        // Send message off
-        if  (!string.IsNullOrEmpty(chatText.text)){
-            // InputMessage currentMessage = new InputMessage(chatText.text, Time.time);
-            // messageList.Add(currentMessage);
-            SendChatMessageServerRpc(chatText.text);
-        }
+    // public void sendOffTextToOtherPerson(){
+    //     // Send message off
+    //     if  (!string.IsNullOrEmpty(chatText.text)){
+    //         // InputMessage currentMessage = new InputMessage(chatText.text, Time.time);
+    //         // messageList.Add(currentMessage);
+    //         SendChatMessageServerRpc(chatText.text);
+    //     }
         
-        chatText.text = "";
-    }
+    //     chatText.text = "";
+    // }
 
-    [ServerRpc(RequireOwnership = false)] // Allows any client to call this
-    private void SendChatMessageServerRpc(string message, ServerRpcParams rpcParams = default)
-    {
-        Debug.Log($"[SERVER] Received message: {message}");
+    // [ServerRpc(RequireOwnership = false)] // Allows any client to call this
+    // private void SendChatMessageServerRpc(string message, ServerRpcParams rpcParams = default)
+    // {
+    //     Debug.Log($"[SERVER] Received message: {message}");
 
-        // Send message to all clients
-        ReceiveChatMessageClientRpc(message);
+    //     // Send message to all clients
+    //     // ReceiveChatMessageClientRpc(message);
 
         
-    }
+    // }
 
     
-    [ClientRpc]
-    private void ReceiveChatMessageClientRpc(string message)
-    {
-        Debug.Log($"[CLIENT] Received message: {message}");
+    // [ClientRpc]
+    // private void ReceiveChatMessageClientRpc(string message)
+    // {
+    //     Debug.Log($"[CLIENT] Received message: {message}");
 
-        InputMessage currentMessage = new InputMessage(message, Time.time);
-        messageList.Add(currentMessage);
-    }
+    //     InputMessage currentMessage = new InputMessage(message, Time.time);
+    //     messageList.Add(currentMessage);
+    // }
 
-    public void displayMessages(){
-        String allString = "";
+    // public void displayMessages(){
+    //     String allString = "";
 
-        if (chatCanvas.activeInHierarchy){
+    //     if (chatCanvas.activeInHierarchy){
             
-            foreach (InputMessage message in messageList){
-                allString += message.message + "\n";
-            }   
+    //         foreach (InputMessage message in messageList){
+    //             allString += message.message + "\n";
+    //         }   
 
-        } else {
-            foreach (InputMessage message in messageList){
-                if (Time.time < message.timestamp + 5f){
-                    allString += message.message + "\n";
-                }
-            }   
-        }
+    //     } else {
+    //         foreach (InputMessage message in messageList){
+    //             if (Time.time < message.timestamp + 5f){
+    //                 allString += message.message + "\n";
+    //             }
+    //         }   
+    //     }
         
 
-        messageListOnScreen.text = allString;
+    //     messageListOnScreen.text = allString;
 
-        messageListOnScreen.transform.parent.gameObject.SetActive(allString.Length > 0 || chatCanvas.activeInHierarchy);
-    }
+    //     messageListOnScreen.transform.parent.gameObject.SetActive(allString.Length > 0 || chatCanvas.activeInHierarchy);
+    // }
     
     public void updateQuestionTime(){
         timeOfLastQuestion = Time.time;
@@ -337,7 +335,7 @@ public class multihandler : NetworkBehaviour
 
     private void OnPlayerConnected(ulong clientId)
     {
-        JoinCanvas.SetActive(false);
+        // JoinCanvas.SetActive(false);
         InGameCanvas.SetActive(true);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

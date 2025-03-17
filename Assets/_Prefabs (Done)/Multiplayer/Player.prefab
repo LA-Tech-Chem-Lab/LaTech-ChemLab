@@ -265,13 +265,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3162092940888264526}
-  - component: {fileID: -8255951326362447445}
-  - component: {fileID: 1853694053383340851}
   - component: {fileID: 461992265593299844}
   - component: {fileID: 4531977685863056674}
   - component: {fileID: -1743027146822609615}
   - component: {fileID: 1985915277204302175}
-  - component: {fileID: 1703488873047447807}
   - component: {fileID: -171534173217139642}
   - component: {fileID: 3771954789903716741}
   - component: {fileID: 5123237120625942739}
@@ -301,67 +298,6 @@ Transform:
   - {fileID: 8694097300774970729}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
---- !u!114 &-8255951326362447445
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1136876097548959345}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3216298659
-  InScenePlacedSourceGlobalObjectIdHash: 3216298659
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
---- !u!114 &1853694053383340851
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1136876097548959345}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da52bf8bbc1de48cfb221a6ff30f7972, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkTransformExpanded: 1
-  AuthorityMode: 0
-  TickSyncChildren: 0
-  UseUnreliableDeltas: 0
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 0
-  SyncScaleX: 0
-  SyncScaleY: 0
-  SyncScaleZ: 0
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 0
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
-  InLocalSpace: 0
-  SwitchTransformSpaceWhenParented: 0
-  Interpolate: 1
-  SlerpPosition: 0
 --- !u!143 &461992265593299844
 CharacterController:
   m_ObjectHideFlags: 0
@@ -402,6 +338,9 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   cameraTransform: {fileID: 2479615450925912079}
   targetCamPosition: {fileID: 545637864248046340}
+  canMove: 1
+  canTurn: 1
+  isTyping: 0
   crouchSpeed: 2
   walkSpeed: 5
   runSpeed: 16
@@ -409,6 +348,7 @@ MonoBehaviour:
   jumpHeight: 1.5
   xSens: 250
   ySens: 180
+  mouseMovement: {x: 1.96, y: 0}
   playerAnimator: {fileID: 3565226767402054665}
 --- !u!114 &-1743027146822609615
 MonoBehaviour:
@@ -426,8 +366,32 @@ MonoBehaviour:
   playerCamera: {fileID: 2479615450925912079}
   range: 7
   playerHoldingObject: 0
-  eyeWashStation: {fileID: 0}
+  eyeOffset: {x: 0, y: 0, z: 0}
   isNearEyeWash: 0
+  eyeWashRunning: 0
+  isWashingEyes: 0
+  readyToDrag: 0
+  currentJointObject: {fileID: 0}
+  parentVentObject: {fileID: 0}
+  parentVentScript: {fileID: 0}
+  pivotPointForCurrentJoint: {x: 0, y: 0, z: 0}
+  playerFirstContactOnJoint: {x: 0, y: 0, z: 0}
+  distFromCameraForJoint: 0
+  currentMousePosition: {x: 0, y: 0, z: 0}
+  actualStartingJointAngle: Infinity
+  startingAngle: Infinity
+  currentAngle: 0
+  angleDifference: 0
+  ventColliding: 0
+  angleDirection3: 1
+  past3: 0
+  cantGoThisWay3: 0
+  angleDirection4: 1
+  past4: 0
+  cantGoThisWay4: 0
+  readyToAssignDir3: 1
+  readyToAssignDir4: 1
+  cameOff: 0
 --- !u!114 &1985915277204302175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -469,28 +433,6 @@ MonoBehaviour:
   initialHeldDistForObject: 0
   distFromGroundLayer: 0
   readyToMoveBack: 0
---- !u!114 &1703488873047447807
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1136876097548959345}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  TransitionStateInfoList:
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 125937960
-    DestinationState: 628581153
-    TransitionDuration: 0.25
-    TriggerNameHash: -1418138586
-    TransitionIndex: 0
-  m_Animator: {fileID: 3565226767402054665}
 --- !u!114 &-171534173217139642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -511,6 +453,17 @@ MonoBehaviour:
   closestIronRing: {fileID: 0}
   ironMesh: {fileID: 0}
   testingOffset: {x: 0, y: 0, z: 0}
+  funnelIsAttatched: 0
+  funneledFlask: {fileID: 0}
+  filteredFunnel: {fileID: 0}
+  filterIsAttatched: 0
+  buchnerfunnelIsAttached: 0
+  buchnerfunneledFlask: {fileID: 0}
+  buchnerfilteredFunnel: {fileID: 0}
+  buchnerfilterIsAttached: 0
+  isRodInBeaker: 0
+  rodInBeaker: {fileID: 0}
+  beginStirring: 0
 --- !u!114 &3771954789903716741
 MonoBehaviour:
   m_ObjectHideFlags: 0

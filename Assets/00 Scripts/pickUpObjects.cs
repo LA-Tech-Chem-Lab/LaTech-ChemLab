@@ -14,7 +14,7 @@ using UnityEngine.Rendering.Universal;
 using static UnityEngine.GraphicsBuffer;
 using System.Linq;
 
-public class pickUpObjects : NetworkBehaviour
+public class pickUpObjects : MonoBehaviour
 {
     public Transform playerCamera;
     public float range = 7f;
@@ -72,16 +72,14 @@ public class pickUpObjects : NetworkBehaviour
 
     void Update()
     {
-        if (IsOwner){
-            setTargetPosition();
+        setTargetPosition();
 
-            checkForInput();
-            if (checkForCollisions) PreventWeirdIntersections();
-            maintainObject();
-            handleObjectShadow();
+        checkForInput();
+        if (checkForCollisions) PreventWeirdIntersections();
+        maintainObject();
+        handleObjectShadow();
 
-            if (holdingItem) setHelpTextConstantly();
-        }
+        if (holdingItem) setHelpTextConstantly();
     }
 
     void PickUpItem(GameObject otherObject)
@@ -91,7 +89,7 @@ public class pickUpObjects : NetworkBehaviour
         holdingItem = true;
         other = otherObject;
         
-        ChangeOwnershipServerRpc(other.GetComponent<NetworkObject>().NetworkObjectId, NetworkManager.Singleton.LocalClientId);
+        // ChangeOwnershipServerRpc(other.GetComponent<NetworkObject>().NetworkObjectId, NetworkManager.Singleton.LocalClientId);
 
         otherObjectLayer = other.layer;
         other.layer = LayerMask.NameToLayer("HeldObject");
@@ -300,26 +298,17 @@ public class pickUpObjects : NetworkBehaviour
                 return; // Simply exit the function, preventing pickup
             }
 
-            NetworkRigidbody rb = hitObject.GetComponent<NetworkRigidbody>();
-            NetworkObject netObj = hitObject.GetComponent<NetworkObject>();
-
-            if (netObj)
-            {
-                if (!netObj.IsOwner && IsClient)
-                {
-                    RequestPickUpServerRpc(netObj.NetworkObjectId);
-                    return; // Exit since the request has been made
-                }
-            }
+            Rigidbody rb = hitObject.GetComponent<Rigidbody>();
 
             if (rb && rb.GetComponent<Rigidbody>().isKinematic) // We are trying to pick up a kinematic object - not normal
             {
-                if (hit.collider.gameObject.tag == "IronRing"){
-                    DetachIronRingServerRpc(netObj.NetworkObjectId);
-                    return;
-                }
+                // if (hit.collider.gameObject.tag == "IronRing"){
+                //     DetachIronRingServerRpc(netObj.NetworkObjectId);
+                //     return;
+                // }
                 // Debug.Log(hit.collider.gameObject.name);
             }
+
             // Can also be the funnel even if it is kinematic because we want to be able to pick it up when it is attatched to the flask
             if (rb && (!rb.GetComponent<Rigidbody>().isKinematic || hitObject.name == "Glass Funnel" || hitObject.name == "Paper Cone" || hitObject.name == "Buchner Funnel" || hitObject.name == "Stir Rod")) // ITEM PICKUP
             {
@@ -450,16 +439,13 @@ public class pickUpObjects : NetworkBehaviour
     }
     void OnDrawGizmos()
     {
-        // Ensure this Gizmo is drawn only for the owning player
-        if (IsOwner && playerCamera != null)
-        {
+        
             // Draw the holding position sphere
             Gizmos.color = holdingItem ? Color.green : Color.red;
             if (other)
                 Gizmos.DrawSphere(targetPosition + other.transform.TransformDirection(targetPositionShift), checkRadius);
             else
                 Gizmos.DrawSphere(targetPosition + targetPositionShift, checkRadius);
-        }
     }
 
     void SetOwnerToTongs()
@@ -472,39 +458,16 @@ public class pickUpObjects : NetworkBehaviour
                 if (networkObject != null)
                 {
                     ulong networkObjectId = networkObject.NetworkObjectId;
-                    ChangeOwnershipServerRpc(networkObjectId, NetworkManager.Singleton.LocalClientId);
                 }
             }
     }
 
     public void DetachIronRingFromStand(GameObject ironRing)
     {
-        if (!IsServer)
-        {
-            DetachIronRingServerRpc(ironRing.GetComponent<NetworkObject>().NetworkObjectId);
-            return;
-        }
 
         DetachIronRing(ironRing);
-        DetachIronRingClientRpc(ironRing.GetComponent<NetworkObject>().NetworkObjectId);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void DetachIronRingServerRpc(ulong ironRingId)
-    {
-        GameObject ironRing = NetworkManager.Singleton.SpawnManager.SpawnedObjects[ironRingId].gameObject;
-        DetachIronRing(ironRing);
-        DetachIronRingClientRpc(ironRingId);
-    }
-
-    [ClientRpc]
-    private void DetachIronRingClientRpc(ulong ironRingId)
-    {
-        if (IsServer) return; // Avoid duplicate execution on the server
-
-        GameObject ironRing = NetworkManager.Singleton.SpawnManager.SpawnedObjects[ironRingId].gameObject;
-        DetachIronRing(ironRing);
-    }
 
     private void DetachIronRing(GameObject ironRing)
     {
@@ -589,79 +552,6 @@ public class pickUpObjects : NetworkBehaviour
     }
 
 
-
-
-
-    [ServerRpc(RequireOwnership = false)]
-    void RequestPickUpServerRpc(ulong networkObjectId, ServerRpcParams rpcParams = default)
-    {
-        NetworkObject obj = NetworkManager.SpawnManager.SpawnedObjects[networkObjectId];
-        if (obj != null)
-        {
-            // Debug.Log("Changing ownership for object: " + obj.name);
-
-            // Change ownership to the requesting client immediately
-            obj.ChangeOwnership(rpcParams.Receive.SenderClientId);
-
-                
-
-            // Log ownership change for debugging
-            // Debug.Log("New OwnerClientId: " + obj.OwnerClientId);
-
-            // Notify clients immediately to update their UI
-            HandlePickUpClientRpc(networkObjectId);
-        }
-    }
-
-    [ClientRpc]
-    void HandlePickUpClientRpc(ulong networkObjectId)
-    {
-        if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out NetworkObject obj))
-        {
-
-            holdingItem = true;
-            other = obj.gameObject;
-            if (IsOwner)
-            {
-                // Ensure offset is recalculated for the new owner
-                if (other.GetComponent<shiftBy>())
-                    meshOffset = other.GetComponent<shiftBy>().GetOffset();
-                else
-                    meshOffset = Vector3.zero;
-
-                
-
-                setHelpTextBasedOnObject();
-
-                
-                if (obj.name == "Tongs")
-                    SetOwnerToTongs();
-            }
-            // DropItem();
-            // PickUpItem(obj.gameObject);
-        }
-        else
-        {
-            // Debug.LogWarning("Object not found on client.");
-        }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    void ChangeOwnershipServerRpc(ulong networkObjectId, ulong newOwnerClientId, ServerRpcParams rpcParams = default)
-    {
-        // Get the NetworkObject based on the provided ID
-        NetworkObject networkObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[networkObjectId];
-
-        if (networkObject != null)
-        {
-            // Check if the current owner is already the requested owner
-            if (networkObject.OwnerClientId == newOwnerClientId)  // Debug.Log($"Ownership of object {networkObject.name} is already held by client {newOwnerClientId}, skipping ownership change.");
-                return;
-
-            // Change ownership on the server
-            networkObject.ChangeOwnership(newOwnerClientId);
-        }
-    }
 
 
 }

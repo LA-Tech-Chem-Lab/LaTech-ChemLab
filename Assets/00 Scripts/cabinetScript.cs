@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class cabinetScript : NetworkBehaviour
+public class cabinetScript : MonoBehaviour
 {
     private Vector3 initialPosition;
     private Vector3 lastPos;
@@ -58,10 +58,7 @@ public class cabinetScript : NetworkBehaviour
     // Called when a player interacts with the cabinet
     public void InteractWithThisCabinet()
     {
-        if (IsServer)
-        {
-            cabinetState.Value = !cabinetState.Value; // Toggle cabinet state on server
-        }
+        cabinetState.Value = !cabinetState.Value; // Toggle cabinet state on server
     }
     
     private void OnCabinetStateChanged(bool previousState, bool newState)

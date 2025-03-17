@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 
-public class interactWithObjects : NetworkBehaviour
+public class interactWithObjects : MonoBehaviour
 {
     const float EYE_WASH_RANGE = 1.7f;
     
@@ -68,11 +68,8 @@ public class interactWithObjects : NetworkBehaviour
 
     void Update()
     {
-        if (IsOwner)
-        {
-            playerHoldingObject = pos.other != null;
-            CheckForInput();
-        }
+        playerHoldingObject = pos.other != null;
+        CheckForInput();
     }
 
     void CheckForInput()
@@ -356,28 +353,16 @@ public class interactWithObjects : NetworkBehaviour
 
             if (doorScriptObject) // We hit a door
             {
-                if (IsServer)
-                {
-                    doorScriptObject.InteractWithThisDoor();
-                }
-                else
-                {
-                    RequestDoorInteractionServerRpc(doorScriptObject.GetComponent<NetworkObject>().NetworkObjectId);
-                }
+                doorScriptObject.InteractWithThisDoor();
+                
             }
 
             doorScriptXAxis doorScriptObjectX = hit.collider.GetComponent<doorScriptXAxis>();
 
             if (doorScriptObjectX) // We hit a door
             {
-                if (IsServer)
-                {
-                    doorScriptObjectX.InteractWithThisDoor();
-                }
-                else
-                {
-                    RequestDoorXAxisInteractionServerRpc(doorScriptObjectX.GetComponent<NetworkObject>().NetworkObjectId);
-                }
+                doorScriptObjectX.InteractWithThisDoor();
+                
             }
         }
     }
@@ -390,14 +375,8 @@ public class interactWithObjects : NetworkBehaviour
 
             if (faucetObject) // We hit a door
             {
-                if (IsServer)
-                {
                     faucetObject.InteractWithThisFaucet();
-                }
-                else
-                {
-                    RequestFaucetInteractionServerRpc(faucetObject.GetComponent<NetworkObject>().NetworkObjectId);
-                }
+                
             }
         }
     }
@@ -437,66 +416,10 @@ public class interactWithObjects : NetworkBehaviour
 
             if (cabinetObjectScript) // We hit a cabinet
             {
-                if (IsServer)
-                {
                     cabinetObjectScript.InteractWithThisCabinet();
-                }
-                else
-                {
-                    RequestCabinetInteractionServerRpc(cabinetObjectScript.GetComponent<NetworkObject>().NetworkObjectId);
-                }
+                
             }
         }
     }
 
-    [ServerRpc]
-    private void RequestDoorInteractionServerRpc(ulong networkObjectId)
-    {
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out NetworkObject networkObject))
-        {
-            doorScript doorScriptObject = networkObject.GetComponent<doorScript>();
-            if (doorScriptObject != null)
-            {
-                doorScriptObject.InteractWithThisDoor();
-            }
-        }
-    }
-
-    [ServerRpc]
-    private void RequestDoorXAxisInteractionServerRpc(ulong networkObjectId)
-    {
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out NetworkObject networkObject))
-        {
-            doorScriptXAxis doorScriptObjectXAxis = networkObject.GetComponent<doorScriptXAxis>();
-            if (doorScriptObjectXAxis != null)
-            {
-                doorScriptObjectXAxis.InteractWithThisDoor();
-            }
-        }
-    }
-
-    [ServerRpc]
-    private void RequestFaucetInteractionServerRpc(ulong networkObjectId)
-    {
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out NetworkObject networkObject))
-        {
-            faucetHandleScript faucetObject = networkObject.GetComponent<faucetHandleScript>();
-
-            if (faucetObject != null)
-                faucetObject.InteractWithThisFaucet();
-        }
-    }
-
-    [ServerRpc]
-    private void RequestCabinetInteractionServerRpc(ulong networkObjectId)
-    {
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out NetworkObject networkObject))
-        {
-            cabinetScript cabinetScriptObject = networkObject.GetComponent<cabinetScript>();
-            if (cabinetScriptObject != null)
-            {
-                cabinetScriptObject.InteractWithThisCabinet();
-            }
-        }
-    }
 }

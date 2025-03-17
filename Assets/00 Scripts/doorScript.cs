@@ -51,11 +51,9 @@ public class doorScript : NetworkBehaviour
 
     public void InteractWithThisDoor()
     {
-        if (IsServer)
-        {
             rotateHandles();
             doorState.Value = !doorState.Value; // Toggle door state on server
-        }
+        
     }
 
     void rotateHandles(){
@@ -86,10 +84,10 @@ public class doorScript : NetworkBehaviour
         doorIsClosed = isClosed;
     }
 
-    private void OnDestroy()
-    {
-        doorState.OnValueChanged -= OnDoorStateChanged;
-    }
+    // private void OnDestroy()
+    // {
+    //     doorState.OnValueChanged -= OnDoorStateChanged;
+    // }
 
 
 

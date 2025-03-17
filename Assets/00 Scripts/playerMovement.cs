@@ -5,7 +5,7 @@ using UnityEngine;
 using Unity.Netcode;
 
 namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
-    public class playerMovement : NetworkBehaviour
+    public class playerMovement : MonoBehaviour
     {
         public Transform cameraTransform;
         public Transform targetCamPosition;
@@ -32,7 +32,7 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
 
         [Header("Turning")]
         public float xSens = 150f; public float ySens = 120f;
-        private Vector2 mouseMovement;
+        public Vector2 mouseMovement;
         float xRotationCam;
         bool turningEnabled;
 
@@ -42,15 +42,12 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
 
 
         // Start is called before the first frame update
-        public override void OnNetworkSpawn()
+        void Start()
         {
             controller = GetComponent<CharacterController>();
             interactScript = GetComponent<interactWithObjects>();
             cameraTransform = transform.GetChild(0);
 
-            if (!IsOwner) {
-                cameraTransform.gameObject.SetActive(false);
-            }
 
             // if (IsLocalPlayer) // Disable Mesh for current client
             // {
@@ -61,26 +58,24 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
         // Update is called once per frame
         void Update()
         {
-            if (IsOwner)
-            {
-                handleInput();
-                if (canMove) moving();
-                if (canTurn) turning();
-                handleAnimations();
-                handleCamera();
-                
-                prevPosition = transform.position;
+            handleInput();
+            if (canMove) moving();
+            if (canTurn) turning();
+            handleAnimations();
+            handleCamera();
+            
+            prevPosition = transform.position;
 
-                if (transform.position.y < -80f){ // Teleport to the teacher if you fall off terrain
-                    transform.position = new Vector3(12f,2f,-0.91f);
-                    transform.localEulerAngles = new Vector3(0f, 88.4f, 0f);
-                }
-
-
-
-
-
+            if (transform.position.y < -80f){ // Teleport to the teacher if you fall off terrain
+                transform.position = new Vector3(12f,2f,-0.91f);
+                transform.localEulerAngles = new Vector3(0f, 88.4f, 0f);
             }
+
+
+
+
+
+            
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,7 +128,6 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
                 
                 if (prevInAir && isGrounded){ // We Just Landed
                     playerAnimator.SetTrigger("Landed");
-                    UpdateAnimationTriggerServerRpc("Landed");
                 }
             }
 
@@ -186,7 +180,6 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
         {
             if (isGrounded){
                 playerAnimator.SetTrigger("Jump");
-                UpdateAnimationTriggerServerRpc("Jump");
                 playerVelocity.y = Mathf.Sqrt(jumpHeight * -2f * Physics.gravity.y);
             }
             // else if (playerVelocity.y > 0)
@@ -195,51 +188,11 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
 
         void handleAnimations()
         {
-            if (IsOwner) // Ensure only the owning client triggers the update
-            {
-                float betterSpeed = Mathf.Min(realWorldMoveSpeed, actualMoveSpeed);
-                playerAnimator.SetFloat("Value", betterSpeed); // Local update for owner
-                UpdateAnimationFloatServerRpc("Value", betterSpeed); // Notify server to propagate
-            }
+            float betterSpeed = Mathf.Min(realWorldMoveSpeed, actualMoveSpeed);
+            playerAnimator.SetFloat("Value", betterSpeed); // Local update for owner
+            
         }
 
-        [ServerRpc]
-        private void UpdateAnimationFloatServerRpc(string parameter, float value)
-        {
-            // Update the server-side Animator
-            playerAnimator.SetFloat(parameter, value);
-
-            // Propagate the update to other clients
-            UpdateAnimationFloatClientRpc(parameter, value);
-        }
-
-        [ClientRpc]
-        private void UpdateAnimationFloatClientRpc(string parameter, float value)
-        {
-            if (!IsOwner) // Prevent re-updating on the owning client
-            {
-                playerAnimator.SetFloat(parameter, value);
-            }
-        }
-
-        [ServerRpc]
-        private void UpdateAnimationTriggerServerRpc(string parameter)
-        {
-            // Set the trigger on the server-side Animator
-            playerAnimator.SetTrigger(parameter);
-
-            // Propagate the trigger to all other clients
-            UpdateAnimationTriggerClientRpc(parameter);
-        }
-
-        [ClientRpc]
-        private void UpdateAnimationTriggerClientRpc(string parameter)
-        {
-            if (!IsOwner) // Prevent re-triggering on the owning client
-            {
-                playerAnimator.SetTrigger(parameter);
-            }
-        }
 
     }
 }
