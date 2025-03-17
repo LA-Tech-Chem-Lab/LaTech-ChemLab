@@ -53,11 +53,8 @@ public class doorScriptXAxis : NetworkBehaviour
 
     public void InteractWithThisDoor()
     {
-        if (IsServer)
-        {
             rotateHandles();
             doorState.Value = !doorState.Value; // Toggle door state on server
-        }
     }
 
     void rotateHandles(){

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class faucetHandleScript : NetworkBehaviour
+public class faucetHandleScript : MonoBehaviour
 {
     public Transform hinge;
     public bool doorIsClosed = true;
@@ -51,10 +51,8 @@ public class faucetHandleScript : NetworkBehaviour
 
     public void InteractWithThisFaucet()
     {
-        if (IsServer)
-        {
             doorState.Value = !doorState.Value; // Toggle door state on server
-        }
+
     }
 
     private void OnDoorStateChanged(bool previousState, bool newState)

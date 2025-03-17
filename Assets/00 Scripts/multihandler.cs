@@ -73,10 +73,8 @@ public class multihandler : NetworkBehaviour
     private void Start()
     {
         
-        // Cursor.lockState = CursorLockMode.None;
-        // Cursor.visible = true;
-
-        // Subscribe to the client connection event
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
         timeOfLastResponse = Time.time - 11f; timeOfLastQuestion = timeOfLastResponse;
     }

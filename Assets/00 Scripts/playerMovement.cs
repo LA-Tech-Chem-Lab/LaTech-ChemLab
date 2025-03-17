@@ -32,8 +32,8 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
 
         [Header("Turning")]
         public float xSens = 150f; public float ySens = 120f;
-        public Vector2 mouseMovement;
-        float xRotationCam;
+        Vector2 mouseMovement;
+        public float xRotationCam = 0f;
         bool turningEnabled;
 
         public Animator playerAnimator;

@@ -4,9 +4,6 @@ using System.Data;
 using System.Runtime.InteropServices;
 using Obi;
 using Unity.Multiplayer.Center.NetcodeForGameObjectsExample;
-using Unity.Netcode;
-using Unity.Netcode.Components;
-using Unity.Networking.Transport;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -123,8 +120,8 @@ public class pickUpObjects : MonoBehaviour
 
         initialHoldingDistance = untouchedHoldingDistance;
 
-        if (other.name == "Tongs")
-            SetOwnerToTongs();
+        // if (other.name == "Tongs")
+        //     SetOwnerToTongs();
 
         if (other.name == "Pipette"){
             initialHoldingDistance = 1.3f;
@@ -448,19 +445,19 @@ public class pickUpObjects : MonoBehaviour
                 Gizmos.DrawSphere(targetPosition + targetPositionShift, checkRadius);
     }
 
-    void SetOwnerToTongs()
-    {
-        other.layer = LayerMask.NameToLayer("HeldObject");
-        foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
-            if (currentObject.name.StartsWith("Erlenmeyer Flask"))
-            {   
-                NetworkObject networkObject = currentObject.GetComponent<NetworkObject>();
-                if (networkObject != null)
-                {
-                    ulong networkObjectId = networkObject.NetworkObjectId;
-                }
-            }
-    }
+    // void SetOwnerToTongs()
+    // {
+    //     other.layer = LayerMask.NameToLayer("HeldObject");
+    //     foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
+    //         if (currentObject.name.StartsWith("Erlenmeyer Flask"))
+    //         {   
+    //             NetworkObject networkObject = currentObject.GetComponent<NetworkObject>();
+    //             if (networkObject != null)
+    //             {
+    //                 ulong networkObjectId = networkObject.NetworkObjectId;
+    //             }
+    //         }
+    // }
 
     public void DetachIronRingFromStand(GameObject ironRing)
     {

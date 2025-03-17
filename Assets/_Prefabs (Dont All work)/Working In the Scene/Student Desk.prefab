@@ -443,6 +443,7 @@ Transform:
   - {fileID: 6306600106654267632}
   - {fileID: 6214113836064714768}
   - {fileID: 2717761673294656877}
+  - {fileID: 8505752204861479642}
   - {fileID: 4980317134703126789}
   - {fileID: 8352916815881257242}
   - {fileID: 5291349799444397935}
@@ -481,7 +482,6 @@ GameObject:
   - component: {fileID: 2044768669181481081}
   - component: {fileID: 6205650497587586274}
   - component: {fileID: 4306233339573888433}
-  - component: {fileID: 914460759879400567}
   - component: {fileID: 8991972924151863038}
   m_Layer: 3
   m_Name: Cylinder.006
@@ -597,31 +597,6 @@ MonoBehaviour:
   filter: -65535
   m_SourceCollider: {fileID: 6205650497587586274}
   m_DistanceField: {fileID: 0}
---- !u!114 &914460759879400567
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 553316059252974307}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4178740100
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
 --- !u!114 &8991972924151863038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -642,6 +617,134 @@ MonoBehaviour:
   blendingSensitivity: 3
   givenY: 0
   givenZ: 0
+--- !u!1 &757550880178872144
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8505752204861479642}
+  - component: {fileID: 1023630848237897308}
+  - component: {fileID: 6950743658511586073}
+  - component: {fileID: 5271656338258278429}
+  - component: {fileID: 824292702163405492}
+  m_Layer: 3
+  m_Name: Cylinder.002 (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8505752204861479642
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 757550880178872144}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.00000023841855}
+  m_LocalPosition: {x: 2.327, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 879758378055435562}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!33 &1023630848237897308
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 757550880178872144}
+  m_Mesh: {fileID: 8691780276856062721, guid: 35b130ccdb8a0a0449dbe0e5feed9834, type: 3}
+--- !u!23 &6950743658511586073
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 757550880178872144}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 022d0028e8c16de49b4064710e8e6728, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &5271656338258278429
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 757550880178872144}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 8691780276856062721, guid: 35b130ccdb8a0a0449dbe0e5feed9834, type: 3}
+--- !u!114 &824292702163405492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 757550880178872144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6757b231cedd544c583ef8aeaf773b2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thickness: 0
+  inverted: 0
+  material: {fileID: 0}
+  filter: -65535
+  m_SourceCollider: {fileID: 5271656338258278429}
+  m_DistanceField: {fileID: 0}
 --- !u!1 &1281877867798290045
 GameObject:
   m_ObjectHideFlags: 0
@@ -2657,7 +2760,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1893
+  m_VersionIndex: 1601
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2701,7 +2804,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96d66c02f379ef44aae64821369f6b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
@@ -3137,7 +3239,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 593
+  m_VersionIndex: 626
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -3192,7 +3294,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4037591553699407782
 Transform:
   m_ObjectHideFlags: 0
@@ -3278,7 +3380,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -3408,7 +3510,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 8691780276856062721, guid: 35b130ccdb8a0a0449dbe0e5feed9834, type: 3}
 --- !u!114 &987475556436943907
@@ -3848,7 +3950,6 @@ GameObject:
   - component: {fileID: 7773038163101245673}
   - component: {fileID: 5946586912435525802}
   - component: {fileID: 8839327810265860724}
-  - component: {fileID: 8652285538216062046}
   - component: {fileID: 9029919333147187286}
   m_Layer: 3
   m_Name: Cylinder.005
@@ -3964,31 +4065,6 @@ MonoBehaviour:
   filter: -65535
   m_SourceCollider: {fileID: 5946586912435525802}
   m_DistanceField: {fileID: 0}
---- !u!114 &8652285538216062046
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3270532426940246238}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1000468568
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
 --- !u!114 &9029919333147187286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4450,7 +4526,6 @@ GameObject:
   - component: {fileID: 1405794058452864656}
   - component: {fileID: 2045178063476167730}
   - component: {fileID: 1163487881079412996}
-  - component: {fileID: 3334395163394169130}
   - component: {fileID: 2268971860545917811}
   m_Layer: 3
   m_Name: Cylinder.006
@@ -4566,31 +4641,6 @@ MonoBehaviour:
   filter: -65535
   m_SourceCollider: {fileID: 2045178063476167730}
   m_DistanceField: {fileID: 0}
---- !u!114 &3334395163394169130
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4526720559459322601}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3574315505
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
 --- !u!114 &2268971860545917811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6395,7 +6445,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 662
+  m_VersionIndex: 505
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -8205,7 +8255,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2430
+  m_VersionIndex: 2150
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -8249,7 +8299,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96d66c02f379ef44aae64821369f6b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
@@ -8328,7 +8377,7 @@ GameObject:
   - component: {fileID: 8989610859764294823}
   - component: {fileID: 4814060696763649803}
   m_Layer: 3
-  m_Name: _Multiplayer Table
+  m_Name: Student Desk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10293,7 +10342,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 593
+  m_VersionIndex: 626
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -12285,7 +12334,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2511
+  m_VersionIndex: 2186
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -12329,7 +12378,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96d66c02f379ef44aae64821369f6b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
@@ -13075,7 +13123,6 @@ GameObject:
   - component: {fileID: 3703821338728763584}
   - component: {fileID: 8650911284773571189}
   - component: {fileID: 2834692785874057387}
-  - component: {fileID: 7803295698227004550}
   - component: {fileID: 1959155454200710572}
   m_Layer: 3
   m_Name: Cylinder.005
@@ -13191,31 +13238,6 @@ MonoBehaviour:
   filter: -65535
   m_SourceCollider: {fileID: 8650911284773571189}
   m_DistanceField: {fileID: 0}
---- !u!114 &7803295698227004550
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8596636634187097385}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3545403137
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
 --- !u!114 &1959155454200710572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15250,7 +15272,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1893
+  m_VersionIndex: 1926
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -15294,7 +15316,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96d66c02f379ef44aae64821369f6b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
   cabinetIsClosed: 1
   cabinetMovement: 0.9
   blendingSensitivity: 3
@@ -18719,7 +18740,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 748
+  m_VersionIndex: 688
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
