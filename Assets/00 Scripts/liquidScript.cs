@@ -66,6 +66,7 @@ public class liquidScript : MonoBehaviour
 
     [Header("Filtering")]
     public bool isFiltering = false;
+    public float liquidPercent;
 
     // Use this for initialization
     void Start()
@@ -79,6 +80,8 @@ public class liquidScript : MonoBehaviour
             calculateDensity();
         }
         maxSpillRate = totalVolume_mL * 0.2f;
+
+        updatePercentages();
     }
 
     private void Update()
@@ -370,6 +373,18 @@ void CalculateHeat()
         return closestBurner; // Return the closest one found (or null if none are within range)
     }
 
+    public void updateLiquidPercent(){
+        //calculate the percent liquid in the solution
+        liquidPercent = 0f;
+        for (int i = 0; i < solutionMakeup.Count; i++)
+        {
+            if (compoundStates[i] == 'l' || compoundStates[i] == 'a')
+            {
+                liquidPercent += solutionMakeup[i];
+            }
+        }
+    }
+
     //adds a vollume of a given solution to the current solution
     public void addSolution(List<float> solutionToAdd, float volume)
     {
@@ -471,6 +486,7 @@ void CalculateHeat()
         flaskScript.updatePercentages();
     }
 
+    //This is to keep the percentages updated so that everything is consistent as well as making sure a couple of other things we are keeping track of are up to date
     public void updatePercentages(){
         percentH2SO4 = solutionMakeup[0];
         percentKOH = solutionMakeup[1];
@@ -485,6 +501,9 @@ void CalculateHeat()
         percentKAlO2 = solutionMakeup[10]; 
 
         calculateDensity();
+
+        //updates the percent liquid in a solution to determine if the pipette or scooper should be used
+        updateLiquidPercent();
     }
 
     void calculateDensity(){
@@ -492,7 +511,12 @@ void CalculateHeat()
         for (int i = 0; i < densities.Count; i++){
             totalMass += densities[i] * solutionMakeup[i] * currentVolume_mL;
         }
-        densityOfLiquid = totalMass / currentVolume_mL;
+        if (currentVolume_mL != 0){
+            densityOfLiquid = totalMass / currentVolume_mL;
+        }
+        else{
+            densityOfLiquid = 0f;
+        }
     }
 
     public void handleReactions(){

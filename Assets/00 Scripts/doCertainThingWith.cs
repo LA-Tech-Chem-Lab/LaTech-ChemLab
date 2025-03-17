@@ -23,13 +23,9 @@ public class doCertainThingWith : NetworkBehaviour
     
     public GameObject heldPipette; public float pipetteSpeed;
     public GameObject closestIronStand; public GameObject closestIronRing;
-
     public GameObject ironMesh;
-
     private bool flowLock = false;
     private bool scoopulaAnimationPlaying = false;
-
-
     pickUpObjects pickUpScript;
     public Vector3 testingOffset;
     public bool funnelIsAttatched = false;
@@ -80,8 +76,6 @@ public class doCertainThingWith : NetworkBehaviour
         if (pickUpScript.other && pickUpScript.other.name == "Iron Mesh") // Snap mesh to ring
             checkForIronRingNearby(pickUpScript.other);
     }
-
-
 
     void checkForInput(){
         if (Input.GetMouseButtonDown(1))
@@ -1329,8 +1323,7 @@ public class doCertainThingWith : NetworkBehaviour
             StartCoroutine(OnOrOffForDelay(netObj.transform.Find("Not Spraying").gameObject, foam.main.duration, false));
         }
     }
-
-
+    
     IEnumerator OnOrOffForDelay(GameObject obj, float delayTime, bool initialState = true)
     {
         obj.SetActive(initialState);
