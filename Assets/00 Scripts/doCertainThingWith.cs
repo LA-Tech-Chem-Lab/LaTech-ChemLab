@@ -39,6 +39,7 @@ public class doCertainThingWith : NetworkBehaviour
 
     public bool isRodInBeaker = false;
     public GameObject rodInBeaker = null;
+    public bool beginStirring = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -50,6 +51,7 @@ public class doCertainThingWith : NetworkBehaviour
         {
             rb.isKinematic = false;
         }
+
     }
 
     // Update is called once per frame
@@ -130,14 +132,19 @@ public class doCertainThingWith : NetworkBehaviour
             //    insertBuchnerFilter(obj);
 
             if (obj.name == "Stir Rod")
-                stirFromBeaker(obj);
+                putStirRodInBeaker(obj);
 
 
         }
     }
 
     void findObjectAndPerformHeldAction()  // Held right click
-    {
+    {   
+        if (isRodInBeaker == true)
+        {
+            beginStirring = true;
+        }
+
         if (pickUpScript.other != null)
         {
             GameObject obj = pickUpScript.other;
@@ -173,13 +180,13 @@ public class doCertainThingWith : NetworkBehaviour
 
             if (obj.name == "Bunsen Burner")
                 manipulateBunsenBurner();
-
         }
     }
 
     
     void findObjectAndPerformLiftedMouseAction()  // Lifted Right Click
-    {  
+    {   
+        beginStirring = false;
         
         if (pickUpScript.other != null) {
             GameObject obj = pickUpScript.other;
@@ -464,7 +471,7 @@ public class doCertainThingWith : NetworkBehaviour
         }
     }
 
-    void stirFromBeaker(GameObject stirRod){
+    void putStirRodInBeaker(GameObject stirRod){
         float minDist = Mathf.Infinity;
         GameObject closestBeaker = null;
         Transform stirPosition = null;
