@@ -210,7 +210,7 @@ public class pickUpObjects : MonoBehaviour
         if (other.name == "Tongs")              multiHandlerScript.setHelpText("Right click to grab a flask.");
         if (other.name == "Erlenmeyer Flask")   multiHandlerScript.setHelpText("250 mL Erlenmeyer flask");
         if (other.name == "Erlenmeyer Flask L") multiHandlerScript.setHelpText("500 mL Erlenmeyer flask");
-        if (other.name == "Evaporating Dish")   multiHandlerScript.setHelpText("This is an evaporating dish.");
+        if (other.name == "Weigh Boat")   multiHandlerScript.setHelpText("This is a weigh boat. You can use it to measure out the aluminum pellets on the scale. When you have the right amount, you can dump its contents into a beaker.");
         if (other.name == "Glass Funnel")             multiHandlerScript.setHelpText("This is a glass funnel used for filtering out solids from solutions. Right click on an Erlenmeyer flask to attatch it.");
         if (other.name == "Paper Cone")         multiHandlerScript.setHelpText("This is a paper filter used with a funnel to filter solids from a solution.");
         if (other.name == "Buchner Funnel")             multiHandlerScript.setHelpText("This is a Buchner funnel used for filtering out solids from solutions. Right click on an Buchner flask to attatch it.");
@@ -223,7 +223,7 @@ public class pickUpObjects : MonoBehaviour
             bool flowing = ps.flowSpeed > 0f;
             multiHandlerScript.setHelpText($"{ps.pipetteVolume} / {ps.pipetteMaxVolume} mL");
             if (GetComponent<doCertainThingWith>().tryingToPipetteSolid){
-                multiHandlerScript.setHelpText("It looks like you are trying to pipette a solid. Maybe try using the scoopula.");
+                multiHandlerScript.setHelpText("It looks like you are trying to pipette a solid. Maybe try pouring this substance by picking up the container and right clicking another container.");
             }
         }
 

@@ -12,6 +12,7 @@ TagManager:
   - BunsenBurner
   - EyeWashStation
   - StirRod
+  - Weigh Boat
   layers:
   - Default
   - TransparentFX

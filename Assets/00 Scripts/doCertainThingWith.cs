@@ -637,7 +637,7 @@ public class doCertainThingWith : MonoBehaviour
     {
 
         // First find the closest beaker/flask below you
-        GameObject closestBeakerOrFlask = findClosestBeakerOrFlask(pipette);
+        GameObject closestBeakerOrFlask = findClosestItemWithTag("LiquidHolder", pipette);
         var pipetteTip = pipette.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
         var beakerOrFlask = closestBeakerOrFlask.transform.position; beakerOrFlask.y = 0f;
 
@@ -723,7 +723,7 @@ public class doCertainThingWith : MonoBehaviour
 
     void lightUpBeaker()
     {
-        GameObject closestBeakerOrFlask = findClosestBeakerOrFlask(heldPipette);
+        GameObject closestBeakerOrFlask = findClosestItemWithTag("LiquidHolder", heldPipette);
         if (closestBeakerOrFlask == null) return;
 
         // Get positions and zero out Y-axis
@@ -784,15 +784,15 @@ public class doCertainThingWith : MonoBehaviour
     }
 
 
-    GameObject findClosestBeakerOrFlask(GameObject pipette)
+    GameObject findClosestItemWithTag(string Tag, GameObject pipette)
     {
         float minDist = Mathf.Infinity;
-        GameObject closestBeakerOrFlask = null;
+        GameObject closestObject = null;
 
         foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
         {
 
-            if (currentObject.tag == "LiquidHolder")
+            if (currentObject.tag == Tag)
             {
 
                 var pipetteTip = pipette.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
@@ -803,11 +803,11 @@ public class doCertainThingWith : MonoBehaviour
                 if (distFromTip < minDist)
                 {
                     minDist = distFromTip;
-                    closestBeakerOrFlask = currentObject;
+                    closestObject = currentObject;
                 }
             }
         }
-        return closestBeakerOrFlask;
+        return closestObject;
     }
 
     public void CheckForIronStandNearby(GameObject ironRing)
@@ -1008,18 +1008,18 @@ public class doCertainThingWith : MonoBehaviour
         }
 
         // Okay, fine lets try to drop it instead then
-        GameObject closestBeakerOrFlask = findClosestBeakerOrFlask(scoopula);
+        GameObject closestWeighBoat = findClosestItemWithTag("weigh boat", scoopula);
         var pipetteTip = scoopula.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
-        var beakerOrFlask = closestBeakerOrFlask.transform.position; beakerOrFlask.y = 0f;
+        var beakerOrFlask = closestWeighBoat.transform.position; beakerOrFlask.y = 0f;
 
         float distFromTip2 = Vector3.Distance(pipetteTip, beakerOrFlask);
 
-        if (closestBeakerOrFlask && distFromTip2 <= ALUMINUM_DROPOFF_RANGE && scoopula.transform.Find("Aluminum").gameObject.activeInHierarchy)
+        if (closestWeighBoat && distFromTip2 <= ALUMINUM_DROPOFF_RANGE && scoopula.transform.Find("Aluminum").gameObject.activeInHierarchy)
         { // We have a beaker or flask within range
-            Debug.Log("Drop in this beaker");
+            Debug.Log("Drop in this weigh boat");
             scoopula.transform.Find("Aluminum").gameObject.SetActive(false);
-            closestBeakerOrFlask.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f }, 0.7407f);  // Add 0.37 mL of Aluminum
-            closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+            closestWeighBoat.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f }, 0.7407f);  // Add 0.37 mL of Aluminum
+            closestWeighBoat.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
         }
     }
 
