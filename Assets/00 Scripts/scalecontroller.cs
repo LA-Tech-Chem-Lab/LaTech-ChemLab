@@ -1,230 +1,119 @@
 using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
-using Unity.Netcode;
 
-public class WeightScale : NetworkBehaviour
+
+public class WeightScale : MonoBehaviour
 {
+
     float forceToMass;
     public TextMeshProUGUI massText;
 
-    private Dictionary<Rigidbody, float> impulsePerRigidBody = new Dictionary<Rigidbody, float>();
-
-    private float currentDeltaTime;
-    private float lastDeltaTime;
 
 
-    private NetworkVariable<float> tareTracker = new NetworkVariable<float>(
-        0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public float combinedForce;
+    public float calculatedMass;
 
-    // Network variable for mass
-    private NetworkVariable<float> calculatedMass = new NetworkVariable<float>(
-        0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public int registeredRigidbodies;
+    private float tareTracker;
+
+    Dictionary<Rigidbody, float> impulsePerRigidBody = new Dictionary<Rigidbody, float>();
+
+
+    float currentDeltaTime;
+    float lastDeltaTime;
+
 
     private void Awake()
     {
         forceToMass = 1f / Physics.gravity.magnitude;
     }
 
-    private void Start()
+    void UpdateWeight()
     {
-        if (IsClient)
+        //calculates sum of forces on scale
+        registeredRigidbodies = impulsePerRigidBody.Count;
+        combinedForce = 0;
+        foreach (var force in impulsePerRigidBody.Values)
         {
-            calculatedMass.OnValueChanged += (oldValue, newValue) =>
-            {
-                UpdateMassText(newValue);
-            };
+            combinedForce += force;
+        }
+
+        calculatedMass = (float)(combinedForce * forceToMass) - tareTracker; //calculates mass from force and tares scale appropriately
+
+        // sets scale display in grams with a max of 5 kg. 
+        if (calculatedMass < 5)
+        {
+            massText.text = (calculatedMass * 1000).ToString("F2") + " g";
+
+        }
+        else
+
+        {
+            massText.text = "ERR";
         }
     }
 
     private void FixedUpdate()
     {
         lastDeltaTime = currentDeltaTime;
-        currentDeltaTime = Time.fixedDeltaTime;
-
-    }
-
-    private void UpdateWeight()
-    {
-
-        float combinedForce = 0;
-        foreach (var force in impulsePerRigidBody.Values)
-        {
-            combinedForce += force;
-        }
-
-        float newMass = (combinedForce * forceToMass) - tareTracker.Value;
-        if (IsClient)
-        {
-            RequestWeightVariableUpdateServerRpc();
-            UpdateMassServerRpc(newMass); // Ensure the server gets the updated mass
-        }
-        
-        if (IsServer)
-        {
-            calculatedMass.Value = newMass;
-        }
-    }
-
-    private void UpdateMassText(float mass)
-    {
-        massText.text = (mass * 1000f).ToString("F2") + " g";
-    }
-
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.rigidbody != null)
-        {
-            float impulseValue = collision.impulse.y / lastDeltaTime;
-            impulsePerRigidBody[collision.rigidbody] = impulseValue;
-            UpdateWeight();
-
-            // Get NetworkObject and send data to the server
-            if (collision.rigidbody.TryGetComponent(out NetworkObject netObj))
-            {
-                SendImpulseToServerRpc(netObj, impulseValue); // Pass NetworkObjectReference
-            }
-        }
+        currentDeltaTime = Time.deltaTime;
+        UpdateWeight();
     }
 
     private void OnCollisionStay(Collision collision)
+
     {
         if (collision.rigidbody != null)
         {
-            float impulseValue = collision.impulse.y / lastDeltaTime;
-            impulsePerRigidBody[collision.rigidbody] = impulseValue;
-            UpdateWeight();
 
-            // Get NetworkObject and send data to the server
-            if (collision.rigidbody.TryGetComponent(out NetworkObject netObj))
-            {
-                SendImpulseToServerRpc(netObj, impulseValue); // Pass NetworkObjectReference
-            }
+
+            if (impulsePerRigidBody.ContainsKey(collision.rigidbody))
+                impulsePerRigidBody[collision.rigidbody] = collision.impulse.y / lastDeltaTime;
+            else
+                impulsePerRigidBody.Add(collision.rigidbody, collision.impulse.y / lastDeltaTime);
+
+            UpdateWeight();
         }
     }
+    private void OnCollisionEnter(Collision collision)
+
+    {
+        if (collision.rigidbody != null)
+        {
+            if (impulsePerRigidBody.ContainsKey(collision.rigidbody))
+                impulsePerRigidBody[collision.rigidbody] = collision.impulse.y / lastDeltaTime;
+            else
+                impulsePerRigidBody.Add(collision.rigidbody, collision.impulse.y / lastDeltaTime);
+
+            UpdateWeight();
+        }
+    }
+
 
     private void OnCollisionExit(Collision collision)
     {
         if (collision.rigidbody != null)
         {
-            // Remove from local dictionary
             impulsePerRigidBody.Remove(collision.rigidbody);
-            UpdateWeight();
-
-            // Get NetworkObject and notify the server
-            if (collision.rigidbody.TryGetComponent(out NetworkObject netObj))
-            {
-                RemoveImpulseFromServerRpc(netObj); // Pass NetworkObjectReference
-            }
-        }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void RequestWeightVariableUpdateServerRpc()
-    {
-            // Server calculates the mass
-            float combinedForce = 0;
-            foreach (var force in impulsePerRigidBody.Values)
-            {
-                combinedForce += force;
-            }
-
-            float newMass = (combinedForce * forceToMass) - tareTracker.Value;
-
-            // Update the calculated mass on the server
-            calculatedMass.Value = newMass;
-
-            // Broadcast the update to all clients
-            UpdateMassClientRpc(newMass);
-
-            // Also update the server's UI text (if necessary)
-            UpdateMassText(newMass);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void SendImpulseToServerRpc(NetworkObjectReference objectRef, float impulseValue)
-    {
-        if (objectRef.TryGet(out NetworkObject netObj))
-        {
-            Rigidbody rb = netObj.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                impulsePerRigidBody[rb] = impulseValue;
-                UpdateWeight();
-            }
-        }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void RemoveImpulseFromServerRpc(NetworkObjectReference objectRef)
-    {
-        if (objectRef.TryGet(out NetworkObject netObj))
-        {
-            Rigidbody rb = netObj.GetComponent<Rigidbody>();
-            if (rb != null && impulsePerRigidBody.ContainsKey(rb))
-            {
-                impulsePerRigidBody.Remove(rb);
-                UpdateWeight();
-            }
-        }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void RequestTareServerRpc()
-    {
-        if (IsServer)
-        {
-            // Server calculates the mass
-            float combinedForce = 0;
-            foreach (var force in impulsePerRigidBody.Values)
-            {
-                combinedForce += force;
-            }
-            tareTracker.Value = (combinedForce * forceToMass);
-            UpdateWeight();
-
-        }
-        else
-        {
-            RequestTareClientRpc();
-        }
-    }
-
-    [ClientRpc]
-    public void RequestTareClientRpc()
-    {
-        if (!IsServer)
-        {
-            // Server calculates the mass
-            float combinedForce = 0;
-            foreach (var force in impulsePerRigidBody.Values)
-            {
-                combinedForce += force;
-            }
-            tareTracker.Value = (combinedForce * forceToMass);
             UpdateWeight();
         }
     }
 
     public void Tare()
     {
-            RequestTareServerRpc();
-    }
-
-    [ClientRpc]
-    private void UpdateMassClientRpc(float newMass)
-    {
-        if (!IsServer) // Prevent host from calling this unnecessarily
+        //calculates total mass on scale
+        registeredRigidbodies = impulsePerRigidBody.Count;
+        combinedForce = 0;
+        foreach (var force in impulsePerRigidBody.Values)
         {
-            UpdateMassText(newMass);
+            combinedForce += force;
         }
+
+        calculatedMass = (float)(combinedForce * forceToMass);
+        // updates the tare tracker
+        tareTracker = calculatedMass;
+        UpdateWeight();
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void UpdateMassServerRpc(float newMass)
-    {
-            UpdateMassText(newMass);
-            UpdateMassClientRpc(newMass);
-    }
 }

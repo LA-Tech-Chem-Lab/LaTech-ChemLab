@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 
-public class doorScript : NetworkBehaviour
+public class doorScript : MonoBehaviour
 {
     public Transform hinge;
     public bool doorIsClosed = true;
@@ -13,9 +12,7 @@ public class doorScript : NetworkBehaviour
     public float blendingSensitivity = 3f;
     bool coroutineRunning = false;
 
-    // NetworkVariable to sync door state
-    private NetworkVariable<bool> doorState = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-
+    private bool doorState = true; // Local state tracking
 
     Vector3 targetRotation;
     Quaternion targetQuaternion;
@@ -26,17 +23,13 @@ public class doorScript : NetworkBehaviour
     {
         hinge = transform.parent.gameObject.transform;
 
-        // Subscribe to state changes
-        doorState.OnValueChanged += OnDoorStateChanged;
-
         // Set the initial state
-        UpdateDoorRotation(doorState.Value);
+        UpdateDoorRotation(doorState);
 
         if (transform.Find("Inside Handle Pivot"))
             handles.Add(transform.Find("Inside Handle Pivot").gameObject);
         if (transform.Find("Outside Handle Pivot"))
             handles.Add(transform.Find("Outside Handle Pivot").gameObject);
-        
     }
 
     void Update()
@@ -46,27 +39,24 @@ public class doorScript : NetworkBehaviour
             targetQuaternion,
             Time.deltaTime * blendingSensitivity
         );
-
     }
 
     public void InteractWithThisDoor()
     {
-            rotateHandles();
-            doorState.Value = !doorState.Value; // Toggle door state on server
-        
+        rotateHandles();
+        doorState = !doorState; // Toggle door state
+        UpdateDoorRotation(doorState);
     }
 
-    void rotateHandles(){
-        foreach (GameObject g in handles)
-                if (g.name == "Inside Handle Pivot")
-                    StartCoroutine(RotateHandleCoroutine(g, 0.2f, 90f, 150f));
-                else
-                    StartCoroutine(RotateHandleCoroutine(g, 0.2f, -90f, -30f));
-    }
-
-    private void OnDoorStateChanged(bool previousState, bool newState)
+    void rotateHandles()
     {
-        UpdateDoorRotation(newState);
+        foreach (GameObject g in handles)
+        {
+            if (g.name == "Inside Handle Pivot")
+                StartCoroutine(RotateHandleCoroutine(g, 0.2f, 90f, 150f));
+            else
+                StartCoroutine(RotateHandleCoroutine(g, 0.2f, -90f, -30f));
+        }
     }
 
     private void UpdateDoorRotation(bool isClosed)
@@ -84,15 +74,8 @@ public class doorScript : NetworkBehaviour
         doorIsClosed = isClosed;
     }
 
-    // private void OnDestroy()
-    // {
-    //     doorState.OnValueChanged -= OnDoorStateChanged;
-    // }
-
-
-
     private IEnumerator RotateHandleCoroutine(GameObject handle, float duration, float rest, float turned)
-    {   
+    {
         coroutineRunning = true;
         Quaternion startRotation = Quaternion.Euler(rest, 0, 0);
         Quaternion targetRotation = Quaternion.Euler(turned, 0, 0);
@@ -124,5 +107,4 @@ public class doorScript : NetworkBehaviour
         handle.transform.localRotation = startRotation;
         coroutineRunning = false;
     }
-
 }

@@ -395,7 +395,7 @@ public class interactWithObjects : MonoBehaviour
                 WeightScale weightScaleScript = parent.GetComponentInChildren<WeightScale>();
                 if (weightScaleScript != null)
                 {
-                    weightScaleScript.RequestTareServerRpc();
+                    weightScaleScript.Tare();
                 }
                 else
                 {
