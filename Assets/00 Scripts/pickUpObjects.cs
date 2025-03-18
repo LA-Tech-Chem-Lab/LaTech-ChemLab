@@ -222,6 +222,9 @@ public class pickUpObjects : MonoBehaviour
             pipetteScript ps = other.GetComponent<pipetteScript>();
             bool flowing = ps.flowSpeed > 0f;
             multiHandlerScript.setHelpText($"{ps.pipetteVolume} / {ps.pipetteMaxVolume} mL");
+            if (GetComponent<doCertainThingWith>().tryingToPipetteSolid){
+                multiHandlerScript.setHelpText("It looks like you are trying to pipette a solid. Maybe try using the scoopula.");
+            }
         }
 
         if (other.name == "Bunsen Burner"){

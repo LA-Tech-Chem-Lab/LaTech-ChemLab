@@ -41,6 +41,7 @@ public class doCertainThingWith : MonoBehaviour
     public bool isRodInBeaker = false;
     public GameObject rodInBeaker = null;
     public bool beginStirring = false;
+    public bool tryingToPipetteSolid = false; 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -657,6 +658,7 @@ public class doCertainThingWith : MonoBehaviour
 
                 if (PS.pipetteFlowing) // stop adding liquid if the pipette runs out
                 {
+                    tryingToPipetteSolid = false;
                     //adds liquid to the beaker and extracts from pipette
                     float pipetteAmountAfterAdding = PS.pipetteVolume - amountToAddOrExtract;
                     if (pipetteAmountAfterAdding > 0)  //makes sure that the pipette does not give more than it has
@@ -676,29 +678,35 @@ public class doCertainThingWith : MonoBehaviour
                 }
                 else if (PS.pipetteExtracting)
                 {
-                    //Sets the liquid type in the pipette to the liquid type in the beaker (the liquid type will not change inside the pipette)
-                    PS.pipetteSolution = LS.solutionMakeup;
-                    heldPipette.GetComponent<liquidScript>().solutionMakeup = LS.solutionMakeup;
+                    if (LS.liquidPercent > 0.5){
+                        tryingToPipetteSolid = false;
+                        //Sets the liquid type in the pipette to the liquid type in the beaker (the liquid type will not change inside the pipette)
+                        PS.pipetteSolution = LS.solutionMakeup;
+                        heldPipette.GetComponent<liquidScript>().solutionMakeup = LS.solutionMakeup;
 
-                    //Extracts liquid from the beaker into the pipette
-                    float beakerAmountAfterExtracting = LS.currentVolume_mL - amountToAddOrExtract;
-                    if (beakerAmountAfterExtracting > 0f && PS.pipetteMaxVolume > PS.pipetteVolume + amountToAddOrExtract) //checks if the beaker has liquid and the pipette has room
-                    {
-                        //transfers liquid from the beaker to the pipette
-                        LS.currentVolume_mL -= amountToAddOrExtract;
-                        PS.pipetteVolume += amountToAddOrExtract;
-                        closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
-                    }
-                    else
-                    {
-                        // transfers remaining liquid from the beaker to the pipette
-                        float amountToFillPipette = PS.pipetteMaxVolume - PS.pipetteVolume;
-                        if (LS.currentVolume_mL > (amountToFillPipette)) // checks to see what the limiting factor is: the beaker or the pipette
+                        //Extracts liquid from the beaker into the pipette
+                        float beakerAmountAfterExtracting = LS.currentVolume_mL - amountToAddOrExtract;
+                        if (beakerAmountAfterExtracting > 0f && PS.pipetteMaxVolume > PS.pipetteVolume + amountToAddOrExtract) //checks if the beaker has liquid and the pipette has room
                         {
-                            LS.currentVolume_mL -= amountToFillPipette;
-                            PS.pipetteVolume += amountToFillPipette;
+                            //transfers liquid from the beaker to the pipette
+                            LS.currentVolume_mL -= amountToAddOrExtract;
+                            PS.pipetteVolume += amountToAddOrExtract;
                             closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
                         }
+                        else
+                        {
+                            // transfers remaining liquid from the beaker to the pipette
+                            float amountToFillPipette = PS.pipetteMaxVolume - PS.pipetteVolume;
+                            if (LS.currentVolume_mL > (amountToFillPipette)) // checks to see what the limiting factor is: the beaker or the pipette
+                            {
+                                LS.currentVolume_mL -= amountToFillPipette;
+                                PS.pipetteVolume += amountToFillPipette;
+                                closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+                            }
+                        }
+                    }
+                    else{
+                        tryingToPipetteSolid = true;
                     }
                 }
             }
@@ -709,6 +717,7 @@ public class doCertainThingWith : MonoBehaviour
         {
             pipette.transform.Find("Tip").GetComponent<ObiEmitter>().speed = speed;
             heldPipette.GetComponent<pipetteScript>().pipetteVolume -= Time.deltaTime;
+            tryingToPipetteSolid = false;
         }
     }
 
