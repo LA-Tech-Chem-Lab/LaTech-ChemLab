@@ -219,7 +219,7 @@ void CalculateHeat()
         if (horizontalDistance <= heatRadius && heightDifference > 0 && burnerScript.isLit)
         {
             float heatFactor = 1 - (horizontalDistance / heatRadius);
-            float burnerIntensity = burnerScript.airflow.Value;
+            float burnerIntensity = burnerScript.airflow;
             currentHeat = (maxHeat * heatFactor * burnerIntensity) + roomTemp;
         }
         else

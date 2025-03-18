@@ -8,9 +8,10 @@ using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-public class doCertainThingWith : NetworkBehaviour
-{   
+public class doCertainThingWith : MonoBehaviour
+{
     const float TONG_GRAB_DISTANCE = 3f;
     const float PIPETTE_GRAB_DISTANCE = 0.3f;
     const float IRON_RING_SNAP_DISTANCE = 0.7f;
@@ -20,7 +21,7 @@ public class doCertainThingWith : NetworkBehaviour
 
 
     public GameObject itemHeldByTongs; int itemHeldByTongsLayer;
-    
+
     public GameObject heldPipette; public float pipetteSpeed;
     public GameObject closestIronStand; public GameObject closestIronRing;
     public GameObject ironMesh;
@@ -35,7 +36,7 @@ public class doCertainThingWith : NetworkBehaviour
     public bool buchnerfunnelIsAttached = false;
     public GameObject buchnerfunneledFlask;
     public GameObject buchnerfilteredFunnel;
-    public bool buchnerfilterIsAttached = false; 
+    public bool buchnerfilterIsAttached = false;
 
     public bool isRodInBeaker = false;
     public GameObject rodInBeaker = null;
@@ -56,37 +57,39 @@ public class doCertainThingWith : NetworkBehaviour
 
     // Update is called once per frame
     void Update()
-    {   
-        if (!IsOwner)
-            return;
-            
+    {
+
         checkForInput();
 
         if (itemHeldByTongs)
             handleTongObject();
 
-        if (heldPipette){
-            if (heldPipette == pickUpScript.other){
+        if (heldPipette)
+        {
+            if (heldPipette == pickUpScript.other)
+            {
                 lightUpBeaker();
                 pipetteSpeed = heldPipette.GetComponent<pipetteScript>().flowSpeed;
             }
         }
 
         if (pickUpScript.other && pickUpScript.other.name == "Iron Ring") // Snap ring to stand
-            checkForIronStandNearby(pickUpScript.other);
+            CheckForIronStandNearby(pickUpScript.other);
 
         if (pickUpScript.other && pickUpScript.other.name == "Iron Mesh") // Snap mesh to ring
-            checkForIronRingNearby(pickUpScript.other);
+            CheckForIronRingNearby(pickUpScript.other);
     }
 
-    void checkForInput(){
+    void checkForInput()
+    {
         if (Input.GetMouseButtonDown(1))
             findObjectAndPerformAction();
 
         if (Input.GetMouseButton(1))
             findObjectAndPerformHeldAction();
 
-        if (Input.GetMouseButtonUp(1)){
+        if (Input.GetMouseButtonUp(1))
+        {
             findObjectAndPerformLiftedMouseAction();
         }
 
@@ -94,8 +97,9 @@ public class doCertainThingWith : NetworkBehaviour
     }
 
     void findObjectAndPerformAction()       // Right click once
-    { 
-        if (pickUpScript.other != null){
+    {
+        if (pickUpScript.other != null)
+        {
             GameObject obj = pickUpScript.other;
 
             if (obj.name == "Fire extinguisher")
@@ -106,19 +110,19 @@ public class doCertainThingWith : NetworkBehaviour
 
             if (obj.name == "Matchbox")
                 LightMatchAndTossForward(obj);
-            
+
             if (obj.name == "Iron Ring")
                 SnapIronRingToStand();
-            
+
             if (obj.name == "Iron Mesh")
                 SnapIronMeshToRing();
-            
+
             if (obj.name == "Bunsen Burner")
                 faceItemAwayFromPlayer();
 
             if (obj.name == "Scoopula")
                 GatherAluminumPelletsFromContainerOrDropThem();
-            
+
             if (obj.name == "Glass Funnel")
                 insertFunnel(obj);
 
@@ -139,7 +143,7 @@ public class doCertainThingWith : NetworkBehaviour
     }
 
     void findObjectAndPerformHeldAction()  // Held right click
-    {   
+    {
         if (isRodInBeaker == true)
         {
             beginStirring = true;
@@ -149,8 +153,10 @@ public class doCertainThingWith : NetworkBehaviour
         {
             GameObject obj = pickUpScript.other;
 
-            if (obj.name == "Pipette"){
-                if (!heldPipette) {
+            if (obj.name == "Pipette")
+            {
+                if (!heldPipette)
+                {
                     heldPipette = obj;
                     pipetteSpeed = heldPipette.GetComponent<pipetteScript>().flowSpeed;
                 }
@@ -171,10 +177,10 @@ public class doCertainThingWith : NetworkBehaviour
 
             if (obj.name == "Beaker")
                 BringObjectCloser(-1.1f);
-            
+
             if (obj.name == "Evaporating Dish")
                 BringObjectCloser(-1.5f);
-            
+
             if (obj.name.StartsWith("Erlenmeyer Flask"))
                 BringObjectCloser(-1.5f);
 
@@ -183,15 +189,17 @@ public class doCertainThingWith : NetworkBehaviour
         }
     }
 
-    
+
     void findObjectAndPerformLiftedMouseAction()  // Lifted Right Click
-    {   
+    {
         beginStirring = false;
-        
-        if (pickUpScript.other != null) {
+
+        if (pickUpScript.other != null)
+        {
             GameObject obj = pickUpScript.other;
 
-            if (obj.name == "Pipette"){
+            if (obj.name == "Pipette")
+            {
                 SetPippetteSpeed(obj, 0f);
                 heldPipette.GetComponent<pipetteScript>().pipetteFlowing = false;
                 heldPipette.GetComponent<pipetteScript>().pipetteExtracting = false;
@@ -203,7 +211,8 @@ public class doCertainThingWith : NetworkBehaviour
         }
     }
 
-    void checkForKeyOrScrollInputs(){
+    void checkForKeyOrScrollInputs()
+    {
         if (pickUpScript.other != null)
         {
             GameObject obj = pickUpScript.other;
@@ -212,29 +221,33 @@ public class doCertainThingWith : NetworkBehaviour
                 if (Input.GetMouseButton(1))
                 {
                     obj.GetComponent<bunsenBurnerScript>().AdjustAirflowBasedOnInput(Input.mouseScrollDelta.y * 2f);
-                    obj.GetComponent<bunsenBurnerScript>().AdjustGearRotationServerRpc(Input.mouseScrollDelta.y * 2f);
+                    obj.GetComponent<bunsenBurnerScript>().AdjustGearRotation(Input.mouseScrollDelta.y * 2f);
                 }
         }
     }
 
     void BringObjectCloser(float dist)
-    {   
+    {
         pickUpScript.distOffset = dist;
     }
 
 
 
-    void insertFunnel(GameObject funnel) {
+    void insertFunnel(GameObject funnel)
+    {
         float minDist = Mathf.Infinity;
         GameObject closestFlask = null;
         Transform flaskOpening = null;
 
         // Find the closest Flask
-        foreach (GameObject currentObject in FindObjectsOfType<GameObject>()) {
-            if (currentObject.name == "Erlenmeyer Flask" || currentObject.name == "Erlenmeyer Flask L") {
+        foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
+        {
+            if (currentObject.name == "Erlenmeyer Flask" || currentObject.name == "Erlenmeyer Flask L")
+            {
                 float distFromFunnel = Vector3.Distance(funnel.transform.position, currentObject.transform.position);
 
-                if (distFromFunnel < minDist) {
+                if (distFromFunnel < minDist)
+                {
                     minDist = distFromFunnel;
                     closestFlask = currentObject;
 
@@ -245,7 +258,8 @@ public class doCertainThingWith : NetworkBehaviour
         }
 
         // Attach the funnel to the flask if within range
-        if (closestFlask && flaskOpening && minDist <= FUNNEL_INSERT_DISTANCE) {
+        if (closestFlask && flaskOpening && minDist <= FUNNEL_INSERT_DISTANCE)
+        {
             pickUpScript.DropItem();
 
             // Attach funnel to flask
@@ -259,7 +273,8 @@ public class doCertainThingWith : NetworkBehaviour
             Physics.IgnoreCollision(funnel.GetComponent<Collider>(), closestFlask.GetComponent<Collider>(), true);
 
             Rigidbody rb = funnel.GetComponent<Rigidbody>();
-            if (rb) {
+            if (rb)
+            {
                 rb.isKinematic = true;
             }
             funneledFlask = closestFlask;
@@ -268,7 +283,8 @@ public class doCertainThingWith : NetworkBehaviour
         }
     }
 
-    public void DetachFunnel(GameObject funnel) {
+    public void DetachFunnel(GameObject funnel)
+    {
         // Remove parent so it no longer follows the flask
         funnel.transform.SetParent(null);
 
@@ -276,7 +292,8 @@ public class doCertainThingWith : NetworkBehaviour
         Physics.IgnoreCollision(funnel.GetComponent<Collider>(), funneledFlask.GetComponent<Collider>(), false);
 
         Rigidbody rb = funnel.GetComponent<Rigidbody>();
-        if (rb) {
+        if (rb)
+        {
             rb.isKinematic = false;
         }
         funneledFlask.tag = "LiquidHolder";
@@ -284,18 +301,23 @@ public class doCertainThingWith : NetworkBehaviour
         funnelIsAttatched = false;
     }
 
-    void insertFilter(GameObject filter) {
+    void insertFilter(GameObject filter)
+    {
         float minDist = Mathf.Infinity;
         GameObject closestFunnel = null;
         Transform funnelOpening = null;
 
         // Find the closest Flask
-        foreach (GameObject currentObject in FindObjectsOfType<GameObject>()) {
-            if ((currentObject.name == "Glass Funnel" || currentObject.name == "Buchner Funnel") && currentObject.transform.parent != null){
-                if (currentObject.transform.parent.name.StartsWith("Erlenmeyer Flask") || currentObject.transform.parent.name.StartsWith("Buchner Flask")) {
+        foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
+        {
+            if ((currentObject.name == "Glass Funnel" || currentObject.name == "Buchner Funnel") && currentObject.transform.parent != null)
+            {
+                if (currentObject.transform.parent.name.StartsWith("Erlenmeyer Flask") || currentObject.transform.parent.name.StartsWith("Buchner Flask"))
+                {
                     float distFromFilter = Vector3.Distance(filter.transform.position, currentObject.transform.position);
 
-                    if (distFromFilter < minDist) {
+                    if (distFromFilter < minDist)
+                    {
                         minDist = distFromFilter;
                         closestFunnel = currentObject;
 
@@ -307,7 +329,8 @@ public class doCertainThingWith : NetworkBehaviour
         }
 
         // Attach the funnel to the flask if within range
-        if (closestFunnel && funnelOpening && minDist <= FUNNEL_INSERT_DISTANCE) {
+        if (closestFunnel && funnelOpening && minDist <= FUNNEL_INSERT_DISTANCE)
+        {
             pickUpScript.DropItem();
 
             // Attach funnel to flask
@@ -321,57 +344,68 @@ public class doCertainThingWith : NetworkBehaviour
             Physics.IgnoreCollision(filter.GetComponent<Collider>(), closestFunnel.GetComponent<Collider>(), true);
 
             Rigidbody rb = filter.GetComponent<Rigidbody>();
-            if (rb) {
+            if (rb)
+            {
                 rb.isKinematic = true;
             }
 
-            if (closestFunnel.name == "Glass Funnel"){
+            if (closestFunnel.name == "Glass Funnel")
+            {
                 filteredFunnel = closestFunnel;
                 filterIsAttatched = true;
             }
-            else{
+            else
+            {
                 buchnerfilteredFunnel = closestFunnel;
                 buchnerfilterIsAttached = true;
             }
         }
     }
 
-    public void DetachFilter(GameObject filter) {
+    public void DetachFilter(GameObject filter)
+    {
         Debug.Log(filter.transform.name);
 
         Rigidbody rb = filter.GetComponent<Rigidbody>();
-        if (rb) {
+        if (rb)
+        {
             rb.isKinematic = false;
         }
 
         Debug.Log(filter.transform.parent.name);
-        if (filter.transform.parent.name == "Glass Funnel"){
-                // Re-enable physics and collisions
-                Physics.IgnoreCollision(filter.GetComponent<Collider>(), filteredFunnel.GetComponent<Collider>(), false);
-                filteredFunnel = null;
-                filterIsAttatched = false;
-            }
-            else{
-                // Re-enable physics and collisions
-                Physics.IgnoreCollision(filter.GetComponent<Collider>(), buchnerfilteredFunnel.GetComponent<Collider>(), false);
-                buchnerfilteredFunnel = null;
-                buchnerfilterIsAttached = false;
-            }
+        if (filter.transform.parent.name == "Glass Funnel")
+        {
+            // Re-enable physics and collisions
+            Physics.IgnoreCollision(filter.GetComponent<Collider>(), filteredFunnel.GetComponent<Collider>(), false);
+            filteredFunnel = null;
+            filterIsAttatched = false;
+        }
+        else
+        {
+            // Re-enable physics and collisions
+            Physics.IgnoreCollision(filter.GetComponent<Collider>(), buchnerfilteredFunnel.GetComponent<Collider>(), false);
+            buchnerfilteredFunnel = null;
+            buchnerfilterIsAttached = false;
+        }
         // Remove parent so it no longer follows the flask
         filter.transform.SetParent(null);
     }
 
-    void insertBuchnerFunnel(GameObject funnel) {
+    void insertBuchnerFunnel(GameObject funnel)
+    {
         float minDist = Mathf.Infinity;
         GameObject closestFlask = null;
         Transform flaskOpening = null;
 
         // Find the closest Flask
-        foreach (GameObject currentObject in FindObjectsOfType<GameObject>()) {
-            if (currentObject.name == "Buchner Flask") {
+        foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
+        {
+            if (currentObject.name == "Buchner Flask")
+            {
                 float distFromFunnel = Vector3.Distance(funnel.transform.position, currentObject.transform.position);
 
-                if (distFromFunnel < minDist) {
+                if (distFromFunnel < minDist)
+                {
                     minDist = distFromFunnel;
                     closestFlask = currentObject;
 
@@ -382,7 +416,8 @@ public class doCertainThingWith : NetworkBehaviour
         }
 
         // Attach the funnel to the flask if within range
-        if (closestFlask && flaskOpening && minDist <= FUNNEL_INSERT_DISTANCE) {
+        if (closestFlask && flaskOpening && minDist <= FUNNEL_INSERT_DISTANCE)
+        {
             pickUpScript.DropItem();
 
             // Attach funnel to flask
@@ -396,7 +431,8 @@ public class doCertainThingWith : NetworkBehaviour
             Physics.IgnoreCollision(funnel.GetComponent<Collider>(), closestFlask.GetComponent<Collider>(), true);
 
             Rigidbody rb = funnel.GetComponent<Rigidbody>();
-            if (rb) {
+            if (rb)
+            {
                 rb.isKinematic = true;
             }
             buchnerfunneledFlask = closestFlask;
@@ -405,7 +441,8 @@ public class doCertainThingWith : NetworkBehaviour
         }
     }
 
-    public void DetachBuchnerFunnel(GameObject funnel) {
+    public void DetachBuchnerFunnel(GameObject funnel)
+    {
         // Remove parent so it no longer follows the flask
         Debug.Log("detatching funnel");
         funnel.transform.SetParent(null);
@@ -414,7 +451,8 @@ public class doCertainThingWith : NetworkBehaviour
         Physics.IgnoreCollision(funnel.GetComponent<Collider>(), buchnerfunneledFlask.GetComponent<Collider>(), false);
 
         Rigidbody rb = funnel.GetComponent<Rigidbody>();
-        if (rb) {
+        if (rb)
+        {
             rb.isKinematic = false;
         }
         buchnerfunneledFlask.tag = "LiquidHolder";
@@ -422,33 +460,38 @@ public class doCertainThingWith : NetworkBehaviour
         buchnerfunnelIsAttached = false;
     }
 
-    void GrabFlaskByNeck(GameObject tongs){
+    void GrabFlaskByNeck(GameObject tongs)
+    {
 
         // Find Closest Flask in the room
         float minDist = Mathf.Infinity;
         GameObject closestFlask = null;
-        
-        foreach (GameObject currentObject in FindObjectsOfType<GameObject>()){
-            
-            if (currentObject.name == "Erlenmeyer Flask" || currentObject.name == "Erlenmeyer Flask L"){
+
+        foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
+        {
+
+            if (currentObject.name == "Erlenmeyer Flask" || currentObject.name == "Erlenmeyer Flask L")
+            {
 
                 float distFromTip = Vector3.Distance(tongs.transform.Find("Tip").transform.position, currentObject.transform.position);
-                
-                if (distFromTip < minDist){
+
+                if (distFromTip < minDist)
+                {
                     minDist = distFromTip;
                     closestFlask = currentObject;
                 }
             }
         }
-        
+
         // If we have a flask held, drop it
-        if (itemHeldByTongs){
+        if (itemHeldByTongs)
+        {
             tongs.transform.Find("Open").gameObject.SetActive(true);
             tongs.transform.Find("Closed").gameObject.SetActive(false);
             dropItemFromTongsCorrectly();
             return;
         }
-        
+
         if (!closestFlask || minDist > TONG_GRAB_DISTANCE) // If we cannot pick up flask make sure meshes are good
         {
             itemHeldByTongs = null;
@@ -471,17 +514,21 @@ public class doCertainThingWith : NetworkBehaviour
         }
     }
 
-    void putStirRodInBeaker(GameObject stirRod){
+    void putStirRodInBeaker(GameObject stirRod)
+    {
         float minDist = Mathf.Infinity;
         GameObject closestBeaker = null;
         Transform stirPosition = null;
 
         // Find the closest Flask
-        foreach (GameObject currentObject in FindObjectsOfType<GameObject>()) {
-            if (currentObject.name == "Beaker") {
+        foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
+        {
+            if (currentObject.name == "Beaker")
+            {
                 float distFromBeaker = Vector3.Distance(stirRod.transform.position, currentObject.transform.position);
 
-                if (distFromBeaker < minDist) {
+                if (distFromBeaker < minDist)
+                {
                     minDist = distFromBeaker;
                     closestBeaker = currentObject;
 
@@ -492,7 +539,8 @@ public class doCertainThingWith : NetworkBehaviour
         }
 
         // teleport stir rod to animation position if in range
-        if (closestBeaker && stirPosition && minDist <= FUNNEL_INSERT_DISTANCE) {
+        if (closestBeaker && stirPosition && minDist <= FUNNEL_INSERT_DISTANCE)
+        {
             pickUpScript.DropItem();
 
             stirRod.transform.position = stirPosition.position;
@@ -505,7 +553,8 @@ public class doCertainThingWith : NetworkBehaviour
             Physics.IgnoreCollision(stirRod.GetComponent<Collider>(), closestBeaker.GetComponent<Collider>(), true);
 
             Rigidbody rb = stirRod.GetComponent<Rigidbody>();
-            if (rb) {
+            if (rb)
+            {
                 rb.isKinematic = true;
             }
 
@@ -514,8 +563,9 @@ public class doCertainThingWith : NetworkBehaviour
             isRodInBeaker = true;
         }
     }
-    
-    public void removeStirRod(GameObject stirRod) {
+
+    public void removeStirRod(GameObject stirRod)
+    {
         // Remove parent so it no longer follows the flask
         stirRod.transform.SetParent(null);
 
@@ -523,7 +573,8 @@ public class doCertainThingWith : NetworkBehaviour
         Physics.IgnoreCollision(stirRod.GetComponent<Collider>(), rodInBeaker.GetComponent<Collider>(), false);
 
         Rigidbody rb = stirRod.GetComponent<Rigidbody>();
-        if (rb) {
+        if (rb)
+        {
             rb.isKinematic = false;
         }
         rodInBeaker.tag = "StirRod";
@@ -531,44 +582,49 @@ public class doCertainThingWith : NetworkBehaviour
         isRodInBeaker = false;
     }
 
-    void handleTongObject(){    // Here Tongs are pos.other
-        
+    void handleTongObject()
+    {    // Here Tongs are pos.other
+
         Vector3 offset = Vector3.zero;
 
         if (itemHeldByTongs.name == "Erlenmeyer Flask")
-            offset = pickUpScript.other.transform.TransformDirection(0f,-0.361f,0.1056f);
-            
+            offset = pickUpScript.other.transform.TransformDirection(0f, -0.361f, 0.1056f);
+
         if (itemHeldByTongs.name == "Erlenmeyer Flask L")
-            offset = pickUpScript.other.transform.TransformDirection(0f,-0.452f,0.1056f);
+            offset = pickUpScript.other.transform.TransformDirection(0f, -0.452f, 0.1056f);
 
 
 
         itemHeldByTongs.transform.position = pickUpScript.other.transform.Find("Tip").position + offset;
     }
 
-    public void dropItemFromTongsCorrectly(){
-        if (itemHeldByTongs){
+    public void dropItemFromTongsCorrectly()
+    {
+        if (itemHeldByTongs)
+        {
             itemHeldByTongs.GetComponent<Rigidbody>().isKinematic = false;
             itemHeldByTongs.GetComponent<Rigidbody>().useGravity = true;
             itemHeldByTongs.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
             itemHeldByTongs.layer = itemHeldByTongsLayer;
         }
-    
+
         pickUpScript.other.transform.Find("Open").gameObject.SetActive(true);
         pickUpScript.other.transform.Find("Closed").gameObject.SetActive(false);
         itemHeldByTongs = null;
     }
 
-    public void dropIronRingCorrectly(){
-        pickUpScript.other.transform.Find("Screw").gameObject.SetActive(true); 
+    public void dropIronRingCorrectly()
+    {
+        pickUpScript.other.transform.Find("Screw").gameObject.SetActive(true);
         pickUpScript.other.transform.Find("Ring").gameObject.SetActive(true);
         pickUpScript.other.transform.Find("Ghost").gameObject.SetActive(false);
         pickUpScript.other.GetComponent<BoxCollider>().enabled = true;
         pickUpScript.other.tag = "IronRing";
     }
 
-    
-    public void dropIronMeshCorrectly(){
+
+    public void dropIronMeshCorrectly()
+    {
         pickUpScript.other.transform.Find("Real").gameObject.SetActive(true);
         pickUpScript.other.transform.Find("Ghost").gameObject.SetActive(false);
         pickUpScript.other.GetComponent<BoxCollider>().enabled = true;
@@ -576,19 +632,21 @@ public class doCertainThingWith : NetworkBehaviour
     }
 
 
-    public void SetPippetteSpeed(GameObject pipette, float speed){
+    public void SetPippetteSpeed(GameObject pipette, float speed)
+    {
 
         // First find the closest beaker/flask below you
         GameObject closestBeakerOrFlask = findClosestBeakerOrFlask(pipette);
-        var pipetteTip = pipette.transform.Find("Tip").transform.position;        pipetteTip.y = 0f;
-        var beakerOrFlask = closestBeakerOrFlask.transform.position;              beakerOrFlask.y = 0f;
+        var pipetteTip = pipette.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
+        var beakerOrFlask = closestBeakerOrFlask.transform.position; beakerOrFlask.y = 0f;
 
         float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
 
-        if (closestBeakerOrFlask && distFromTip <= PIPETTE_GRAB_DISTANCE){ // We have a beaker or flask within range
-            
+        if (closestBeakerOrFlask && distFromTip <= PIPETTE_GRAB_DISTANCE)
+        { // We have a beaker or flask within range
+
             pipette.transform.Find("Tip").GetComponent<ObiEmitter>().speed = 0f;
-            
+
             // Add or subtract liquid from beaker based on volume within pipette
             if (closestBeakerOrFlask.transform.Find("Liquid"))
             {
@@ -647,37 +705,43 @@ public class doCertainThingWith : NetworkBehaviour
         }
 
         // We arent within range of a liquid holder
-        else{
+        else
+        {
             pipette.transform.Find("Tip").GetComponent<ObiEmitter>().speed = speed;
             heldPipette.GetComponent<pipetteScript>().pipetteVolume -= Time.deltaTime;
         }
     }
-    
+
     void lightUpBeaker()
     {
         GameObject closestBeakerOrFlask = findClosestBeakerOrFlask(heldPipette);
         if (closestBeakerOrFlask == null) return;
-    
+
         // Get positions and zero out Y-axis
         Vector3 pipetteTip = heldPipette.transform.Find("Tip").position;
         pipetteTip.y = 0f;
         Vector3 beakerOrFlask = closestBeakerOrFlask.transform.position;
         beakerOrFlask.y = 0f;
-    
+
         float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
-        
-    
+
+
         // Find "allLiquidHolders" object
         GameObject allLiquidHolders = GameObject.Find("allLiquidHolders");
         if (allLiquidHolders == null) return; // Avoid errors if it's missing
-    
+
         foreach (Transform liquidHolder in allLiquidHolders.transform)
         {
-            if (liquidHolder.name.StartsWith("Erlenmeyer Flask")){
-                foreach (Transform flaskChild in liquidHolder.transform){
-                    if (flaskChild.name.StartsWith("Glass Funnel")){
-                        foreach (Transform funnelChild in flaskChild.transform){
-                            if (funnelChild.name.StartsWith("Paper Cone")){
+            if (liquidHolder.name.StartsWith("Erlenmeyer Flask"))
+            {
+                foreach (Transform flaskChild in liquidHolder.transform)
+                {
+                    if (flaskChild.name.StartsWith("Glass Funnel"))
+                    {
+                        foreach (Transform funnelChild in flaskChild.transform)
+                        {
+                            if (funnelChild.name.StartsWith("Paper Cone"))
+                            {
                                 GameObject whiteOutline = funnelChild.GetChild(0).gameObject;
                                 bool isClosest = funnelChild.gameObject == closestBeakerOrFlask && distFromTip <= PIPETTE_GRAB_DISTANCE;
                                 whiteOutline.SetActive(isClosest);
@@ -695,10 +759,11 @@ public class doCertainThingWith : NetworkBehaviour
         }
     }
 
-    public void turnOffBeakers(){
+    public void turnOffBeakers()
+    {
         GameObject allLiquidHolders = GameObject.Find("allLiquidHolders");
         if (allLiquidHolders == null) return; // Avoid errors if it's missing
-    
+
         foreach (Transform liquidHolder in allLiquidHolders.transform)
         {
             if (liquidHolder.childCount > 0) // Ensure it has children
@@ -710,20 +775,24 @@ public class doCertainThingWith : NetworkBehaviour
     }
 
 
-    GameObject findClosestBeakerOrFlask(GameObject pipette){
+    GameObject findClosestBeakerOrFlask(GameObject pipette)
+    {
         float minDist = Mathf.Infinity;
         GameObject closestBeakerOrFlask = null;
-        
-        foreach (GameObject currentObject in FindObjectsOfType<GameObject>()){
-            
-            if (currentObject.tag == "LiquidHolder"){
+
+        foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
+        {
+
+            if (currentObject.tag == "LiquidHolder")
+            {
 
                 var pipetteTip = pipette.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
-                var beakerOrFlask = currentObject.transform.position;              beakerOrFlask.y = 0f;
+                var beakerOrFlask = currentObject.transform.position; beakerOrFlask.y = 0f;
 
                 float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
-                
-                if (distFromTip < minDist){
+
+                if (distFromTip < minDist)
+                {
                     minDist = distFromTip;
                     closestBeakerOrFlask = currentObject;
                 }
@@ -732,7 +801,7 @@ public class doCertainThingWith : NetworkBehaviour
         return closestBeakerOrFlask;
     }
 
-    void checkForIronStandNearby(GameObject ironRing)
+    public void CheckForIronStandNearby(GameObject ironRing)
     {
         float minDist = float.MaxValue;
         closestIronStand = null;
@@ -751,60 +820,27 @@ public class doCertainThingWith : NetworkBehaviour
             }
         }
 
-        float yDist = Vector3.Distance(ironRing.transform.Find("Pivot").position, closestIronStand.transform.Find("Base").position);
+        float yDist = Vector3.Distance(ironRing.transform.Find("Pivot").position, closestIronStand?.transform.Find("Base").position ?? Vector3.zero);
 
-        // No Go
-        if (!closestIronStand || minDist > IRON_RING_SNAP_DISTANCE || yDist > 1.35f)
+        if (closestIronStand == null || minDist > IRON_RING_SNAP_DISTANCE || yDist > 1.35f)
         {
             closestIronStand = null;
             ironRing.transform.Find("Screw").gameObject.SetActive(true);
             ironRing.transform.Find("Ring").gameObject.SetActive(true);
             ironRing.transform.Find("Ghost").gameObject.SetActive(false);
             ironRing.GetComponent<BoxCollider>().enabled = true;
-            pickUpScript.other.tag = "IronRing";
         }
-
-        // Now we have closest stand
-        if (closestIronStand && minDist <= IRON_RING_SNAP_DISTANCE && yDist < 1.35f)
+        else
         {
             ironRing.transform.Find("Screw").gameObject.SetActive(false);
             ironRing.transform.Find("Ring").gameObject.SetActive(false);
             ironRing.transform.Find("Ghost").gameObject.SetActive(true);
             ironRing.GetComponent<BoxCollider>().enabled = false;
-            pickUpScript.other.tag = "NoShadow";
 
             var ghostRestingPoint = closestIronStand.transform.Find("Base").position;
             ghostRestingPoint += closestIronStand.transform.up * yDist;
 
             ironRing.transform.Find("Ghost").gameObject.transform.position = ghostRestingPoint;
-
-            // Inform the server about the closest iron stand
-            if (IsOwner)
-            {
-                // Get the NetworkObjectIds for the iron ring and closest iron stand
-                ulong ironRingId = pickUpScript.other.GetComponent<NetworkObject>().NetworkObjectId;
-                ulong ironStandId = closestIronStand.GetComponent<NetworkObject>().NetworkObjectId;
-
-                // Call the server RPC to update the closest iron stand
-                UpdateClosestIronStandServerRpc(ironRingId, ironStandId);
-            }
-        }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    void UpdateClosestIronStandServerRpc(ulong ironRingId, ulong ironStandId, ServerRpcParams rpcParams = default)
-    {
-        // Find the iron ring by its NetworkObjectId
-        NetworkObject ironRingNetObj = NetworkManager.Singleton.SpawnManager.SpawnedObjects[ironRingId];
-        if (ironRingNetObj != null)
-        {
-            // Find the iron stand by its NetworkObjectId
-            NetworkObject ironStandNetObj = NetworkManager.Singleton.SpawnManager.SpawnedObjects[ironStandId];
-            if (ironStandNetObj != null)
-            {
-                // Now update the closest iron stand on the server
-                closestIronStand = ironStandNetObj.gameObject;
-            }
         }
     }
 
@@ -814,14 +850,6 @@ public class doCertainThingWith : NetworkBehaviour
 
         if (ironRing.transform.Find("Ghost").gameObject.activeInHierarchy) // Ready to snap and right-clicked
         {
-            if (IsHost)
-            {
-                Debug.Log("[SERVER] This is the host, processing iron ring snap.");
-            }
-            else
-            {
-                Debug.Log("[CLIENT] This is a client, triggering action on server.");
-            }
             Vector3 realMeshOffset = ironRing.transform.Find("Ghost").Find("Ghost Screw").position - ironRing.transform.Find("Screw").position;
 
 
@@ -836,117 +864,21 @@ public class doCertainThingWith : NetworkBehaviour
             pickUpScript.DropItem(); // Probably the only way
             temp.tag = "IronRing";
 
-            // Ensure the Iron Ring has a NetworkObject and is spawned before syncing
-            if (ironRing.TryGetComponent<NetworkObject>(out var netObj) && netObj.IsSpawned)
-            {
-                // If client initiated, notify the server
-                if (!IsHost)
-                {
-                    Debug.Log("Client Trying");
-                    // Call server-side function to handle syncing and actions
-                    NotifyServerToSnapIronRingServerRpc(netObj.NetworkObjectId, ironRing.transform.position, realMeshOffset, true);
-                }
-                else
-                {
-                    Debug.Log("Server Trying");
-                    // If host initiates, proceed directly
-                    SyncIronRingPositionAndOffsetServerRpc(netObj.NetworkObjectId, ironRing.transform.position, realMeshOffset, true);
-                    SetParentServerRpc(netObj.NetworkObjectId, closestIronStand.GetComponent<NetworkObject>().NetworkObjectId);
-                }
-            }
-
-            // Debug log for host only
-            if (IsHost)
-            {
-                Debug.Log($"[HOST] Iron Ring Position: {ironRing.transform.position}");
-            }
-        }
-    }
-
-    // ServerRpc for client to notify the server to handle the snapping and synchronization
-    [ServerRpc(RequireOwnership = false)]
-    void NotifyServerToSnapIronRingServerRpc(ulong ironRingId, Vector3 position, Vector3 offset, bool isKinematic, ServerRpcParams rpcParams = default)
-    {
-        
-        // Optionally, trigger SetParentServerRpc for server-side parenting
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ironRingId, out NetworkObject ironRingNetObj))
-        {
-            SetParentServerRpc(ironRingId, closestIronStand.GetComponent<NetworkObject>().NetworkObjectId);
-        }
-        SyncIronRingPositionAndOffsetServerRpc(ironRingId, position, offset, isKinematic);
-    }
-
-
-
-    // ServerRpc for syncing position and offset across all clients
-    [ServerRpc(RequireOwnership = false)]
-    void SyncIronRingPositionAndOffsetServerRpc(ulong ironRingId, Vector3 position, Vector3 offset, bool isKinematic, ServerRpcParams rpcParams = default)
-    {
-        Debug.Log($"[SERVER] Iron Ring Snap Triggered on Server. Position: {position}, Offset: {offset}, Is Kinematic: {isKinematic}");
-
-        // Ensure the iron ring position is updated on the server before syncing
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ironRingId, out NetworkObject ironRingNetObj))
-        {
-            GameObject ironRing = ironRingNetObj.gameObject;
-
-            ironRing.transform.position = position;
-            ironRing.transform.Find("Screw").position += offset;
-            ironRing.transform.Find("Ring").position += offset;
+            ironRing.transform.SetParent(closestIronStand.transform);
+            ironRing.transform.Find("Screw").position += realMeshOffset;
+            ironRing.transform.Find("Ring").position += realMeshOffset;
             ironRing.GetComponent<BoxCollider>().center = ironRing.transform.Find("Ring").localPosition;
-            Debug.Log("Local Position of the iron ring child called ring" + ironRing.transform.Find("Ring").localPosition);
-            ironRing.GetComponent<Rigidbody>().isKinematic = isKinematic;
-
-            // Sync to clients
-            SyncIronRingPositionAndOffsetClientRpc(ironRingId, position, offset, isKinematic);
+            
         }
     }
 
-
-    // ClientRpc to update clients with the position and offset
-    [ClientRpc]
-    void SyncIronRingPositionAndOffsetClientRpc(ulong ironRingId, Vector3 position, Vector3 offset, bool isKinematic)
+    public void CheckForIronRingNearby(GameObject ironMesh)
     {
-        if (!IsHost) // Only clients update (Host already has the correct position)
-        {
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ironRingId, out NetworkObject ironRingNetObj))
-            {
-                GameObject ironRing = ironRingNetObj.gameObject;
-
-                // Apply the position and offset on the client as well
-                ironRing.transform.position = position;
-                Debug.Log("Offset is " + offset);
-                ironRing.transform.Find("Screw").position += offset;
-                ironRing.transform.Find("Ring").position += offset;
-                ironRing.GetComponent<BoxCollider>().center = ironRing.transform.Find("Ring").localPosition;
-                Debug.Log("Local Position of the iron ring child called ring" + ironRing.transform.Find("Ring").localPosition);
-                ironRing.GetComponent<Rigidbody>().isKinematic = isKinematic;
-
-                // Debug log for clients only
-                Debug.Log($"[CLIENT] Iron Ring Position: {ironRing.transform.position}");
-            }
-        }
-    }
-
-    // ServerRpc for setting the parent on the server
-    [ServerRpc(RequireOwnership = false)]
-    void SetParentServerRpc(ulong ironRingId, ulong standId)
-    {
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ironRingId, out NetworkObject ironRingNetObj) &&
-            NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(standId, out NetworkObject standNetObj))
-        {
-            ironRingNetObj.transform.SetParent(standNetObj.transform);
-        }
-    }
-
-
-
-    void checkForIronRingNearby(GameObject ironMesh){
-
         float minDist = float.MaxValue;
         closestIronRing = null;
 
         foreach (GameObject currentObject in GameObject.FindGameObjectsWithTag("IronRing"))
-        {   
+        {
             Vector3 ironMeshPos = ironMesh.transform.position;
             Vector3 ironRingPos = currentObject.transform.position;
 
@@ -959,184 +891,62 @@ public class doCertainThingWith : NetworkBehaviour
             }
         }
 
-        // No Go
-        if (!closestIronRing || minDist > IRON_RING_SNAP_DISTANCE){
-            
+        if (closestIronRing == null || minDist > IRON_RING_SNAP_DISTANCE)
+        {
             closestIronRing = null;
             ironMesh.transform.Find("Real").gameObject.SetActive(true);
             ironMesh.transform.Find("Ghost").gameObject.SetActive(false);
             ironMesh.GetComponent<BoxCollider>().enabled = false;
         }
-        
-
-        // Now we have closest ring
-        if (closestIronRing && minDist <= IRON_RING_SNAP_DISTANCE && closestIronRing.transform.parent != null) {
+        else if (closestIronRing.transform.parent != null)
+        {
             ironMesh.transform.Find("Real").gameObject.SetActive(false);
             ironMesh.transform.Find("Ghost").gameObject.SetActive(true);
             ironMesh.GetComponent<BoxCollider>().enabled = true;
-            
-            pickUpScript.other.tag = "NoShadow"; // Give no shadow to held ghost item
 
-            Vector3 ghostRestingPoint = closestIronRing.transform.Find("Ring").Find("Center").position;
+            Vector3 ghostRestingPoint = closestIronRing.transform.Find("Ring/Center").position;
 
             ironMesh.transform.Find("Ghost").position = ghostRestingPoint;
             ironMesh.transform.Find("Ghost").localEulerAngles = Vector3.zero;
-            // Inform the server about the closest iron ring
-            if (IsOwner)
-            {
-                // Get the NetworkObjectIds for the iron ring and closest iron stand
-                ulong ironMeshId = pickUpScript.other.GetComponent<NetworkObject>().NetworkObjectId;
-                ulong ironRingId = closestIronRing.GetComponent<NetworkObject>().NetworkObjectId;
-                Debug.Log("Closest Iron Ring: " + closestIronRing);
-                // Call the server RPC to update the closest iron stand
-                UpdateClosestIronRingServerRpc(ironMeshId, ironRingId);
-            }
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    void UpdateClosestIronRingServerRpc(ulong ironMeshId, ulong ironRingId, ServerRpcParams rpcParams = default)
-    {
-        // Find the iron ring by its NetworkObjectId
-        NetworkObject ironMeshNetObj = NetworkManager.Singleton.SpawnManager.SpawnedObjects[ironMeshId];
-        if (ironMeshNetObj != null)
-        {
-            // Find the iron stand by its NetworkObjectId
-            NetworkObject ironRingNetObj = NetworkManager.Singleton.SpawnManager.SpawnedObjects[ironRingId];
-            if (ironRingNetObj != null)
-            {
-                // Now update the closest iron stand on the server
-                closestIronRing = ironRingNetObj.gameObject;
-                Debug.Log("Closest Iron Ring: " + closestIronRing);
-            }
-        }
-    }
-
-    void SnapIronMeshToRing()
+    public void SnapIronMeshToRing()
     {
         GameObject ironMesh = pickUpScript.other;
 
-
         if (ironMesh.transform.Find("Ghost").gameObject.activeInHierarchy)
-        { // We are ready to snap and we right clicked
-
+        {
             ironMesh.transform.Find("Real").gameObject.SetActive(true);
             ironMesh.transform.Find("Ghost").gameObject.SetActive(false);
             ironMesh.GetComponent<BoxCollider>().enabled = true;
-
             ironMesh.GetComponent<Rigidbody>().isKinematic = true;
-            var localPosition = closestIronRing.transform.Find("Ring").localPosition + closestIronRing.transform.Find("Ring").Find("Center").localPosition;
-            pickUpScript.DropItem(); // prob the only way
 
-            // Ensure the Iron Mesh has a NetworkObject and is spawned before syncing
-            if (ironMesh.TryGetComponent<NetworkObject>(out var netObj) && netObj.IsSpawned)
-            {
-                // If client initiated, notify the server
-                if (!IsHost)
-                {
-                    Debug.Log("Client Trying Mesh");
-                    // Call server-side function to handle syncing and actions
-                    NotifyServerToSnapIronMeshServerRpc(netObj.NetworkObjectId, localPosition, true);
-                }
-                else
-                {
-                    Debug.Log("Server Trying Mesh ");
-                    // If host initiates, proceed directly
-                    SetParentMeshServerRpc(netObj.NetworkObjectId, closestIronRing.GetComponent<NetworkObject>().NetworkObjectId);
-                    SyncIronMeshPositionServerRpc(netObj.NetworkObjectId, localPosition, true);
-                }
-            }
-            // Debug log for host only
-            if (IsHost)
-            {
-                Debug.Log("Snap Function Debug");
-                Debug.Log($"[HOST] Iron Mesh Position: {ironMesh.transform.localPosition}");
-            }
+            Vector3 localPosition = closestIronRing.transform.Find("Ring").localPosition +
+                                    closestIronRing.transform.Find("Ring/Center").localPosition;
+
+            pickUpScript.DropItem();
+
+            // Set the position of the iron mesh
+            ironMesh.transform.position = closestIronRing.transform.Find("Ring/Center").position;
+            ironMesh.transform.SetParent(closestIronRing.transform);
+
+            Debug.Log("Iron Mesh Snapped to Ring");
+            Debug.Log($"Iron Mesh Position: {ironMesh.transform.localPosition}");
         }
     }
 
-    // ServerRpc for client to notify the server to handle the snapping and synchronization
-    [ServerRpc(RequireOwnership = false)]
-    void NotifyServerToSnapIronMeshServerRpc(ulong ironMeshId, Vector3 position, bool isKinematic, ServerRpcParams rpcParams = default)
+    void faceItemAwayFromPlayer()
     {
-
-        
-        // Optionally, trigger SetParentServerRpc for server-side parenting
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ironMeshId, out NetworkObject ironMeshNetObj))
-        {
-
-            SetParentMeshServerRpc(ironMeshId, closestIronRing.GetComponent<NetworkObject>().NetworkObjectId);
-            
-        }
-
-        SyncIronMeshPositionServerRpc(ironMeshId, position, isKinematic);
-    }
-
-    // ServerRpc for syncing position and offset across all clients
-    [ServerRpc(RequireOwnership = false)]
-    void SyncIronMeshPositionServerRpc(ulong ironMeshId, Vector3 position, bool isKinematic, ServerRpcParams rpcParams = default)
-    {
-        Debug.Log($"[SERVER] Iron Mesh Snap Triggered on Server. Position: {position}, Is Kinematic: {isKinematic}");
-
-        // Ensure the iron ring position is updated on the server before syncing
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ironMeshId, out NetworkObject ironMeshNetObj))
-        {
-            Debug.Log("Position that it should be: " + position);
-            GameObject ironMesh = ironMeshNetObj.gameObject;
-            Debug.Log("Current Position Before TRYING" + ironMesh.transform.localPosition);
-            Debug.Log("POSITION BEFORE TRYING" + position);
-            ironMesh.transform.localPosition = position; 
-            Debug.Log("Current Position AFTER TRYING" + ironMesh.transform.localPosition);
-            var angles = ironMesh.transform.localEulerAngles; angles.x = 0f; angles.z = 0f;
-            ironMesh.transform.localEulerAngles = angles;
-            ironMesh.GetComponent<Rigidbody>().isKinematic = isKinematic;
-            Debug.Log($"[SERVER] End Results, Mesh {ironMesh.transform.localPosition}");
-            // Sync to clients
-            SyncIronMeshPositionClientRpc(ironMeshId, position, isKinematic);
-        }
-    }
-
-    // ClientRpc to update clients with the position and offset
-    [ClientRpc]
-    void SyncIronMeshPositionClientRpc(ulong ironMeshId, Vector3 position, bool isKinematic)
-    {
-        if (!IsHost) // Only clients update (Host already has the correct position)
-        {
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ironMeshId, out NetworkObject ironMeshNetObj))
-            {
-                GameObject ironMesh = ironMeshNetObj.gameObject;
-                ironMesh.transform.localPosition = position;
-                var angles = ironMesh.transform.localEulerAngles; angles.x = 0f; angles.z = 0f;
-                ironMesh.transform.localEulerAngles = angles;
-                ironMesh.GetComponent<Rigidbody>().isKinematic = isKinematic;
-
-
-                // Debug log for clients only
-                Debug.Log($"[CLIENT] Iron Ring Position: {ironMesh.transform.localPosition}");
-            }
-        }
-    }
-
-    // ServerRpc for setting the parent on the server
-    [ServerRpc(RequireOwnership = false)]
-    void SetParentMeshServerRpc(ulong ironMeshId, ulong RingId)
-    {
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ironMeshId, out NetworkObject ironMeshNetObj) &&
-            NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(RingId, out NetworkObject RingNetObj))
-        {
-            ironMeshNetObj.transform.SetParent(RingNetObj.transform);
-        }
-    }
-
-    void faceItemAwayFromPlayer(){
         pickUpScript.targetRotation.y = transform.localEulerAngles.y;           // When right clicked, face item away from player
     }
 
 
-    void manipulateBunsenBurner(){
+    void manipulateBunsenBurner()
+    {
 
-        
-        
+
+
         pickUpScript.targetX = 85f;
         pickUpScript.canZoomIn = false;
         pickUpScript.canRotateItem = false;
@@ -1145,38 +955,44 @@ public class doCertainThingWith : NetworkBehaviour
 
     }
 
-    void resetRotationOffset(){
+    void resetRotationOffset()
+    {
         pickUpScript.targetX = 0f;
         pickUpScript.canZoomIn = true;
         pickUpScript.canRotateItem = true;
     }
 
 
-    void GatherAluminumPelletsFromContainerOrDropThem(){
+    void GatherAluminumPelletsFromContainerOrDropThem()
+    {
         GameObject scoopula = pickUpScript.other;
 
         // Find Closest Aluminum Container in the room
         float minDist = Mathf.Infinity;
         GameObject closestAluminumContainer = null;
-        
-        foreach (GameObject currentObject in FindObjectsOfType<GameObject>()){
-            
-            if (currentObject.name == "Aluminum Container"){
+
+        foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
+        {
+
+            if (currentObject.name == "Aluminum Container")
+            {
 
                 float distFromTip = Vector3.Distance(scoopula.transform.position, currentObject.transform.position);
-                
-                if (distFromTip < minDist){
+
+                if (distFromTip < minDist)
+                {
                     minDist = distFromTip;
                     closestAluminumContainer = currentObject;
                 }
             }
         }
-        
-        
+
+
 
         if (closestAluminumContainer && minDist <= SCOOPULA_GRAB_DISTANCE) // Now we have closest Flask
         {
-            if (!scoopulaAnimationPlaying){
+            if (!scoopulaAnimationPlaying)
+            {
                 StartCoroutine(getAluminumUsingScoopula(closestAluminumContainer));
                 return;
             }
@@ -1184,15 +1000,16 @@ public class doCertainThingWith : NetworkBehaviour
 
         // Okay, fine lets try to drop it instead then
         GameObject closestBeakerOrFlask = findClosestBeakerOrFlask(scoopula);
-        var pipetteTip = scoopula.transform.Find("Tip").transform.position;        pipetteTip.y = 0f;
-        var beakerOrFlask = closestBeakerOrFlask.transform.position;              beakerOrFlask.y = 0f;
+        var pipetteTip = scoopula.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
+        var beakerOrFlask = closestBeakerOrFlask.transform.position; beakerOrFlask.y = 0f;
 
         float distFromTip2 = Vector3.Distance(pipetteTip, beakerOrFlask);
 
-        if (closestBeakerOrFlask && distFromTip2 <= ALUMINUM_DROPOFF_RANGE && scoopula.transform.Find("Aluminum").gameObject.activeInHierarchy){ // We have a beaker or flask within range
+        if (closestBeakerOrFlask && distFromTip2 <= ALUMINUM_DROPOFF_RANGE && scoopula.transform.Find("Aluminum").gameObject.activeInHierarchy)
+        { // We have a beaker or flask within range
             Debug.Log("Drop in this beaker");
             scoopula.transform.Find("Aluminum").gameObject.SetActive(false);
-            closestBeakerOrFlask.GetComponent<liquidScript>().addSolution(new List<float>{0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f}, 0.7407f);  // Add 0.37 mL of Aluminum
+            closestBeakerOrFlask.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f }, 0.7407f);  // Add 0.37 mL of Aluminum
             closestBeakerOrFlask.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
         }
     }
@@ -1209,7 +1026,7 @@ public class doCertainThingWith : NetworkBehaviour
         if (cap == null)
             yield break; // Stop the coroutine if cap is not found
 
-        float speedMult = 1/2f;
+        float speedMult = 1 / 2f;
         Vector3 startPos = cap.position;
         Vector3 targetPos = startPos + cap.parent.up * 0.08f; // Move up by 0.1 units
         Vector3 leftPos = targetPos - cap.parent.right * 0.14f; // Move left by 0.13 units
@@ -1222,17 +1039,17 @@ public class doCertainThingWith : NetworkBehaviour
         yield return StartCoroutine(MoveAndRotateOverTime(cap, targetPos, leftPos, duration * speedMult, 0, tiltRotation));
 
         // Wait for 2 seconds THIS IS THE TIME WHERE THE THING DIPS IN AND OUT
-        
-        
+
+
         StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 0f, 30f, 1.2f * speedMult));
         yield return new WaitForSeconds(1.2f * speedMult);
         GetComponent<pickUpObjects>().other.transform.Find("Aluminum").gameObject.SetActive(true); // enable aluminum pellets
 
-        
+
         yield return new WaitForSeconds(0.7f * speedMult);
         StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 30f, 0f, 0.5f * speedMult));
         yield return new WaitForSeconds(0.8f * speedMult);
-        
+
 
         Vector3 tiltRotationBack = new Vector3(0f, 0f, -70f); // Tilt 30 degrees on Z-axis
         yield return StartCoroutine(MoveAndRotateOverTime(cap, leftPos, targetPos, duration * speedMult, 0, tiltRotationBack));
@@ -1258,7 +1075,7 @@ public class doCertainThingWith : NetworkBehaviour
         {
             float t = elapsedTime / duration;
             obj.position = Vector3.Lerp(start, end, t);
-            
+
             // Rotate smoothly if a rotation is applied
             if (rotationSpeed != 0)
                 obj.Rotate(obj.transform.parent.up, rotationSpeed * Time.deltaTime);
@@ -1276,7 +1093,7 @@ public class doCertainThingWith : NetworkBehaviour
     IEnumerator LerpValue(System.Action<float> setValue, float start, float end, float duration)
     {
         float elapsedTime = 0f;
-        
+
         while (elapsedTime < duration)
         {
             float t = elapsedTime / duration;
@@ -1284,53 +1101,41 @@ public class doCertainThingWith : NetworkBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        
+
         setValue(end); // Ensure it reaches the exact target value
     }
 
 
     void ShootFoam()
     {
-        
+
         if (pickUpScript.other != null && pickUpScript.other.name == "Fire extinguisher")
         {
-            
+
             ParticleSystem foam = pickUpScript.other.transform.Find("Foam").GetComponent<ParticleSystem>();
             if (!foam.isPlaying)
             {
-                
-                TriggerFoamServerRpc(pickUpScript.other.GetComponent<NetworkObject>().NetworkObjectId);
+
+                TriggerFoam(pickUpScript.other);
             }
         }
     }
 
-    [ServerRpc]
-    private void TriggerFoamServerRpc(ulong networkObjectId)
+
+
+
+    private void TriggerFoam(GameObject extinguisher)
     {
-       
-        if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out NetworkObject netObj))
-        {
-            // Call the ClientRpc to trigger the foam effect for all clients
-            TriggerFoamClientRpc(networkObjectId);
-        }
+
+
+        ParticleSystem foam = extinguisher.transform.Find("Foam").GetComponent<ParticleSystem>();
+        foam.Play();
+
+
+        StartCoroutine(OnOrOffForDelay(extinguisher.transform.Find("Spraying").gameObject, foam.main.duration));
+        StartCoroutine(OnOrOffForDelay(extinguisher.transform.Find("Not Spraying").gameObject, foam.main.duration, false));
     }
 
-    [ClientRpc]
-    private void TriggerFoamClientRpc(ulong networkObjectId)
-    {
-        
-        if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out NetworkObject netObj))
-        {
-            
-            ParticleSystem foam = netObj.transform.Find("Foam").GetComponent<ParticleSystem>();
-            foam.Play();
-
-            
-            StartCoroutine(OnOrOffForDelay(netObj.transform.Find("Spraying").gameObject, foam.main.duration));
-            StartCoroutine(OnOrOffForDelay(netObj.transform.Find("Not Spraying").gameObject, foam.main.duration, false));
-        }
-    }
-    
     IEnumerator OnOrOffForDelay(GameObject obj, float delayTime, bool initialState = true)
     {
         obj.SetActive(initialState);
@@ -1340,40 +1145,14 @@ public class doCertainThingWith : NetworkBehaviour
 
     void LightMatchAndTossForward(GameObject obj)
     {
-        
+
         matchBoxScript matchScript = obj.GetComponent<matchBoxScript>();
 
-        
+
         if (!matchScript.animationPlaying)
         {
-            
-            LightMatchServerRpc(obj.GetComponent<NetworkObject>().NetworkObjectId);
-        }
-    }
 
-    [ServerRpc]
-    void LightMatchServerRpc(ulong matchboxNetworkObjectId)
-    {
-        
-        if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(matchboxNetworkObjectId, out NetworkObject matchboxNetworkObject))
-        {
-            // Call the ClientRpc to trigger the Light Match for all clients
-            LightMatchClientRpc(matchboxNetworkObjectId);
-        }
-    }
-
-    [ClientRpc]
-    void LightMatchClientRpc(ulong matchboxNetworkObjectId)
-    {
-        
-        if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(matchboxNetworkObjectId, out NetworkObject matchboxNetworkObject))
-        {
-            
-            matchBoxScript matchScript = matchboxNetworkObject.GetComponent<matchBoxScript>();
-            if (matchScript != null && !matchScript.animationPlaying)
-            {
-                matchScript.LightMatch();
-            }
+            matchScript.LightMatch();
         }
     }
 }
