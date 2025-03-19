@@ -18,10 +18,10 @@ public class gameHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            QuitGame();
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    QuitGame();
+        //}
 
         if (Input.GetKeyDown(KeyCode.Tab))
             ToggleCursor();

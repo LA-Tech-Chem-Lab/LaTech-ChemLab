@@ -1015,6 +1015,83 @@ public class doCertainThingWith : MonoBehaviour
         }
     }
 
+    IEnumerator getAluminumUsingScoopula(GameObject container)
+{
+    scoopulaAnimationPlaying = true;
+    
+    // Reference to scoopula
+    GameObject scoopula = GetComponent<pickUpObjects>().other;
+
+    // If scoopula is null (dropped), stop coroutine
+    if (scoopula == null)
+        yield break;
+
+    Transform cap = container.transform.Find("Cap");
+
+    GetComponent<playerMovement>().canMove = false;
+    GetComponent<playerMovement>().canTurn = false;
+    GetComponent<pickUpObjects>().canRotateItem = false;
+
+    if (cap == null)
+        yield break; // Stop the coroutine if cap is not found
+
+    float speedMult = 1 / 2f;
+    Vector3 startPos = cap.position;
+    Vector3 targetPos = startPos + cap.parent.up * 0.08f;
+    Vector3 leftPos = targetPos - cap.parent.right * 0.14f;
+    float duration = 0.8f;
+    float rotationSpeed = 240f;
+
+    // First movement check
+    if (scoopula == null) yield break;
+    yield return StartCoroutine(MoveAndRotateOverTime(cap, startPos, targetPos, duration * speedMult, -rotationSpeed, Vector3.zero));
+
+    if (scoopula == null) yield break;
+    yield return new WaitForSeconds(duration * speedMult);
+
+    Vector3 tiltRotation = new Vector3(0f, 0f, 70f);
+    
+    if (scoopula == null) yield break;
+    yield return StartCoroutine(MoveAndRotateOverTime(cap, targetPos, leftPos, duration * speedMult, 0, tiltRotation));
+
+    if (scoopula == null) yield break;
+    StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 0f, 30f, 1.2f * speedMult));
+    yield return new WaitForSeconds(1.2f * speedMult);
+
+    if (scoopula == null) yield break;
+    scoopula.transform.Find("Aluminum").gameObject.SetActive(true);
+
+    if (scoopula == null) yield break;
+    yield return new WaitForSeconds(0.7f * speedMult);
+    
+    if (scoopula == null) yield break;
+    StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 30f, 0f, 0.5f * speedMult));
+    yield return new WaitForSeconds(0.8f * speedMult);
+
+    Vector3 tiltRotationBack = new Vector3(0f, 0f, -70f);
+    
+    if (scoopula == null) yield break;
+    yield return StartCoroutine(MoveAndRotateOverTime(cap, leftPos, targetPos, duration * speedMult, 0, tiltRotationBack));
+
+    if (scoopula == null) yield break;
+    yield return new WaitForSeconds(duration * speedMult);
+
+    if (scoopula == null) yield break;
+    yield return StartCoroutine(MoveAndRotateOverTime(cap, targetPos, startPos, duration * speedMult, rotationSpeed, Vector3.zero));
+
+    if (scoopula == null) yield break;
+    yield return new WaitForSeconds(duration * speedMult);
+
+    // Reset animation state
+    scoopulaAnimationPlaying = false;
+    cap.localPosition = new Vector3(0f, 0.3299f, 0f);
+    cap.localEulerAngles = new Vector3(0f, 0f, 0f);
+    GetComponent<playerMovement>().canMove = true;
+    GetComponent<playerMovement>().canTurn = true;
+    GetComponent<pickUpObjects>().canRotateItem = true;
+}
+
+
     IEnumerator scoopulaDip(GameObject scoopula, GameObject closestWeighBoat){
         float speedMult = 1 / 2f;
 
@@ -1034,7 +1111,7 @@ public class doCertainThingWith : MonoBehaviour
         yield return new WaitForSeconds(0.8f * speedMult);
     }
 
-    IEnumerator getAluminumUsingScoopula(GameObject container)
+    IEnumerator getAluminumUsingScoopulaOld(GameObject container)
     {
         scoopulaAnimationPlaying = true;
         Transform cap = container.transform.Find("Cap");
@@ -1060,6 +1137,9 @@ public class doCertainThingWith : MonoBehaviour
 
         // Wait for 2 seconds THIS IS THE TIME WHERE THE THING DIPS IN AND OUT
 
+        if (!GetComponent<pickUpObjects>().other){
+            yield break;
+        }
 
         StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 0f, 30f, 1.2f * speedMult));
         yield return new WaitForSeconds(1.2f * speedMult);
@@ -1124,7 +1204,7 @@ public class doCertainThingWith : MonoBehaviour
 
         setValue(end); // Ensure it reaches the exact target value
     }
-    
+
     void ShootFoam()
     {
 
