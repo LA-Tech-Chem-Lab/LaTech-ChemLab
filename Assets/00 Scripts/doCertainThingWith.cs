@@ -14,7 +14,7 @@ using UnityEngine.UIElements;
 public class doCertainThingWith : MonoBehaviour
 {
     const float TONG_GRAB_DISTANCE = 3f;
-    const float PIPETTE_GRAB_DISTANCE = 0.3f;
+    const float PIPETTE_GRAB_DISTANCE = 0.5f;
     const float IRON_RING_SNAP_DISTANCE = 0.7f;
     const float SCOOPULA_GRAB_DISTANCE = 1.2f;
     const float FUNNEL_INSERT_DISTANCE = 1.5f;
@@ -73,8 +73,12 @@ public class doCertainThingWith : MonoBehaviour
         {
             if (heldPipette == pickUpScript.other)
             {
-                lightUpBeaker();
                 pipetteSpeed = heldPipette.GetComponent<pipetteScript>().flowSpeed;
+            }
+        }
+        if (pickUpScript.other){
+            if (pickUpScript.other.transform.name == "Beaker" || pickUpScript.other.transform.name == "Weigh Boat" || pickUpScript.other.transform.name == "Scoopula" || pickUpScript.other.transform.name.StartsWith("Erlenmeyer Flask") || pickUpScript.other.transform.name == "Paper Cone" || pickUpScript.other.transform.name == "Pipette"){
+                lightUpBeaker();
             }
         }
 
@@ -228,30 +232,21 @@ public class doCertainThingWith : MonoBehaviour
                     obj.GetComponent<bunsenBurnerScript>().AdjustAirflowBasedOnInput(Input.mouseScrollDelta.y * 2f);
                     obj.GetComponent<bunsenBurnerScript>().AdjustGearRotation(Input.mouseScrollDelta.y * 2f);
                 }
-            
-            //if (obj.name == "Beaker" || obj.name.StartsWith("Erlenmeyer Flask") || obj.name == "Weigh Boat" || obj.name == "Paper Cone"){
-            //    if (Input.GetKeyDown(KeyCode.P)){
-            //        startPour();
-            //    }
-//
-            //    if (Input.GetKeyUp(KeyCode.P)){
-            //        stopPour();
-            //    }
-            //}
+
             if (obj.name == "Beaker" || obj.name.StartsWith("Erlenmeyer Flask") || obj.name == "Weigh Boat" || obj.name == "Paper Cone")
-        {
-            if (Input.GetKey(KeyCode.E)) // While "E" is held
             {
-                if (!obj.GetComponent<liquidScript>().isPouring) // Only start pouring if it's not already pouring
+                if (Input.GetKey(KeyCode.P)) // While "P" is held
                 {
-                    startPour();
+                    if (!obj.GetComponent<liquidScript>().isPouring) // Only start pouring if it's not already pouring
+                    {
+                        startPour();
+                    }
+                }
+                else if (Input.GetKeyUp(KeyCode.P)) // When "P" is released
+                {
+                    stopPour();
                 }
             }
-            else if (Input.GetKeyUp(KeyCode.E)) // When "E" is released
-            {
-                stopPour();
-            }
-        }
         }
     }
 
@@ -260,68 +255,62 @@ public class doCertainThingWith : MonoBehaviour
         pickUpScript.distOffset = dist;
     }
 
-    //void startPour(){
-    //    liquidScript LS = pickUpScript.other.GetComponent<liquidScript>();
-    //    LS.isPouring = true;
-    //    GameObject closestBeakerOrFlask = findClosestItemWithTag("LiquidHolder", pickUpScript.other);
-    //    pickUpScript.other.transform.eulerAngles = new Vector3(90f, 0f, 0f);
-    //    Debug.Log(closestBeakerOrFlask);
-    //    LS.filterSolution(LS.solutionMakeup, 10f, closestBeakerOrFlask.transform);
-    //}
-//
-    //void stopPour(){
-    //    pickUpScript.other.GetComponent<liquidScript>().isPouring = false;
-    //    pickUpScript.other.transform.rotation = Quaternion.identity;
-    //}
-//
+    void startPour()
+    {
+        liquidScript LS = pickUpScript.other.GetComponent<liquidScript>();
 
-void startPour()
-{
-    liquidScript LS = pickUpScript.other.GetComponent<liquidScript>();
+        if (LS.isPouring) return;
+
+        LS.isPouring = true;
+        GameObject closestBeakerOrFlask = findClosestItemWithTag("LiquidHolder", pickUpScript.other);
+
+        if (closestBeakerOrFlask == null)
+        {
+            Debug.LogWarning("No liquid container found nearby!");
+            return;
+        }
+        pickUpScript.other.transform.rotation = Quaternion.Euler(90f, 0f, 0f); // Keep beaker tilted
+
+        //pickUpScript.other.transform.eulerAngles = new Vector3(90f, 0f, 0f);
+        Debug.Log("Pouring into: " + closestBeakerOrFlask.name);
+
+        // Store the coroutine reference
+        pouringCoroutine = StartCoroutine(PourContinuously(LS, closestBeakerOrFlask.transform));
+    }
+
+    void stopPour()
+    {
+        liquidScript LS = pickUpScript.other.GetComponent<liquidScript>();
+        LS.isPouring = false;
+        pickUpScript.other.transform.rotation = Quaternion.identity;
+
+        // Stop only this specific coroutine
+        if (pouringCoroutine != null)
+        {
+            StopCoroutine(pouringCoroutine);
+            pouringCoroutine = null;
+        }
+    }
+    IEnumerator PourContinuously(liquidScript LS, Transform targetContainer)
+    {
+        float maxPourDistance = PIPETTE_GRAB_DISTANCE; // Set the max allowed distance for pouring
+
+        while (LS.isPouring)
+        {
+            // Check if target container is still within range
+            float distance = Vector3.Distance(pickUpScript.other.transform.position, targetContainer.position);
+
+            if (distance > maxPourDistance) // Stop pouring if too far
+            {
+                stopPour();
+                yield break; // Exit the coroutine
+            }
+
+            LS.filterSolution(LS.solutionMakeup, 1f, targetContainer); // Pour 1 unit per frame
+            yield return new WaitForSeconds(0.1f); // Controls pour speed
+        }
+    }
     
-    if (LS.isPouring) return;
-
-    LS.isPouring = true;
-    GameObject closestBeakerOrFlask = findClosestItemWithTag("LiquidHolder", pickUpScript.other);
-
-    if (closestBeakerOrFlask == null)
-    {
-        Debug.LogWarning("No liquid container found nearby!");
-        return;
-    }
-    pickUpScript.other.transform.rotation = Quaternion.Euler(90f, 0f, 0f); // Keep beaker tilted
-
-    //pickUpScript.other.transform.eulerAngles = new Vector3(90f, 0f, 0f);
-    Debug.Log("Pouring into: " + closestBeakerOrFlask.name);
-
-    // Store the coroutine reference
-    pouringCoroutine = StartCoroutine(PourContinuously(LS, closestBeakerOrFlask.transform));
-}
-
-void stopPour()
-{
-    liquidScript LS = pickUpScript.other.GetComponent<liquidScript>();
-    LS.isPouring = false;
-    pickUpScript.other.transform.rotation = Quaternion.identity;
-
-    // Stop only this specific coroutine
-    if (pouringCoroutine != null)
-    {
-        StopCoroutine(pouringCoroutine);
-        pouringCoroutine = null;
-    }
-}
-
-IEnumerator PourContinuously(liquidScript LS, Transform targetContainer)
-{
-    while (LS.isPouring)
-    {
-        LS.filterSolution(LS.solutionMakeup, 1f, targetContainer); // Pour 1 unit per frame
-        yield return new WaitForSeconds(0.1f); // Controls pour speed
-    }
-}
-
-
     void insertFunnel(GameObject funnel)
     {
         float minDist = Mathf.Infinity;
@@ -812,12 +801,18 @@ IEnumerator PourContinuously(liquidScript LS, Transform targetContainer)
 
     void lightUpBeaker()
     {
-        GameObject pipetteEnd = heldPipette.transform.Find("Tip")?.gameObject;
+        GameObject pipetteEnd = pickUpScript.other;
+        if (pickUpScript.other.name == "Pipette" || pickUpScript.other.name == "Scoopula"){
+            pipetteEnd = heldPipette.transform.Find("Tip")?.gameObject;
+        }
         GameObject closestBeakerOrFlask = findClosestItemWithTag("LiquidHolder", pipetteEnd);
         if (closestBeakerOrFlask == null) return;
 
         // Get positions and zero out Y-axis
-        Vector3 pipetteTip = heldPipette.transform.Find("Tip").position;
+        Vector3 pipetteTip = pickUpScript.other.transform.position;
+        if (pickUpScript.other.name == "Pipette" || pickUpScript.other.name == "Scoopula"){
+            pipetteTip = heldPipette.transform.Find("Tip").position;
+        }
         pipetteTip.y = 0f;
         Vector3 beakerOrFlask = closestBeakerOrFlask.transform.position;
         beakerOrFlask.y = 0f;

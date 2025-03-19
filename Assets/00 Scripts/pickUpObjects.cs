@@ -254,7 +254,7 @@ public class pickUpObjects : MonoBehaviour
                 multiHandlerScript.setHelpText(helpText);
             }
             else{
-                multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents.");
+                multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents. You can also hold P to pour into another container.");
             }
         }
     }
@@ -359,9 +359,7 @@ public class pickUpObjects : MonoBehaviour
                 holdingDistance = Mathf.MoveTowards(holdingDistance, initialHoldingDistance, blendingSensitivity * Time.deltaTime / 3f);
                 setTargetPosition();
             }
-        }
-        
-        
+        } 
     }
 
     void maintainObject(){
@@ -378,12 +376,6 @@ public class pickUpObjects : MonoBehaviour
             );
 
             heldObjPosition = other.transform.position;
-            
-            //other.transform.localRotation = Quaternion.Slerp(
-            //    other.transform.localRotation,
-            //    targetQuaternion,
-            //    Time.deltaTime * blendingSensitivity
-            //);
 
             // Allow objects to stay tipped while pouring
             if (other.GetComponent<liquidScript>() == null || !other.GetComponent<liquidScript>().isPouring)
@@ -452,20 +444,6 @@ public class pickUpObjects : MonoBehaviour
             else
                 Gizmos.DrawSphere(targetPosition + targetPositionShift, checkRadius);
     }
-
-    // void SetOwnerToTongs()
-    // {
-    //     other.layer = LayerMask.NameToLayer("HeldObject");
-    //     foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
-    //         if (currentObject.name.StartsWith("Erlenmeyer Flask"))
-    //         {   
-    //             NetworkObject networkObject = currentObject.GetComponent<NetworkObject>();
-    //             if (networkObject != null)
-    //             {
-    //                 ulong networkObjectId = networkObject.NetworkObjectId;
-    //             }
-    //         }
-    // }
 
     public void DetachIronRingFromStand(GameObject ironRing)
     {
