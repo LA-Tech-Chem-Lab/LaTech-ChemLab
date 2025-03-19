@@ -115,13 +115,7 @@ public class pickUpObjects : MonoBehaviour
             meshOffset = Vector3.zero;  objShift = meshOffset;
             targetPositionShift = Vector3.zero; }
 
-
-
-
         initialHoldingDistance = untouchedHoldingDistance;
-
-        // if (other.name == "Tongs")
-        //     SetOwnerToTongs();
 
         if (other.name == "Pipette"){
             initialHoldingDistance = 1.3f;
@@ -143,17 +137,10 @@ public class pickUpObjects : MonoBehaviour
         }
 
         if (other.name == "Buchner Funnel"){
-            Debug.Log("MightCall detach funtion");
             if (GetComponent<doCertainThingWith>().buchnerfunnelIsAttached == true){
-                Debug.Log("Calling detatch funtion");
                 GetComponent<doCertainThingWith>().DetachBuchnerFunnel(other);
             }
         }
-
-        //if (other.name == "Buchner Paper Cone"){
-        //    if (GetComponent<doCertainThingWith>().filterIsAttatched == true)
-        //        GetComponent<doCertainThingWith>().DetachBuchnerFilter(other);
-        //}
 
         if (other.name == "Stir Rod"){
             initialHoldingDistance = 1.3f;
@@ -164,7 +151,6 @@ public class pickUpObjects : MonoBehaviour
         initialHeldDistForObject = initialHoldingDistance;
         setHelpTextBasedOnObject();
     }
-
 
     public void DropItem(){
 
@@ -210,20 +196,29 @@ public class pickUpObjects : MonoBehaviour
         if (other.name == "Tongs")              multiHandlerScript.setHelpText("Right click to grab a flask.");
         if (other.name == "Erlenmeyer Flask")   multiHandlerScript.setHelpText("250 mL Erlenmeyer flask");
         if (other.name == "Erlenmeyer Flask L") multiHandlerScript.setHelpText("500 mL Erlenmeyer flask");
-        if (other.name == "Weigh Boat")   multiHandlerScript.setHelpText("This is a weigh boat. You can use it to measure out the aluminum pellets on the scale. When you have the right amount, you can dump its contents into a beaker.");
-        if (other.name == "Glass Funnel")             multiHandlerScript.setHelpText("This is a glass funnel used for filtering out solids from solutions. Right click on an Erlenmeyer flask to attatch it.");
+        if (other.name == "Weigh Boat")         multiHandlerScript.setHelpText("This is a weigh boat. You can use it to measure out the aluminum pellets on the scale. When you have the right amount, you can dump its contents into a beaker.");
+        if (other.name == "Glass Funnel")       multiHandlerScript.setHelpText("This is a glass funnel used for filtering out solids from solutions. Right click on an Erlenmeyer flask to attatch it.");
         if (other.name == "Paper Cone")         multiHandlerScript.setHelpText("This is a paper filter used with a funnel to filter solids from a solution.");
-        if (other.name == "Buchner Funnel")             multiHandlerScript.setHelpText("This is a Buchner funnel used for filtering out solids from solutions. Right click on an Buchner flask to attatch it.");
-        //if (other.name == "Buchner Paper Cone")         multiHandlerScript.setHelpText("This is a paper filter used with the buchner funnel to filter solids from a solution.");
+        if (other.name == "Buchner Funnel")     multiHandlerScript.setHelpText("This is a Buchner funnel used for filtering out solids from solutions. Right click on an Buchner flask to attatch it.");
     }
 
     void setHelpTextConstantly(){
         if (other.name == "Pipette"){
             pipetteScript ps = other.GetComponent<pipetteScript>();
-            bool flowing = ps.flowSpeed > 0f;
             multiHandlerScript.setHelpText($"{ps.pipetteVolume} / {ps.pipetteMaxVolume} mL");
             if (GetComponent<doCertainThingWith>().tryingToPipetteSolid){
                 multiHandlerScript.setHelpText("It looks like you are trying to pipette a solid. Maybe try pouring this substance by picking up the container and right clicking another container.");
+            }
+        }
+
+        if (other.name == "Scoopula"){
+            string contents = "";
+            if (other.transform.Find("Aluminum").gameObject.activeInHierarchy){
+                contents = "Aluminum";
+            }
+            multiHandlerScript.setHelpText("Scoopula: \nContains: " + contents);
+            if (GetComponent<doCertainThingWith>().tryingToMixCompoundsInNonLiquidHolder){
+                multiHandlerScript.setHelpText("It looks like you are trying to mix two different types of compounds in a non-mixing container. This is not allowed. Try using a clean dish");
             }
         }
 

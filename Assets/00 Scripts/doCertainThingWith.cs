@@ -43,6 +43,8 @@ public class doCertainThingWith : MonoBehaviour
     public bool beginStirring = false;
     public bool tryingToPipetteSolid = false; 
 
+    public bool tryingToMixCompoundsInNonLiquidHolder = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -179,7 +181,7 @@ public class doCertainThingWith : MonoBehaviour
             if (obj.name == "Beaker")
                 BringObjectCloser(-1.1f);
 
-            if (obj.name == "Evaporating Dish")
+            if (obj.name == "Weigh Boat")
                 BringObjectCloser(-1.5f);
 
             if (obj.name.StartsWith("Erlenmeyer Flask"))
@@ -1008,16 +1010,15 @@ public class doCertainThingWith : MonoBehaviour
         }
 
         // Okay, fine lets try to drop it instead then
-        GameObject closestWeighBoat = findClosestItemWithTag("weigh boat", scoopula);
+        GameObject closestWeighBoat = findClosestItemWithTag("Weigh Boat", scoopula);
+        Debug.Log(closestWeighBoat);
         var pipetteTip = scoopula.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
-        Debug.Log("before weightboat var");
-        var weighBoat = closestWeighBoat.transform.position; weighBoat.y = 0f;
-        Debug.Log("after weightboat var");
+        Vector3 weighBoat = closestWeighBoat.transform.position;
+        weighBoat.y = 0f; 
         float distFromTip2 = Vector3.Distance(pipetteTip, weighBoat);
 
         if (closestWeighBoat && distFromTip2 <= ALUMINUM_DROPOFF_RANGE && scoopula.transform.Find("Aluminum").gameObject.activeInHierarchy)
         { // We have a beaker or flask within range
-            Debug.Log("Drop in this weigh boat");
             scoopula.transform.Find("Aluminum").gameObject.SetActive(false);
             //closestWeighBoat.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f }, 0.7407f);  // Add 0.37 mL of Aluminum
             closestWeighBoat.GetComponent<weighboatscript>().addScoop(4);
