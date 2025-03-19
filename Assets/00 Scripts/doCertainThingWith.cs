@@ -955,15 +955,9 @@ public class doCertainThingWith : MonoBehaviour
 
     void manipulateBunsenBurner()
     {
-
-
-
         pickUpScript.targetX = 85f;
         pickUpScript.canZoomIn = false;
         pickUpScript.canRotateItem = false;
-
-
-
     }
 
     void resetRotationOffset()
@@ -998,8 +992,6 @@ public class doCertainThingWith : MonoBehaviour
             }
         }
 
-
-
         if (closestAluminumContainer && minDist <= SCOOPULA_GRAB_DISTANCE) // Now we have closest Flask
         {
             if (!scoopulaAnimationPlaying)
@@ -1019,11 +1011,27 @@ public class doCertainThingWith : MonoBehaviour
 
         if (closestWeighBoat && distFromTip2 <= ALUMINUM_DROPOFF_RANGE && scoopula.transform.Find("Aluminum").gameObject.activeInHierarchy)
         { // We have a beaker or flask within range
-            scoopula.transform.Find("Aluminum").gameObject.SetActive(false);
-            //closestWeighBoat.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f }, 0.7407f);  // Add 0.37 mL of Aluminum
-            closestWeighBoat.GetComponent<weighboatscript>().addScoop(4);
-            closestWeighBoat.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+            StartCoroutine(scoopulaDip(scoopula, closestWeighBoat));
         }
+    }
+
+    IEnumerator scoopulaDip(GameObject scoopula, GameObject closestWeighBoat){
+        float speedMult = 1 / 2f;
+
+        //scoopula dips down
+        StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 0f, 30f, 1.2f * speedMult));
+        yield return new WaitForSeconds(1.2f * speedMult);
+
+        //scoopula drops pellets
+        scoopula.transform.Find("Aluminum").gameObject.SetActive(false);
+        //closestWeighBoat.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f }, 0.7407f);  // Add 0.37 mL of Aluminum
+        closestWeighBoat.GetComponent<weighboatscript>().addScoop(4);
+        closestWeighBoat.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+
+        //scoopula returns to original position
+        yield return new WaitForSeconds(0.7f * speedMult);
+        StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 30f, 0f, 0.5f * speedMult));
+        yield return new WaitForSeconds(0.8f * speedMult);
     }
 
     IEnumerator getAluminumUsingScoopula(GameObject container)
@@ -1116,8 +1124,7 @@ public class doCertainThingWith : MonoBehaviour
 
         setValue(end); // Ensure it reaches the exact target value
     }
-
-
+    
     void ShootFoam()
     {
 
@@ -1133,16 +1140,11 @@ public class doCertainThingWith : MonoBehaviour
         }
     }
 
-
-
-
     private void TriggerFoam(GameObject extinguisher)
     {
 
-
         ParticleSystem foam = extinguisher.transform.Find("Foam").GetComponent<ParticleSystem>();
         foam.Play();
-
 
         StartCoroutine(OnOrOffForDelay(extinguisher.transform.Find("Spraying").gameObject, foam.main.duration));
         StartCoroutine(OnOrOffForDelay(extinguisher.transform.Find("Not Spraying").gameObject, foam.main.duration, false));
@@ -1159,7 +1161,6 @@ public class doCertainThingWith : MonoBehaviour
     {
 
         matchBoxScript matchScript = obj.GetComponent<matchBoxScript>();
-
 
         if (!matchScript.animationPlaying)
         {
