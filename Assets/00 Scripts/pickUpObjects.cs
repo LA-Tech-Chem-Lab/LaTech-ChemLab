@@ -379,11 +379,21 @@ public class pickUpObjects : MonoBehaviour
 
             heldObjPosition = other.transform.position;
             
-            other.transform.localRotation = Quaternion.Slerp(
-                other.transform.localRotation,
-                targetQuaternion,
-                Time.deltaTime * blendingSensitivity
-            );
+            //other.transform.localRotation = Quaternion.Slerp(
+            //    other.transform.localRotation,
+            //    targetQuaternion,
+            //    Time.deltaTime * blendingSensitivity
+            //);
+
+            // Allow objects to stay tipped while pouring
+            if (other.GetComponent<liquidScript>() == null || !other.GetComponent<liquidScript>().isPouring)
+            {
+                other.transform.localRotation = Quaternion.Slerp(
+                    other.transform.localRotation,
+                    targetQuaternion,
+                    Time.deltaTime * blendingSensitivity
+                );
+            }
 
             if (holdingItem){
                 float yDistance = 0f;
@@ -545,8 +555,4 @@ public class pickUpObjects : MonoBehaviour
             Debug.LogWarning("DetachIronRing: Iron Mesh not found!");
         }
     }
-
-
-
-
 }

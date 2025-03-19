@@ -5,6 +5,7 @@ using Obi;
 using Tripolygon.UModelerX.Runtime;
 using Unity.Multiplayer.Center.NetcodeForGameObjectsExample;
 using Unity.Netcode;
+using Unity.Services.Multiplay.Authoring.Core.MultiplayApi;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -44,6 +45,7 @@ public class doCertainThingWith : MonoBehaviour
     public bool tryingToPipetteSolid = false; 
 
     public bool tryingToMixCompoundsInNonLiquidHolder = false;
+    private Coroutine pouringCoroutine; // Store reference to coroutine
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -226,6 +228,30 @@ public class doCertainThingWith : MonoBehaviour
                     obj.GetComponent<bunsenBurnerScript>().AdjustAirflowBasedOnInput(Input.mouseScrollDelta.y * 2f);
                     obj.GetComponent<bunsenBurnerScript>().AdjustGearRotation(Input.mouseScrollDelta.y * 2f);
                 }
+            
+            //if (obj.name == "Beaker" || obj.name.StartsWith("Erlenmeyer Flask") || obj.name == "Weigh Boat" || obj.name == "Paper Cone"){
+            //    if (Input.GetKeyDown(KeyCode.P)){
+            //        startPour();
+            //    }
+//
+            //    if (Input.GetKeyUp(KeyCode.P)){
+            //        stopPour();
+            //    }
+            //}
+            if (obj.name == "Beaker" || obj.name.StartsWith("Erlenmeyer Flask") || obj.name == "Weigh Boat" || obj.name == "Paper Cone")
+        {
+            if (Input.GetKey(KeyCode.E)) // While "E" is held
+            {
+                if (!obj.GetComponent<liquidScript>().isPouring) // Only start pouring if it's not already pouring
+                {
+                    startPour();
+                }
+            }
+            else if (Input.GetKeyUp(KeyCode.E)) // When "E" is released
+            {
+                stopPour();
+            }
+        }
         }
     }
 
@@ -234,6 +260,66 @@ public class doCertainThingWith : MonoBehaviour
         pickUpScript.distOffset = dist;
     }
 
+    //void startPour(){
+    //    liquidScript LS = pickUpScript.other.GetComponent<liquidScript>();
+    //    LS.isPouring = true;
+    //    GameObject closestBeakerOrFlask = findClosestItemWithTag("LiquidHolder", pickUpScript.other);
+    //    pickUpScript.other.transform.eulerAngles = new Vector3(90f, 0f, 0f);
+    //    Debug.Log(closestBeakerOrFlask);
+    //    LS.filterSolution(LS.solutionMakeup, 10f, closestBeakerOrFlask.transform);
+    //}
+//
+    //void stopPour(){
+    //    pickUpScript.other.GetComponent<liquidScript>().isPouring = false;
+    //    pickUpScript.other.transform.rotation = Quaternion.identity;
+    //}
+//
+
+void startPour()
+{
+    liquidScript LS = pickUpScript.other.GetComponent<liquidScript>();
+    
+    if (LS.isPouring) return;
+
+    LS.isPouring = true;
+    GameObject closestBeakerOrFlask = findClosestItemWithTag("LiquidHolder", pickUpScript.other);
+
+    if (closestBeakerOrFlask == null)
+    {
+        Debug.LogWarning("No liquid container found nearby!");
+        return;
+    }
+    pickUpScript.other.transform.rotation = Quaternion.Euler(90f, 0f, 0f); // Keep beaker tilted
+
+    //pickUpScript.other.transform.eulerAngles = new Vector3(90f, 0f, 0f);
+    Debug.Log("Pouring into: " + closestBeakerOrFlask.name);
+
+    // Store the coroutine reference
+    pouringCoroutine = StartCoroutine(PourContinuously(LS, closestBeakerOrFlask.transform));
+}
+
+void stopPour()
+{
+    liquidScript LS = pickUpScript.other.GetComponent<liquidScript>();
+    LS.isPouring = false;
+    pickUpScript.other.transform.rotation = Quaternion.identity;
+
+    // Stop only this specific coroutine
+    if (pouringCoroutine != null)
+    {
+        StopCoroutine(pouringCoroutine);
+        pouringCoroutine = null;
+    }
+}
+
+IEnumerator PourContinuously(liquidScript LS, Transform targetContainer)
+{
+    while (LS.isPouring)
+    {
+        LS.filterSolution(LS.solutionMakeup, 1f, targetContainer); // Pour 1 unit per frame
+        yield return new WaitForSeconds(0.1f); // Controls pour speed
+    }
+}
 
 
     void insertFunnel(GameObject funnel)
@@ -639,7 +725,8 @@ public class doCertainThingWith : MonoBehaviour
     {
 
         // First find the closest beaker/flask below you
-        GameObject closestBeakerOrFlask = findClosestItemWithTag("LiquidHolder", pipette);
+        GameObject pipetteEnd = pipette.transform.Find("Tip")?.gameObject;
+        GameObject closestBeakerOrFlask = findClosestItemWithTag("LiquidHolder", pipetteEnd);
         var pipetteTip = pipette.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
         var beakerOrFlask = closestBeakerOrFlask.transform.position; beakerOrFlask.y = 0f;
 
@@ -725,7 +812,8 @@ public class doCertainThingWith : MonoBehaviour
 
     void lightUpBeaker()
     {
-        GameObject closestBeakerOrFlask = findClosestItemWithTag("LiquidHolder", heldPipette);
+        GameObject pipetteEnd = heldPipette.transform.Find("Tip")?.gameObject;
+        GameObject closestBeakerOrFlask = findClosestItemWithTag("LiquidHolder", pipetteEnd);
         if (closestBeakerOrFlask == null) return;
 
         // Get positions and zero out Y-axis
@@ -793,11 +881,10 @@ public class doCertainThingWith : MonoBehaviour
 
         foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
         {
-
-            if (currentObject.tag == Tag)
+            if (currentObject.tag == Tag && currentObject != pipette)
             {
 
-                var pipetteTip = pipette.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
+                var pipetteTip = pipette.transform.position; pipetteTip.y = 0f;
                 var beakerOrFlask = currentObject.transform.position; beakerOrFlask.y = 0f;
 
                 float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
@@ -952,7 +1039,6 @@ public class doCertainThingWith : MonoBehaviour
         pickUpScript.targetRotation.y = transform.localEulerAngles.y;           // When right clicked, face item away from player
     }
 
-
     void manipulateBunsenBurner()
     {
         pickUpScript.targetX = 85f;
@@ -966,7 +1052,6 @@ public class doCertainThingWith : MonoBehaviour
         pickUpScript.canZoomIn = true;
         pickUpScript.canRotateItem = true;
     }
-
 
     void GatherAluminumPelletsFromContainerOrDropThem()
     {
@@ -1002,7 +1087,8 @@ public class doCertainThingWith : MonoBehaviour
         }
 
         // Okay, fine lets try to drop it instead then
-        GameObject closestWeighBoat = findClosestItemWithTag("Weigh Boat", scoopula);
+        GameObject scoopulaEnd = scoopula.transform.Find("Tip")?.gameObject;
+        GameObject closestWeighBoat = findClosestItemWithTag("Weigh Boat", scoopulaEnd);
         Debug.Log(closestWeighBoat);
         var pipetteTip = scoopula.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
         Vector3 weighBoat = closestWeighBoat.transform.position;
@@ -1016,80 +1102,80 @@ public class doCertainThingWith : MonoBehaviour
     }
 
     IEnumerator getAluminumUsingScoopula(GameObject container)
-{
-    scoopulaAnimationPlaying = true;
+    {
+        scoopulaAnimationPlaying = true;
+        
+        // Reference to scoopula
+        GameObject scoopula = GetComponent<pickUpObjects>().other;
     
-    // Reference to scoopula
-    GameObject scoopula = GetComponent<pickUpObjects>().other;
-
-    // If scoopula is null (dropped), stop coroutine
-    if (scoopula == null)
-        yield break;
-
-    Transform cap = container.transform.Find("Cap");
-
-    GetComponent<playerMovement>().canMove = false;
-    GetComponent<playerMovement>().canTurn = false;
-    GetComponent<pickUpObjects>().canRotateItem = false;
-
-    if (cap == null)
-        yield break; // Stop the coroutine if cap is not found
-
-    float speedMult = 1 / 2f;
-    Vector3 startPos = cap.position;
-    Vector3 targetPos = startPos + cap.parent.up * 0.08f;
-    Vector3 leftPos = targetPos - cap.parent.right * 0.14f;
-    float duration = 0.8f;
-    float rotationSpeed = 240f;
-
-    // First movement check
-    if (scoopula == null) yield break;
-    yield return StartCoroutine(MoveAndRotateOverTime(cap, startPos, targetPos, duration * speedMult, -rotationSpeed, Vector3.zero));
-
-    if (scoopula == null) yield break;
-    yield return new WaitForSeconds(duration * speedMult);
-
-    Vector3 tiltRotation = new Vector3(0f, 0f, 70f);
+        // If scoopula is null (dropped), stop coroutine
+        if (scoopula == null)
+            yield break;
     
-    if (scoopula == null) yield break;
-    yield return StartCoroutine(MoveAndRotateOverTime(cap, targetPos, leftPos, duration * speedMult, 0, tiltRotation));
-
-    if (scoopula == null) yield break;
-    StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 0f, 30f, 1.2f * speedMult));
-    yield return new WaitForSeconds(1.2f * speedMult);
-
-    if (scoopula == null) yield break;
-    scoopula.transform.Find("Aluminum").gameObject.SetActive(true);
-
-    if (scoopula == null) yield break;
-    yield return new WaitForSeconds(0.7f * speedMult);
+        Transform cap = container.transform.Find("Cap");
     
-    if (scoopula == null) yield break;
-    StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 30f, 0f, 0.5f * speedMult));
-    yield return new WaitForSeconds(0.8f * speedMult);
-
-    Vector3 tiltRotationBack = new Vector3(0f, 0f, -70f);
+        GetComponent<playerMovement>().canMove = false;
+        GetComponent<playerMovement>().canTurn = false;
+        GetComponent<pickUpObjects>().canRotateItem = false;
     
-    if (scoopula == null) yield break;
-    yield return StartCoroutine(MoveAndRotateOverTime(cap, leftPos, targetPos, duration * speedMult, 0, tiltRotationBack));
-
-    if (scoopula == null) yield break;
-    yield return new WaitForSeconds(duration * speedMult);
-
-    if (scoopula == null) yield break;
-    yield return StartCoroutine(MoveAndRotateOverTime(cap, targetPos, startPos, duration * speedMult, rotationSpeed, Vector3.zero));
-
-    if (scoopula == null) yield break;
-    yield return new WaitForSeconds(duration * speedMult);
-
-    // Reset animation state
-    scoopulaAnimationPlaying = false;
-    cap.localPosition = new Vector3(0f, 0.3299f, 0f);
-    cap.localEulerAngles = new Vector3(0f, 0f, 0f);
-    GetComponent<playerMovement>().canMove = true;
-    GetComponent<playerMovement>().canTurn = true;
-    GetComponent<pickUpObjects>().canRotateItem = true;
-}
+        if (cap == null)
+            yield break; // Stop the coroutine if cap is not found
+    
+        float speedMult = 1 / 2f;
+        Vector3 startPos = cap.position;
+        Vector3 targetPos = startPos + cap.parent.up * 0.08f;
+        Vector3 leftPos = targetPos - cap.parent.right * 0.14f;
+        float duration = 0.8f;
+        float rotationSpeed = 240f;
+    
+        // First movement check
+        if (scoopula == null) yield break;
+        yield return StartCoroutine(MoveAndRotateOverTime(cap, startPos, targetPos, duration * speedMult, -rotationSpeed, Vector3.zero));
+    
+        if (scoopula == null) yield break;
+        yield return new WaitForSeconds(duration * speedMult);
+    
+        Vector3 tiltRotation = new Vector3(0f, 0f, 70f);
+        
+        if (scoopula == null) yield break;
+        yield return StartCoroutine(MoveAndRotateOverTime(cap, targetPos, leftPos, duration * speedMult, 0, tiltRotation));
+    
+        if (scoopula == null) yield break;
+        StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 0f, 30f, 1.2f * speedMult));
+        yield return new WaitForSeconds(1.2f * speedMult);
+    
+        if (scoopula == null) yield break;
+        scoopula.transform.Find("Aluminum").gameObject.SetActive(true);
+    
+        if (scoopula == null) yield break;
+        yield return new WaitForSeconds(0.7f * speedMult);
+        
+        if (scoopula == null) yield break;
+        StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 30f, 0f, 0.5f * speedMult));
+        yield return new WaitForSeconds(0.8f * speedMult);
+    
+        Vector3 tiltRotationBack = new Vector3(0f, 0f, -70f);
+        
+        if (scoopula == null) yield break;
+        yield return StartCoroutine(MoveAndRotateOverTime(cap, leftPos, targetPos, duration * speedMult, 0, tiltRotationBack));
+    
+        if (scoopula == null) yield break;
+        yield return new WaitForSeconds(duration * speedMult);
+    
+        if (scoopula == null) yield break;
+        yield return StartCoroutine(MoveAndRotateOverTime(cap, targetPos, startPos, duration * speedMult, rotationSpeed, Vector3.zero));
+    
+        if (scoopula == null) yield break;
+        yield return new WaitForSeconds(duration * speedMult);
+    
+        // Reset animation state
+        scoopulaAnimationPlaying = false;
+        cap.localPosition = new Vector3(0f, 0.3299f, 0f);
+        cap.localEulerAngles = new Vector3(0f, 0f, 0f);
+        GetComponent<playerMovement>().canMove = true;
+        GetComponent<playerMovement>().canTurn = true;
+        GetComponent<pickUpObjects>().canRotateItem = true;
+    }
 
 
     IEnumerator scoopulaDip(GameObject scoopula, GameObject closestWeighBoat){
@@ -1109,60 +1195,6 @@ public class doCertainThingWith : MonoBehaviour
         yield return new WaitForSeconds(0.7f * speedMult);
         StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 30f, 0f, 0.5f * speedMult));
         yield return new WaitForSeconds(0.8f * speedMult);
-    }
-
-    IEnumerator getAluminumUsingScoopulaOld(GameObject container)
-    {
-        scoopulaAnimationPlaying = true;
-        Transform cap = container.transform.Find("Cap");
-        GetComponent<playerMovement>().canMove = false;
-        GetComponent<playerMovement>().canTurn = false;
-        GetComponent<pickUpObjects>().canRotateItem = false;
-        // Debug.Log(GetComponent<pickUpObjects>().targetRotation.y);
-
-        if (cap == null)
-            yield break; // Stop the coroutine if cap is not found
-
-        float speedMult = 1 / 2f;
-        Vector3 startPos = cap.position;
-        Vector3 targetPos = startPos + cap.parent.up * 0.08f; // Move up by 0.1 units
-        Vector3 leftPos = targetPos - cap.parent.right * 0.14f; // Move left by 0.13 units
-        float duration = 0.8f; // Time to move up/down
-        float rotationSpeed = 240f; // Degrees per second
-
-        yield return StartCoroutine(MoveAndRotateOverTime(cap, startPos, targetPos, duration * speedMult, -rotationSpeed, Vector3.zero));
-        yield return new WaitForSeconds(duration * speedMult);
-        Vector3 tiltRotation = new Vector3(0f, 0f, 70f); // Tilt 30 degrees on Z-axis
-        yield return StartCoroutine(MoveAndRotateOverTime(cap, targetPos, leftPos, duration * speedMult, 0, tiltRotation));
-
-        // Wait for 2 seconds THIS IS THE TIME WHERE THE THING DIPS IN AND OUT
-
-        if (!GetComponent<pickUpObjects>().other){
-            yield break;
-        }
-
-        StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 0f, 30f, 1.2f * speedMult));
-        yield return new WaitForSeconds(1.2f * speedMult);
-        GetComponent<pickUpObjects>().other.transform.Find("Aluminum").gameObject.SetActive(true); // enable aluminum pellets
-
-
-        yield return new WaitForSeconds(0.7f * speedMult);
-        StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 30f, 0f, 0.5f * speedMult));
-        yield return new WaitForSeconds(0.8f * speedMult);
-
-
-        Vector3 tiltRotationBack = new Vector3(0f, 0f, -70f); // Tilt 30 degrees on Z-axis
-        yield return StartCoroutine(MoveAndRotateOverTime(cap, leftPos, targetPos, duration * speedMult, 0, tiltRotationBack));
-        yield return new WaitForSeconds(duration * speedMult);
-        yield return StartCoroutine(MoveAndRotateOverTime(cap, targetPos, startPos, duration * speedMult, rotationSpeed, Vector3.zero));
-        yield return new WaitForSeconds(duration * speedMult);
-
-        scoopulaAnimationPlaying = false;
-        cap.localPosition = new Vector3(0f, 0.3299f, 0f);
-        cap.localEulerAngles = new Vector3(0f, 0f, 0f);
-        GetComponent<playerMovement>().canMove = true;
-        GetComponent<playerMovement>().canTurn = true;
-        GetComponent<pickUpObjects>().canRotateItem = true;
     }
 
     IEnumerator MoveAndRotateOverTime(Transform obj, Vector3 start, Vector3 end, float duration, float rotationSpeed, Vector3 targetRotation)
