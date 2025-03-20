@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/3. Mason/Two Person Lab Selection UI.unity
     guid: 96e0ace4f0fa2f04e997f5cf2f2005cc
-  - enabled: 1
+  - enabled: 0
     path: Assets/{Main - Multiplayer}.unity
     guid: 60ccb3ee2e539444483848083ab45f6a
   - enabled: 0

@@ -81,8 +81,8 @@ public class multihandler : NetworkBehaviour
 
     void Update()
     {   
-        if (Input.GetKeyDown(KeyCode.Escape)) // We are selecting server and press escape - Quit
-            QuitGame();
+        // if (Input.GetKeyDown(KeyCode.Escape)) // We are selecting server and press escape - Quit
+        //     QuitGame();
 
         if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab))) // We are loaded in and press escape - pause or unpause
             PauseOrUnpause();
