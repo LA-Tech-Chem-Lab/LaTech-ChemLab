@@ -508,7 +508,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 21292802316322614, guid: d43e3d0a18413724b96fc710ad300b6a, type: 3}
+  - {fileID: 2100000, guid: 29e72ac4150ffc54699d309ad36a825f, type: 2}
   - {fileID: 7234310677201292718, guid: d43e3d0a18413724b96fc710ad300b6a, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -6097,7 +6097,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 57
+  m_VersionIndex: 78
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -6330,7 +6330,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8571b709d69aa7b42bc1d9b998ce0d35, type: 2}
+  - {fileID: 2100000, guid: 29e72ac4150ffc54699d309ad36a825f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7092,7 +7092,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 73
+  m_VersionIndex: 94
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -7130,7 +7130,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82675822fa3ee584aa7505dd3476e48d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
   hinge: {fileID: 0}
   doorIsClosed: 1
   closedAngle: 0
@@ -7336,7 +7335,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8571b709d69aa7b42bc1d9b998ce0d35, type: 2}
+  - {fileID: 2100000, guid: 29e72ac4150ffc54699d309ad36a825f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7708,7 +7707,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 34
+  m_VersionIndex: 55
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -7746,7 +7745,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82675822fa3ee584aa7505dd3476e48d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
   hinge: {fileID: 0}
   doorIsClosed: 1
   closedAngle: 0
