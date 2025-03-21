@@ -18,6 +18,7 @@ public class doCertainThingWith : MonoBehaviour
     const float IRON_RING_SNAP_DISTANCE = 0.7f;
     const float SCOOPULA_GRAB_DISTANCE = 1.2f;
     const float FUNNEL_INSERT_DISTANCE = 1.5f;
+    const float ASSEMBLY_DISTANCE = 1.5f;
     const float ALUMINUM_DROPOFF_RANGE = 0.8f;
 
 
@@ -46,6 +47,8 @@ public class doCertainThingWith : MonoBehaviour
 
     public bool tryingToMixCompoundsInNonLiquidHolder = false;
     private Coroutine pouringCoroutine; // Store reference to coroutine
+
+    public GameObject combinedApparatusPrefab;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -147,7 +150,11 @@ public class doCertainThingWith : MonoBehaviour
             if (obj.name == "Stir Rod")
                 putStirRodInBeaker(obj);
 
+            if (obj.name == "Capilary tube")
+                insertMeltingPointApparatus(obj);
 
+            if (obj.name == "Melting Point Tool")
+                placeMeltingPointApparatus(obj);
         }
     }
 
@@ -610,6 +617,133 @@ public class doCertainThingWith : MonoBehaviour
         buchnerfunneledFlask.tag = "LiquidHolder";
         buchnerfunneledFlask = null;
         buchnerfunnelIsAttached = false;
+    }
+    void insertMeltingPointApparatus(GameObject capillaryTube)
+    {
+        GameObject thermometer = GameObject.Find("Therometer");
+        GameObject rubberBand = GameObject.Find("RubberBand");
+
+        if (thermometer == null || rubberBand == null)
+        {
+            Debug.Log("Required components not found in the scene.");
+            return;
+        }
+
+        float distThermometer = Vector3.Distance(capillaryTube.transform.position, thermometer.transform.position);
+        float distRubberBand = Vector3.Distance(capillaryTube.transform.position, rubberBand.transform.position);
+
+        Debug.Log("Thermometer distance: " + distThermometer);
+        Debug.Log("Rubber Band distance: " + distRubberBand);
+
+        // Check if all components are within range
+        if (distThermometer <= ASSEMBLY_DISTANCE && distRubberBand <= ASSEMBLY_DISTANCE)
+        {
+            Debug.Log("All components within assembly range. Creating assembled apparatus...");
+
+            // Instantiate the assembled apparatus at the thermometer's position
+            GameObject newApparatus = Instantiate(combinedApparatusPrefab, thermometer.transform.position, thermometer.transform.rotation);
+            newApparatus.name = combinedApparatusPrefab.name; // Remove "(Clone)"
+
+            // Destroy individual components
+            pickUpScript.DropItem();
+            Destroy(thermometer);
+            Destroy(rubberBand);
+            Destroy(capillaryTube);
+
+            Debug.Log("Melting Point Apparatus Assembled Successfully!");
+        }
+        else
+        {
+            Debug.Log("Assembly failed. Components may be out of range.");
+        }
+    }
+
+    void placeMeltingPointApparatus(GameObject MeltingPointTool)
+    {
+        Debug.Log("Trying");
+        // Find all beakers in the scene
+        GameObject[] beakers = GameObject.FindGameObjectsWithTag("LiquidHolder");
+
+
+        GameObject closestBeaker = null;
+        float closestDistance = Mathf.Infinity;
+
+        // Loop through all beakers to find the closest one
+        foreach (GameObject beaker in beakers)
+        {
+            float distBeaker = Vector3.Distance(MeltingPointTool.transform.position, beaker.transform.position);
+            if (distBeaker < closestDistance)
+            {
+                closestDistance = distBeaker;
+                closestBeaker = beaker;
+            }
+        }
+
+        // If no closest beaker was found, return
+        if (closestBeaker == null)
+        {
+            Debug.Log("No closest beaker found.");
+
+        }
+
+        // Get the liquidScript from the closest beaker
+        liquidScript beakerLiquid = closestBeaker.GetComponent<liquidScript>();
+        if (beakerLiquid == null)
+        {
+            Debug.Log("Closest beaker has no Liquid script attached.");
+        }
+
+        if (beakerLiquid.percentH2SO4 == 0 &&
+            beakerLiquid.percentKOH == 0 &&
+            beakerLiquid.percentH2O == 1 &&
+            beakerLiquid.percentK2SO4 == 0 &&
+            beakerLiquid.percentAl == 0 &&
+            beakerLiquid.percentKAlOH4 == 0 &&
+            beakerLiquid.percentAl2SO43 == 0 &&
+            beakerLiquid.percentAlum == 0 &&
+            beakerLiquid.percentAlOH3 == 0 &&
+            beakerLiquid.percentKAlSO42 == 0 &&
+            beakerLiquid.percentKAlO2 == 0)
+        {
+            float distBeaker = Vector3.Distance(MeltingPointTool.transform.position, closestBeaker.transform.position);
+            Debug.Log("Distance to beaker: " + distBeaker);
+
+            if (distBeaker <= ASSEMBLY_DISTANCE)
+            {
+                Debug.Log("Melting Point Apparatus successfully placed near the beaker.");
+                pickUpScript.DropItem();
+                Rigidbody rb = MeltingPointTool.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    Destroy(rb);
+                }
+
+                BoxCollider collider = MeltingPointTool.GetComponent<BoxCollider>();
+                if (collider != null)
+                {
+                    collider.isTrigger = true; // Makes the collider a trigger
+                }
+                // Set as a child of the beaker
+                MeltingPointTool.transform.SetParent(closestBeaker.transform);
+
+                // Apply local position, rotation, and scale
+                MeltingPointTool.transform.localPosition = new Vector3(-0.5699997f, -0.7067311f, 0.09368933f);
+                MeltingPointTool.transform.localRotation = Quaternion.Euler(0f, 0f, -25.826f);
+                MeltingPointTool.transform.localScale = new Vector3(6.905945f, 5.176058f, 7.692307f);
+
+                Debug.Log("Melting Point Apparatus placed successfully with specified transform settings.");
+            }
+            else
+            {
+                Debug.Log("Beaker is out of range. Cannot place Melting Point Apparatus.");
+            }
+        }
+        else
+        {
+            Debug.Log("Beaker does not contain pure water. Cannot place Melting Point Apparatus.");
+            //Debug.Log(beakerLiquid.percentH2O);
+            //Debug.Log((beakerLiquid.percentH2SO4, beakerLiquid.percentKOH, beakerLiquid.percentH2O, beakerLiquid.percentK2SO4, beakerLiquid.percentAl, beakerLiquid.percentKAlOH4, beakerLiquid.percentAl2SO43, beakerLiquid.percentAlum, beakerLiquid.percentAlOH3, beakerLiquid.percentKAlSO42, beakerLiquid.percentKAlO2));
+        }
     }
 
     void GrabFlaskByNeck(GameObject tongs)

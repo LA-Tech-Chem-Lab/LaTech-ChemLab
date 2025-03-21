@@ -70,13 +70,33 @@ public class liquidScript : MonoBehaviour
 
     public bool isPouring = false;
 
+    private float meltingPointH2SO4 = -10f;
+    private float meltingPointKOH = 360f;
+    private float meltingPointH2O = 0f;
+    private float meltingPointK2SO4 = 1069f;
+    private float meltingPointAl = 660f;
+    private float meltingPointKAlOH4 = 100f;
+    private float meltingPointAl2SO43 = 770f;
+    private float meltingPointAlum = 92f;
+    private float meltingPointAlOH3 = 300f;
+    private float meltingPointKAlSO42 = 1200f;
+    private float meltingPointKAlO2 = 1000f;
+
+
     // Use this for initialization
     void Start()
     {
         liquidTransform = transform.Find("Liquid").transform;
         rend = transform.Find("Liquid").GetComponent<Renderer>();
         objectRigidbody = GetComponent<Rigidbody>();
-        initialObjectMass = objectRigidbody.mass;
+        if (gameObject.name == "Capilary tube (1)")
+        {
+            initialObjectMass = 1.0f; // Set to a default value
+        }
+        else
+        {
+            initialObjectMass = objectRigidbody.mass; // Otherwise, use the Rigidbody's mass
+        }
         solutionMakeup.AddRange(new float[] { percentH2SO4, percentKOH , percentH2O, percentK2SO4, percentAl, percentKAlOH4, percentAl2SO43, percentAlum, percentAlOH3, percentKAlSO42, percentKAlO2});
         if (currentVolume_mL > 0){
             calculateDensity();
@@ -172,7 +192,15 @@ public class liquidScript : MonoBehaviour
             rend.material.SetFloat("_FillAmount", scaledHeight);
         }
         // Simulate new object mass now containing liquid
-        objectRigidbody.mass = initialObjectMass + currentVolume_mL * densityOfLiquid / 1000f;
+        if (gameObject.name == "Capilary tube (1)")
+        {
+            return;
+        }
+        else
+        {
+            objectRigidbody.mass = initialObjectMass + currentVolume_mL * densityOfLiquid / 1000f;
+        }
+        
 
     }
 
@@ -247,8 +275,14 @@ void CalculateHeat()
     }
 
     float heatTransferRate = convectiveHeatTransferCoeff * beakerSurfaceArea * (currentHeat - liquidTemperature);
-    float temperatureChange = (heatTransferRate / (GetComponent<Rigidbody>().mass * specificHeatCapacity)) * Time.deltaTime;
-
+    if (gameObject.name == "Capilary tube (1)")
+        {
+            float temperatureChange = (heatTransferRate / (1 * specificHeatCapacity)) * Time.deltaTime;
+        }
+    else
+        {
+            float temperatureChange = (heatTransferRate / (GetComponent<Rigidbody>().mass * specificHeatCapacity)) * Time.deltaTime;
+        }
     liquidTemperature = Mathf.Lerp(liquidTemperature, currentHeat, Time.deltaTime / 15f);
 
     // Calculate total mass of the solution (assume mass of liquid is given or available)
@@ -740,5 +774,36 @@ void CalculateHeat()
         }
 
         reactionHappening = false;
+    }
+    public float GetMeltingPoint()
+    {
+        // Calculate the total percentage to ensure it sums to 100% or 1
+        float totalPercent = percentH2SO4 + percentKOH + percentH2O + percentK2SO4 +
+                             percentAl + percentKAlOH4 + percentAl2SO43 + percentAlum +
+                             percentAlOH3 + percentKAlSO42 + percentKAlO2;
+
+        // Prevent division by zero if totalPercent is zero
+        if (totalPercent == 0f)
+        {
+            Debug.LogWarning("Total percentage is 0, returning a default value of 0°C");
+            return 0f; // Return 0 if the percentages don't sum up to a meaningful value
+        }
+
+        // Calculate the weighted average melting point
+        float meltingPoint = (
+            (percentH2SO4 * meltingPointH2SO4) +
+            (percentKOH * meltingPointKOH) +
+            (percentH2O * meltingPointH2O) +
+            (percentK2SO4 * meltingPointK2SO4) +
+            (percentAl * meltingPointAl) +
+            (percentKAlOH4 * meltingPointKAlOH4) +
+            (percentAl2SO43 * meltingPointAl2SO43) +
+            (percentAlum * meltingPointAlum) +
+            (percentAlOH3 * meltingPointAlOH3) +
+            (percentKAlSO42 * meltingPointKAlSO42) +
+            (percentKAlO2 * meltingPointKAlO2)
+        ) / totalPercent;
+
+        return meltingPoint;
     }
 }
