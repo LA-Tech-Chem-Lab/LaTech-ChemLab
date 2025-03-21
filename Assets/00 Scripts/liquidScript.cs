@@ -85,6 +85,9 @@ public class liquidScript : MonoBehaviour
 
     [Header("Toxic Gas")]
     public float H2Released = 0f;
+    public GameObject boilingEffect;
+    public bool isBoiling = false;
+    GameObject currentBoilingEffect;
 
     // Use this for initialization
     void Start()
@@ -92,6 +95,7 @@ public class liquidScript : MonoBehaviour
         liquidTransform = transform.Find("Liquid").transform;
         rend = transform.Find("Liquid").GetComponent<Renderer>();
         objectRigidbody = GetComponent<Rigidbody>();
+        boilingEffect = Resources.Load<GameObject>("boilingEffect");
         if (gameObject.name == "Capilary tube (1)")
         {
             initialObjectMass = 1.0f; // Set to a default value
@@ -143,6 +147,15 @@ public class liquidScript : MonoBehaviour
         if (gameObject.name == "Paper Cone" && gameObject.transform.parent?.parent && !isFiltering && currentVolume_mL > 1f){
             Transform Flask = gameObject.transform.parent?.parent;
             StartCoroutine(handleFiltering(Flask));
+        }
+
+        if (H2Released > 0.1f){
+            //explode(); 
+            Debug.Log("Boom");
+        }
+
+        if (H2Released > 0){
+            H2Released -= 0.00001f;
         }
     }
 
@@ -290,7 +303,6 @@ void CalculateHeat()
 
     // Calculate total mass of the solution (assume mass of liquid is given or available)
     float totalSolutionMass = densityOfLiquid * currentVolume_mL;
-
     // Check for evaporation
     for (int i = 0; i < compoundNames.Count; i++)
     {
@@ -298,8 +310,15 @@ void CalculateHeat()
         float latentHeatOfVaporization = latentHeat[i]; // Latent heat of vaporization for each compound
 
         // If the temperature exceeds the boiling point, calculate evaporation rate
-        if (liquidTemperature >= boilingPoint)
+        if (liquidTemperature >= boilingPoint && solutionMakeup[i] > 0.1f)
         {
+            if (!isBoiling){
+                currentBoilingEffect = Instantiate(boilingEffect, transform);
+                currentBoilingEffect.transform.localPosition = new Vector3(0f, -0.7f, 0f);
+                currentBoilingEffect.GetComponent<Renderer>().material.color = surfaceColor;
+            }
+            isBoiling = true;
+
             float temperatureDifference = liquidTemperature - boilingPoint;
             
             // Evaporation rate calculation (rate at which mass evaporates per second)
@@ -320,6 +339,9 @@ void CalculateHeat()
 
             // Update the solution makeup percentage based on the new mass of the compound
             solutionMakeup[i] = compoundMass / totalSolutionMass;
+        }
+        else if (!isBoiling){
+            Destroy(currentBoilingEffect);
         }
     }
 }
