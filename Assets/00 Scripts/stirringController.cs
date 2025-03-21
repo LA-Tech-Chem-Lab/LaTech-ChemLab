@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 
-public class stirringController : NetworkBehaviour
+public class stirringController : MonoBehaviour
 {
     private doCertainThingWith playerScript;
     public Camera playerCamera;
@@ -50,6 +50,7 @@ public class stirringController : NetworkBehaviour
                 {
                     // find stir rod child
                     Transform stirRodChild = hit.transform.Find("Stir Rod");
+                    Debug.Log("Stir Rod Layer: " + LayerMask.LayerToName(stirRodChild.gameObject.layer));
 
                     if (stirRodChild != null)
                     {
