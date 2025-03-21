@@ -11,6 +11,7 @@ using Unity.Mathematics;
 using Unity.Multiplayer.Center.Common;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UIElements;
 
 public class liquidScript : MonoBehaviour
@@ -82,6 +83,8 @@ public class liquidScript : MonoBehaviour
     private float meltingPointKAlSO42 = 1200f;
     private float meltingPointKAlO2 = 1000f;
 
+    [Header("Toxic Gas")]
+    public float H2Released = 0f;
 
     // Use this for initialization
     void Start()
@@ -571,7 +574,7 @@ void CalculateHeat()
                     List<string> products = new List<string> {"KAl(OH)4"};
                     List<float> Rratio = new List<float> {2, 2, 6};
                     List<float> Pratio = new List<float> {2};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, .1f));
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, .1f, "H2", 3));
                 }
                 //Tested and Working
                 if (percentH2SO4 > 0.03f){
@@ -582,7 +585,7 @@ void CalculateHeat()
                     List<string> products = new List<string> {"Al2(SO4)3"};
                     List<float> Rratio = new List<float> {2, 3};
                     List<float> Pratio = new List<float> {1};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, .1f));
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, .1f, "H2", 3));
                 }
             }
             if (percentH2SO4 > 0.02f){
@@ -688,7 +691,7 @@ void CalculateHeat()
         }
     }
 
-    IEnumerator react(List<string> reactants, List<float> Rratio, List<string> products, List<float> Pratio, float reactSpeed)
+    IEnumerator react(List<string> reactants, List<float> Rratio, List<string> products, List<float> Pratio, float reactSpeed, string gasType = "none", int gasMols = 0)
     {
         reactionHappening = true;
         limreactnum = 1f;
@@ -726,6 +729,9 @@ void CalculateHeat()
             {
                 // Update products in proportion to the limiting reactant
                 solutionMols[compoundNames.IndexOf(products[i])] += Pratio[i] * limreactnum / 10f;
+                if (gasType == "H2"){
+                    H2Released += gasMols * limreactnum / 10f; 
+                }
             }
 
             // Update liquid color (or other visual effects)
@@ -744,7 +750,6 @@ void CalculateHeat()
             // Check for invalid total mass
             if (totalMass <= 0f)
             {
-                Debug.LogError("Total mass is zero/negative. Resetting solution.");
                 break; // Exit the loop to prevent NaN
             }
 
@@ -785,7 +790,7 @@ void CalculateHeat()
         // Prevent division by zero if totalPercent is zero
         if (totalPercent == 0f)
         {
-            Debug.LogWarning("Total percentage is 0, returning a default value of 0°C");
+            //Debug.LogWarning("Total percentage is 0, returning a default value of 0ï¿½C");
             return 0f; // Return 0 if the percentages don't sum up to a meaningful value
         }
 
