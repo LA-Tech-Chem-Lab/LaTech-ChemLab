@@ -352,7 +352,7 @@ public class pickUpObjects : MonoBehaviour
             }
 
             // Can also be the funnel even if it is kinematic because we want to be able to pick it up when it is attatched to the flask
-            if (rb && (!rb.GetComponent<Rigidbody>().isKinematic || hitObject.name == "Glass Funnel" || hitObject.name == "Paper Cone" || hitObject.name == "Buchner Funnel" || hitObject.name == "Stir Rod")) // ITEM PICKUP
+            if (rb) // ITEM PICKUP
             {
                 PickUpItem(hitObject);
             }
