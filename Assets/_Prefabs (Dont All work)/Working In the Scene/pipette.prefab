@@ -125,7 +125,7 @@ Transform:
   m_GameObject: {fileID: 5875408927554808786}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.02, y: 0, z: -0.00043869}
+  m_LocalPosition: {x: -0.003, y: -0, z: -0.00043869}
   m_LocalScale: {x: 0.93, y: 0.985, z: 0.93}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -162,7 +162,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 80654e172b3be854c8d40012f3a513d5, type: 2}
+  - {fileID: 2100000, guid: 67ac645a28c7fff43ae7c2211f62fb8d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -438,6 +438,7 @@ MonoBehaviour:
   - 0
   - 0
   flowRateML: 1.5
+  pipetteFlowStatus: 0
 --- !u!114 &5712248642422999328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -533,6 +534,10 @@ MonoBehaviour:
   roomTemp: 293.15
   isFiltering: 0
   liquidPercent: 0
+  isPouring: 0
+  H2Released: 0
+  boilingEffect: {fileID: 0}
+  isBoiling: 0
 --- !u!114 &4581113958860313215
 MonoBehaviour:
   m_ObjectHideFlags: 0

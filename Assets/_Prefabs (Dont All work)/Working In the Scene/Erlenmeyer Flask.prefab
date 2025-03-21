@@ -361,6 +361,10 @@ MonoBehaviour:
   roomTemp: 293.15
   isFiltering: 0
   liquidPercent: 0
+  isPouring: 0
+  H2Released: 0
+  boilingEffect: {fileID: 0}
+  isBoiling: 0
 --- !u!1 &8068738466388944729
 GameObject:
   m_ObjectHideFlags: 0
@@ -511,7 +515,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3ab0c56097057e5438c7ca1818a923e0, type: 2}
+  - {fileID: 2100000, guid: 67ac645a28c7fff43ae7c2211f62fb8d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

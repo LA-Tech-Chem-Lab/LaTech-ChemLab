@@ -56,7 +56,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 80654e172b3be854c8d40012f3a513d5, type: 2}
+  - {fileID: 2100000, guid: 67ac645a28c7fff43ae7c2211f62fb8d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -367,6 +367,9 @@ MonoBehaviour:
   isFiltering: 0
   liquidPercent: 0
   isPouring: 0
+  H2Released: 0
+  boilingEffect: {fileID: 0}
+  isBoiling: 0
 --- !u!4 &1968481727774086031 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7e68e29a4dcb6e543bfc13899615a715,
