@@ -16,6 +16,7 @@ public class pipetteScript : MonoBehaviour // goood luck
     public string liquidType;
     public List<float> pipetteSolution = new List<float> {0f, 0f, 0f};
     public float flowRateML = 1f;
+    public bool pipetteFlowStatus = false; 
 
     liquidScript ls;
 

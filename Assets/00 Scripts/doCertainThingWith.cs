@@ -174,18 +174,29 @@ public class doCertainThingWith : MonoBehaviour
                 if (!heldPipette)
                 {
                     heldPipette = obj;
+                    heldPipette.GetComponent<pipetteScript>().pipetteFlowStatus = true;
                     pipetteSpeed = heldPipette.GetComponent<pipetteScript>().flowSpeed;
                 }
                 if (flowLock == false)
                 {
-                    if (heldPipette.GetComponent<pipetteScript>().pipetteVolume > 0) //is the pipette flowing?
+                    if (heldPipette.GetComponent<pipetteScript>().pipetteVolume > 0 && heldPipette.GetComponent<pipetteScript>().pipetteFlowStatus == true) //is the pipette flowing?
                     {
                         heldPipette.GetComponent<pipetteScript>().pipetteFlowing = true;
+                        heldPipette.GetComponent<pipetteScript>().pipetteFlowStatus = false;
                     }
                     else
                     {
                         heldPipette.GetComponent<pipetteScript>().pipetteExtracting = true;
+                        heldPipette.GetComponent<pipetteScript>().pipetteFlowStatus = true;
                     }
+
+
+                    //if (heldPipette.GetComponent<pipetteScript>().pipetteFlowing == true){
+                    //    heldPipette.GetComponent<pipetteScript>().pipetteExtracting = true;
+                    //}
+                    //else{
+                    //    heldPipette.GetComponent<pipetteScript>().pipetteFlowing = true;
+                    //}
                     flowLock = true;
                 }
                 SetPippetteSpeed(obj, pipetteSpeed);
