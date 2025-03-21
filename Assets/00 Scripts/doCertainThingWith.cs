@@ -80,7 +80,7 @@ public class doCertainThingWith : MonoBehaviour
             }
         }
         if (pickUpScript.other){
-            if (pickUpScript.other.transform.name == "Beaker" || pickUpScript.other.transform.name == "Weigh Boat" || pickUpScript.other.transform.name == "Scoopula" || pickUpScript.other.transform.name.StartsWith("Erlenmeyer Flask") || pickUpScript.other.transform.name == "Paper Cone" || pickUpScript.other.transform.name == "Pipette"){
+            if (pickUpScript.other.transform.name == "Beaker" || pickUpScript.other.transform.name == "Weigh Boat" || pickUpScript.other.transform.name.StartsWith("Erlenmeyer Flask") || pickUpScript.other.transform.name == "Paper Cone" || pickUpScript.other.transform.name == "Pipette"){
                 lightUpBeaker();
             }
         }
@@ -337,7 +337,7 @@ public class doCertainThingWith : MonoBehaviour
                 yield break; // Exit the coroutine
             }
 
-            LS.filterSolution(LS.solutionMakeup, 1f, targetContainer); // Pour 1 unit per frame
+            LS.filterSolution(LS.solutionMakeup, 5f, targetContainer); // Pour 1 unit per frame
             yield return new WaitForSeconds(0.1f); // Controls pour speed
         }
     }

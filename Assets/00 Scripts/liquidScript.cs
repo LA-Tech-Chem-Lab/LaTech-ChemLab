@@ -120,15 +120,17 @@ public class liquidScript : MonoBehaviour
         dotProduct = Vector3.Dot(transform.up.normalized, Vector3.up);
 
         // Spill logic
-        if (dotProduct <= 0.25f)
-        {
-            float loss = (-0.8f * dotProduct + 0.2f) * maxSpillRate * Time.deltaTime;
-            currentVolume_mL -= loss;
+        if (!isPouring){
+            if (dotProduct <= 0.25f)
+            {
+                float loss = (-0.8f * dotProduct + 0.2f) * maxSpillRate * Time.deltaTime;
+                currentVolume_mL -= loss;
 
-            if (gameObject.name.StartsWith("Erlenmeyer") && currentVolume_mL / totalVolume_mL < 0.45f)
-                currentVolume_mL = 0f;
-            if (gameObject.name.StartsWith("Beaker") && currentVolume_mL / totalVolume_mL < 0.19f)
-                currentVolume_mL = 0f;
+                if (gameObject.name.StartsWith("Erlenmeyer") && currentVolume_mL / totalVolume_mL < 0.45f)
+                    currentVolume_mL = 0f;
+                if (gameObject.name.StartsWith("Beaker") && currentVolume_mL / totalVolume_mL < 0.19f)
+                    currentVolume_mL = 0f;
+            }
         }
 
         // Handle liquid (should only be called once)
