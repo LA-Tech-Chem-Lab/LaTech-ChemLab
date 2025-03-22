@@ -14,6 +14,7 @@ public class matchBoxScript : MonoBehaviour
     Transform spawnPoint;
     
     public GameObject thrownMatch;
+    public AudioClip strikingSound;
 
     Vector3 initialPos;
     public Vector3 initialMatchPos;
@@ -61,8 +62,13 @@ public class matchBoxScript : MonoBehaviour
 
     public void LightMatch(){
         StartCoroutine(PerformLitAnimation());
+        StartCoroutine(StrikeSoundAfterDelay());
     }
 
+    IEnumerator StrikeSoundAfterDelay(){
+        yield return new WaitForSeconds(1.55f);
+        playStrikeSound();
+    }
     IEnumerator PerformLitAnimation()
     {   
         animationPlaying = true;
@@ -107,7 +113,9 @@ public class matchBoxScript : MonoBehaviour
         matchMesh.transform.localRotation = targetRotation;
     }
 
-
+    void playStrikeSound(){
+        AudioSource.PlayClipAtPoint(strikingSound, transform.position);
+    }
 
 
 

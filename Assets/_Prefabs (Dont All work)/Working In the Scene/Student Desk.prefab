@@ -609,7 +609,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4538e89a8fdd804baff3986065c0434, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
   hinge: {fileID: 0}
   doorIsClosed: 1
   closedAngle: 0
@@ -2760,7 +2759,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1601
+  m_VersionIndex: 1947
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2805,13 +2804,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cabinetIsClosed: 1
-  cabinetMovement: 0.9
-  blendingSensitivity: 3
+  cabinetMovement: 0.82
+  blendingSensitivity: 4.5
   roomMesh: {fileID: 0}
   boxSize: {x: 1.07, y: 0.25, z: 1}
   boxOffset: {x: 0.00016, y: 0.01035, z: -0.005175}
   cabinetVel: {x: 0, y: 0, z: 0}
   objectsInArea: []
+  openingSound: {fileID: 8300000, guid: 8ffa935a3c370fc4ab55fb3c738225ca, type: 3}
+  closingSound: {fileID: 0}
 --- !u!64 &727691114652288599
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -3017,12 +3018,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82675822fa3ee584aa7505dd3476e48d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
   hinge: {fileID: 0}
   doorIsClosed: 1
   closedAngle: 0
   openAngle: 120
   blendingSensitivity: 5
+  openingSound: {fileID: 8300000, guid: a283457c516aee34989c850fd21903ea, type: 3}
+  closingSound: {fileID: 0}
 --- !u!114 &5793188038012422752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3239,7 +3241,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 626
+  m_VersionIndex: 647
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -4077,7 +4079,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4538e89a8fdd804baff3986065c0434, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
   hinge: {fileID: 0}
   doorIsClosed: 1
   closedAngle: 0
@@ -4653,7 +4654,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4538e89a8fdd804baff3986065c0434, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
   hinge: {fileID: 0}
   doorIsClosed: 1
   closedAngle: 0
@@ -6445,7 +6445,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 505
+  m_VersionIndex: 716
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -8255,7 +8255,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2150
+  m_VersionIndex: 2484
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -8300,13 +8300,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cabinetIsClosed: 1
-  cabinetMovement: 0.9
-  blendingSensitivity: 3
+  cabinetMovement: 0.82
+  blendingSensitivity: 4.5
   roomMesh: {fileID: 0}
   boxSize: {x: 1.07, y: 0.25, z: 1}
   boxOffset: {x: 0.00016, y: 0.01035, z: -0.005175}
   cabinetVel: {x: 0, y: 0, z: 0}
   objectsInArea: []
+  openingSound: {fileID: 8300000, guid: 8ffa935a3c370fc4ab55fb3c738225ca, type: 3}
+  closingSound: {fileID: 0}
 --- !u!64 &5866269770593295100
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -10120,12 +10122,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82675822fa3ee584aa7505dd3476e48d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
   hinge: {fileID: 0}
   doorIsClosed: 1
   closedAngle: 0
   openAngle: -120
   blendingSensitivity: 5
+  openingSound: {fileID: 8300000, guid: a283457c516aee34989c850fd21903ea, type: 3}
+  closingSound: {fileID: 0}
 --- !u!114 &1071779839471139343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10342,7 +10345,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 626
+  m_VersionIndex: 647
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -12334,7 +12337,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2186
+  m_VersionIndex: 2565
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -12379,13 +12382,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cabinetIsClosed: 1
-  cabinetMovement: 0.9
-  blendingSensitivity: 3
+  cabinetMovement: 0.82
+  blendingSensitivity: 4.5
   roomMesh: {fileID: 0}
   boxSize: {x: 1.07, y: 0.25, z: 1}
   boxOffset: {x: 0.00016, y: 0.01035, z: -0.005175}
   cabinetVel: {x: 0, y: 0, z: 0}
   objectsInArea: []
+  openingSound: {fileID: 8300000, guid: 8ffa935a3c370fc4ab55fb3c738225ca, type: 3}
+  closingSound: {fileID: 0}
 --- !u!64 &4182825826130548361
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -13250,7 +13255,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4538e89a8fdd804baff3986065c0434, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
   hinge: {fileID: 0}
   doorIsClosed: 1
   closedAngle: 0
@@ -15272,7 +15276,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1926
+  m_VersionIndex: 1947
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -15317,13 +15321,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cabinetIsClosed: 1
-  cabinetMovement: 0.9
-  blendingSensitivity: 3
+  cabinetMovement: 0.82
+  blendingSensitivity: 4.5
   roomMesh: {fileID: 0}
   boxSize: {x: 1.07, y: 0.25, z: 1}
   boxOffset: {x: 0.00016, y: 0.01035, z: -0.005175}
   cabinetVel: {x: 0, y: 0, z: 0}
   objectsInArea: []
+  openingSound: {fileID: 8300000, guid: 8ffa935a3c370fc4ab55fb3c738225ca, type: 3}
+  closingSound: {fileID: 0}
 --- !u!64 &4749155846417757876
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -18740,7 +18746,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 688
+  m_VersionIndex: 802
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []

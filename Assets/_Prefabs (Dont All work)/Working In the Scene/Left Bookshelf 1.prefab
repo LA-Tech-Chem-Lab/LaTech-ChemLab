@@ -6097,7 +6097,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 78
+  m_VersionIndex: 87
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -7092,7 +7092,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 94
+  m_VersionIndex: 103
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -7135,6 +7135,8 @@ MonoBehaviour:
   closedAngle: 0
   openAngle: 90
   blendingSensitivity: 3
+  openingSound: {fileID: 8300000, guid: 8ffa935a3c370fc4ab55fb3c738225ca, type: 3}
+  closingSound: {fileID: 0}
 --- !u!54 &2456256467718619833
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7707,7 +7709,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 55
+  m_VersionIndex: 64
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -7750,6 +7752,8 @@ MonoBehaviour:
   closedAngle: 0
   openAngle: -90
   blendingSensitivity: 3
+  openingSound: {fileID: 8300000, guid: 8ffa935a3c370fc4ab55fb3c738225ca, type: 3}
+  closingSound: {fileID: 0}
 --- !u!54 &947247778704875445
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -19,6 +19,11 @@ public class cabinetScript : MonoBehaviour
 
     public List<GameObject> objectsInArea = new List<GameObject>();
 
+    
+    public AudioClip openingSound;
+    public AudioClip closingSound;
+    
+
     private Vector3 targetPosition;
 
     void Start()
@@ -47,7 +52,15 @@ public class cabinetScript : MonoBehaviour
     public void InteractWithThisCabinet()
     {
         cabinetIsClosed = !cabinetIsClosed;
+        playDrawerSound();
         UpdateCabinet(cabinetIsClosed);
+    }
+
+    void playDrawerSound(){
+        if (cabinetIsClosed && closingSound)
+            AudioSource.PlayClipAtPoint(closingSound, transform.position);
+        else if (!cabinetIsClosed && openingSound)
+            AudioSource.PlayClipAtPoint(openingSound, transform.position);
     }
 
     private void UpdateCabinet(bool isClosed)

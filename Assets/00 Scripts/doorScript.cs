@@ -10,6 +10,9 @@ public class doorScript : MonoBehaviour
     public float closedAngle = 0f;
     public float openAngle = 90f;
     public float blendingSensitivity = 3f;
+    public AudioClip openingSound;
+    public AudioClip closingSound;
+    
     bool coroutineRunning = false;
 
     private bool doorState = true; // Local state tracking
@@ -45,7 +48,15 @@ public class doorScript : MonoBehaviour
     {
         rotateHandles();
         doorState = !doorState; // Toggle door state
+        playDoorSound();
         UpdateDoorRotation(doorState);
+    }
+
+    void playDoorSound(){
+        if (!doorIsClosed && closingSound)
+            AudioSource.PlayClipAtPoint(closingSound, transform.position);
+        else if (doorIsClosed && openingSound)
+            AudioSource.PlayClipAtPoint(openingSound, transform.position);
     }
 
     void rotateHandles()
@@ -62,13 +73,9 @@ public class doorScript : MonoBehaviour
     private void UpdateDoorRotation(bool isClosed)
     {
         if (isClosed)
-        {
             targetRotation = new Vector3(0f, closedAngle, 0f);
-        }
         else
-        {
             targetRotation = new Vector3(0f, openAngle, 0f);
-        }
 
         targetQuaternion = Quaternion.Euler(targetRotation);
         doorIsClosed = isClosed;
