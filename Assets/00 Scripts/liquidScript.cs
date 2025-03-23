@@ -88,6 +88,12 @@ public class liquidScript : MonoBehaviour
     public GameObject boilingEffect;
     public bool isBoiling = false;
     GameObject currentBoilingEffect;
+    public GameObject explosion;
+    float explosionHeightOffset = 0f;
+    public float explosionDuration = 5f;
+    public bool exploded = false; 
+    public float detectionRadius = 1f;
+    public GameObject firePrefab;
 
     // Use this for initialization
     void Start()
@@ -96,6 +102,8 @@ public class liquidScript : MonoBehaviour
         rend = transform.Find("Liquid").GetComponent<Renderer>();
         objectRigidbody = GetComponent<Rigidbody>();
         boilingEffect = Resources.Load<GameObject>("boilingEffect");
+        explosion = Resources.Load<GameObject>("Explosion Effect");
+        firePrefab = Resources.Load<GameObject>("Flame");
         if (gameObject.name == "Capilary tube (1)")
         {
             initialObjectMass = 1.0f; // Set to a default value
@@ -151,15 +159,44 @@ public class liquidScript : MonoBehaviour
             StartCoroutine(handleFiltering(Flask));
         }
 
-        if (H2Released > 0.1f){
-            //explode(); 
+        if (H2Released > 0.1f && !exploded && IsLitMatchNearby()){
+            exploded = true;
+            explode(); 
             Debug.Log("Boom");
+            for (int i = 0; i < 5; i++){
+                // Generate a random position within the spread radius
+                Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * 0.2f;
+                randomDirection.y = 0; // Keep the fire on the same horizontal plane
+                Vector3 spawnPosition = transform.position + randomDirection;
+
+                // Spawn a new fire prefab at the randomly generated position
+                Instantiate(firePrefab, spawnPosition, Quaternion.identity);
+            }
         }
 
         if (H2Released > 0){
             H2Released -= 0.00001f;
         }
     }
+
+    private bool IsLitMatchNearby()
+{
+    Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRadius);
+
+    foreach (Collider collider in colliders)
+    {
+        if (collider.CompareTag("Match")) // Check if the object is tagged as "Match"
+        {
+            matchScript matchScript = collider.GetComponent<matchScript>();
+
+            if (matchScript != null && matchScript.lit) // Check if the match is lit
+            {
+                return true; // A lit match is nearby
+            }
+        }
+    }
+    return false; // No lit match found in range
+}
 
     void handleLiquid(){
 
@@ -834,5 +871,25 @@ void CalculateHeat()
         ) / totalPercent;
 
         return meltingPoint;
+    }
+
+
+    void explode()
+    {
+        if (explosion != null)
+        {
+            // Calculate position slightly above the object
+            Vector3 explosionPosition = transform.position + new Vector3(0, explosionHeightOffset, 0);
+
+            // Instantiate the explosion effect
+            GameObject explosionInstance = Instantiate(explosion, explosionPosition, Quaternion.identity);
+
+            // Destroy the explosion effect after the specified duration
+            Destroy(explosionInstance, explosionDuration);
+        }
+        else
+        {
+            Debug.LogWarning("Explosion effect is not assigned.");
+        }
     }
 }

@@ -13,6 +13,7 @@ TagManager:
   - EyeWashStation
   - StirRod
   - Weigh Boat
+  - Match
   layers:
   - Default
   - TransparentFX

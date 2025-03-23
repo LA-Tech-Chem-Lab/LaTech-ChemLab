@@ -37,12 +37,6 @@ public class matchScript : MonoBehaviour
         }
     }
 
-
-
-
-
-
-
     void findClosestBunsenBurner(){
         float minDist = Mathf.Infinity;
 
@@ -52,8 +46,6 @@ public class matchScript : MonoBehaviour
 
             float dist = Vector3.Distance(tip.position, currentBurner.transform.position);
             
-            
-
             if (dist < minDist && dist < MATCH_LIGHT_RADUIS){
                 minDist = dist;
                 closestBunsenBurner = currentBurner;
