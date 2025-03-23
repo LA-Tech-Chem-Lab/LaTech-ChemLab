@@ -1,42 +1,29 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 
 public class faucetHandleScript : MonoBehaviour
 {
     public Transform hinge;
-    public bool doorIsClosed = true;
+    public bool faucetIsOff = true;
 
     public float closedAngle = 0f;
     public float openAngle = 90f;
     public float blendingSensitivity = 3f;
-    bool coroutineRunning = false;
 
-    public float givenY = 0f;
-    public float givenZ = 0f;
+    public AudioClip faucetStart;
+    public AudioClip faucetLoop;
 
-    // NetworkVariable to sync door state
-    private NetworkVariable<bool> doorState = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-
-
-    Vector3 targetRotation;
-    Quaternion targetQuaternion;
-
-    List<GameObject> handles = new List<GameObject>();
+    private Coroutine faucetAudioCoroutine;
+    private Quaternion targetQuaternion;
 
     void Start()
     {
+        if (hinge == null)
+        {
+            hinge = transform.parent.gameObject.transform;
+        }
 
-        hinge = transform.parent.gameObject.transform;
-
-        // Subscribe to state changes
-        doorState.OnValueChanged += OnDoorStateChanged;
-
-        // Set the initial state
-        UpdateDoorRotation(doorState.Value);
-
-        
+        UpdateFaucetRotation(faucetIsOff);
     }
 
     void Update()
@@ -46,40 +33,66 @@ public class faucetHandleScript : MonoBehaviour
             targetQuaternion,
             Time.deltaTime * blendingSensitivity
         );
-
     }
 
     public void InteractWithThisFaucet()
     {
-            doorState.Value = !doorState.Value; // Toggle door state on server
+        faucetIsOff = !faucetIsOff; // Toggle faucet state
+        UpdateFaucetRotation(faucetIsOff);
 
-    }
-
-    private void OnDoorStateChanged(bool previousState, bool newState)
-    {
-        UpdateDoorRotation(newState);
-    }
-
-    private void UpdateDoorRotation(bool isClosed)
-    {
-        if (isClosed)
+        if (!faucetIsOff)
         {
-            targetRotation = new Vector3(0f, 0f, closedAngle);
+            // Start playing faucet sounds
+            if (faucetAudioCoroutine != null)
+            {
+                StopCoroutine(faucetAudioCoroutine);
+            }
+            faucetAudioCoroutine = StartCoroutine(TurnOnFaucetAudio());
         }
         else
         {
-            targetRotation = new Vector3(0f, 0f, openAngle);
+            // Stop audio immediately
+            if (faucetAudioCoroutine != null)
+            {
+                StopCoroutine(faucetAudioCoroutine);
+                faucetAudioCoroutine = null;
+            }
+        }
+    }
+
+    private void UpdateFaucetRotation(bool isClosed)
+    {
+        targetQuaternion = Quaternion.Euler(0f, 0f, isClosed ? closedAngle : openAngle);
+    }
+
+    private IEnumerator TurnOnFaucetAudio()
+    {
+        // Play the start sound
+        AudioSource.PlayClipAtPoint(faucetStart, transform.position);
+
+        // Wait for faucetStart to finish, but stop if faucetIsOff becomes true
+        float elapsedTime = 0f;
+        while (elapsedTime < faucetStart.length)
+        {
+            if (faucetIsOff) yield break; // Stop immediately if faucet is turned off
+            yield return null;
+            elapsedTime += Time.deltaTime;
         }
 
-        targetQuaternion = Quaternion.Euler(targetRotation);
-        doorIsClosed = isClosed;
+        // Ensure faucet is still on before starting the loop
+        while (!faucetIsOff)
+        {
+            AudioSource.PlayClipAtPoint(faucetLoop, transform.position);
+            float loopTime = faucetLoop.length;
+
+            // Check every frame if faucet was turned off mid-loop
+            elapsedTime = 0f;
+            while (elapsedTime < loopTime)
+            {
+                if (faucetIsOff) yield break; // Stop immediately if faucet is turned off
+                yield return null;
+                elapsedTime += Time.deltaTime;
+            }
+        }
     }
-
-    private void OnDestroy()
-    {
-        doorState.OnValueChanged -= OnDoorStateChanged;
-    }
-
-
-
 }

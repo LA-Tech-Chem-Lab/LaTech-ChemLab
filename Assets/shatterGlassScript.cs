@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class shatterGlassScript : MonoBehaviour
 {
-    public float forceLimit = 300; // Define a force limit for shattering if needed
+    public float forceLimit = 400f; // Define a force limit for shattering if needed
     public GameObject brokenVersionOfGlass;
     public AudioClip dinkSound;
-    public float dinkVolumeScale;
+    public float dinkVolumeScale = 1;
 
     private Rigidbody rb;
 
@@ -19,7 +19,7 @@ public class shatterGlassScript : MonoBehaviour
         float impactForce = collision.impulse.magnitude / Time.fixedDeltaTime / rb.mass;
         Debug.Log("Impact Force: " + impactForce);
 
-        if (impactForce >= forceLimit)
+        if (impactForce >= forceLimit && brokenVersionOfGlass)
             breakGlass();
         else
             playGlassDinkSound(impactForce / forceLimit);
@@ -34,7 +34,7 @@ public class shatterGlassScript : MonoBehaviour
         GameObject tempAudio = new GameObject("TempAudio");
         AudioSource audioSource = tempAudio.AddComponent<AudioSource>();
         audioSource.clip = dinkSound;
-        audioSource.volume = scale * dinkVolumeScale;
+        audioSource.volume = scale * scale * dinkVolumeScale;
         audioSource.Play();
         Destroy(tempAudio, dinkSound.length); // Cleanup
     }

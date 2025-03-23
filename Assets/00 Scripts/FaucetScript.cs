@@ -19,8 +19,8 @@ public class FaucetScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        FaucetCold = !LFaucetColdScript.doorIsClosed;
-        FaucetHot  = !LFaucetHotScript.doorIsClosed;
+        FaucetCold = !LFaucetColdScript.faucetIsOff;
+        FaucetHot  = !LFaucetHotScript.faucetIsOff;
         
         LFaucetEmitter.speed = (FaucetCold ? coldWaterFlow : 0f) + (FaucetHot ? hotWaterFlow : 0f); 
     }

@@ -610,12 +610,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hinge: {fileID: 0}
-  doorIsClosed: 1
+  faucetIsOff: 1
   closedAngle: 0
   openAngle: -180
   blendingSensitivity: 3
-  givenY: 0
-  givenZ: 0
+  faucetStart: {fileID: 8300000, guid: 875b4efb2c079b34f9fdf70501602631, type: 3}
+  faucetLoop: {fileID: 8300000, guid: e2d4dfd9d1b729447bbef3b84aa04763, type: 3}
 --- !u!1 &757550880178872144
 GameObject:
   m_ObjectHideFlags: 0
@@ -2759,7 +2759,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1947
+  m_VersionIndex: 1652
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -3241,7 +3241,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 647
+  m_VersionIndex: 677
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -4080,12 +4080,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hinge: {fileID: 0}
-  doorIsClosed: 1
+  faucetIsOff: 1
   closedAngle: 0
   openAngle: -180
   blendingSensitivity: 3
-  givenY: 0
-  givenZ: 0
+  faucetStart: {fileID: 8300000, guid: 875b4efb2c079b34f9fdf70501602631, type: 3}
+  faucetLoop: {fileID: 8300000, guid: e2d4dfd9d1b729447bbef3b84aa04763, type: 3}
 --- !u!1 &4047592871951370738
 GameObject:
   m_ObjectHideFlags: 0
@@ -4655,12 +4655,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hinge: {fileID: 0}
-  doorIsClosed: 1
+  faucetIsOff: 1
   closedAngle: 0
   openAngle: 180
   blendingSensitivity: 3
-  givenY: 0
-  givenZ: 0
+  faucetStart: {fileID: 8300000, guid: 875b4efb2c079b34f9fdf70501602631, type: 3}
+  faucetLoop: {fileID: 8300000, guid: e2d4dfd9d1b729447bbef3b84aa04763, type: 3}
 --- !u!1 &4629020412809733894
 GameObject:
   m_ObjectHideFlags: 0
@@ -6445,7 +6445,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 716
+  m_VersionIndex: 556
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -8255,7 +8255,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2484
+  m_VersionIndex: 2201
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -10345,7 +10345,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 647
+  m_VersionIndex: 677
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -12337,7 +12337,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2565
+  m_VersionIndex: 2237
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -13256,12 +13256,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hinge: {fileID: 0}
-  doorIsClosed: 1
+  faucetIsOff: 1
   closedAngle: 0
   openAngle: 180
   blendingSensitivity: 3
-  givenY: 0
-  givenZ: 0
+  faucetStart: {fileID: 8300000, guid: 875b4efb2c079b34f9fdf70501602631, type: 3}
+  faucetLoop: {fileID: 8300000, guid: e2d4dfd9d1b729447bbef3b84aa04763, type: 3}
 --- !u!1 &8612519670316596387
 GameObject:
   m_ObjectHideFlags: 0
@@ -15276,7 +15276,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1947
+  m_VersionIndex: 1977
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -18746,7 +18746,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 802
+  m_VersionIndex: 739
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
