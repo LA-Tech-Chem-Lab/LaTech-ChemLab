@@ -9,6 +9,7 @@ public class stirringController : MonoBehaviour
     public Camera playerCamera;
     private bool stirringTrigger;
     public bool debugFlag = true;
+    public Animator stirRodAnimator;
 
     // will only execute if stir rod is in the beaker
     void Start() // does this only execute once?
@@ -35,41 +36,32 @@ public class stirringController : MonoBehaviour
         Debug.Log("Found camera");
     }
 
-    void Update()
-    {   
-        if (playerScript != null)
-        {
-            Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-            RaycastHit hit;
+    void Update(){   
+        if (stirringTrigger == true) {
+            if (playerScript != null) {
+                Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+                RaycastHit hit;
 
-            // cast a ray
-            if (Physics.Raycast(ray, out hit, 5f))
-            {
-                // check if the ray is cast on a beaker
-                if (hit.collider.gameObject.name == "Beaker") 
-                {
-                    // find stir rod child
-                    Transform stirRodChild = hit.transform.Find("Stir Rod");
-                    Debug.Log("Stir Rod Layer: " + LayerMask.LayerToName(stirRodChild.gameObject.layer));
+                // cast a ray
+                if (Physics.Raycast(ray, out hit, 5f)){
+                    // check if the ray is cast on a beaker
+                    if (hit.collider.gameObject.name == "Beaker") {
+                        // find stir rod child
+                        Transform stirRodChild = hit.transform.Find("Stir Rod");
+                        Debug.Log("Stir Rod Layer: " + LayerMask.LayerToName(stirRodChild.gameObject.layer));
 
-                    if (stirRodChild != null)
-                    {
-                        Animator stirRodAnimator = stirRodChild.GetComponent<Animator>();
+                        if (stirRodChild != null){
+                            stirRodAnimator = stirRodChild.GetComponent<Animator>();
 
-                        if (stirRodAnimator != null) {
-
-                            if (stirringTrigger == true) 
-                            {
+                            if (stirRodAnimator != null){
                                 stirRodAnimator.SetTrigger("StartStirring");
-                            }
-                            else
-                            {
-                                stirRodAnimator.ResetTrigger("StartStirring");
                             }
                         }
                     }
                 }
             }
+        } else {
+            stirRodAnimator.ResetTrigger("StartStirring");
         }
     }
 }

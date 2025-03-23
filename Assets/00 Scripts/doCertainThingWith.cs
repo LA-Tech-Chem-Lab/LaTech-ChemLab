@@ -43,6 +43,8 @@ public class doCertainThingWith : MonoBehaviour
     public bool isRodInBeaker = false;
     public GameObject rodInBeaker = null;
     public bool beginStirring = false;
+    public Animator stirAnimator;                           // bays ip
+
     public bool tryingToPipetteSolid = false; 
 
     public bool tryingToMixCompoundsInNonLiquidHolder = false;
@@ -54,6 +56,10 @@ public class doCertainThingWith : MonoBehaviour
     void Start()
     {
         pickUpScript = GetComponent<pickUpObjects>();
+
+        stirAnimator = GameObject.Find("Stir Rod").GetComponent<Animator>();
+        stirAnimator.enabled = false;
+
         ironMesh = GameObject.Find("Iron Mesh");
         Rigidbody rb = ironMesh.GetComponent<Rigidbody>();
         if (rb != null)
@@ -160,9 +166,11 @@ public class doCertainThingWith : MonoBehaviour
 
     void findObjectAndPerformHeldAction()  // Held right click
     {
-        if (isRodInBeaker == true)
-        {
+        if (isRodInBeaker == true){
             beginStirring = true;
+            if (stirAnimator != null) {
+                stirAnimator.enabled = true;
+            }
         }
 
         if (pickUpScript.other != null)
@@ -220,6 +228,7 @@ public class doCertainThingWith : MonoBehaviour
     void findObjectAndPerformLiftedMouseAction()  // Lifted Right Click
     {
         beginStirring = false;
+        stirAnimator.enabled = false;
 
         if (pickUpScript.other != null)
         {
@@ -817,7 +826,7 @@ public class doCertainThingWith : MonoBehaviour
         GameObject closestBeaker = null;
         Transform stirPosition = null;
 
-        // Find the closest Flask
+        // locate closest beaker
         foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
         {
             if (currentObject.name == "Beaker")
@@ -829,7 +838,7 @@ public class doCertainThingWith : MonoBehaviour
                     minDist = distFromBeaker;
                     closestBeaker = currentObject;
 
-                    // Find the flask's top position
+                    // designated position
                     stirPosition = closestBeaker.transform.Find("StirPos");
                 }
             }
@@ -858,6 +867,7 @@ public class doCertainThingWith : MonoBehaviour
             rodInBeaker = closestBeaker;
             rodInBeaker.tag = "Untagged";
             isRodInBeaker = true;
+
         }
     }
 
