@@ -53,8 +53,5 @@ public class pipetteScript : MonoBehaviour // goood luck
         if (ls)
             ls.currentVolume_mL = pipetteVolume;
 
-        //fills the pipette on click of R 
-        if (Input.GetKeyDown(KeyCode.R))
-            pipetteVolume = initialMaxVolume;
     }
 }

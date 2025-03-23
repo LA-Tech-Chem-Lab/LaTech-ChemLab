@@ -79,7 +79,7 @@ public class pickUpObjects : MonoBehaviour
         if (holdingItem) setHelpTextConstantly();
     }
 
-    void PickUpItem(GameObject otherObject)
+    public void PickUpItem(GameObject otherObject)
     {
         if (!otherObject) return; 
 
@@ -121,6 +121,11 @@ public class pickUpObjects : MonoBehaviour
             initialHoldingDistance = 1.3f;
             canRotateItem = false;
             GetComponent<doCertainThingWith>().heldPipette = other;
+        }
+
+        if (other.name == "Thrown Match(Clone)"){
+            initialHoldingDistance = 1.3f;
+            canRotateItem = false;
         }
 
         if (other.name == "Bunsen Burner")
@@ -399,7 +404,7 @@ public class pickUpObjects : MonoBehaviour
                     initialHoldingDistance = holdingDistance;
                 }
             } else {
-                if (other.name != "Pipette") initialHoldingDistance = Mathf.MoveTowards(initialHoldingDistance, initialHeldDistForObject, blendingSensitivity * Time.deltaTime);
+                if (other.name != "Pipette" && other.name != "Thrown Match(Clone)") initialHoldingDistance = Mathf.MoveTowards(initialHoldingDistance, initialHeldDistForObject, blendingSensitivity * Time.deltaTime);
                 // if (distFromGroundLayer < holdingDistance) 
                 //     if (other.name != "Matchbox" && other.name != "Tongs" && other.name != "Glass Plate" && !other.name.StartsWith("Beaker")) { 
                 //         Debug.Log("If you are seeing this and the item is not behind a wall, go to pickUpObjects > PreventWeirdIntersections() and add this name to the if statement"); holdingDistance = distFromGroundLayer - checkRadius; initialHoldingDistance = holdingDistance; }  // Look the tongs were a problem for some reason

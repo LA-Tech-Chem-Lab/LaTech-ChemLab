@@ -22,18 +22,21 @@ public class matchBoxScript : MonoBehaviour
     public Quaternion targetRotation;
     public Vector3 targetPosition;
     public float xOffset;
+    public GameObject firePrefab;
+    public GameObject player;
+    pickUpObjects pickUpScript;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         sleeve = transform.Find("Sleeve").gameObject;
         initialPos = sleeve.transform.localPosition;
-
         matchMesh = transform.Find("Match").gameObject;
         flame = matchMesh.transform.Find("Flame").GetComponent<ParticleSystem>();
+        firePrefab = Resources.Load<GameObject>("Flame");
 
         spawnPoint = transform.Find("Spawn Point");
-
+        pickUpScript = player.GetComponent<pickUpObjects>();
         initialMatchPos = matchMesh.transform.localPosition;
         initialMatchRotation = matchMesh.transform.localEulerAngles;
         targetPosition = new Vector3(0.120360129f, -0.00789999962f, 0.14634639f); // End point for matchstick
@@ -96,13 +99,12 @@ public class matchBoxScript : MonoBehaviour
         matchMesh.SetActive(false);
         GameObject currThrownMatch = Instantiate(thrownMatch, spawnPoint.position, Quaternion.Euler(spawnPoint.localEulerAngles));
         Rigidbody matchRB = currThrownMatch.GetComponent<Rigidbody>();
-        matchRB.AddForce(transform.right / 800f, ForceMode.Impulse);
-        matchRB.AddTorque(matchRB.transform.up, ForceMode.Force);
-        
+        //matchRB.AddForce(transform.right / 800f, ForceMode.Impulse);
+        //matchRB.AddTorque(matchRB.transform.up, ForceMode.Force);
 
         sleeveDir = -1; // Return sleeve to closed
-        yield return new WaitForSeconds(0.5f / speedMult);
-
+        yield return new WaitForSeconds(0.01f / speedMult);
+        //Instantiate(firePrefab, currThrownMatch.transform.position, Quaternion.identity);
 
         // Reset all values
         sleeveDir = 0;
@@ -111,6 +113,9 @@ public class matchBoxScript : MonoBehaviour
         targetRotation = Quaternion.Euler(initialMatchRotation);
         matchMesh.transform.localPosition = initialMatchPos;
         matchMesh.transform.localRotation = targetRotation;
+
+        pickUpScript.DropItem();
+        pickUpScript.PickUpItem(currThrownMatch);
     }
 
     void playStrikeSound(){

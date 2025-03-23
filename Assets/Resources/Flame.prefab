@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2442546096875848070}
   - component: {fileID: 7087731534341272529}
   - component: {fileID: 8173431130564792697}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Flame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4849,10 +4849,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firePrefab: {fileID: 5274586898651707948}
-  spreadRadius: 2
+  spreadRadius: 0.2
   spreadInterval: 2
-  lifespan: 10
+  lifespan: 5
   maxFires: 50
+  flameGrowthRate: 1.01
+  generation: 0
 --- !u!54 &7087731534341272529
 Rigidbody:
   m_ObjectHideFlags: 0

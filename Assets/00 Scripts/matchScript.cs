@@ -15,7 +15,7 @@ public class matchScript : MonoBehaviour
         tip = transform.Find("Tip");
         flame = transform.Find("Flame").GetComponent<ParticleSystem>();
 
-        Destroy(gameObject, 8f);
+        //Destroy(gameObject, 8f);
     }
 
     // Update is called once per frame

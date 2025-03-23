@@ -303,6 +303,20 @@ void CalculateHeat()
 
         if (horizontalDistance <= heatRadius && heightDifference > 0 && burnerScript.isLit)
         {
+            if (H2Released > 0.1f && !exploded){
+                exploded = true;
+                explode(); 
+                Debug.Log("Boom");
+                for (int i = 0; i < 5; i++){
+                    // Generate a random position within the spread radius
+                    Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * 0.2f;
+                    randomDirection.y = 0; // Keep the fire on the same horizontal plane
+                    Vector3 spawnPosition = transform.position + randomDirection;
+
+                    // Spawn a new fire prefab at the randomly generated position
+                    Instantiate(firePrefab, spawnPosition, Quaternion.identity);
+                }
+            }
             float heatFactor = 1 - (horizontalDistance / heatRadius);
             float burnerIntensity = burnerScript.airflow;
             currentHeat = (maxHeat * heatFactor * burnerIntensity) + roomTemp;
