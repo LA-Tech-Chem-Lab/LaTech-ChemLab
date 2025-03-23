@@ -49,7 +49,7 @@ public class doCertainThingWith : MonoBehaviour
 
     public bool tryingToMixCompoundsInNonLiquidHolder = false;
     private Coroutine pouringCoroutine; // Store reference to coroutine
-
+    public GameObject paperTowelSheet;
     public GameObject combinedApparatusPrefab;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -1459,6 +1459,13 @@ public class doCertainThingWith : MonoBehaviour
         }
 
         setValue(end); // Ensure it reaches the exact target value
+    }
+
+
+    public void givePlayerPaperTowelSheet(Transform paperTowelRoll){
+        Debug.Log("Give Paper Towel");
+        GameObject sheet = Instantiate(paperTowelSheet, paperTowelRoll.position - transform.forward * 0.15f, transform.rotation);
+        GetComponent<pickUpObjects>().PickUpItem(sheet);
     }
 
     void ShootFoam()

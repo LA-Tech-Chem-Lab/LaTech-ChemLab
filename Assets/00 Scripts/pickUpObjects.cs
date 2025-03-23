@@ -357,9 +357,15 @@ public class pickUpObjects : MonoBehaviour
             }
 
             // Can also be the funnel even if it is kinematic because we want to be able to pick it up when it is attatched to the flask
-            if (rb) // ITEM PICKUP
+            if (rb && hitObject.tag != "NoPickup") // ITEM PICKUP
             {
                 PickUpItem(hitObject);
+            }
+
+            if (rb && hitObject.tag == "NoPickup"){
+                if (hitObject.name == "Paper Towel"){
+                    GetComponent<doCertainThingWith>().givePlayerPaperTowelSheet(hitObject.transform);
+                }
             }
         }
     }

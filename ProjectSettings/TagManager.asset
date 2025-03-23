@@ -14,6 +14,7 @@ TagManager:
   - StirRod
   - Weigh Boat
   - Match
+  - NoPickup
   layers:
   - Default
   - TransparentFX
@@ -27,7 +28,7 @@ TagManager:
   - FlameCollider
   - IgnoreGround
   - Fire
-  - 
+  - PaperTowelRoll
   - 
   - 
   - 
