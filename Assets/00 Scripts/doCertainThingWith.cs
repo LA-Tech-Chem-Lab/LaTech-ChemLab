@@ -1470,15 +1470,38 @@ public class doCertainThingWith : MonoBehaviour
 
     void ShootFoam()
     {
-
         if (pickUpScript.other != null && pickUpScript.other.name == "Fire extinguisher")
         {
-
             ParticleSystem foam = pickUpScript.other.transform.Find("Foam").GetComponent<ParticleSystem>();
+
             if (!foam.isPlaying)
             {
-
                 TriggerFoam(pickUpScript.other);
+            }
+
+            // Extinguish Fires
+            ExtinguishFires(pickUpScript.other.transform);
+        }
+    }
+
+    void ExtinguishFires(Transform extinguisher)
+    {
+        float extinguishRadius = 2f;           // Radius of fire extinguishing
+        float extinguishAngle = 45f;           // Angle in front of the extinguisher that will be affected
+        LayerMask fireLayer = LayerMask.GetMask("Fire");  // Make sure your fires are on the "Fire" layer
+
+        // Get all fires within the radius
+        Collider[] hitColliders = Physics.OverlapSphere(extinguisher.position, extinguishRadius, fireLayer);
+
+        foreach (Collider hit in hitColliders)
+        {
+            // Check if the hit object is within the extinguishing cone angle
+            Vector3 directionToFire = (hit.transform.position - extinguisher.position).normalized;
+            float angle = Vector3.Angle(extinguisher.forward, directionToFire);
+
+            if (angle <= extinguishAngle)
+            {
+                Destroy(hit.gameObject);  // Destroy the fire object immediately
             }
         }
     }
