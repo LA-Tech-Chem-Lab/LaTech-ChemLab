@@ -1,34 +1,54 @@
 using UnityEngine;
+using System.Collections;
 
-public class FireSpreader : MonoBehaviour
+public class FireSpread : MonoBehaviour
 {
-    public GameObject firePrefab;        // The fire prefab that will spread and multiply
-    public float spreadRadius = 2f;      // How far the fire can spread
-    public float spreadInterval = 2f;    // How often the fire spreads
+    public GameObject firePrefab;        // The fire prefab that will spread and multiply (should be itself)
+    public float spreadRadius = 2f;      // How far the fire spreads each time
+    public float spreadInterval = 2f;    // How often the fire spreads (in seconds)
     public float lifespan = 10f;         // How long each fire prefab lasts before destroying itself
-    public LayerMask spreadableLayer;    // Which layer the fire can spread on (e.g., Default, Floor)
+    public int maxFires = 50;            // Maximum number of fires allowed in the scene
 
-    private bool isSpreading = false;
+    private static int currentFireCount = 0; // Tracks how many fires are currently active
 
     void Start()
     {
-        Debug.Log("newFire");
-        Debug.Log(transform.position.x);
-        // Start the fire lifecycle
-        InvokeRepeating(nameof(SpreadFire), spreadInterval, spreadInterval);
-        //Destroy(gameObject, lifespan); // Destroy itself after its lifespan
+        // Register the newly spawned fire
+        currentFireCount++;
+        
+        // Start the spreading cycle
+        StartCoroutine(SpreadFire());
+
+        // Destroy itself after its lifespan
     }
 
-    void SpreadFire()
-    {
-        Debug.Log("fire spreading");
-        // Generate a random position within the spread radius
-        Vector3 randomDirection = Random.insideUnitSphere * 0.2f;
-        randomDirection.y = 0.1f; // Keep the fire on the same horizontal plane
-        Vector3 spawnPosition = transform.position + randomDirection;
+    IEnumerator SpreadFire()
+    {   
+        for (int i = 0; i < 5; i++){
+            if (currentFireCount <= 100){ // Prevent overpopulation of fires
 
-        // Spawn a new fire prefab at the randomly generated position
-        Instantiate(firePrefab, spawnPosition, Quaternion.identity);
+                Vector2 randomCircle = UnityEngine.Random.insideUnitCircle * 0.2f;
+                Vector3 randomDirection = new Vector3(randomCircle.x, 0, randomCircle.y);
+                Vector3 spawnPosition = transform.position + randomDirection;
+
+                // Instantiate a new fire prefab at the calculated position
+                GameObject newFire = Instantiate(firePrefab, spawnPosition, Quaternion.identity);
+                ParticleSystem flame = newFire.GetComponent<ParticleSystem>();
+                Destroy(newFire, lifespan);
+                flame.Play();
+
+                // Register the newly spawned fire
+                currentFireCount++;
+            }
+            yield return new WaitForSeconds(4f);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // Decrement the fire count when this fire is destroyed
+        currentFireCount--;
     }
 }
+
 
