@@ -309,6 +309,9 @@ public class doCertainThingWith : MonoBehaviour
             Debug.LogWarning("No liquid container found nearby!");
             return;
         }
+        Transform pourPos = closestBeakerOrFlask.transform.Find("pourPos");
+        pickUpScript.other.transform.position = pourPos.position;
+
         pickUpScript.other.transform.rotation = Quaternion.Euler(90f, 0f, 0f); // Keep beaker tilted
 
         //pickUpScript.other.transform.eulerAngles = new Vector3(90f, 0f, 0f);
