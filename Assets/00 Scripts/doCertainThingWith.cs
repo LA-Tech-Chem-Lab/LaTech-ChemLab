@@ -694,7 +694,7 @@ public class doCertainThingWith : MonoBehaviour
         {
             Debug.Log("Assembly failed. Components may be out of range.");
             //time to gather our sample
-            GameObject closestBeakerOrFlask = findClosestItemWithTag("liquidHolder", capillaryTube);
+            GameObject closestBeakerOrFlask = findClosestItemWithTag("LiquidHolder", capillaryTube);
             float maxSampleDistance = PIPETTE_GRAB_DISTANCE * 2f;
             float distance = Vector3.Distance(capillaryTube.transform.position, closestBeakerOrFlask.transform.position);
 
