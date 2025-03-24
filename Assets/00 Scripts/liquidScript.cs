@@ -258,7 +258,7 @@ public class liquidScript : MonoBehaviour
         
         // Now differentiate between flasks beakers and pipettes
 
-        if (transform.name == "Beaker" || transform.name == "Paper Cone" || transform.name == "graduated Cylinder"){  // 1 to 1 in this case
+        if (transform.name == "Beaker" || transform.name == "Paper Cone" || transform.name == "graduated Cylinder" || transform.name == "Ice Bucket"){  // 1 to 1 in this case
             
             if (rend.material != null)
             {

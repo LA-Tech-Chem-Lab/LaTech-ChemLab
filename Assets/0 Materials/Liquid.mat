@@ -188,7 +188,7 @@ Material:
     - _EnableGeometricSpecularAA: 0
     - _EnergyConservingSpecularColor: 1
     - _ExcludeFromTUAndAA: 0
-    - _FillAmount: 0.68
+    - _FillAmount: 1
     - _Fill_Amount: 0.15
     - _Fresnel: 2
     - _HeightAmplitude: 0.02
@@ -291,7 +291,7 @@ Material:
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _Surface_Color: {r: 0, g: 0.15761685, b: 1, a: 1}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
-    - _TopColor: {r: 0.00965023, g: 0, b: 1, a: 1}
+    - _TopColor: {r: 0, g: 0.003921569, b: 1, a: 1}
     - _TransmittanceColor: {r: 1, g: 1, b: 1, a: 1}
     - _UVDetailsMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
