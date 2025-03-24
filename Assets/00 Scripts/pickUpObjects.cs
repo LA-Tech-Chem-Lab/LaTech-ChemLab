@@ -191,6 +191,9 @@ public class pickUpObjects : MonoBehaviour
             other.tag = "Untagged";
         }
 
+        if (other.name == "Beaker" || other.name == "Scooper" || other.name == "Erlenmeyer Flask" || other.name == "Erlenmeyer Flask L" || other.name == "Weigh Boat" || other.name == "Buchner Flask"){
+            GetComponent<doCertainThingWith>().turnOffBeakers();
+        }
         other = null;holdingItem = false;
         multiHandlerScript.setHelpText("");
     }
