@@ -102,13 +102,13 @@ public class matchBoxScript : MonoBehaviour
         //matchRB.AddForce(transform.right / 800f, ForceMode.Impulse);
         //matchRB.AddTorque(matchRB.transform.up, ForceMode.Force);
 
-        sleeveDir = -1; // Return sleeve to closed
         yield return new WaitForSeconds(0.01f / speedMult);
         //Instantiate(firePrefab, currThrownMatch.transform.position, Quaternion.identity);
-
+        sleeveDir = -1; // Return sleeve to closed
         // Reset all values
         sleeveDir = 0;
         matchDir = 0;
+        xOffset = 0;
         animationPlaying = false;        
         targetRotation = Quaternion.Euler(initialMatchRotation);
         matchMesh.transform.localPosition = initialMatchPos;
