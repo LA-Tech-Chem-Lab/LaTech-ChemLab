@@ -270,7 +270,6 @@ public class pickUpObjects : MonoBehaviour
                                 {
                                     helpText = $"Melting point reached! The substance is melting at {meltingPoint:F1}°C.";
                                 }
-                                Debug.Log(helpText);
                                 multiHandlerScript.setHelpText(helpText);
                             }
                         }

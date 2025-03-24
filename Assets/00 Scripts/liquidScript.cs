@@ -141,6 +141,10 @@ public class liquidScript : MonoBehaviour
                     currentVolume_mL = 0f;
                 if (gameObject.name.StartsWith("Beaker") && currentVolume_mL / totalVolume_mL < 0.19f)
                     currentVolume_mL = 0f;
+                if (gameObject.name.StartsWith("Paper Cone") && currentVolume_mL / totalVolume_mL < 0.19f)
+                    currentVolume_mL = 0f; 
+                if (gameObject.name.StartsWith("Graduated") && currentVolume_mL / totalVolume_mL < 0.19f)
+                    currentVolume_mL = 0f; 
             }
         }
 
@@ -241,8 +245,6 @@ public class liquidScript : MonoBehaviour
         return current;  // Return the great-great-great grandparent Transform
     }
 
-
-
     void handleLiquid(){
 
         // Liquid Colors
@@ -257,7 +259,7 @@ public class liquidScript : MonoBehaviour
         
         // Now differentiate between flasks beakers and pipettes
 
-        if (transform.name == "Beaker"){  // 1 to 1 in this case
+        if (transform.name == "Beaker" || transform.name == "Paper Cone" || transform.name == "graduated Cylinder"){  // 1 to 1 in this case
             
             if (rend.material != null)
             {

@@ -1511,7 +1511,7 @@ public class doCertainThingWith : MonoBehaviour
 
     void ExtinguishFires(Transform extinguisher)
     {
-        float extinguishRadius = 2f;           // Radius of fire extinguishing
+        float extinguishRadius = 5f;           // Radius of fire extinguishing
         float extinguishAngle = 45f;           // Angle in front of the extinguisher that will be affected
         LayerMask fireLayer = LayerMask.GetMask("Fire");  // Make sure your fires are on the "Fire" layer
 
