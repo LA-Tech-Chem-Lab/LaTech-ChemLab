@@ -107,7 +107,7 @@ public class liquidScript : MonoBehaviour
         explosion = Resources.Load<GameObject>("Explosion Effect");
         firePrefab = Resources.Load<GameObject>("Flame");
         //doCertainThingWith certainThingWith = player.GetComponent<doCertainThingWith>();
-        if (gameObject.name == "Capilary tube (1)")
+        if (gameObject.name == "Capilary tube")
         {
             initialObjectMass = 1.0f; // Set to a default value
         }
@@ -293,7 +293,7 @@ public class liquidScript : MonoBehaviour
             rend.material.SetFloat("_FillAmount", scaledHeight);
         }
         // Simulate new object mass now containing liquid
-        if (gameObject.name == "Capilary tube (1)")
+        if (gameObject.name == "Capilary tube")
         {
             return;
         }
@@ -390,7 +390,7 @@ void CalculateHeat()
     }
 
     float heatTransferRate = convectiveHeatTransferCoeff * beakerSurfaceArea * (currentHeat - liquidTemperature);
-    if (gameObject.name == "Capilary tube (1)")
+    if (gameObject.name == "Capilary tube")
         {
             float temperatureChange = (heatTransferRate / (1 * specificHeatCapacity)) * Time.deltaTime;
         }

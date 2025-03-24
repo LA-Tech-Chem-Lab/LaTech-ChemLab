@@ -693,6 +693,20 @@ public class doCertainThingWith : MonoBehaviour
         else
         {
             Debug.Log("Assembly failed. Components may be out of range.");
+            //time to gather our sample
+            GameObject closestBeakerOrFlask = findClosestItemWithTag("liquidHolder", capillaryTube);
+            float maxSampleDistance = PIPETTE_GRAB_DISTANCE * 2f;
+            float distance = Vector3.Distance(capillaryTube.transform.position, closestBeakerOrFlask.transform.position);
+
+            if (distance > maxSampleDistance) // Stop pouring if too far
+            {
+                return; // Exit the function
+            }
+
+            liquidScript LS = capillaryTube.GetComponent<liquidScript>();
+            liquidScript CBLS = closestBeakerOrFlask.GetComponent<liquidScript>();
+
+            LS.addSolution(CBLS.solutionMakeup, 0.1f);
         }
     }
 
