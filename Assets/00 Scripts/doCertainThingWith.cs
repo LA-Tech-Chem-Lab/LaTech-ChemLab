@@ -1485,8 +1485,11 @@ public class doCertainThingWith : MonoBehaviour
 
     public void givePlayerPaperTowelSheet(Transform paperTowelRoll){
         Debug.Log("Give Paper Towel");
+        paperTowelRoll.gameObject.GetComponent<AudioSource>().Play();
         GameObject sheet = Instantiate(paperTowelSheet, paperTowelRoll.position - transform.forward * 0.15f, transform.rotation);
         GetComponent<pickUpObjects>().PickUpItem(sheet);
+
+
     }
 
     void ShootFoam()

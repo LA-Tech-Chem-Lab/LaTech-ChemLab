@@ -5067,6 +5067,7 @@ GameObject:
   - component: {fileID: 4268168718934579028}
   - component: {fileID: 2451581137579319173}
   - component: {fileID: 6668741541323874539}
+  - component: {fileID: 8069562994998247152}
   m_Layer: 0
   m_Name: Weigh Boat
   m_TagString: Weigh Boat
@@ -5269,6 +5270,22 @@ MonoBehaviour:
   doCertainThingWithScript: {fileID: 0}
   isPouring: 0
   density: 0
+--- !u!114 &8069562994998247152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3387605982505887129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f13c69889b7cbe4a9fad259e07581e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  forceThreshold: 165
+  OverwriteScaleThresh: 0
+  Sound: {fileID: 8300000, guid: f7d1e6328942acc43bfb79770424222e, type: 3}
+  VolumeScale: 0.12
 --- !u!1 &3450407020306941431
 GameObject:
   m_ObjectHideFlags: 0
