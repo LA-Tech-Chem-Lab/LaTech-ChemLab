@@ -172,8 +172,10 @@ public class doCertainThingWith : MonoBehaviour
     {
         if (isRodInBeaker == true){
             beginStirring = true;
+            Debug.Log("Stir animator: " + stirAnimator);
             if (stirAnimator != null) {
                 stirAnimator.enabled = true;
+                stirAnimator.SetBool("IsStirring", true);
             }
         }
 
@@ -232,6 +234,7 @@ public class doCertainThingWith : MonoBehaviour
     void findObjectAndPerformLiftedMouseAction()  // Lifted Right Click
     {
         beginStirring = false;
+        stirAnimator.SetBool("IsStirring", false);
         stirAnimator.enabled = false;
 
         if (pickUpScript.other != null)
@@ -868,6 +871,7 @@ public class doCertainThingWith : MonoBehaviour
 
             stirRod.transform.position = stirPosition.position;
             stirRod.transform.rotation = stirPosition.rotation;
+            Debug.Log("Stir rod position: " + stirRod.transform.position);
 
             // Make it a child so it follows movement
             stirRod.transform.SetParent(closestBeaker.transform);

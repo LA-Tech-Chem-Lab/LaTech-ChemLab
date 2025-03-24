@@ -11,22 +11,18 @@ public class stirringController : MonoBehaviour
     public bool debugFlag = true;
     public Animator stirRodAnimator;
 
-    // will only execute if stir rod is in the beaker
+    /*
     void Start() // does this only execute once?
     {
         playerScript = GetComponent<doCertainThingWith>();
-        if (playerScript != null)
-        {
-            stirringTrigger = playerScript.beginStirring;
-        }
 
-        StartCoroutine(WaitForCamera());
+        //StartCoroutine(WaitForCamera());
         //playerCamera = GameObject.Find("Camera")?.GetComponent<Camera>();
         //if (playerCamera == null && debugFlag == true)
         //{
         //    Debug.LogError("Can't find camera");
         //}
-        //playerCamera = Camera.main;
+        playerCamera = Camera.main;
     }
 
     IEnumerator WaitForCamera()
@@ -37,15 +33,22 @@ public class stirringController : MonoBehaviour
     }
 
     void Update(){   
+        if (playerScript != null) {
+            stirringTrigger = playerScript.beginStirring;
+        }
+
         if (stirringTrigger == true) {
+            Debug.Log("Stirring Trigger is TRUE");
             if (playerScript != null) {
                 Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
                 RaycastHit hit;
 
                 // cast a ray
                 if (Physics.Raycast(ray, out hit, 5f)){
+                    Debug.Log("A ray was cast");
                     // check if the ray is cast on a beaker
                     if (hit.collider.gameObject.name == "Beaker") {
+                        Debug.Log("Ray collided with beaker");
                         // find stir rod child
                         Transform stirRodChild = hit.transform.Find("Stir Rod");
                         Debug.Log("Stir Rod Layer: " + LayerMask.LayerToName(stirRodChild.gameObject.layer));
@@ -64,7 +67,24 @@ public class stirringController : MonoBehaviour
             stirRodAnimator.ResetTrigger("StartStirring");
         }
     }
+*/  /*void Start() {
+        stirRodAnimator = GetComponent<Animator>();
+    }
+
+    void Update() {
+        if (playerScript != null) {
+            stirringTrigger = playerScript.beginStirring;
+        }
+        
+        if (stirringTrigger) {
+            stirRodAnimator.SetTrigger("StartStirring");
+        } else {
+            stirRodAnimator.ResetTrigger("StartStirring");
+        }
+    }
+    */
 }
+
 
 
 // We need to access only beakers that have a child stir rod using raycast 
