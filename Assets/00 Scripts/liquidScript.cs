@@ -159,13 +159,13 @@ public class liquidScript : MonoBehaviour
         //is the filter in the funneled flask?
         if (gameObject.name == "Paper Cone" && gameObject.transform.parent?.parent && !isFiltering && currentVolume_mL > 1f){
             Transform Flask = gameObject.transform.parent?.parent;
+            Debug.Log("filterrr");
             StartCoroutine(handleFiltering(Flask));
         }
 
         if (H2Released > 0.1f && !exploded && IsLitMatchNearby()){
             exploded = true;
             explode(); 
-            Debug.Log("Boom");
             
             for (int i = 0; i < 5; i++){
                 // Generate a random position within the spread radius
@@ -181,7 +181,6 @@ public class liquidScript : MonoBehaviour
         if (H2Released > 0){
             H2Released -= 0.00001f;
             if (ventIsNear()){
-                Debug.Log("Venting");
                 H2Released = H2Released / 2f;
             }
         }
@@ -569,13 +568,12 @@ void CalculateHeat()
 
     public void filterSolution(List<float> solutionToFilter, float volume, Transform Flask)
     {
-        Debug.Log("about to begin filtering");
         liquidScript flaskScript = Flask.GetComponent<liquidScript>();
 
         // Prevent filtering if there is too little solution left
         if (currentVolume_mL < 0.1f)  // Adjust threshold as needed
         {
-            Debug.LogWarning("Filtering stopped: Solution too low to continue.");
+            //Debug.LogWarning("Filtering stopped: Solution too low to continue.");
             return;
         }
 
@@ -590,7 +588,7 @@ void CalculateHeat()
 
         if (newVolumeTop <= 0)
         {
-            Debug.LogWarning("Filtering stopped: Not enough solution to filter.");
+            //Debug.LogWarning("Filtering stopped: Not enough solution to filter.");
             return;
         }
 
@@ -645,7 +643,6 @@ void CalculateHeat()
         // Update percentages
         updatePercentages();
         flaskScript.updatePercentages();
-        Debug.Log("done filtering");
     }
 
     //This is to keep the percentages updated so that everything is consistent as well as making sure a couple of other things we are keeping track of are up to date
