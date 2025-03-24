@@ -1,32 +1,24 @@
 using Unity.Netcode; // Import Netcode for GameObjects
 using UnityEngine;
 
-public class GlassScript : NetworkBehaviour
+public class GlassScript : MonoBehaviour
 {
     GameObject unbroken;
     GameObject broken;
     public float breakThreshold = 220f; // Example threshold
 
-    private NetworkVariable<bool> isBroken = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private bool isBroken = false;
 
     void Start()
     {
         unbroken = transform.Find("Unbroken").gameObject;
         broken = transform.Find("Broken").gameObject;
 
-        // Update glass state based on the network variable when it changes
-        isBroken.OnValueChanged += (previousValue, newValue) =>
-        {
-            UpdateGlassState(newValue);
-        };
-
-        // Initialize the glass state
-        UpdateGlassState(isBroken.Value);
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        if (IsServer && unbroken.activeInHierarchy)
+        if (unbroken.activeInHierarchy)
         {
             Rigidbody objectRB = collision.gameObject.GetComponent<Rigidbody>();
             if (objectRB != null)
@@ -40,7 +32,17 @@ public class GlassScript : NetworkBehaviour
 
                 if (forceMagnitude > breakThreshold)
                 {
-                    BreakGlassServerRpc();
+                    GetComponent<BoxCollider>().enabled = false;
+                    unbroken.SetActive(false);
+                    broken.SetActive(true);
+
+                    // Activate physics on the broken glass pieces
+                    foreach (Transform child in broken.transform)
+                    {
+                        Rigidbody rb = child.GetComponent<Rigidbody>();
+                        if (rb != null)
+                            rb.isKinematic = false;
+                    }
 
                     // Prevent bounce by reapplying original velocity
                     objectRB.linearVelocity = originalVelocity;
@@ -54,44 +56,4 @@ public class GlassScript : NetworkBehaviour
 
 
 
-    [ServerRpc]
-    void BreakGlassServerRpc()
-    {
-        if (!isBroken.Value) // Ensure it only breaks once
-        {
-            isBroken.Value = true; // Update the network variable to sync the state
-        }
-    }
-
-    void UpdateGlassState(bool brokenState)
-    {
-        if (brokenState)
-        {
-            GetComponent<BoxCollider>().enabled = false;
-            unbroken.SetActive(false);
-            broken.SetActive(true);
-
-            // Activate physics on the broken glass pieces
-            foreach (Transform child in broken.transform)
-            {
-                Rigidbody rb = child.GetComponent<Rigidbody>();
-                if (rb != null)
-                    rb.isKinematic = false;
-            }
-        }
-        else
-        {
-            GetComponent<BoxCollider>().enabled = true;
-            unbroken.SetActive(true);
-            broken.SetActive(false);
-
-            // Reset physics on the broken glass pieces (optional, for respawning logic)
-            foreach (Transform child in broken.transform)
-            {
-                Rigidbody rb = child.GetComponent<Rigidbody>();
-                if (rb != null)
-                    rb.isKinematic = true;
-            }
-        }
-    }
 }

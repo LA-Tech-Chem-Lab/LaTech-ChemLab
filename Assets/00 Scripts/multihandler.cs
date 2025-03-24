@@ -29,9 +29,10 @@ public class InputMessage
 
 
 
-public class multihandler : NetworkBehaviour
+public class multihandler : MonoBehaviour
 {   
     public GameObject currentPlayer;
+    private interactWithObjects interactWithObjectsScript;
 
     //public GameObject JoinCanvas;
     public GameObject InGameCanvas;
@@ -49,9 +50,10 @@ public class multihandler : NetworkBehaviour
     public TextMeshProUGUI helpText;
     public GameObject helpTextBG;
     public float helpAreaWhiteness;
+    public GameObject gogglesHaze;
 
     [Header("Text Chat")]
-    public bool isTyping;
+    public bool isTyping; // Necessary 
     // public GameObject chatCanvas;
 
     // public TextMeshProUGUI chatText;
@@ -77,6 +79,7 @@ public class multihandler : NetworkBehaviour
         Cursor.visible = false;
 
         timeOfLastResponse = Time.time - 11f; timeOfLastQuestion = timeOfLastResponse;
+        interactWithObjectsScript = currentPlayer.GetComponent<interactWithObjects>();
     }
 
     void Update()
@@ -96,6 +99,8 @@ public class multihandler : NetworkBehaviour
             inputField.Select();
             inputField.ActivateInputField();
         }
+
+        gogglesHaze.SetActive(interactWithObjectsScript.gogglesOn);
 
 
         // if (Input.GetKeyDown(KeyCode.Tab) && !isPaused)

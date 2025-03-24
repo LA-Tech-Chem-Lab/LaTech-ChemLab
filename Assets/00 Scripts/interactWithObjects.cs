@@ -27,6 +27,8 @@ public class interactWithObjects : MonoBehaviour
     public bool isNearEyeWash; bool previousNearEyeWash;
     public bool eyeWashRunning; bool previousEyeWashRunning;
     public bool isWashingEyes;
+    public bool gogglesOn;
+    public GameObject goggles;
 
     [Header("Vent Stuff")]
     public bool readyToDrag;
@@ -70,6 +72,7 @@ public class interactWithObjects : MonoBehaviour
     {
         playerHoldingObject = pos.other != null;
         CheckForInput();
+        goggles.SetActive(gogglesOn);
     }
 
     void CheckForInput()
