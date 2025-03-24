@@ -9,6 +9,7 @@ using Obi;
 using Tripolygon.UModeler.UI.Input;
 using Unity.Mathematics;
 using Unity.Multiplayer.Center.Common;
+using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -105,6 +106,7 @@ public class liquidScript : MonoBehaviour
         boilingEffect = Resources.Load<GameObject>("boilingEffect");
         explosion = Resources.Load<GameObject>("Explosion Effect");
         firePrefab = Resources.Load<GameObject>("Flame");
+        //doCertainThingWith certainThingWith = player.GetComponent<doCertainThingWith>();
         if (gameObject.name == "Capilary tube (1)")
         {
             initialObjectMass = 1.0f; // Set to a default value
@@ -178,6 +180,10 @@ public class liquidScript : MonoBehaviour
 
         if (H2Released > 0){
             H2Released -= 0.00001f;
+            if (ventIsNear()){
+                Debug.Log("Venting");
+                H2Released = H2Released / 2f;
+            }
         }
     }
 
@@ -199,6 +205,44 @@ public class liquidScript : MonoBehaviour
     }
     return false; // No lit match found in range
 }
+
+    bool ventIsNear()  // Changed the return type to bool since it's returning true or false
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRadius * 3f);
+
+        foreach (Collider collider in colliders)
+        {
+            if (collider.gameObject.name == "Joint 6") // Check if the object's name is "Match"
+            {
+                Debug.Log(FindGreatGreatGreatGrandparent(collider.gameObject.transform).name);
+                bool isOn = FindGreatGreatGreatGrandparent(collider.gameObject.transform).GetComponent<VentController>().vacuumOn;
+                if (isOn)
+                    return true;
+            }
+        }
+        return false; // No lit match found in range
+    }
+
+    Transform FindGreatGreatGreatGrandparent(Transform child)
+    {
+        Transform current = child;
+
+        for (int i = 0; i < 5; i++)  // 4 steps up the hierarchy
+        {
+            if (current.parent != null)
+            {
+                current = current.parent;
+            }
+            else
+            {
+                return null;  // No great-great-great grandparent exists (out of hierarchy range)
+            }
+        }
+
+        return current;  // Return the great-great-great grandparent Transform
+    }
+
+
 
     void handleLiquid(){
 

@@ -89,6 +89,9 @@ public class doCertainThingWith : MonoBehaviour
         if (pickUpScript.other){
             if (pickUpScript.other.transform.name == "Beaker" || pickUpScript.other.transform.name == "Weigh Boat" || pickUpScript.other.transform.name.StartsWith("Erlenmeyer Flask") || pickUpScript.other.transform.name == "Paper Cone" || pickUpScript.other.transform.name == "Pipette"){
                 lightUpBeaker();
+                if (pickUpScript.other.GetComponent<liquidScript>().isPouring){
+                    turnOffBeakers();
+                }
             }
         }
 
@@ -310,6 +313,13 @@ public class doCertainThingWith : MonoBehaviour
         {
             Debug.LogWarning("No liquid container found nearby!");
             return;
+        }
+        float maxPourDistance = PIPETTE_GRAB_DISTANCE * 5f;
+        float distance = Vector3.Distance(pickUpScript.other.transform.position, closestBeakerOrFlask.transform.position);
+
+        if (distance > maxPourDistance) // Stop pouring if too far
+        {
+            return; // Exit the function
         }
         Transform pourPos = closestBeakerOrFlask.transform.Find("pourPos");
         pickUpScript.other.transform.position = pourPos.position;
@@ -1060,6 +1070,10 @@ public class doCertainThingWith : MonoBehaviour
         GameObject allLiquidHolders = GameObject.Find("allLiquidHolders");
         if (allLiquidHolders == null) return; // Avoid errors if it's missing
 
+        float distanceAllowed = PIPETTE_GRAB_DISTANCE;
+        if (pickUpScript.other.name != "Pipette"){
+            distanceAllowed = distanceAllowed * 5f;
+        }
         foreach (Transform liquidHolder in allLiquidHolders.transform)
         {
             if (liquidHolder.name.StartsWith("Erlenmeyer Flask"))
@@ -1073,7 +1087,7 @@ public class doCertainThingWith : MonoBehaviour
                             if (funnelChild.name.StartsWith("Paper Cone"))
                             {
                                 GameObject whiteOutline = funnelChild.GetChild(0).gameObject;
-                                bool isClosest = funnelChild.gameObject == closestBeakerOrFlask && distFromTip <= PIPETTE_GRAB_DISTANCE;
+                                bool isClosest = funnelChild.gameObject == closestBeakerOrFlask && distFromTip <= distanceAllowed;
                                 whiteOutline.SetActive(isClosest);
                             }
                         }
@@ -1083,7 +1097,7 @@ public class doCertainThingWith : MonoBehaviour
             if (liquidHolder.childCount > 0) // Ensure it has children
             {
                 GameObject whiteOutline = liquidHolder.GetChild(0).gameObject;
-                bool isClosest = liquidHolder.gameObject == closestBeakerOrFlask && distFromTip <= PIPETTE_GRAB_DISTANCE;
+                bool isClosest = liquidHolder.gameObject == closestBeakerOrFlask && distFromTip <= distanceAllowed;
                 whiteOutline.SetActive(isClosest);
             }
         }

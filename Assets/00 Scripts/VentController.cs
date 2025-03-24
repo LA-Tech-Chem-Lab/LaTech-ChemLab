@@ -13,6 +13,8 @@ public class VentController : MonoBehaviour
     public float SecondJointX;
     public float ThirdJointX;
     public float FourthJointX;
+    public bool soundPlaying = false;
+    public AudioClip ventSound;
 
     [Header("Collisions")]
     public bool colliding;
@@ -39,6 +41,9 @@ public class VentController : MonoBehaviour
         constrainAngles();
         applyAngles();
         checkForCollisions();
+        if (!soundPlaying && vacuumOn){
+            AudioSource.PlayClipAtPoint(ventSound, transform.position);
+        }
     }
 
     void constrainAngles(){
