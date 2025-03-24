@@ -94,6 +94,7 @@ public class liquidScript : MonoBehaviour
     public bool exploded = false; 
     public float detectionRadius = 1f;
     public GameObject firePrefab;
+    public AudioClip boomSound;
 
     // Use this for initialization
     void Start()
@@ -163,6 +164,7 @@ public class liquidScript : MonoBehaviour
             exploded = true;
             explode(); 
             Debug.Log("Boom");
+            
             for (int i = 0; i < 5; i++){
                 // Generate a random position within the spread radius
                 Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * 0.2f;
@@ -897,6 +899,7 @@ void CalculateHeat()
 
             // Instantiate the explosion effect
             GameObject explosionInstance = Instantiate(explosion, explosionPosition, Quaternion.identity);
+            AudioSource.PlayClipAtPoint(boomSound, transform.position);
 
             // Destroy the explosion effect after the specified duration
             Destroy(explosionInstance, explosionDuration);
