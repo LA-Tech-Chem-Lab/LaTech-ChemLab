@@ -15,6 +15,7 @@ public class VentController : MonoBehaviour
     public float FourthJointX;
     public bool soundPlaying = false;
     public AudioClip ventSound;
+    private AudioSource audioSource;
 
     [Header("Collisions")]
     public bool colliding;
@@ -31,6 +32,12 @@ public class VentController : MonoBehaviour
         THIRD_JOINT = SECOND_JOINT.Find("THIRD JOINT");
         FOURTH_JOINT = THIRD_JOINT.Find("FOURTH JOINT");
         HandleScript = THIRD_JOINT.Find("4to5").Find("Handle Hinge").Find("Handle").GetComponent<doorScriptXAxis>();
+
+        // Add and configure AudioSource component
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.clip = ventSound;
+        audioSource.loop = true; // Loop the audio so it plays continuously
+        audioSource.playOnAwake = false; // Don't play it immediately on scene load
     }
 
     // Update is called once per frame
@@ -41,8 +48,15 @@ public class VentController : MonoBehaviour
         constrainAngles();
         applyAngles();
         checkForCollisions();
-        if (!soundPlaying && vacuumOn){
-            AudioSource.PlayClipAtPoint(ventSound, transform.position);
+        
+        // Manage audio playback based on vacuum state
+        if (vacuumOn && !audioSource.isPlaying)
+        {
+            audioSource.Play(); // Start playing if vacuum is on
+        }
+        else if (!vacuumOn && audioSource.isPlaying)
+        {
+            audioSource.Stop(); // Stop playing if vacuum is off
         }
     }
 
