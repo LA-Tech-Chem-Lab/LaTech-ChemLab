@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Obi;
+using TMPro;
 using Tripolygon.UModelerX.Runtime;
 using Unity.Multiplayer.Center.NetcodeForGameObjectsExample;
 using Unity.Netcode;
@@ -301,6 +302,7 @@ public class doCertainThingWith : MonoBehaviour
 
         if (LS.isPouring) return;
 
+        Debug.Log("ispouring");
         LS.isPouring = true;
         GameObject closestBeakerOrFlask = findClosestItemWithTag("LiquidHolder", pickUpScript.other);
 
@@ -313,6 +315,7 @@ public class doCertainThingWith : MonoBehaviour
         pickUpScript.other.transform.position = pourPos.position;
 
         pickUpScript.other.transform.rotation = Quaternion.Euler(90f, 0f, 0f); // Keep beaker tilted
+        pickUpScript.other.GetComponent<MeshCollider>().isTrigger = true;
 
         //pickUpScript.other.transform.eulerAngles = new Vector3(90f, 0f, 0f);
         Debug.Log("Pouring into: " + closestBeakerOrFlask.name);
@@ -326,6 +329,7 @@ public class doCertainThingWith : MonoBehaviour
         liquidScript LS = pickUpScript.other.GetComponent<liquidScript>();
         LS.isPouring = false;
         pickUpScript.other.transform.rotation = Quaternion.identity;
+        pickUpScript.other.GetComponent<MeshCollider>().isTrigger = false;
 
         // Stop only this specific coroutine
         if (pouringCoroutine != null)
@@ -336,7 +340,7 @@ public class doCertainThingWith : MonoBehaviour
     }
     IEnumerator PourContinuously(liquidScript LS, Transform targetContainer)
     {
-        float maxPourDistance = PIPETTE_GRAB_DISTANCE; // Set the max allowed distance for pouring
+        float maxPourDistance = PIPETTE_GRAB_DISTANCE * 5f; // Set the max allowed distance for pouring
 
         while (LS.isPouring)
         {

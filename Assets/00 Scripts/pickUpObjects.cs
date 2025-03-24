@@ -430,11 +430,14 @@ public class pickUpObjects : MonoBehaviour
             other.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             // Debug.DrawRay(other.transform.position, targetPosition - other.transform.position);
 
-            other.transform.position = Vector3.Slerp(
-                other.transform.position,
-                targetPosition, 
-                Time.deltaTime * blendingSensitivity
-            );
+            if (other.GetComponent<liquidScript>() == null || !other.GetComponent<liquidScript>().isPouring)
+            {
+                other.transform.position = Vector3.Slerp(
+                    other.transform.position,
+                    targetPosition, 
+                    Time.deltaTime * blendingSensitivity
+                );
+            }
 
             heldObjPosition = other.transform.position;
 
