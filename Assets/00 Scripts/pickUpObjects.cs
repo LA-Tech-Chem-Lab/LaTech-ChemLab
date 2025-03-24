@@ -237,6 +237,16 @@ public class pickUpObjects : MonoBehaviour
                 multiHandlerScript.setHelpText("Right Click to adjust airflow");
         }
 
+        if (other.name == "graduated Cylinder"){
+            if (Input.GetMouseButton(1)){
+                liquidScript LS = other.GetComponent<liquidScript>();
+                multiHandlerScript.setHelpText("Volume: " + LS.currentVolume_mL + " mLs");
+            }
+            else{
+                multiHandlerScript.setHelpText("This is a graduated cylinder. Hold right click to observe the volume of your solution.");
+            }
+        }
+
         if (other.name.StartsWith("Beaker") || other.name.StartsWith("Erlenmeyer Flask") || other.name.StartsWith("Paper Cone")){
             if (other.transform.Find("Melting Point Tool") != null)
             {

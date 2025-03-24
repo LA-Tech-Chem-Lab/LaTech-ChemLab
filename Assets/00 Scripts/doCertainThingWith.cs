@@ -87,7 +87,7 @@ public class doCertainThingWith : MonoBehaviour
             }
         }
         if (pickUpScript.other){
-            if (pickUpScript.other.transform.name == "Beaker" || pickUpScript.other.transform.name == "Weigh Boat" || pickUpScript.other.transform.name.StartsWith("Erlenmeyer Flask") || pickUpScript.other.transform.name == "Paper Cone" || pickUpScript.other.transform.name == "Pipette"){
+            if (pickUpScript.other.transform.name == "Beaker" || pickUpScript.other.transform.name == "Weigh Boat" || pickUpScript.other.transform.name.StartsWith("Erlenmeyer Flask") || pickUpScript.other.transform.name == "Paper Cone" || pickUpScript.other.transform.name == "Pipette" || pickUpScript.other.transform.name == "graduated Cylinder"){
                 lightUpBeaker();
                 if (pickUpScript.other.GetComponent<liquidScript>().isPouring){
                     turnOffBeakers();
@@ -204,19 +204,15 @@ public class doCertainThingWith : MonoBehaviour
                         heldPipette.GetComponent<pipetteScript>().pipetteFlowStatus = true;
                     }
 
-
-                    //if (heldPipette.GetComponent<pipetteScript>().pipetteFlowing == true){
-                    //    heldPipette.GetComponent<pipetteScript>().pipetteExtracting = true;
-                    //}
-                    //else{
-                    //    heldPipette.GetComponent<pipetteScript>().pipetteFlowing = true;
-                    //}
                     flowLock = true;
                 }
                 SetPippetteSpeed(obj, pipetteSpeed);
             }
 
             if (obj.name == "Beaker")
+                BringObjectCloser(-1.1f);
+
+            if (obj.name == "graduated Cylinder")
                 BringObjectCloser(-1.1f);
 
             if (obj.name == "Weigh Boat")
@@ -267,7 +263,7 @@ public class doCertainThingWith : MonoBehaviour
                     obj.GetComponent<bunsenBurnerScript>().AdjustGearRotation(Input.mouseScrollDelta.y * 2f);
                 }
 
-            if (obj.name == "Beaker" || obj.name.StartsWith("Erlenmeyer Flask")|| obj.name == "Paper Cone")
+            if (obj.name == "Beaker" || obj.name.StartsWith("Erlenmeyer Flask")|| obj.name == "Paper Cone" || obj.name == "graduated Cylinder")
             {
                 if (Input.GetKey(KeyCode.P)) // While "P" is held
                 {
