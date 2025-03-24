@@ -364,14 +364,27 @@ public class pickUpObjects : MonoBehaviour
                 PickUpItem(hitObject);
             }
 
-            if (rb && hitObject.tag == "NoPickup"){
-                if (hitObject.name == "Paper Towel"){
-                    GetComponent<doCertainThingWith>().givePlayerPaperTowelSheet(hitObject.transform);
-                }
-            }
+            if (hitObject.tag == "NoPickup")
+                alternativeToPickingUp(hitObject);
         }
     }
 
+    void alternativeToPickingUp(GameObject hitObject){
+        if (hitObject.name == "Paper Towel"){
+            GetComponent<doCertainThingWith>().givePlayerPaperTowelSheet(hitObject.transform);
+        }
+
+        if (hitObject.name == "Hanging Goggles" && !GetComponent<interactWithObjects>().gogglesOn){
+            hitObject.SetActive(false);
+            GetComponent<interactWithObjects>().gogglesOn = true;
+        }
+
+        if (hitObject.name == "Goggles Hanger" && !hitObject.transform.Find("Hanging Goggles").gameObject.activeInHierarchy){
+            hitObject.transform.Find("Hanging Goggles").gameObject.SetActive(true);
+            GetComponent<interactWithObjects>().gogglesOn = false;
+        }
+
+    }
 
     void setTargetPosition(){
         float actualDist = holdingDistance + distOffset;
