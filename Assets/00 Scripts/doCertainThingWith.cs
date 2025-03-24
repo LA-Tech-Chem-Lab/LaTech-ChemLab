@@ -89,8 +89,10 @@ public class doCertainThingWith : MonoBehaviour
         if (pickUpScript.other){
             if (pickUpScript.other.transform.name == "Beaker" || pickUpScript.other.transform.name == "Weigh Boat" || pickUpScript.other.transform.name.StartsWith("Erlenmeyer Flask") || pickUpScript.other.transform.name == "Paper Cone" || pickUpScript.other.transform.name == "Pipette" || pickUpScript.other.transform.name == "graduated Cylinder"){
                 lightUpBeaker();
-                if (pickUpScript.other.GetComponent<liquidScript>().isPouring){
-                    turnOffBeakers();
+                if (pickUpScript.other.GetComponent<liquidScript>()){
+                    if (pickUpScript.other.GetComponent<liquidScript>().isPouring){
+                        turnOffBeakers();
+                    }
                 }
             }
         }

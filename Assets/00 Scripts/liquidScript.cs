@@ -163,7 +163,6 @@ public class liquidScript : MonoBehaviour
         //is the filter in the funneled flask?
         if (gameObject.name == "Paper Cone" && gameObject.transform.parent?.parent && !isFiltering && currentVolume_mL > 1f){
             Transform Flask = gameObject.transform.parent?.parent;
-            Debug.Log("filterrr");
             StartCoroutine(handleFiltering(Flask));
         }
 
@@ -452,8 +451,15 @@ void CalculateHeat()
         float liquidVolume = 10f;
         List<float> liquidSolution = Enumerable.Repeat(0f, 11).ToList();
 
+        float volumeLeft = 0f;
+        if (Flask.name.StartsWith("Erlenmeyer")){
+            volumeLeft = currentVolume_mL * 0.05f;
+        }
+        if (Flask.name.StartsWith("Buchner")){
+            volumeLeft = currentVolume_mL * 0.01f;
+        }
         // Filtering continues while there is enough solution
-        while (liquidVolume > 0.1f && currentVolume_mL > 0.1f)
+        while (liquidVolume > 0.1f && currentVolume_mL > volumeLeft)
         {
             float liquidPercent = 0f; // Reset inside loop to prevent accumulation
 

@@ -191,7 +191,7 @@ public class pickUpObjects : MonoBehaviour
             other.tag = "Untagged";
         }
 
-        if (other.name == "Beaker" || other.name == "Scooper" || other.name == "Erlenmeyer Flask" || other.name == "Erlenmeyer Flask L" || other.name == "Weigh Boat" || other.name == "Buchner Flask"){
+        if (other.name == "Beaker" || other.name == "Scoopula" || other.name == "Erlenmeyer Flask" || other.name == "Erlenmeyer Flask L" || other.name == "Weigh Boat" || other.name == "Buchner Flask" || other.name == "graduated Cylinder" || other.name == "Paper Cone"){
             GetComponent<doCertainThingWith>().turnOffBeakers();
         }
         other = null;holdingItem = false;
