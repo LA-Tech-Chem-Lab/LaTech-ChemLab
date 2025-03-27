@@ -101,7 +101,7 @@ public class multihandler : MonoBehaviour
         }
 
         gogglesHaze.SetActive(interactWithObjectsScript.gogglesOn);
-
+        helpTextBG.SetActive(helpText.text.Length > 0);
 
         // if (Input.GetKeyDown(KeyCode.Tab) && !isPaused)
         //     ToggleCursor();
