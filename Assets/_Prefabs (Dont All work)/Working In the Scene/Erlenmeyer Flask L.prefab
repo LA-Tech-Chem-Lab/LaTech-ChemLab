@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 2599696932114408569}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.26, z: 0}
+  m_LocalPosition: {x: 0, y: 0.332, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 4238982687011018461}
   m_Layer: 0
   m_Name: white outline
-  m_TagString: LiquidHolder
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -117,6 +117,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &4051363178763128287
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3744727813703530737}
+  m_Layer: 0
+  m_Name: pourPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3744727813703530737
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4051363178763128287}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.5, z: -4}
+  m_LocalScale: {x: 0.08125, y: 0.13, z: 0.08125}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6621111945555434886}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4356323583161258448
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,6 +164,7 @@ GameObject:
   - component: {fileID: 9134307726829972573}
   - component: {fileID: 8561971973453008146}
   - component: {fileID: 7243602351125644732}
+  - component: {fileID: 6472925661129731742}
   m_Layer: 0
   m_Name: Erlenmeyer Flask L
   m_TagString: LiquidHolder
@@ -157,6 +189,7 @@ Transform:
   - {fileID: 3603401986328053728}
   - {fileID: 3511008826338828245}
   - {fileID: 9035168476542923989}
+  - {fileID: 3744727813703530737}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7397833441914739205
@@ -382,6 +415,12 @@ MonoBehaviour:
   H2Released: 0
   boilingEffect: {fileID: 0}
   isBoiling: 0
+  explosion: {fileID: 0}
+  explosionDuration: 5
+  exploded: 0
+  detectionRadius: 1
+  firePrefab: {fileID: 0}
+  boomSound: {fileID: 8300000, guid: 3b957f95e58696f468dbd2b4d3ffc7a4, type: 3}
 --- !u!114 &7243602351125644732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -395,6 +434,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inSpace: 0
+--- !u!114 &6472925661129731742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4356323583161258448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11759ad9640d893459018b55958ce4a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  forceLimit: 600
+  brokenVersionOfGlass: {fileID: 0}
+  dinkSound: {fileID: 8300000, guid: 4c3e6173fbb642340abdd58981a875d2, type: 3}
+  dinkVolumeScale: 1
+  dinkPitchScale: 0.9
 --- !u!1 &5968200981617950947
 GameObject:
   m_ObjectHideFlags: 0
@@ -492,6 +548,7 @@ GameObject:
   - component: {fileID: 3603401986328053728}
   - component: {fileID: 3930361490192033096}
   - component: {fileID: 3539950460790244787}
+  - component: {fileID: 9195033178032285218}
   m_Layer: 0
   m_Name: Liquid
   m_TagString: Untagged
@@ -567,3 +624,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &9195033178032285218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6288843219313984542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d09d67b73613a34980b9e4899834128, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  newMaterial: {fileID: 2100000, guid: 80654e172b3be854c8d40012f3a513d5, type: 2}

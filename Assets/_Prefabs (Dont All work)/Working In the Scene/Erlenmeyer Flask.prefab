@@ -117,6 +117,68 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3051184171042309023}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3892141103855733586
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4179349366743715002}
+  m_Layer: 0
+  m_Name: pourPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4179349366743715002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3892141103855733586}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.5, z: -4}
+  m_LocalScale: {x: 0.1, y: 0.16, z: 0.1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3051184171042309023}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6960050002191215346
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3009424834279916571}
+  m_Layer: 0
+  m_Name: pourPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3009424834279916571
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6960050002191215346}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.5, z: -4}
+  m_LocalScale: {x: 0.1, y: 0.16, z: 0.1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3051184171042309023}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6994679905266515316
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,6 +193,8 @@ GameObject:
   - component: {fileID: 6571534405349168079}
   - component: {fileID: 2917225990457861490}
   - component: {fileID: 9085856967713899595}
+  - component: {fileID: 4097539717577364166}
+  - component: {fileID: 3100242949662402087}
   m_Layer: 0
   m_Name: Erlenmeyer Flask
   m_TagString: LiquidHolder
@@ -155,6 +219,8 @@ Transform:
   - {fileID: 2549121912133235467}
   - {fileID: 4343407201445381749}
   - {fileID: 6055838334303254843}
+  - {fileID: 4179349366743715002}
+  - {fileID: 3009424834279916571}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &172479561022397082
@@ -365,6 +431,46 @@ MonoBehaviour:
   H2Released: 0
   boilingEffect: {fileID: 0}
   isBoiling: 0
+  explosion: {fileID: 0}
+  explosionDuration: 5
+  exploded: 0
+  detectionRadius: 1
+  firePrefab: {fileID: 0}
+  boomSound: {fileID: 8300000, guid: 3b957f95e58696f468dbd2b4d3ffc7a4, type: 3}
+--- !u!114 &4097539717577364166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6994679905266515316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11759ad9640d893459018b55958ce4a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  forceLimit: 600
+  brokenVersionOfGlass: {fileID: 0}
+  dinkSound: {fileID: 8300000, guid: 4c3e6173fbb642340abdd58981a875d2, type: 3}
+  dinkVolumeScale: 1
+  dinkPitchScale: 1
+--- !u!114 &3100242949662402087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6994679905266515316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11759ad9640d893459018b55958ce4a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  forceLimit: 600
+  brokenVersionOfGlass: {fileID: 0}
+  dinkSound: {fileID: 8300000, guid: 4c3e6173fbb642340abdd58981a875d2, type: 3}
+  dinkVolumeScale: 1
+  dinkPitchScale: 1
 --- !u!1 &8068738466388944729
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,7 +484,7 @@ GameObject:
   - component: {fileID: 3316652857210796224}
   m_Layer: 0
   m_Name: white outline
-  m_TagString: LiquidHolder
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -462,6 +568,8 @@ GameObject:
   - component: {fileID: 2549121912133235467}
   - component: {fileID: 4956983165213743573}
   - component: {fileID: 5877115854338527594}
+  - component: {fileID: 876564204324673414}
+  - component: {fileID: 1656228700921537337}
   m_Layer: 0
   m_Name: Liquid
   m_TagString: Untagged
@@ -537,3 +645,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &876564204324673414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8941520053099051722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d09d67b73613a34980b9e4899834128, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  newMaterial: {fileID: 2100000, guid: 80654e172b3be854c8d40012f3a513d5, type: 2}
+--- !u!114 &1656228700921537337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8941520053099051722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d09d67b73613a34980b9e4899834128, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  newMaterial: {fileID: 2100000, guid: 80654e172b3be854c8d40012f3a513d5, type: 2}
