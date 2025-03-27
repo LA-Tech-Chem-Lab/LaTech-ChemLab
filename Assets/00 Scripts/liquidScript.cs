@@ -96,6 +96,7 @@ public class liquidScript : MonoBehaviour
     public float detectionRadius = 1f;
     public GameObject firePrefab;
     public AudioClip boomSound;
+    public bool isViolent = false; 
 
     // Use this for initialization
     void Start()
@@ -581,13 +582,14 @@ void CalculateHeat()
         // Prevent filtering if there is too little solution left
         if (currentVolume_mL < 0.1f)  // Adjust threshold as needed
         {
-            //Debug.LogWarning("Filtering stopped: Solution too low to continue.");
+            
             return;
         }
 
         // Ensure we don't try to filter more than available
         if (volume > currentVolume_mL)
         {
+            Debug.LogWarning("Filtering stopped: Solution too low to continue.");
             volume = currentVolume_mL;  // Adjust to only filter what's available
         }
 
@@ -695,12 +697,13 @@ void CalculateHeat()
                 //releases heat
                 //dark gritty material on the top of the solution
                 //accelerated by heat
+                //CORRECT PATH
                 if (percentKOH > 0.02f && percentH2O > 0.06f){
                     List<string> reactants = new List<string> {"Al", "KOH", "H2O"};
                     List<string> products = new List<string> {"KAl(OH)4"};
                     List<float> Rratio = new List<float> {2, 2, 6};
                     List<float> Pratio = new List<float> {2};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, .1f, "H2", 3));
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, .1f, "H2", 3, false));
                 }
                 //Tested and Working
                 if (percentH2SO4 > 0.03f){
@@ -711,7 +714,7 @@ void CalculateHeat()
                     List<string> products = new List<string> {"Al2(SO4)3"};
                     List<float> Rratio = new List<float> {2, 3};
                     List<float> Pratio = new List<float> {1};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, .1f, "H2", 3));
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, .1f, "H2", 3, false));
                 }
             }
             if (percentH2SO4 > 0.02f){
@@ -728,25 +731,35 @@ void CalculateHeat()
                     List<string> products = new List<string> {"K2SO4", "H2O"};
                     List<float> Rratio = new List<float> {1, 2};
                     List<float> Pratio = new List<float> {1, 2};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 5f)); // moderate heat generation
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 5f, "none", 0, true)); // moderate heat generation
                 }
                 //GOAL PRODUCT
                 //tested and working
                 //split up into steps
                 //if h2so4 goes in to fast solid will clump and reaction will slow significanlty
                 //hat solves this problem or mixing
+                //if (percentKAlOH4 > 0.03f){
+                //    // forms alum as white crystals on the top of the solution
+                //    List<string> reactants = new List<string> {"H2SO4", "KAl(OH)4"};
+                //    List<string> products = new List<string> {"Alum"};
+                //    List<float> Rratio = new List<float> {1, 2};
+                //    List<float> Pratio = new List<float> {1};
+                //    StartCoroutine(react(reactants, Rratio, products, Pratio, 6f, "none", 0, false)); // moderate heat, solid white precipitate
+                //}
+
                 if (percentKAlOH4 > 0.03f){
-                    // forms alum as white crystals on the top of the solution
+                    //intermediate reaction for alum
+                    // CORRECT PATH
                     List<string> reactants = new List<string> {"H2SO4", "KAl(OH)4"};
-                    List<string> products = new List<string> {"Alum"};
+                    List<string> products = new List<string> {"Al(OH)3", "K2SO4", "H2O"};
                     List<float> Rratio = new List<float> {1, 2};
-                    List<float> Pratio = new List<float> {1};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 6f)); // moderate heat, solid white precipitate
+                    List<float> Pratio = new List<float> {2, 1, 2};
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 6f, "none", 0, false)); 
                 }
+
                 // Potassium aluminate + sulfuric acid
                 // Produces potassium alum (KAl(SO4)2) and water (H2O)
                 // Fast, produces crystals as the solution cools
-                //
                 if (percentKAlO2 > 0.02f){
                     // Reaction: Potassium aluminate (KAlO2) + Sulfuric acid (H2SO4)
                     // Produces potassium alum (KAl(SO4)2) and water (H2O)
@@ -754,7 +767,7 @@ void CalculateHeat()
                     List<string> products = new List<string> {"Al(OH)3", "K2SO4"};
                     List<float> Rratio = new List<float> {2, 3};
                     List<float> Pratio = new List<float> {1, 2};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 10f)); // exothermic, forms crystals over time
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 10f, "none", 0, false)); // exothermic, forms crystals over time
                 }
                 // Reaction: Aluminum hydroxide (Al(OH)3) + Sulfuric acid (H2SO4)
                 // Produces aluminum sulfate (Al2(SO4)3) and water (H2O)
@@ -764,12 +777,13 @@ void CalculateHeat()
                 // - **Dissolution:** The gelatinous, white Al(OH)3 precipitate dissolves upon contact with the acid.
                 // - **Clarity Change:** Initially cloudy solution becomes clear as Al(OH)3 dissolves.
                 // - **Reaction Speed:** Moderate (3/30 scale), occurs within seconds to minutes
+                // CORRECT PATH
                 if (percentAlOH3 > 0.02f){
                     List<string> reactants = new List<string> {"Al(OH)3", "H2SO4"};
                     List<string> products = new List<string> {"Al2(SO4)3", "H2O"};
                     List<float> Rratio = new List<float> {2, 3};
                     List<float> Pratio = new List<float> {1, 6};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 3f)); 
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 3f, "none", 0, false)); 
                 }
             }
             if (percentKOH > 0.02f){
@@ -780,17 +794,17 @@ void CalculateHeat()
                     List<string> products = new List<string> {"KAl(OH)4"};
                     List<float> Rratio = new List<float> {1, 1};
                     List<float> Pratio = new List<float> {1};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 15f)); 
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 15f, "none", 0, false)); 
                 }
-                //aloh3 is a gel like white precipitate which forms almost immediately
-                //more dilute -> slower
-                if (percentKAlSO42 > 0.02f){
-                    List<string> reactants = new List<string> {"KOH", "KAl(SO4)2"};
-                    List<string> products = new List<string> {"K2SO4", "Al(OH)3"};
-                    List<float> Rratio = new List<float> {3, 1};
-                    List<float> Pratio = new List<float> {2, 1};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 6f)); 
-                }
+                ////aloh3 is a gel like white precipitate which forms almost immediately
+                ////more dilute -> slower
+                //if (percentKAlSO42 > 0.02f){
+                //    List<string> reactants = new List<string> {"KOH", "KAl(SO4)2"};
+                //    List<string> products = new List<string> {"K2SO4", "Al(OH)3"};
+                //    List<float> Rratio = new List<float> {3, 1};
+                //    List<float> Pratio = new List<float> {2, 1};
+                //    StartCoroutine(react(reactants, Rratio, products, Pratio, 6f, "none", 0, false)); 
+                //}
             }
             if (percentKAlOH4 > 0.02f) {
                if (percentAl2SO43 > 0.01f) {
@@ -802,7 +816,7 @@ void CalculateHeat()
                    List<string> products = new List<string> {"Al(OH)3", "K2SO4"};
                    List<float> Rratio = new List<float> {2, 1};
                    List<float> Pratio = new List<float> {2, 1};
-                   StartCoroutine(react(reactants, Rratio, products, Pratio, 8f));
+                   StartCoroutine(react(reactants, Rratio, products, Pratio, 8f, "none", 0, false));
                }
             }
             if (percentAl2SO43 > 0.02f){
@@ -811,20 +825,34 @@ void CalculateHeat()
                     List<string> products = new List<string> {"Al(OH)3", "K2SO4"};
                     List<float> Rratio = new List<float> {1, 6};
                     List<float> Pratio = new List<float> {2, 3};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 8f));
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 8f, "none", 0, false));
+                }
+            }
+            if (percentK2SO4 > 0.02f){
+                if (percentAl2SO43 > 0.02f && percentH2O > 0.24f){
+                    //CORRECT PATH
+                    // GOAL PRODUCT
+                    List<string> reactants = new List<string> {"Al2(SO4)3", "K2SO4", "H2O"};
+                    List<string> products = new List<string> {"KAl(SO4)2"};
+                    List<float> Rratio = new List<float> {1, 1, 24};
+                    List<float> Pratio = new List<float> {4};
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 8f, "none", 0, false));
                 }
             }
         }
     }
 
-    IEnumerator react(List<string> reactants, List<float> Rratio, List<string> products, List<float> Pratio, float reactSpeed, string gasType = "none", int gasMols = 0)
+    IEnumerator react(List<string> reactants, List<float> Rratio, List<string> products, List<float> Pratio, float reactSpeed, string gasType = "none", int gasMols = 0, bool violence = false)
     {
         reactionHappening = true;
         limreactnum = 1f;
 
         // Gradually process the reaction
-        while (limreactnum > 0.01f)
+        while (limreactnum > 0.001f)
         {
+            if (liquidTemperature > 25){
+                isViolent = violence;
+            }
             List<float> solutionMols = Enumerable.Repeat(0f, 11).ToList();
 
             // Convert percentages to moles for reactants
@@ -904,6 +932,7 @@ void CalculateHeat()
             yield return new WaitForSeconds(duration);  // Allow other game logic to continue
         }
 
+        isViolent = false;
         reactionHappening = false;
     }
     public float GetMeltingPoint()

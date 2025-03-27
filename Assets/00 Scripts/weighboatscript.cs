@@ -29,7 +29,7 @@ public class weighboatscript : MonoBehaviour
             scoopsHeld += 1; 
             //adds mass to the rigidbody to compensate
             calculateDensity();
-            GetComponent<Rigidbody>().mass += 0.7407f * density / 1000;
+            GetComponent<Rigidbody>().mass += 0.1852f * density / 1000;
             foreach (Transform child in transform)
             {
                 if(!child.gameObject.activeSelf){
@@ -48,7 +48,7 @@ public class weighboatscript : MonoBehaviour
     public void removeScoop(){
         if (scoopsHeld > 0){
             scoopsHeld -= 1;
-            GetComponent<Rigidbody>().mass -= 0.7407f * density / 1000;
+            GetComponent<Rigidbody>().mass -= 0.1852f * density / 1000;
             foreach (Transform child in transform)
             {
                 if(child.gameObject.activeSelf){

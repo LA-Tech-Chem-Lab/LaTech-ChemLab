@@ -326,7 +326,7 @@ public class doCertainThingWith : MonoBehaviour
         pickUpScript.other.transform.position = pourPos.position;
 
         pickUpScript.other.transform.rotation = Quaternion.Euler(90f, 0f, 0f); // Keep beaker tilted
-        pickUpScript.other.GetComponent<MeshCollider>().isTrigger = true;
+        //pickUpScript.other.GetComponent<MeshCollider>().isTrigger = true;
 
         //pickUpScript.other.transform.eulerAngles = new Vector3(90f, 0f, 0f);
         Debug.Log("Pouring into: " + closestBeakerOrFlask.name);
@@ -340,7 +340,7 @@ public class doCertainThingWith : MonoBehaviour
         liquidScript LS = pickUpScript.other.GetComponent<liquidScript>();
         LS.isPouring = false;
         pickUpScript.other.transform.rotation = Quaternion.identity;
-        pickUpScript.other.GetComponent<MeshCollider>().isTrigger = false;
+        //pickUpScript.other.GetComponent<MeshCollider>().isTrigger = false;
 
         // Stop only this specific coroutine
         if (pouringCoroutine != null)
@@ -364,7 +364,7 @@ public class doCertainThingWith : MonoBehaviour
                 yield break; // Exit the coroutine
             }
 
-            LS.filterSolution(LS.solutionMakeup, 5f, targetContainer); // Pour 1 unit per frame
+            LS.filterSolution(LS.solutionMakeup, LS.currentVolume_mL * Time.deltaTime * 2, targetContainer); // Pour 1 unit per frame
             yield return new WaitForSeconds(0.1f); // Controls pour speed
         }
     }
@@ -424,7 +424,7 @@ public class doCertainThingWith : MonoBehaviour
                 Debug.Log("Made it here");
                 WBS.removeScoop();
                 Debug.Log("Made it after remove scoop");
-                targetContainer.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f }, 0.7407f);
+                targetContainer.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f }, 0.1852f);
             }
             yield return new WaitForSeconds(0.1f); // Controls pour speed
         }
