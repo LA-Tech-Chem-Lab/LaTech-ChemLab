@@ -20,6 +20,8 @@ public class liquidScript : MonoBehaviour
     public float totalVolume_mL;
     public float currentVolume_mL;
     public float scaleDown = 1f;
+    public float readHere;
+    public float testScale = 1f;
     public Color surfaceColor;
     public Color topColor;
     public float densityOfLiquid = 1f;
@@ -250,6 +252,16 @@ public class liquidScript : MonoBehaviour
         return current;  // Return the great-great-great grandparent Transform
     }
 
+
+    bool inRange(float value, float min, float max)
+    {
+        return value >= min && value < max;
+    }
+
+    float reScale(float p, float lo, float hi){
+        return (p - lo) / (hi - lo);
+    }
+
     void handleLiquid(){
 
         // Liquid Colors
@@ -262,12 +274,89 @@ public class liquidScript : MonoBehaviour
         float percentFull = currentVolume_mL / totalVolume_mL;
         float scaledPercentRender = percentFull / scaleDown;
         
-        // Now differentiate between flasks beakers and pipettes
+        // Just Beakers Level Oh Boy
+        if (transform.name.StartsWith("Beaker")) {
 
-        if (transform.name == "Beaker" || transform.name == "Paper Cone" || transform.name == "graduated Cylinder" || transform.name == "Ice Bucket"){  // 1 to 1 in this case
+            
+            transform.Find("Liquid").GetComponent<MeshRenderer>().enabled = percentFull > 0f;
+            readHere = percentFull;
+
+            if (totalVolume_mL == 800f){ // 800 mL Beaker
+                float renderedScale800 = 1f;
+                if (inRange(percentFull, 0, 0.00125f)) 
+                    renderedScale800 = 13.5f;
+                if (inRange(percentFull, 0.00125f, 0.0025f)) 
+                    renderedScale800 = Mathf.Lerp(26.48f, 13.5f, reScale(percentFull, 0.00125f, 0.0025f));
+                if (inRange(percentFull, 0.0025f, 0.00625f)) 
+                    renderedScale800 = Mathf.Lerp(13.5f, 5.55f, reScale(percentFull, 0.0025f, 0.00625f));
+                if (inRange(percentFull, 0.00625f, 0.00875f)) 
+                    renderedScale800 = Mathf.Lerp(5.55f, 4.19f, reScale(percentFull, 0.00625f, 0.00875f));
+                if (inRange(percentFull, 0.00875f, 0.0125f)) 
+                    renderedScale800 = Mathf.Lerp(4.19f, 3.17f, reScale(percentFull, 0.00875f, 0.0125f));
+                if (inRange(percentFull, 0.0125f, 0.01875f)) 
+                    renderedScale800 = Mathf.Lerp(3.17f, 2.34f, reScale(percentFull, 0.0125f, 0.01875f));
+                if (inRange(percentFull, 0.01875f, 0.025f)) 
+                    renderedScale800 = Mathf.Lerp(2.34f, 2.16f, reScale(percentFull, 0.01875f, 0.025f));
+                if (inRange(percentFull, 0.025f, 0.03125f)) 
+                    renderedScale800 = Mathf.Lerp(2.16f, 1.68f, reScale(percentFull, 0.025f, 0.03125f));
+                if (inRange(percentFull, 0.03125f, 0.04375f)) 
+                    renderedScale800 = Mathf.Lerp(1.68f, 1.4f, reScale(percentFull, 0.03125f, 0.04375f));
+                if (inRange(percentFull, 0.04375f, 0.0625f)) 
+                    renderedScale800 = Mathf.Lerp(1.4f, 1.16f, reScale(percentFull, 0.04375f, 0.0625f));
+                if (inRange(percentFull, 0.0625f, 0.08125f)) 
+                    renderedScale800 = Mathf.Lerp(1.16f, 1.04f, reScale(percentFull, 0.0625f, 0.08125f));
+                if (inRange(percentFull, 0.08125f, 0.09375f)) 
+                    renderedScale800 = Mathf.Lerp(1.04f, 1f, reScale(percentFull, 0.08125f, 0.09375f));
+                if (inRange(percentFull, 0.09375f, 0.1125f)) 
+                    renderedScale800 = Mathf.Lerp(1f, 0.94f, reScale(percentFull, 0.09375f, 0.1125f));
+                if (inRange(percentFull, 0.1125f, 0.125f)) 
+                    renderedScale800 = Mathf.Lerp(0.94f, 0.92f, reScale(percentFull, 0.1125f, 0.125f));
+                if (inRange(percentFull, 0.125f, 0.1875f)) 
+                    renderedScale800 = Mathf.Lerp(0.92f, 0.93f, reScale(percentFull, 0.125f, 0.1875f));
+                if (inRange(percentFull, 0.1875f, 0.25f)) 
+                    renderedScale800 = Mathf.Lerp(0.93f, 0.94f, reScale(percentFull, 0.1875f, 0.25f));
+                if (inRange(percentFull, 0.25f, 0.3125f)) 
+                    renderedScale800 = Mathf.Lerp(0.94f, 0.95f, reScale(percentFull, 0.25f, 0.3125f));
+                if (inRange(percentFull, 0.3125f, 0.375f)) 
+                    renderedScale800 = Mathf.Lerp(0.95f, 0.96f, reScale(percentFull, 0.3125f, 0.375f));
+                if (inRange(percentFull, 0.375f, 0.4375f)) 
+                    renderedScale800 = Mathf.Lerp(0.96f, 0.96f, reScale(percentFull, 0.375f, 0.4375f));
+                if (inRange(percentFull, 0.4375f, 0.5f)) 
+                    renderedScale800 = Mathf.Lerp(0.96f, 0.965f, reScale(percentFull, 0.4375f, 0.5f));
+                if (inRange(percentFull, 0.5f, 0.5625f)) 
+                    renderedScale800 = Mathf.Lerp(0.965f, 0.96f, reScale(percentFull, 0.5f, 0.5625f));
+                if (inRange(percentFull, 0.5625f, 0.625f)) 
+                    renderedScale800 = Mathf.Lerp(0.96f, 0.97f, reScale(percentFull, 0.5625f, 0.625f));
+                if (inRange(percentFull, 0.625f, 0.6875f)) 
+                    renderedScale800 = Mathf.Lerp(0.97f, 0.97f, reScale(percentFull, 0.625f, 0.6875f));
+                if (inRange(percentFull, 0.6875f, 0.75f)) 
+                    renderedScale800 = Mathf.Lerp(0.97f, 0.97f, reScale(percentFull, 0.6875f, 0.75f));
+                if (inRange(percentFull, 0.75f, 0.8125f)) 
+                    renderedScale800 = Mathf.Lerp(0.97f, 0.97f, reScale(percentFull, 0.75f, 0.8125f));
+                if (inRange(percentFull, 0.8125f, 0.875f)) 
+                    renderedScale800 = Mathf.Lerp(0.97f, 0.97f, reScale(percentFull, 0.8125f, 0.875f));
+                if (inRange(percentFull, 0.875f, 0.9375f)) 
+                    renderedScale800 = Mathf.Lerp(0.97f, 0.975f, reScale(percentFull, 0.875f, 0.9375f));
+                if (inRange(percentFull, 0.9375f, 1f)) 
+                    renderedScale800 = Mathf.Lerp(0.975f, 0.974f, reScale(percentFull, 0.9375f, 1f));
+                if (percentFull == 1)
+                    renderedScale800 = 0.974f;
+
+                readHere = percentFull * renderedScale800;
+                rend.material.SetFloat("_FillAmount", percentFull * renderedScale800);
+                // Debug.Log("DDD");
+                // renderedScale800 = testScale;
+                // readHere = percentFull;
+
+            }
+            
+        }
+
+
+        if (transform.name == "Paper Cone" || transform.name == "graduated Cylinder" || transform.name == "Ice Bucket"){  // 1 to 1 in this case
             
             if (rend.material != null)
-            {
+            {   
                 // Make sure to use the instance material, not the shared one
                 if (scaledPercentRender > 0f)
                 {
