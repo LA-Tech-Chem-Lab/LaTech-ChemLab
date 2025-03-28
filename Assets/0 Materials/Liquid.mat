@@ -188,7 +188,7 @@ Material:
     - _EnableGeometricSpecularAA: 0
     - _EnergyConservingSpecularColor: 1
     - _ExcludeFromTUAndAA: 0
-    - _FillAmount: 0.78
+    - _FillAmount: 0.75
     - _Fill_Amount: 0.15
     - _Fresnel: 2
     - _HeightAmplitude: 0.02
