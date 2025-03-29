@@ -279,6 +279,7 @@ public class liquidScript : MonoBehaviour
 
             
             transform.Find("Liquid").GetComponent<MeshRenderer>().enabled = percentFull > 0f;
+            rend.material.SetFloat("_FillAmount", percentFull);
             readHere = percentFull;
 
             if (totalVolume_mL == 800f){ // 800 mL Beaker
