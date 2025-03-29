@@ -67,6 +67,7 @@ public class liquidScript : MonoBehaviour
     public float liquidTemperature = 293.15f;
     float specificHeatCapacity = 4184f;
     public float roomTemp = 293.15f;
+    public bool isinIceBath;
 
     [Header("Filtering")]
     public bool isFiltering = false;
@@ -556,46 +557,64 @@ void CalculateHeat()
     GameObject burner = findClosestBunsenBurner();
     float radius = transform.localScale.x / 2; // Assuming uniform scaling for X and Z
     float beakerSurfaceArea = Mathf.PI * Mathf.Pow(radius, 2);
-
-    if (burner != null)
-    {
-        Vector3 burnerPos = burner.transform.position;
-        Vector3 beakerPos = transform.position;
-        float heatRadius = 0.2f;
-
-        float horizontalDistance = Vector2.Distance(new Vector2(beakerPos.x, beakerPos.z), new Vector2(burnerPos.x, burnerPos.z));
-        float heightDifference = beakerPos.y - burnerPos.y;
-
-        bunsenBurnerScript burnerScript = burner.GetComponent<bunsenBurnerScript>();
-
-        if (horizontalDistance <= heatRadius && heightDifference > 0 && burnerScript.isLit)
+        if (isinIceBath == false)
         {
-            if (H2Released > 0.1f && !exploded){
-                exploded = true;
-                explode(); 
-                Debug.Log("Boom");
-                for (int i = 0; i < 5; i++){
-                    // Generate a random position within the spread radius
-                    Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * 0.2f;
-                    randomDirection.y = 0; // Keep the fire on the same horizontal plane
-                    Vector3 spawnPosition = transform.position + randomDirection;
+            if (burner != null)
+            {
+                Vector3 burnerPos = burner.transform.position;
+                Vector3 beakerPos = transform.position;
+                float heatRadius = 0.2f;
 
-                    // Spawn a new fire prefab at the randomly generated position
-                    Instantiate(firePrefab, spawnPosition, Quaternion.identity);
+                float horizontalDistance = Vector2.Distance(new Vector2(beakerPos.x, beakerPos.z), new Vector2(burnerPos.x, burnerPos.z));
+                float heightDifference = beakerPos.y - burnerPos.y;
+
+                bunsenBurnerScript burnerScript = burner.GetComponent<bunsenBurnerScript>();
+
+                if (horizontalDistance <= heatRadius && heightDifference > 0 && burnerScript.isLit)
+                {
+                    if (H2Released > 0.1f && !exploded)
+                    {
+                        exploded = true;
+                        explode();
+                        Debug.Log("Boom");
+                        for (int i = 0; i < 5; i++)
+                        {
+                            // Generate a random position within the spread radius
+                            Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * 0.2f;
+                            randomDirection.y = 0; // Keep the fire on the same horizontal plane
+                            Vector3 spawnPosition = transform.position + randomDirection;
+
+                            // Spawn a new fire prefab at the randomly generated position
+                            Instantiate(firePrefab, spawnPosition, Quaternion.identity);
+                        }
+                    }
+                    float heatFactor = 1 - (horizontalDistance / heatRadius);
+                    float burnerIntensity = burnerScript.airflow;
+                    currentHeat = (maxHeat * heatFactor * burnerIntensity) + roomTemp;
+                }
+                else
+                {
+                    currentHeat = roomTemp;
                 }
             }
-            float heatFactor = 1 - (horizontalDistance / heatRadius);
-            float burnerIntensity = burnerScript.airflow;
-            currentHeat = (maxHeat * heatFactor * burnerIntensity) + roomTemp;
+            else
+            {
+                currentHeat = roomTemp;
+            }
         }
+        else if (isinIceBath == true)
+        {
+            if (currentHeat != -273.15f)
+            {
+                var coolingRate = 0.05f;
+                currentHeat -= coolingRate * Time.deltaTime;
+            }
+        }
+
         else
         {
-            currentHeat = roomTemp; 
+            currentHeat = roomTemp;
         }
-    }
-    else{
-        currentHeat = roomTemp;
-    }
 
     // Apply heat transfer equation
     specificHeatCapacity = 0f;
