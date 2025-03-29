@@ -7,6 +7,7 @@ public class shatterGlassScript : MonoBehaviour
     public AudioClip dinkSound;
     public float dinkVolumeScale = 1f;
     public float dinkPitchScale = 1f;
+    public bool scaleAudioFromSurvivingFall = true;
 
     private Rigidbody rb;
 
@@ -23,7 +24,10 @@ public class shatterGlassScript : MonoBehaviour
         if (impactForce >= forceLimit && brokenVersionOfGlass)
             breakGlass();
         else
-            playGlassDinkSound(impactForce / forceLimit);
+            if (scaleAudioFromSurvivingFall)
+                playGlassDinkSound(impactForce / forceLimit);
+            else
+                playGlassDinkSound(1f);
     }
 
     void breakGlass(){
@@ -35,7 +39,7 @@ public class shatterGlassScript : MonoBehaviour
         GameObject tempAudio = new GameObject("TempAudio");
         AudioSource audioSource = tempAudio.AddComponent<AudioSource>();
         audioSource.clip = dinkSound;
-        audioSource.volume = scale * scale * dinkVolumeScale;
+        audioSource.volume = scale * dinkVolumeScale;
         audioSource.pitch = dinkPitchScale; // Adjusts speed and pitch
         audioSource.Play();
         Destroy(tempAudio, dinkSound.length); // Cleanup

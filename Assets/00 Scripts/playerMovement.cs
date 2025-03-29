@@ -59,7 +59,7 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
         void Update()
         {
             handleInput();
-            if (canMove) moving();
+            moving();
             if (canTurn) turning();
             handleAnimations();
             handleCamera();
@@ -110,13 +110,14 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
             else actualMoveSpeed = Mathf.Lerp(actualMoveSpeed, moveSpeed, 10f * Time.deltaTime);
 
 
-            controller.Move(movement * actualMoveSpeed * Time.deltaTime);
+            if (canMove)
+                controller.Move(movement * actualMoveSpeed * Time.deltaTime);
             
 
             if (!isGrounded) playerVelocity.y += Time.deltaTime * Physics.gravity.y;
             controller.Move(playerVelocity * Time.deltaTime);
 
-            realWorldMoveSpeed = ((transform.position - prevPosition).magnitude/Time.deltaTime);
+            realWorldMoveSpeed = (transform.position - prevPosition).magnitude/Time.deltaTime;
 
             bool prevInAir = !isGrounded;
             // jumpHeight = -1 / ((actualMoveSpeed / 10f) + 0.3f) + 4.833f;
