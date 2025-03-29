@@ -557,8 +557,6 @@ void CalculateHeat()
     GameObject burner = findClosestBunsenBurner();
     float radius = transform.localScale.x / 2; // Assuming uniform scaling for X and Z
     float beakerSurfaceArea = Mathf.PI * Mathf.Pow(radius, 2);
-        if (isinIceBath == false)
-        {
             if (burner != null)
             {
                 Vector3 burnerPos = burner.transform.position;
@@ -597,27 +595,21 @@ void CalculateHeat()
                     currentHeat = roomTemp;
                 }
             }
-            else
-            {
-                currentHeat = roomTemp;
-            }
-        }
         else if (isinIceBath == true)
         {
-            if (currentHeat != -273.15f)
+            if (currentHeat != 0f)
             {
-                var coolingRate = 0.05f;
+                var coolingRate = 5f;
                 currentHeat -= coolingRate * Time.deltaTime;
             }
         }
-
         else
         {
             currentHeat = roomTemp;
         }
 
-    // Apply heat transfer equation
-    specificHeatCapacity = 0f;
+        // Apply heat transfer equation
+        specificHeatCapacity = 0f;
     for (int i = 0; i < solutionMakeup.Count; i++){
         specificHeatCapacity += solutionMakeup[i] * specificHeatCapacities[i];
     }
@@ -625,8 +617,9 @@ void CalculateHeat()
     if (currentHeat < liquidTemperature)
     {
         float ambientCoolingRate = 0.05f; // Adjust for faster cooling
-        float coolingLoss = ambientCoolingRate * beakerSurfaceArea * (liquidTemperature - roomTemp) * 1000;
+        float coolingLoss = ambientCoolingRate * beakerSurfaceArea * (liquidTemperature - currentHeat) * 1000;
         liquidTemperature -= coolingLoss / (GetComponent<Rigidbody>().mass * specificHeatCapacity);
+       
     }
 
     float heatTransferRate = convectiveHeatTransferCoeff * beakerSurfaceArea * (currentHeat - liquidTemperature);
@@ -640,8 +633,8 @@ void CalculateHeat()
         }
     liquidTemperature = Mathf.Lerp(liquidTemperature, currentHeat, Time.deltaTime / 15f);
 
-    // Calculate total mass of the solution (assume mass of liquid is given or available)
-    float totalSolutionMass = densityOfLiquid * currentVolume_mL;
+        // Calculate total mass of the solution (assume mass of liquid is given or available)
+        float totalSolutionMass = densityOfLiquid * currentVolume_mL;
     // Check for evaporation
     for (int i = 0; i < compoundNames.Count; i++)
     {
@@ -683,7 +676,28 @@ void CalculateHeat()
             Destroy(currentBoilingEffect);
         }
     }
-}
+        if (liquidTemperature < 273.15f)
+        {
+            Transform crystallizationTransform = transform.Find("Crystalization");
+            if (crystallizationTransform != null)
+            {
+                // Activate the Crystalization object when the liquid is below freezing
+                if (!crystallizationTransform.gameObject.activeSelf)
+                {
+                    crystallizationTransform.gameObject.SetActive(true);
+                }
+                Renderer crystallizationRenderer = crystallizationTransform.GetComponent<Renderer>();
+                if (crystallizationRenderer != null)
+                {
+                    Material crystallizationMaterial = crystallizationRenderer.material;
+                    float freezingPoint = 273f; 
+                    float freezeSpeed = Mathf.Max(0.1f, Mathf.Clamp01((freezingPoint - liquidTemperature) / 100f));
+                    float newGrowth = Mathf.Clamp01(1 - freezeSpeed * (freezingPoint - liquidTemperature) / freezingPoint);
+                    crystallizationMaterial.SetFloat("_Growth", newGrowth);
+                }
+            }
+        }
+    }
 
     IEnumerator handleFiltering(Transform Flask)
     {
