@@ -47,7 +47,7 @@ public class stirringController : MonoBehaviour
                 if (Physics.Raycast(ray, out hit, 5f)){
                     Debug.Log("A ray was cast");
                     // check if the ray is cast on a beaker
-                    if (hit.collider.gameObject.name == "Beaker") {
+                    if (hit.collider.gameObject.name.StartsWith("Beaker")) {
                         Debug.Log("Ray collided with beaker");
                         // find stir rod child
                         Transform stirRodChild = hit.transform.Find("Stir Rod");

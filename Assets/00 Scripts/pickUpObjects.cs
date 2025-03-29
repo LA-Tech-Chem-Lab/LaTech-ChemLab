@@ -191,7 +191,7 @@ public class pickUpObjects : MonoBehaviour
             other.tag = "Untagged";
         }
 
-        if (other.name == "Beaker" || other.name == "Scoopula" || other.name == "Erlenmeyer Flask" || other.name == "Erlenmeyer Flask L" || other.name == "Weigh Boat" || other.name == "Buchner Flask" || other.name == "graduated Cylinder" || other.name == "Paper Cone"){
+        if (other.name.StartsWith("Beaker") || other.name == "Scoopula" || other.name == "Erlenmeyer Flask" || other.name == "Erlenmeyer Flask L" || other.name == "Weigh Boat" || other.name == "Buchner Flask" || other.name == "graduated Cylinder" || other.name == "Paper Cone"){
             GetComponent<doCertainThingWith>().turnOffBeakers();
         }
         other = null;holdingItem = false;
@@ -199,7 +199,7 @@ public class pickUpObjects : MonoBehaviour
     }
 
     void setHelpTextBasedOnObject(){
-        if (other.name == "Beaker")             multiHandlerScript.setHelpText("Right click to view up close.");
+        if (other.name.StartsWith("Beaker"))    multiHandlerScript.setHelpText("Right click to view up close.");
         if (other.name == "Fire extinguisher")  multiHandlerScript.setHelpText("Right click to use."); 
         if (other.name == "Tongs")              multiHandlerScript.setHelpText("Right click to grab a flask.");
         if (other.name == "Erlenmeyer Flask")   multiHandlerScript.setHelpText("250 mL Erlenmeyer flask");

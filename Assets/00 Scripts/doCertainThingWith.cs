@@ -87,7 +87,7 @@ public class doCertainThingWith : MonoBehaviour
             }
         }
         if (pickUpScript.other){
-            if (pickUpScript.other.transform.name == "Beaker" || pickUpScript.other.transform.name == "Weigh Boat" || pickUpScript.other.transform.name.StartsWith("Erlenmeyer Flask") || pickUpScript.other.transform.name == "Paper Cone" || pickUpScript.other.transform.name == "Pipette" || pickUpScript.other.transform.name == "graduated Cylinder"){
+            if (pickUpScript.other.transform.name.StartsWith("Beaker") || pickUpScript.other.transform.name == "Weigh Boat" || pickUpScript.other.transform.name.StartsWith("Erlenmeyer Flask") || pickUpScript.other.transform.name == "Paper Cone" || pickUpScript.other.transform.name == "Pipette" || pickUpScript.other.transform.name == "graduated Cylinder"){
                 lightUpBeaker();
                 if (pickUpScript.other.GetComponent<liquidScript>()){
                     if (pickUpScript.other.GetComponent<liquidScript>().isPouring){
@@ -211,8 +211,20 @@ public class doCertainThingWith : MonoBehaviour
                 SetPippetteSpeed(obj, pipetteSpeed);
             }
 
-            if (obj.name == "Beaker")
-                BringObjectCloser(-1.1f);
+            if (obj.name.StartsWith("Beaker")){
+                if (obj.name == "Beaker 800mL")
+                    BringObjectCloser(-1.74f);
+                if (obj.name == "Beaker 400mL")
+                    BringObjectCloser(-1.83f);
+                if (obj.name == "Beaker 250mL")
+                    BringObjectCloser(-1.9f);
+                if (obj.name == "Beaker 150mL")
+                    BringObjectCloser(-1.95f);
+                if (obj.name == "Beaker 100mL")
+                    BringObjectCloser(-2f);
+                if (obj.name == "Beaker 50mL")
+                    BringObjectCloser(-2.06f);
+            }
 
             if (obj.name == "graduated Cylinder")
                 BringObjectCloser(-1.1f);
@@ -265,7 +277,7 @@ public class doCertainThingWith : MonoBehaviour
                     obj.GetComponent<bunsenBurnerScript>().AdjustGearRotation(Input.mouseScrollDelta.y * 2f);
                 }
 
-            if (obj.name == "Beaker" || obj.name.StartsWith("Erlenmeyer Flask")|| obj.name == "Paper Cone" || obj.name == "graduated Cylinder")
+            if (obj.name.StartsWith("Beaker") || obj.name.StartsWith("Erlenmeyer Flask")|| obj.name == "Paper Cone" || obj.name == "graduated Cylinder")
             {
                 if (Input.GetKey(KeyCode.P)) // While "P" is held
                 {
@@ -861,7 +873,7 @@ public class doCertainThingWith : MonoBehaviour
         // locate closest beaker
         foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
         {
-            if (currentObject.name == "Beaker")
+            if (currentObject.name.StartsWith("Beaker"))
             {
                 float distFromBeaker = Vector3.Distance(stirRod.transform.position, currentObject.transform.position);
 
