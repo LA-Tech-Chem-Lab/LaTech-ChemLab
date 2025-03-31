@@ -492,7 +492,7 @@ MonoBehaviour:
   compoundStates: 610061006c0061007300610073007300730073007300
   reactionHappening: 0
   dotProduct: 0
-  maxSpillRate: 200
+  maxSpillRate: 50
   liquidTransform: {fileID: 0}
   maxHeat: 100
   currentHeat: 0
@@ -712,7 +712,7 @@ PrefabInstance:
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 67ac645a28c7fff43ae7c2211f62fb8d, type: 2}
+      objectReference: {fileID: 2100000, guid: 80654e172b3be854c8d40012f3a513d5, type: 2}
     - target: {fileID: 919132149155446097, guid: 314934607da81ec40aa07a6f21af0e35,
         type: 3}
       propertyPath: m_Name
