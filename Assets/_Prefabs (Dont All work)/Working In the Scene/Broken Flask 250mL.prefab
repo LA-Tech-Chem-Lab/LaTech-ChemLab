@@ -15,18 +15,33 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: cf27eea0fb52b554ebaa1d4caec839e9, type: 2}
     - target: {fileID: -8679921383154817045, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.127369
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.127369
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.127369
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.0693709
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.0447743
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 18.815413
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
         type: 3}
@@ -36,17 +51,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
         type: 3}
@@ -63,6 +78,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7219076460700332019, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.052362297
+      objectReference: {fileID: 0}
+    - target: {fileID: -6362509722343219229, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.045294702
+      objectReference: {fileID: 0}
+    - target: {fileID: -5894863403822994359, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.0126
+      objectReference: {fileID: 0}
+    - target: {fileID: -2271502847731017999, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.018275078
+      objectReference: {fileID: 0}
     - target: {fileID: -2245623774801616189, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -76,7 +116,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
         type: 3}
       propertyPath: m_Name
-      value: Broken Flask 1
+      value: Broken Flask 250mL
       objectReference: {fileID: 0}
     - target: {fileID: 8442510506162454399, guid: 8bcb9f992360b564c9cd8a9cecbf41dd,
         type: 3}
@@ -156,7 +196,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!64 &2810882640943943351
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -211,7 +251,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!64 &5258595074208456190
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -266,7 +306,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!64 &6236641174177979511
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -321,7 +361,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!64 &9205194267209473482
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -363,7 +403,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 7938b9fcd5f745b47bbed3ae540366d5, type: 3}
   m_Resource: {fileID: 8300000, guid: 7938b9fcd5f745b47bbed3ae540366d5, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.6
   m_Pitch: 1
   Loop: 0
   Mute: 0

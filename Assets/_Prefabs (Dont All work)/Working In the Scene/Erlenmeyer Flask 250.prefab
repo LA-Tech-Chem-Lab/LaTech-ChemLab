@@ -247,7 +247,9 @@ GameObject:
   - component: {fileID: 2368223526535276608}
   - component: {fileID: 6571534405349168079}
   - component: {fileID: 2917225990457861490}
+  - component: {fileID: 2743355965695065633}
   - component: {fileID: 9085856967713899595}
+  - component: {fileID: 8357555938184140775}
   - component: {fileID: 4097539717577364166}
   m_Layer: 0
   m_Name: Erlenmeyer Flask 250
@@ -379,6 +381,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &2743355965695065633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6994679905266515316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c945c8c7187585643a1e4298fa1745dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displacement: {x: 0, y: -0.12, z: 0}
+  targetPosOffset: {x: 0, y: 0, z: 0}
+  checkRadiusOverride: 0.1
 --- !u!114 &9085856967713899595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -495,6 +512,19 @@ MonoBehaviour:
   firePrefab: {fileID: 0}
   boomSound: {fileID: 8300000, guid: 3b957f95e58696f468dbd2b4d3ffc7a4, type: 3}
   isViolent: 0
+--- !u!114 &8357555938184140775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6994679905266515316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bb4143185184814490b81e7047accf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inSpace: 0
 --- !u!114 &4097539717577364166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -507,12 +537,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11759ad9640d893459018b55958ce4a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceLimit: 600
-  brokenVersionOfGlass: {fileID: 0}
+  forceLimit: 480
+  brokenVersionOfGlass: {fileID: 8762140033237742095, guid: 11e5ebaff1ad0774680e69707509bc35,
+    type: 3}
   dinkSound: {fileID: 8300000, guid: 4c3e6173fbb642340abdd58981a875d2, type: 3}
   dinkVolumeScale: 1
   dinkPitchScale: 1
-  scaleAudioFromSurvivingFall: 0
+  scaleAudioFromSurvivingFall: 1
 --- !u!1 &8068738466388944729
 GameObject:
   m_ObjectHideFlags: 0

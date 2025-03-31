@@ -658,57 +658,67 @@ public class liquidScript : MonoBehaviour
             
             if (totalVolume_mL ==  500f){ // 500 mL Flask
                 float renderedFlask500 = 1f;
-                if (inRange(percentFull, 0f, 0.002f))
-                    renderedFlask500 = 17f;
+                if (inRange(percentFull, 0, 0.001f)) 
+                    renderedFlask500 = 35.9f;
+                if (inRange(percentFull, 0.001f, 0.002f))
+                    renderedFlask500 = Mathf.Lerp(35.9f, 17.6f, reScale(percentFull, 0.001f, 0.002f));
                 if (inRange(percentFull, 0.002f, 0.004f))
-                    renderedFlask500 = Mathf.Lerp(17f, 8.8f, reScale(percentFull, 0.002f, 0.004f));
-                if (inRange(percentFull, 0.004f, 0.008f))
-                    renderedFlask500 = Mathf.Lerp(8.8f, 4.75f, reScale(percentFull, 0.004f, 0.008f));
-                if (inRange(percentFull, 0.008f, 0.014f))
-                    renderedFlask500 = Mathf.Lerp(4.75f, 2.94f, reScale(percentFull, 0.008f, 0.014f));
-                if (inRange(percentFull, 0.014f, 0.02f))
-                    renderedFlask500 = Mathf.Lerp(2.94f, 2.12f, reScale(percentFull, 0.014f, 0.02f));
+                    renderedFlask500 = Mathf.Lerp(17.6f, 9.4f, reScale(percentFull, 0.002f, 0.004f));
+                if (inRange(percentFull, 0.004f, 0.006f))
+                    renderedFlask500 = Mathf.Lerp(9.4f, 6.57f, reScale(percentFull, 0.004f, 0.006f));
+                if (inRange(percentFull, 0.006f, 0.01f))
+                    renderedFlask500 = Mathf.Lerp(6.57f, 4.06f, reScale(percentFull, 0.006f, 0.01f));
+                if (inRange(percentFull, 0.01f, 0.015f))
+                    renderedFlask500 = Mathf.Lerp(4.06f, 2.94f, reScale(percentFull, 0.01f, 0.015f));
+                if (inRange(percentFull, 0.015f, 0.02f))
+                    renderedFlask500 = Mathf.Lerp(2.94f, 2.37f, reScale(percentFull, 0.015f, 0.02f));
                 if (inRange(percentFull, 0.02f, 0.03f))
-                    renderedFlask500 = Mathf.Lerp(2.12f, 1.58f, reScale(percentFull, 0.02f, 0.03f));
+                    renderedFlask500 = Mathf.Lerp(2.37f, 1.76f, reScale(percentFull, 0.02f, 0.03f));
                 if (inRange(percentFull, 0.03f, 0.04f))
-                    renderedFlask500 = Mathf.Lerp(1.58f, 1.33f, reScale(percentFull, 0.03f, 0.04f));
+                    renderedFlask500 = Mathf.Lerp(1.76f, 1.6f, reScale(percentFull, 0.03f, 0.04f));
                 if (inRange(percentFull, 0.04f, 0.06f))
-                    renderedFlask500 = Mathf.Lerp(1.33f, 1.04f, reScale(percentFull, 0.04f, 0.06f));
+                    renderedFlask500 = Mathf.Lerp(1.6f, 1.35f, reScale(percentFull, 0.04f, 0.06f));
                 if (inRange(percentFull, 0.06f, 0.08f))
-                    renderedFlask500 = Mathf.Lerp(1.04f, 0.903f, reScale(percentFull, 0.06f, 0.08f));
+                    renderedFlask500 = Mathf.Lerp(1.35f, 1.22f, reScale(percentFull, 0.06f, 0.08f));
                 if (inRange(percentFull, 0.08f, 0.1f))
-                    renderedFlask500 = Mathf.Lerp(0.903f, 0.82f, reScale(percentFull, 0.08f, 0.1f));
+                    renderedFlask500 = Mathf.Lerp(1.22f, 1.14f, reScale(percentFull, 0.08f, 0.1f));
                 if (inRange(percentFull, 0.1f, 0.12f))
-                    renderedFlask500 = Mathf.Lerp(0.82f, 0.762f, reScale(percentFull, 0.1f, 0.12f));
+                    renderedFlask500 = Mathf.Lerp(1.14f, 1.09f, reScale(percentFull, 0.1f, 0.12f));
                 if (inRange(percentFull, 0.12f, 0.16f))
-                    renderedFlask500 = Mathf.Lerp(0.762f, 0.693f, reScale(percentFull, 0.12f, 0.16f));
+                    renderedFlask500 = Mathf.Lerp(1.09f, 1.028f, reScale(percentFull, 0.12f, 0.16f));
                 if (inRange(percentFull, 0.16f, 0.2f))
-                    renderedFlask500 = Mathf.Lerp(0.693f, 0.65f, reScale(percentFull, 0.16f, 0.2f));
+                    renderedFlask500 = Mathf.Lerp(1.028f, 0.99f, reScale(percentFull, 0.16f, 0.2f));
                 if (inRange(percentFull, 0.2f, 0.24f))
-                    renderedFlask500 = Mathf.Lerp(0.65f, 0.622f, reScale(percentFull, 0.2f, 0.24f));
+                    renderedFlask500 = Mathf.Lerp(0.99f, 0.964f, reScale(percentFull, 0.2f, 0.24f));
                 if (inRange(percentFull, 0.24f, 0.28f))
-                    renderedFlask500 = Mathf.Lerp(0.622f, 0.6021f, reScale(percentFull, 0.24f, 0.28f));
+                    renderedFlask500 = Mathf.Lerp(0.964f, 0.944f, reScale(percentFull, 0.24f, 0.28f));
                 if (inRange(percentFull, 0.28f, 0.32f))
-                    renderedFlask500 = Mathf.Lerp(0.6021f, 0.587f, reScale(percentFull, 0.28f, 0.32f));
-                if (inRange(percentFull, 0.32f, 0.4f))
-                    renderedFlask500 = Mathf.Lerp(0.587f, 0.562f, reScale(percentFull, 0.32f, 0.4f));
-                if (inRange(percentFull, 0.4f, 0.6f))
-                    renderedFlask500 = Mathf.Lerp(0.562f, 0.557f, reScale(percentFull, 0.4f, 0.6f));
+                    renderedFlask500 = Mathf.Lerp(0.944f, 0.932f, reScale(percentFull, 0.28f, 0.32f));
+                if (inRange(percentFull, 0.32f, 0.36f))
+                    renderedFlask500 = Mathf.Lerp(0.932f, 0.92f, reScale(percentFull, 0.32f, 0.36f));
+                if (inRange(percentFull, 0.36f, 0.4f))
+                    renderedFlask500 = Mathf.Lerp(0.92f, 0.908f, reScale(percentFull, 0.36f, 0.4f));
+                if (inRange(percentFull, 0.4f, 0.5f))
+                    renderedFlask500 = Mathf.Lerp(0.908f, 0.849f, reScale(percentFull, 0.4f, 0.5f));
+                if (inRange(percentFull, 0.5f, 0.6f))
+                    renderedFlask500 = Mathf.Lerp(0.849f, 0.81f, reScale(percentFull, 0.5f, 0.6f));
                 if (inRange(percentFull, 0.6f, 0.7f))
-                    renderedFlask500 = Mathf.Lerp(0.557f, 0.578f, reScale(percentFull, 0.6f, 0.7f));
+                    renderedFlask500 = Mathf.Lerp(0.81f, 0.809f, reScale(percentFull, 0.6f, 0.7f));
                 if (inRange(percentFull, 0.7f, 0.8f))
-                    renderedFlask500 = Mathf.Lerp(0.578f, 0.595f, reScale(percentFull, 0.7f, 0.8f));
+                    renderedFlask500 = Mathf.Lerp(0.809f, 0.805f, reScale(percentFull, 0.7f, 0.8f));
                 if (inRange(percentFull, 0.8f, 0.9f))
-                    renderedFlask500 = Mathf.Lerp(0.595f, 0.64f, reScale(percentFull, 0.8f, 0.9f));
-                if (inRange(percentFull, 0.9f, 1.0f))
-                    renderedFlask500 = Mathf.Lerp(0.64f, 0.67f, reScale(percentFull, 0.9f, 1.0f));
-                if (percentFull == 1.0f)
-                    renderedFlask500 = 0.67f;
+                    renderedFlask500 = Mathf.Lerp(0.805f, 0.84f, reScale(percentFull, 0.8f, 0.9f));
+                if (inRange(percentFull, 0.9f, 0.95f))
+                    renderedFlask500 = Mathf.Lerp(0.84f, 0.855f, reScale(percentFull, 0.9f, 0.95f));
+                if (inRange(percentFull, 0.95f, 1.0f))
+                    renderedFlask500 = Mathf.Lerp(0.855f, 0.865f, reScale(percentFull, 0.95f, 1.0f));
+                if (percentFull == 1)
+                    renderedFlask500 = 0.865f;
 
-                renderedFlask500 = testScale;
-                readHere = percentFull;
+                // renderedFlask500 = testScale;
+                // readHere = percentFull;
 
-                // readHere =  percentFull * renderedFlask500;
+                readHere =  percentFull * renderedFlask500;
                 rend.material.SetFloat("_FillAmount", percentFull * renderedFlask500);
             }
 
