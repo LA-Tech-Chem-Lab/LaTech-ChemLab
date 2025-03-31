@@ -87,7 +87,7 @@ public class doCertainThingWith : MonoBehaviour
             }
         }
         if (pickUpScript.other){
-            if (pickUpScript.other.transform.name.StartsWith("Beaker") || pickUpScript.other.transform.name == "Weigh Boat" || pickUpScript.other.transform.name.StartsWith("Erlenmeyer Flask") || pickUpScript.other.transform.name == "Paper Cone" || pickUpScript.other.transform.name == "Pipette" || pickUpScript.other.transform.name == "graduated Cylinder"){
+            if (pickUpScript.other.transform.name.StartsWith("Beaker") || pickUpScript.other.transform.name == "Weigh Boat" || pickUpScript.other.transform.name.StartsWith("Erlenmeyer Flask") || pickUpScript.other.transform.name == "Paper Cone" || pickUpScript.other.transform.name == "Pipette" || pickUpScript.other.transform.name == "Graduated Cylinder"){
                 lightUpBeaker();
                 if (pickUpScript.other.GetComponent<liquidScript>()){
                     if (pickUpScript.other.GetComponent<liquidScript>().isPouring){
@@ -226,7 +226,7 @@ public class doCertainThingWith : MonoBehaviour
                     BringObjectCloser(-2.06f);
             }
 
-            if (obj.name == "graduated Cylinder")
+            if (obj.name == "Graduated Cylinder")
                 BringObjectCloser(-1.1f);
 
             if (obj.name == "Weigh Boat")
@@ -277,7 +277,7 @@ public class doCertainThingWith : MonoBehaviour
                     obj.GetComponent<bunsenBurnerScript>().AdjustGearRotation(Input.mouseScrollDelta.y * 2f);
                 }
 
-            if (obj.name.StartsWith("Beaker") || obj.name.StartsWith("Erlenmeyer Flask")|| obj.name == "Paper Cone" || obj.name == "graduated Cylinder")
+            if (obj.name.StartsWith("Beaker") || obj.name.StartsWith("Erlenmeyer Flask")|| obj.name == "Paper Cone" || obj.name == "Graduated Cylinder")
             {
                 if (Input.GetKey(KeyCode.P)) // While "P" is held
                 {

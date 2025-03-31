@@ -78,6 +78,8 @@ public class multihandler : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+        InGameCanvas.SetActive(true);
+
         timeOfLastResponse = Time.time - 11f; timeOfLastQuestion = timeOfLastResponse;
         interactWithObjectsScript = currentPlayer.GetComponent<interactWithObjects>();
     }

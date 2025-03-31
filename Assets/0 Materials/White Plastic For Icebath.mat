@@ -26,7 +26,6 @@ Material:
   m_ModifiedSerializedProperties: 10
   m_ValidKeywords:
   - _ALPHAPREMULTIPLY_ON
-  - _SPECULAR_SETUP
   - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
   m_LightmapFlags: 4

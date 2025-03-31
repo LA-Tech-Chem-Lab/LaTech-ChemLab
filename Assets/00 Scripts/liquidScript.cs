@@ -635,24 +635,6 @@ public class liquidScript : MonoBehaviour
             }
         }
 
-
-        if (transform.name == "Paper Cone" || transform.name == "graduated Cylinder" || transform.name == "Ice Bucket"){  // 1 to 1 in this case
-            
-            if (rend.material != null)
-            {   
-                // Make sure to use the instance material, not the shared one
-                if (scaledPercentRender > 0f)
-                {
-                    transform.Find("Liquid").GetComponent<MeshRenderer>().enabled = true;
-                    rend.material.SetFloat("_FillAmount", scaledPercentRender);
-                }
-                if (scaledPercentRender <= 0f)
-                {
-                    transform.Find("Liquid").GetComponent<MeshRenderer>().enabled = false;
-                }
-            }
-        }
-
         if (transform.name.StartsWith("Erlenmeyer Flask")){
             
             
@@ -779,6 +761,22 @@ public class liquidScript : MonoBehaviour
             }
         }
 
+        if (transform.name == "Paper Cone" || transform.name == "Graduated Cylinder" || transform.name == "Ice Bucket"){  // 1 to 1 in this case
+            
+            if (rend.material != null)
+            {   
+                // Make sure to use the instance material, not the shared one
+                if (scaledPercentRender > 0f)
+                {
+                    transform.Find("Liquid").GetComponent<MeshRenderer>().enabled = true;
+                    rend.material.SetFloat("_FillAmount", scaledPercentRender);
+                }
+                if (scaledPercentRender <= 0f)
+                {
+                    transform.Find("Liquid").GetComponent<MeshRenderer>().enabled = false;
+                }
+            }
+        }
 
         if (transform.name == "Pipette"){  // 1 to 1 in this case
             
@@ -788,6 +786,9 @@ public class liquidScript : MonoBehaviour
 
             rend.material.SetFloat("_FillAmount", scaledHeight);
         }
+
+
+        
         // Simulate new object mass now containing liquid
         if (gameObject.name == "Capilary tube")
         {

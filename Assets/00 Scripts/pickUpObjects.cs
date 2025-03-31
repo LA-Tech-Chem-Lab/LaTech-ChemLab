@@ -105,8 +105,7 @@ public class pickUpObjects : MonoBehaviour
             checkRadius = (extents.x + extents.z) / 2f;
         
         } else checkRadius = 0.12f;
-
-    
+        
         if (other.GetComponent<shiftBy>()) {
             meshOffset = other.GetComponent<shiftBy>().GetOffset();  objShift = meshOffset;
             targetPositionShift = other.GetComponent<shiftBy>().GetTargetPosOffset(); 
@@ -117,6 +116,9 @@ public class pickUpObjects : MonoBehaviour
 
         initialHoldingDistance = untouchedHoldingDistance;
 
+
+        ////////////////////////////////    Item Specific Stuff    //////////////////////////////////////////////////
+        
         if (other.name == "Pipette"){
             initialHoldingDistance = 1.3f;
             canRotateItem = false;
@@ -152,7 +154,7 @@ public class pickUpObjects : MonoBehaviour
             if (GetComponent<doCertainThingWith>().isRodInBeaker == true)
                 GetComponent<doCertainThingWith>().removeStirRod(other);
         }
-
+        
         initialHeldDistForObject = initialHoldingDistance;
         setHelpTextBasedOnObject();
     }
@@ -191,7 +193,7 @@ public class pickUpObjects : MonoBehaviour
             other.tag = "Untagged";
         }
 
-        if (other.name.StartsWith("Beaker") || other.name.StartsWith("Erlenmeyer Flask") || other.name == "Scoopula" ||  other.name == "Weigh Boat" || other.name == "Buchner Flask" || other.name == "graduated Cylinder" || other.name == "Paper Cone"){
+        if (other.name.StartsWith("Beaker") || other.name.StartsWith("Erlenmeyer Flask") || other.name == "Scoopula" ||  other.name == "Weigh Boat" || other.name == "Buchner Flask" || other.name == "Graduated Cylinder" || other.name == "Paper Cone"){
             GetComponent<doCertainThingWith>().turnOffBeakers();
         }
         other = null;holdingItem = false;
@@ -236,13 +238,13 @@ public class pickUpObjects : MonoBehaviour
                 multiHandlerScript.setHelpText("Right Click to adjust airflow");
         }
 
-        if (other.name == "graduated Cylinder"){
+        if (other.name == "Graduated Cylinder"){
             if (Input.GetMouseButton(1)){
                 liquidScript LS = other.GetComponent<liquidScript>();
                 multiHandlerScript.setHelpText("Volume: " + LS.currentVolume_mL + " mLs");
             }
             else{
-                multiHandlerScript.setHelpText("This is a graduated cylinder. Hold right click to observe the volume of your solution.");
+                multiHandlerScript.setHelpText("This is a Graduated cylinder. Hold right click to observe the volume of your solution.");
             }
         }
 
