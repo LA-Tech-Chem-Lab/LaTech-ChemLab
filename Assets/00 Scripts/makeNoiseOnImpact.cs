@@ -4,7 +4,9 @@ using UnityEngine;
 public class makeNoiseOnImpact : MonoBehaviour
 {   
     
-    public float forceThreshold = 100f; // Define a force limit for shattering if needed
+    public float soundThreshold = 100f; // Define a force limit for shattering if needed
+    public float breakThreshold;
+    public GameObject brokenVersionOfObject;
     public float OverwriteScaleThresh;
     public AudioClip Sound;
     public float VolumeScale = 1f;
@@ -22,15 +24,26 @@ public class makeNoiseOnImpact : MonoBehaviour
         float impactForce = collision.impulse.magnitude / Time.fixedDeltaTime / rb.mass;
         Debug.Log("Impact Force: " + impactForce);
 
-        
+        if (impactForce > breakThreshold && breakThreshold > soundThreshold){
+            breakObject();
+            return;
+        }    
         
         if (OverwriteScaleThresh > 0f){
-            playScaledSound(impactForce / forceThreshold);
+            playScaledSound(impactForce / soundThreshold);
         }
         
-        else if (impactForce > forceThreshold)
+        else if (impactForce > soundThreshold)
             playSound();
     }
+
+    void breakObject(){
+        if (brokenVersionOfObject){
+            Instantiate(brokenVersionOfObject, transform.position, transform.rotation);
+            Destroy(gameObject);
+        }
+    }
+
 
 
     void playSound(){

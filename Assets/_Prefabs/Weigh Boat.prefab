@@ -5131,7 +5131,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 8556262120643298411, guid: b1d0d2435aba6f9459bc6d082abdd362, type: 3}
+  - {fileID: 2100000, guid: 0e903c5cf3c2ab044899168a0745e86c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5282,10 +5282,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f13c69889b7cbe4a9fad259e07581e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceThreshold: 165
+  soundThreshold: 100
+  breakThreshold: 550
+  brokenVersionOfObject: {fileID: 5393956745702613590, guid: 1ada26e61f8c501479daf398b2b2c2e5,
+    type: 3}
   OverwriteScaleThresh: 0
   Sound: {fileID: 8300000, guid: f7d1e6328942acc43bfb79770424222e, type: 3}
   VolumeScale: 0.12
+  PitchScale: 1
 --- !u!1 &3450407020306941431
 GameObject:
   m_ObjectHideFlags: 0
