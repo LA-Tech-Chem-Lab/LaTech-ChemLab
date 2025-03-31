@@ -227,7 +227,7 @@ public class doCertainThingWith : MonoBehaviour
             }
 
             if (obj.name == "Graduated Cylinder")
-                BringObjectCloser(-1.1f);
+                BringObjectCloser(-1.5f);
 
             if (obj.name == "Weigh Boat")
                 BringObjectCloser(-1.5f);

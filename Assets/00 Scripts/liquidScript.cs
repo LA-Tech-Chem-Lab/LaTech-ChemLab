@@ -761,7 +761,69 @@ public class liquidScript : MonoBehaviour
             }
         }
 
-        if (transform.name == "Paper Cone" || transform.name == "Graduated Cylinder" || transform.name == "Ice Bucket"){  // 1 to 1 in this case
+        if (transform.name == "Graduated Cylinder") {
+
+            if (totalVolume_mL ==  50f){ // 50 mL Graduated Cylinder
+                float renderedGradCylinder50 = 1f;
+                if (inRange(percentFull, 0, 0.005f)) 
+                    renderedGradCylinder50 = 7.3f;
+                if (inRange(percentFull, 0.005f, 0.0075f))
+                    renderedGradCylinder50 = Mathf.Lerp(7.3f, 5.19f, reScale(percentFull, 0.005f, 0.0075f));
+                if (inRange(percentFull, 0.0075f, 0.01f))
+                    renderedGradCylinder50 = Mathf.Lerp(5.19f, 4.2f, reScale(percentFull, 0.0075f, 0.01f));
+                if (inRange(percentFull, 0.01f, 0.015f))
+                    renderedGradCylinder50 = Mathf.Lerp(4.2f, 3.16f, reScale(percentFull, 0.01f, 0.015f));
+                if (inRange(percentFull, 0.015f, 0.02f))
+                    renderedGradCylinder50 = Mathf.Lerp(3.16f, 2.73f, reScale(percentFull, 0.015f, 0.02f));
+                if (inRange(percentFull, 0.02f, 0.03f))
+                    renderedGradCylinder50 = Mathf.Lerp(2.73f, 2.2f, reScale(percentFull, 0.02f, 0.03f));
+                if (inRange(percentFull, 0.03f, 0.04f))
+                    renderedGradCylinder50 = Mathf.Lerp(2.2f, 1.925f, reScale(percentFull, 0.03f, 0.04f));
+                if (inRange(percentFull, 0.04f, 0.05f))
+                    renderedGradCylinder50 = Mathf.Lerp(1.925f, 1.76f, reScale(percentFull, 0.04f, 0.05f));
+                if (inRange(percentFull, 0.05f, 0.06f))
+                    renderedGradCylinder50 = Mathf.Lerp(1.76f, 1.65f, reScale(percentFull, 0.05f, 0.06f));
+                if (inRange(percentFull, 0.06f, 0.08f))
+                    renderedGradCylinder50 = Mathf.Lerp(1.65f, 1.518f, reScale(percentFull, 0.06f, 0.08f));
+                if (inRange(percentFull, 0.08f, 0.1f))
+                    renderedGradCylinder50 = Mathf.Lerp(1.518f, 1.437f, reScale(percentFull, 0.08f, 0.1f));
+                if (inRange(percentFull, 0.1f, 0.12f))
+                    renderedGradCylinder50 = Mathf.Lerp(1.437f, 1.38f, reScale(percentFull, 0.1f, 0.12f));
+                if (inRange(percentFull, 0.12f, 0.16f))
+                    renderedGradCylinder50 = Mathf.Lerp(1.38f, 1.315f, reScale(percentFull, 0.12f, 0.16f));
+                if (inRange(percentFull, 0.16f, 0.2f))
+                    renderedGradCylinder50 = Mathf.Lerp(1.315f, 1.275f, reScale(percentFull, 0.16f, 0.2f));
+                if (inRange(percentFull, 0.2f, 0.25f))
+                    renderedGradCylinder50 = Mathf.Lerp(1.275f, 1.243f, reScale(percentFull, 0.2f, 0.25f));
+                if (inRange(percentFull, 0.25f, 0.3f))
+                    renderedGradCylinder50 = Mathf.Lerp(1.243f, 1.22f, reScale(percentFull, 0.25f, 0.3f));
+                if (inRange(percentFull, 0.3f, 0.35f))
+                    renderedGradCylinder50 = Mathf.Lerp(1.22f, 1.205f, reScale(percentFull, 0.3f, 0.35f));
+                if (inRange(percentFull, 0.35f, 0.4f))
+                    renderedGradCylinder50 = Mathf.Lerp(1.205f, 1.194f, reScale(percentFull, 0.35f, 0.4f));
+                if (inRange(percentFull, 0.4f, 0.5f))
+                    renderedGradCylinder50 = Mathf.Lerp(1.194f, 1.176f, reScale(percentFull, 0.4f, 0.5f));
+                if (inRange(percentFull, 0.5f, 0.6f))
+                    renderedGradCylinder50 = Mathf.Lerp(1.176f, 1.166f, reScale(percentFull, 0.5f, 0.6f));
+                if (inRange(percentFull, 0.6f, 0.7f))
+                    renderedGradCylinder50 = Mathf.Lerp(1.166f, 1.1578f, reScale(percentFull, 0.6f, 0.7f));
+                if (inRange(percentFull, 0.7f, 0.8f))
+                    renderedGradCylinder50 = Mathf.Lerp(1.1578f, 1.1522f, reScale(percentFull, 0.7f, 0.8f));
+                if (inRange(percentFull, 0.8f, 0.9f))
+                    renderedGradCylinder50 = Mathf.Lerp(1.1522f, 1.1476f, reScale(percentFull, 0.8f, 0.9f));
+                if (inRange(percentFull, 0.9f, 1.0f))
+                    renderedGradCylinder50 = Mathf.Lerp(1.1476f, 1.1442f, reScale(percentFull, 0.9f, 1.0f));
+                if (percentFull == 1)
+                    renderedGradCylinder50 = 1.1442f;
+
+                // renderedGradCylinder50 = testScale;
+                // readHere = percentFull;
+
+                readHere =  percentFull * renderedGradCylinder50;
+                rend.material.SetFloat("_FillAmount", percentFull * renderedGradCylinder50);
+            }
+        }
+        if (transform.name == "Paper Cone" || transform.name == "Ice Bucket"){  // 1 to 1 in this case
             
             if (rend.material != null)
             {   

@@ -156,7 +156,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!64 &2026202705399040173
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -211,7 +211,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!64 &5437080038494638632
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -266,7 +266,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!64 &4585640843952862959
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -308,7 +308,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 7938b9fcd5f745b47bbed3ae540366d5, type: 3}
   m_Resource: {fileID: 8300000, guid: 7938b9fcd5f745b47bbed3ae540366d5, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.6
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -424,7 +424,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!64 &7346036181008122263
 MeshCollider:
   m_ObjectHideFlags: 0
