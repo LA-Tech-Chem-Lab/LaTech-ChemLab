@@ -451,7 +451,7 @@ public class doCertainThingWith : MonoBehaviour
         // Find the closest Flask
         foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
         {
-            if (currentObject.name == "Erlenmeyer Flask" || currentObject.name == "Erlenmeyer Flask L")
+            if (currentObject.name.StartsWith("Erlenmeyer Flask"))
             {
                 float distFromFunnel = Vector3.Distance(funnel.transform.position, currentObject.transform.position);
 
@@ -820,7 +820,7 @@ public class doCertainThingWith : MonoBehaviour
         foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
         {
 
-            if (currentObject.name == "Erlenmeyer Flask" || currentObject.name == "Erlenmeyer Flask L")
+            if (currentObject.name.StartsWith("Erlenmeyer Flask"))
             {
 
                 float distFromTip = Vector3.Distance(tongs.transform.Find("Tip").transform.position, currentObject.transform.position);
@@ -939,10 +939,10 @@ public class doCertainThingWith : MonoBehaviour
 
         Vector3 offset = Vector3.zero;
 
-        if (itemHeldByTongs.name == "Erlenmeyer Flask")
+        if (itemHeldByTongs.name == "Erlenmeyer Flask 250")
             offset = pickUpScript.other.transform.TransformDirection(0f, -0.361f, 0.1056f);
 
-        if (itemHeldByTongs.name == "Erlenmeyer Flask L")
+        if (itemHeldByTongs.name == "Erlenmeyer Flask 500")
             offset = pickUpScript.other.transform.TransformDirection(0f, -0.452f, 0.1056f);
 
 

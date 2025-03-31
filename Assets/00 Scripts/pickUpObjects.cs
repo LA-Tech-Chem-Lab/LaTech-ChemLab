@@ -191,7 +191,7 @@ public class pickUpObjects : MonoBehaviour
             other.tag = "Untagged";
         }
 
-        if (other.name.StartsWith("Beaker") || other.name == "Scoopula" || other.name == "Erlenmeyer Flask" || other.name == "Erlenmeyer Flask L" || other.name == "Weigh Boat" || other.name == "Buchner Flask" || other.name == "graduated Cylinder" || other.name == "Paper Cone"){
+        if (other.name.StartsWith("Beaker") || other.name.StartsWith("Erlenmeyer Flask") || other.name == "Scoopula" ||  other.name == "Weigh Boat" || other.name == "Buchner Flask" || other.name == "graduated Cylinder" || other.name == "Paper Cone"){
             GetComponent<doCertainThingWith>().turnOffBeakers();
         }
         other = null;holdingItem = false;
@@ -199,15 +199,14 @@ public class pickUpObjects : MonoBehaviour
     }
 
     void setHelpTextBasedOnObject(){
-        if (other.name.StartsWith("Beaker"))    multiHandlerScript.setHelpText("Right click to view up close.");
-        if (other.name == "Fire extinguisher")  multiHandlerScript.setHelpText("Right click to use."); 
-        if (other.name == "Tongs")              multiHandlerScript.setHelpText("Right click to grab a flask.");
-        if (other.name == "Erlenmeyer Flask")   multiHandlerScript.setHelpText("250 mL Erlenmeyer flask");
-        if (other.name == "Erlenmeyer Flask L") multiHandlerScript.setHelpText("500 mL Erlenmeyer flask");
-        if (other.name == "Weigh Boat")         multiHandlerScript.setHelpText("This is a weigh boat. You can use it to measure out the aluminum pellets on the scale. When you have the right amount, you can dump its contents into a beaker.");
-        if (other.name == "Glass Funnel")       multiHandlerScript.setHelpText("This is a glass funnel used for filtering out solids from solutions. Right click on an Erlenmeyer flask to attatch it.");
-        if (other.name == "Paper Cone")         multiHandlerScript.setHelpText("This is a paper filter used with a funnel to filter solids from a solution.");
-        if (other.name == "Buchner Funnel")     multiHandlerScript.setHelpText("This is a Buchner funnel used for filtering out solids from solutions. Right click on an Buchner flask to attatch it.");
+        if (other.name == "Fire extinguisher")      multiHandlerScript.setHelpText("Right click to use."); 
+        if (other.name == "Tongs")                  multiHandlerScript.setHelpText("Right click to grab a flask.");
+        if (other.name == "Erlenmeyer Flask 250")   multiHandlerScript.setHelpText("250 mL Erlenmeyer flask");
+        if (other.name == "Erlenmeyer Flask 500")   multiHandlerScript.setHelpText("500 mL Erlenmeyer flask");
+        if (other.name == "Weigh Boat")             multiHandlerScript.setHelpText("This is a weigh boat. You can use it to measure out the aluminum pellets on the scale. When you have the right amount, you can dump its contents into a beaker.");
+        if (other.name == "Glass Funnel")           multiHandlerScript.setHelpText("This is a glass funnel used for filtering out solids from solutions. Right click on an Erlenmeyer flask to attatch it.");
+        if (other.name == "Paper Cone")             multiHandlerScript.setHelpText("This is a paper filter used with a funnel to filter solids from a solution.");
+        if (other.name == "Buchner Funnel")         multiHandlerScript.setHelpText("This is a Buchner funnel used for filtering out solids from solutions. Right click on an Buchner flask to attatch it.");
     }
 
     void setHelpTextConstantly(){
