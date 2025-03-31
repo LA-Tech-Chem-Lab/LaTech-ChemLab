@@ -100,7 +100,8 @@ public class liquidScript : MonoBehaviour
     public GameObject firePrefab;
     public AudioClip boomSound;
     public bool isViolent = false; 
-    //public GameObject player;
+    public GameObject player;
+    public GameObject stuffInEyesFilter;
 
     // Use this for initialization
     void Start()
@@ -193,9 +194,12 @@ public class liquidScript : MonoBehaviour
             }
         }
 
-        //if (isViolent && Vector3.Distance(player.transform.position, transform.position) < 2f){
-        //    
-        //}
+        if (isViolent && Vector3.Distance(player.transform.position, transform.position) < 2f){
+            stuffInEyesFilter.SetActive(true);
+        }
+        else{
+            stuffInEyesFilter.SetActive(false);
+        }
     }
 
     private bool IsLitMatchNearby()
