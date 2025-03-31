@@ -86,6 +86,7 @@ public class liquidScript : MonoBehaviour
     private float meltingPointAlOH3 = 300f;
     private float meltingPointKAlSO42 = 1200f;
     private float meltingPointKAlO2 = 1000f;
+    private float freezeProgress = 1f;
 
     [Header("Toxic Gas")]
     public float H2Released = 0f;
@@ -938,11 +939,7 @@ void CalculateHeat()
             }
         else if (isinIceBath == true)
         {
-            if (currentHeat != 0f)
-            {
-                var coolingRate = 5f;
-                currentHeat -= coolingRate * Time.deltaTime;
-            }
+                currentHeat = 263.15f;
         }
         else
         {
@@ -1017,25 +1014,59 @@ void CalculateHeat()
             Destroy(currentBoilingEffect);
         }
     }
+        //Beaker Frost Effect
         if (liquidTemperature < 273.15f)
         {
             Transform crystallizationTransform = transform.Find("Crystalization");
             if (crystallizationTransform != null)
             {
-                // Activate the Crystalization object when the liquid is below freezing
                 if (!crystallizationTransform.gameObject.activeSelf)
                 {
                     crystallizationTransform.gameObject.SetActive(true);
                 }
+
                 Renderer crystallizationRenderer = crystallizationTransform.GetComponent<Renderer>();
                 if (crystallizationRenderer != null)
                 {
                     Material crystallizationMaterial = crystallizationRenderer.material;
-                    float freezingPoint = 273f; 
-                    float freezeSpeed = Mathf.Max(0.1f, Mathf.Clamp01((freezingPoint - liquidTemperature) / 100f));
-                    float newGrowth = Mathf.Clamp01(1 - freezeSpeed * (freezingPoint - liquidTemperature) / freezingPoint);
-                    crystallizationMaterial.SetFloat("_Growth", newGrowth);
+                    // Increase freeze progress at a constant rate
+                    freezeProgress = Mathf.Max(0.54298f, Mathf.Clamp01(freezeProgress - 0.02f * Time.deltaTime));
+
+
+                    // Apply to material property
+                    crystallizationMaterial.SetFloat("_Growth", freezeProgress);
                 }
+            }
+        }
+        else if (liquidTemperature > 273.15f)
+        {
+            Transform crystallizationTransform = transform.Find("Crystalization");
+            if (crystallizationTransform != null)
+            {
+                Renderer crystallizationRenderer = crystallizationTransform.GetComponent<Renderer>();
+                if (crystallizationRenderer != null)
+                {
+                    Material crystallizationMaterial = crystallizationRenderer.material;
+
+                    // Decrease freeze progress at a constant rate
+                    freezeProgress = Mathf.Clamp01(freezeProgress + .02f * Time.deltaTime);
+
+                    // Apply to material property
+                    crystallizationMaterial.SetFloat("_Growth", freezeProgress);
+                }
+            }
+        }
+
+        if (liquidTemperature < 273.15f)
+        {
+            if (percentKAlSO42 >= .05f && percentH2O >= .5f)
+            {
+                Debug.Log("GOT HERE");
+                List<string> reactants = new List<string> { "KAl(SO4)2", "H2O" };
+                List<string> products = new List<string> { "Alum" };
+                List<float> Rratio = new List<float> { 1, 12 };
+                List<float> Pratio = new List<float> { 1 };
+                StartCoroutine(react(reactants, Rratio, products, Pratio, .1f));
             }
         }
     }
