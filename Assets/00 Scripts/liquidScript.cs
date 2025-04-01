@@ -39,17 +39,18 @@ public class liquidScript : MonoBehaviour
     public float percentKAlO2 = 0f; 
     public float limreactnum;
     public List<float> solutionMakeup = new List<float>();
-    public List<string> compoundNames = new List<string> {"H2SO4", "KOH", "H2O", "K2SO4", "Al", "KAl(OH)4", "Al2(SO4)3", "Alum", "Al(OH)3", "KAl(SO4)2", "KAlO2"};
+    public List<string> compoundNames = new List<string> {"H2SO4", "KOH", "H2O", "K2SO4", "Al", "KAl(OH)4", "Al2(SO4)3", "Alum", "Al(OH)3", "KAl(SO4)2*12H2O", "KAlO2"};
     public List<float> densities = new List<float> {1.83f, 2.12f, 1f, 2.66f, 2.7f, 1.5f, 2.672f, 1.76f, 2.42f, 1.75f, 1.57f};
-    public List<float> molarMasses = new List<float> {98.079f, 56.1056f, 18.01528f, 174.259f, 26.982f, 134.12f, 342.14f, 474.39f, 78f, 258.42f, 98.075f};
+    public List<float> molarMasses = new List<float> {98.079f, 56.1056f, 18.01528f, 174.259f, 26.982f, 134.12f, 342.14f, 474.39f, 78f, 464.46f, 98.075f};
     public List<float> specificHeatCapacities = new List<float> {1380f, 1300f, 4186f, 1060f, 900f, 1500f, 1300f, 1200f, 900f, 1060f, 1250f};
     float[] boilingPoints = new float[] {611f, 1388f, 373.15f, 1685f, 2792f, 1110f, 1073f, 1383f, 773f, 1383f, 1280f};
     public List<float> latentHeat = new List<float> {2257000f, 2000000f, 2257000f, 2500000f, 2920000f, 2200000f, 2500000f, 2400000f, 2300000f, 2300000f, 2400000f};
     List<Color> liquidColors = new List<Color> {Color.red, Color.green, Color.blue, Color.yellow, new Color(0.6f, 0.6f, 0.6f), Color.yellow, Color.red, Color.green, Color.yellow, Color.green, Color.blue};
-    public List<char> compoundStates = new List<char> { 'a', 'a', 'l', 'a', 's', 'a', 's', 's', 's', 's', 's' };
+    public List<char> compoundStates = new List<char> { 'a', 'a', 'l', 'a', 's', 'a', 's', 's', 's', 'a', 's' };
 
     //                                            H2SO4       KOH              H20        K2SO4              Al                  KAl(OH)4
     public bool reactionHappening;
+    public int currReactionID = 0;
 
     [Header("Spillage")]
     
@@ -1062,9 +1063,9 @@ void CalculateHeat()
             if (percentKAlSO42 >= .05f && percentH2O >= .5f)
             {
                 Debug.Log("GOT HERE");
-                List<string> reactants = new List<string> { "KAl(SO4)2", "H2O" };
+                List<string> reactants = new List<string> { "KAl(SO4)2*12H2O" };
                 List<string> products = new List<string> { "Alum" };
-                List<float> Rratio = new List<float> { 1, 12 };
+                List<float> Rratio = new List<float> { 1 };
                 List<float> Pratio = new List<float> { 1 };
                 StartCoroutine(react(reactants, Rratio, products, Pratio, .1f));
             }
@@ -1324,6 +1325,7 @@ void CalculateHeat()
                 //accelerated by heat
                 //CORRECT PATH
                 if (percentKOH > 0.02f && percentH2O > 0.06f){
+                    currReactionID = 1;
                     List<string> reactants = new List<string> {"Al", "KOH", "H2O"};
                     List<string> products = new List<string> {"KAl(OH)4"};
                     List<float> Rratio = new List<float> {2, 2, 6};
@@ -1375,6 +1377,7 @@ void CalculateHeat()
                 if (percentKAlOH4 > 0.03f){
                     //intermediate reaction for alum
                     // CORRECT PATH
+                    currReactionID = 2;
                     List<string> reactants = new List<string> {"H2SO4", "KAl(OH)4"};
                     List<string> products = new List<string> {"Al(OH)3", "K2SO4", "H2O"};
                     List<float> Rratio = new List<float> {1, 2};
@@ -1404,6 +1407,7 @@ void CalculateHeat()
                 // - **Reaction Speed:** Moderate (3/30 scale), occurs within seconds to minutes
                 // CORRECT PATH
                 if (percentAlOH3 > 0.02f){
+                    currReactionID = 3;
                     List<string> reactants = new List<string> {"Al(OH)3", "H2SO4"};
                     List<string> products = new List<string> {"Al2(SO4)3", "H2O"};
                     List<float> Rratio = new List<float> {2, 3};
@@ -1457,8 +1461,9 @@ void CalculateHeat()
                 if (percentAl2SO43 > 0.02f && percentH2O > 0.24f){
                     //CORRECT PATH
                     // GOAL PRODUCT
+                    currReactionID = 4;
                     List<string> reactants = new List<string> {"Al2(SO4)3", "K2SO4", "H2O"};
-                    List<string> products = new List<string> {"KAl(SO4)2"};
+                    List<string> products = new List<string> {"KAl(SO4)2*12H2O"};
                     List<float> Rratio = new List<float> {1, 1, 24};
                     List<float> Pratio = new List<float> {4};
                     StartCoroutine(react(reactants, Rratio, products, Pratio, 8f, "none", 0, false));

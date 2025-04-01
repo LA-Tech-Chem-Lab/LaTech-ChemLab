@@ -55,6 +55,7 @@ public class pickUpObjects : MonoBehaviour
     Vector3 launchSpin;
     public GameObject stuffInEyesFilter;
     
+    bool clipIsPlaying = false;
 
 
     void Start(){
@@ -78,7 +79,7 @@ public class pickUpObjects : MonoBehaviour
         handleObjectShadow();
 
         if (holdingItem) setHelpTextConstantly();
-        
+
         if(stuffInEyesFilter.activeSelf){
             multiHandlerScript.setHelpText("Warning! It looks like you were standing near a violent reaction without your protective goggles and you have some in your eyes. Immediately use the eye wash station to evacuate the contaminent.");
         }
@@ -254,77 +255,83 @@ public class pickUpObjects : MonoBehaviour
         }
 
         if (other.name.StartsWith("Beaker") || other.name.StartsWith("Erlenmeyer Flask") || other.name.StartsWith("Paper Cone")){
-            if (other.transform.Find("Melting Point Tool") != null)
-            {
-                if (Input.GetMouseButton(1))
-                {
-                    if (other.transform.Find("Melting Point Tool") != null)
-                    {
-                        GameObject meltingPointTool = other.transform.Find("Melting Point Tool").gameObject;
-                        GameObject capillaryTube = meltingPointTool.transform.Find("Capilary tube (1)")?.gameObject;
-
-                        if (capillaryTube != null)
-                        {
-                            liquidScript capillaryLiquid = capillaryTube.GetComponent<liquidScript>();
-                            liquidScript beakerLiquid = other.GetComponent<liquidScript>();
-
-                            if (capillaryLiquid != null && beakerLiquid != null)
-                            {
-                                float waterTemp = beakerLiquid.liquidTemperature - 273.15f; // Convert from Kelvin to Celsius
-                                float meltingPoint = capillaryLiquid.GetMeltingPoint(); // Assume a method to fetch melting point
-
-                                // Approximate heating process (simple interpolation)
-                                float heatTransferRate = 0.05f; // Adjust this for realism
-                                float capillaryTemp = Mathf.Lerp(25f, waterTemp, Time.timeSinceLevelLoad * heatTransferRate);
-
-                                string helpText;
-                                if (capillaryTemp < meltingPoint)
-                                {
-                                    helpText = $"Heating up... Current Temperature: {capillaryTemp:F1}°C";
-                                }
-                                else
-                                {
-                                    helpText = $"Melting point reached! The substance is melting at {meltingPoint:F1}°C.";
-                                }
-                                multiHandlerScript.setHelpText(helpText);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents. You can also hold P to pour into another container.");
-                }
-            }
-            else if (Input.GetMouseButton(1))
-            {
-                string helpText = "Contents: \n";
-                liquidScript LS = other.GetComponent<liquidScript>();
-                List<float> solutionMols = Enumerable.Repeat(0f, 11).ToList();
-
-                // Convert percentages to moles for reactants
-                for (int i = 0; i < solutionMols.Count; i++)
-                {
-                    float reactantMol = LS.solutionMakeup[i] * LS.densityOfLiquid / LS.molarMasses[i] * 1000;
-                    solutionMols[i] = reactantMol;
-                }
-
-                for (int i = 0; i < LS.solutionMakeup.Count; i++)
-                {
-                    if (LS.solutionMakeup[i] > 0.01)
-                    {
-                        helpText += LS.compoundNames[i];
-                        helpText += ": ";
-                        helpText += (solutionMols[i]).ToString("F2");
-                        helpText += " M\n";
-                    }
-                }
-                helpText += (LS.liquidTemperature - 273.15f) + "°C.\n";
-                multiHandlerScript.setHelpText(helpText);
-            }
-            else
-            {
-                multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents. You can also hold P to pour into another container.");
+            //if (other.transform.Find("Melting Point Tool") != null)
+            //{
+            //    if (Input.GetMouseButton(1))
+            //    {
+            //        if (other.transform.Find("Melting Point Tool") != null)
+            //        {
+            //            GameObject meltingPointTool = other.transform.Find("Melting Point Tool").gameObject;
+            //            GameObject capillaryTube = meltingPointTool.transform.Find("Capilary tube (1)")?.gameObject;
+//
+            //            if (capillaryTube != null)
+            //            {
+            //                liquidScript capillaryLiquid = capillaryTube.GetComponent<liquidScript>();
+            //                liquidScript beakerLiquid = other.GetComponent<liquidScript>();
+//
+            //                if (capillaryLiquid != null && beakerLiquid != null)
+            //                {
+            //                    float waterTemp = beakerLiquid.liquidTemperature - 273.15f; // Convert from Kelvin to Celsius
+            //                    float meltingPoint = capillaryLiquid.GetMeltingPoint(); // Assume a method to fetch melting point
+//
+            //                    // Approximate heating process (simple interpolation)
+            //                    float heatTransferRate = 0.05f; // Adjust this for realism
+            //                    float capillaryTemp = Mathf.Lerp(25f, waterTemp, Time.timeSinceLevelLoad * heatTransferRate);
+//
+            //                    string helpText;
+            //                    if (capillaryTemp < meltingPoint)
+            //                    {
+            //                        helpText = $"Heating up... Current Temperature: {capillaryTemp:F1}°C";
+            //                    }
+            //                    else
+            //                    {
+            //                        helpText = $"Melting point reached! The substance is melting at {meltingPoint:F1}°C.";
+            //                    }
+            //                    multiHandlerScript.setHelpText(helpText);
+            //                }
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents. You can also hold P to pour into another container.");
+            //    }
+            //}
+            //else if (Input.GetMouseButton(1))
+            //{
+            //    string helpText = "Contents: \n";
+            //    liquidScript LS = other.GetComponent<liquidScript>();
+            //    List<float> solutionMols = Enumerable.Repeat(0f, 11).ToList();
+//
+            //    // Convert percentages to moles for reactants
+            //    for (int i = 0; i < solutionMols.Count; i++)
+            //    {
+            //        float reactantMol = LS.solutionMakeup[i] * LS.densityOfLiquid / LS.molarMasses[i] * 1000;
+            //        solutionMols[i] = reactantMol;
+            //    }
+//
+            //    for (int i = 0; i < LS.solutionMakeup.Count; i++)
+            //    {
+            //        if (LS.solutionMakeup[i] > 0.01)
+            //        {
+            //            helpText += LS.compoundNames[i];
+            //            helpText += ": ";
+            //            helpText += (solutionMols[i]).ToString("F2");
+            //            helpText += " M\n";
+            //        }
+            //    }
+            //    helpText += (LS.liquidTemperature - 273.15f) + "°C.\n";
+            //    multiHandlerScript.setHelpText(helpText);
+            //}
+            //else
+            //{
+            //    multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents. You can also hold P to pour into another container.");
+            //}
+            multiHandlerScript.setHelpText("April Fools! (Sound on)");
+            if (!clipIsPlaying){
+                AudioClip FunlilEffect = Resources.Load<AudioClip>("warning effect");
+                AudioSource.PlayClipAtPoint(FunlilEffect, transform.position);
+                clipIsPlaying = true;
             }
         }
     }
