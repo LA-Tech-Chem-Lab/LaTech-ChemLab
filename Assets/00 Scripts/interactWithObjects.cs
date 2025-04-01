@@ -7,18 +7,12 @@ using UnityEngine;
 public class interactWithObjects : MonoBehaviour
 {
     const float EYE_WASH_RANGE = 1.7f;
-    
-    
     public Transform playerCamera;
     public float range = 7f;
-
     public bool playerHoldingObject;
-
     pickUpObjects pos;
     playerMovement movementScript;
-
     multihandler multiHandlerScript;
-
     [Header("Eye Wash")]
     public Vector3 eyeOffset;
     doorScriptXAxis eyeWashPushHandle;
@@ -53,7 +47,7 @@ public class interactWithObjects : MonoBehaviour
     public bool readyToAssignDir3 = true;
     public bool readyToAssignDir4 = true;
     public bool cameOff;
-
+    public GameObject stuffInEyesFilter;
 
     void Start()
     {
@@ -320,6 +314,7 @@ public class interactWithObjects : MonoBehaviour
             
             if (Input.GetKeyDown(KeyCode.E)){
                 if (multiHandlerScript.helpText.text == "") multiHandlerScript.setHelpText("Press E to Rinse Eyes.");
+                stuffInEyesFilter.SetActive(false);
                 StartCoroutine(rinseEyes());
             }       
         } else if ( (previousNearEyeWash && !isNearEyeWash) || (previousEyeWashRunning && !eyeWashRunning) )

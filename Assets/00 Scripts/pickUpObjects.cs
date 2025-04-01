@@ -53,6 +53,7 @@ public class pickUpObjects : MonoBehaviour
     Vector3 previousRotation;
     Vector3 launchTraj;
     Vector3 launchSpin;
+    public GameObject stuffInEyesFilter;
     
 
 
@@ -77,6 +78,10 @@ public class pickUpObjects : MonoBehaviour
         handleObjectShadow();
 
         if (holdingItem) setHelpTextConstantly();
+        
+        if(stuffInEyesFilter.activeSelf){
+            multiHandlerScript.setHelpText("Warning! It looks like you were standing near a violent reaction without your protective goggles and you have some in your eyes. Immediately use the eye wash station to evacuate the contaminent.");
+        }
     }
 
     public void PickUpItem(GameObject otherObject)

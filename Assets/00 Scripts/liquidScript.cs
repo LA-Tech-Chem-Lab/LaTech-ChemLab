@@ -13,6 +13,7 @@ using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.UIElements;
 
 public class liquidScript : MonoBehaviour
@@ -113,6 +114,7 @@ public class liquidScript : MonoBehaviour
         boilingEffect = Resources.Load<GameObject>("boilingEffect");
         explosion = Resources.Load<GameObject>("Explosion Effect");
         firePrefab = Resources.Load<GameObject>("Flame");
+
         //doCertainThingWith certainThingWith = player.GetComponent<doCertainThingWith>();
         if (gameObject.name == "Capilary tube")
         {
@@ -195,11 +197,8 @@ public class liquidScript : MonoBehaviour
             }
         }
 
-        if (isViolent && Vector3.Distance(player.transform.position, transform.position) < 2f){
+        if (isViolent && Vector3.Distance(player.transform.position, transform.position) < 2f && player.GetComponent<interactWithObjects>().gogglesOn == false){
             stuffInEyesFilter.SetActive(true);
-        }
-        else{
-            stuffInEyesFilter.SetActive(false);
         }
     }
 
@@ -956,8 +955,9 @@ void CalculateHeat()
     {
         float ambientCoolingRate = 0.05f; // Adjust for faster cooling
         float coolingLoss = ambientCoolingRate * beakerSurfaceArea * (liquidTemperature - currentHeat) * 1000;
-        liquidTemperature -= coolingLoss / (GetComponent<Rigidbody>().mass * specificHeatCapacity);
-       
+        if ((GetComponent<Rigidbody>().mass * specificHeatCapacity) != 0){
+            liquidTemperature -= coolingLoss / (GetComponent<Rigidbody>().mass * specificHeatCapacity);
+        }       
     }
 
     float heatTransferRate = convectiveHeatTransferCoeff * beakerSurfaceArea * (currentHeat - liquidTemperature);
