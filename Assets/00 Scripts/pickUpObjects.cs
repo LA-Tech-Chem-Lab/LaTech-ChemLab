@@ -327,12 +327,6 @@ public class pickUpObjects : MonoBehaviour
             //{
             //    multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents. You can also hold P to pour into another container.");
             //}
-            multiHandlerScript.setHelpText("April Fools! (Sound on)");
-            if (!clipIsPlaying){
-                AudioClip FunlilEffect = Resources.Load<AudioClip>("warning effect");
-                AudioSource.PlayClipAtPoint(FunlilEffect, transform.position);
-                clipIsPlaying = true;
-            }
         }
     }
     void checkForInput()

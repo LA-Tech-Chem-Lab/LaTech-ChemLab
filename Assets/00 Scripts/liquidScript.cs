@@ -89,6 +89,10 @@ public class liquidScript : MonoBehaviour
     private float meltingPointKAlSO42 = 1200f;
     private float meltingPointKAlO2 = 1000f;
     private float freezeProgress = 1f;
+    public bool isCrystalizedAlum;
+    public GameObject crystallizationPrefab;
+    public GameObject liquidCrystalPrefab;
+    private Transform crystallizationTransform;
 
     [Header("Toxic Gas")]
     public float H2Released = 0f;
@@ -106,9 +110,11 @@ public class liquidScript : MonoBehaviour
     public GameObject player;
     public GameObject stuffInEyesFilter;
 
+
     // Use this for initialization
     void Start()
     {
+        isCrystalizedAlum = false;
         liquidTransform = transform.Find("Liquid").transform;
         rend = transform.Find("Liquid").GetComponent<Renderer>();
         objectRigidbody = GetComponent<Rigidbody>();
@@ -157,6 +163,33 @@ public class liquidScript : MonoBehaviour
                     currentVolume_mL = 0f; 
             }
         }
+        if (isCrystalizedAlum)
+        {
+            Transform liquidTransform = transform.Find("Liquid");
+            if (liquidTransform != null)
+            {
+                liquidTransform.gameObject.SetActive(false);
+            }
+
+            Transform existingCrystalizedLiquid = transform.Find("Crystalized Liquid");
+            if (existingCrystalizedLiquid == null)
+            {
+                if (liquidCrystalPrefab != null)
+                {
+                    GameObject newCrystallizedLiquid = Instantiate(liquidCrystalPrefab, transform);
+                    newCrystallizedLiquid.name = "Crystalized Liquid";
+
+                    // Assign the renderer
+                    rend = newCrystallizedLiquid.GetComponent<Renderer>();
+                }
+            }
+            else
+            {
+                // Assign the renderer from the already existing "Crystalized Liquid"
+                rend = existingCrystalizedLiquid.GetComponent<Renderer>();
+            }
+        }
+
 
         // Handle liquid (should only be called once)
         handleLiquid();
@@ -1018,7 +1051,15 @@ void CalculateHeat()
         //Beaker Frost Effect
         if (liquidTemperature < 273.15f)
         {
-            Transform crystallizationTransform = transform.Find("Crystalization");
+            if (crystallizationTransform == null) // Instantiate if it doesn’t exist
+            {
+                if (crystallizationPrefab != null)
+                {
+                    GameObject newCrystallization = Instantiate(crystallizationPrefab, transform);
+                    newCrystallization.name = "Crystalization"; 
+                    crystallizationTransform = newCrystallization.transform;
+                }
+            }
             if (crystallizationTransform != null)
             {
                 if (!crystallizationTransform.gameObject.activeSelf)
@@ -1032,7 +1073,6 @@ void CalculateHeat()
                     Material crystallizationMaterial = crystallizationRenderer.material;
                     // Increase freeze progress at a constant rate
                     freezeProgress = Mathf.Max(0.54298f, Mathf.Clamp01(freezeProgress - 0.02f * Time.deltaTime));
-
 
                     // Apply to material property
                     crystallizationMaterial.SetFloat("_Growth", freezeProgress);
@@ -1062,12 +1102,12 @@ void CalculateHeat()
         {
             if (percentKAlSO42 >= .05f && percentH2O >= .5f)
             {
-                Debug.Log("GOT HERE");
                 List<string> reactants = new List<string> { "KAl(SO4)2*12H2O" };
                 List<string> products = new List<string> { "Alum" };
                 List<float> Rratio = new List<float> { 1 };
                 List<float> Pratio = new List<float> { 1 };
                 StartCoroutine(react(reactants, Rratio, products, Pratio, .1f));
+                isCrystalizedAlum = true;
             }
         }
     }
