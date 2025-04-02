@@ -45,7 +45,7 @@ public class liquidScript : MonoBehaviour
     public List<float> specificHeatCapacities = new List<float> {1380f, 1300f, 4186f, 1060f, 900f, 1500f, 1300f, 1200f, 900f, 1060f, 1250f};
     float[] boilingPoints = new float[] {611f, 1388f, 373.15f, 1685f, 2792f, 1110f, 1073f, 1383f, 773f, 1383f, 1280f};
     public List<float> latentHeat = new List<float> {2257000f, 2000000f, 2257000f, 2500000f, 2920000f, 2200000f, 2500000f, 2400000f, 2300000f, 2300000f, 2400000f};
-    List<Color> liquidColors = new List<Color> {Color.red, Color.green, Color.blue, Color.yellow, new Color(0.6f, 0.6f, 0.6f), Color.yellow, Color.red, Color.green, Color.yellow, Color.green, Color.blue};
+    List<Color> liquidColors = new List<Color> {Color.red, Color.green, Color.blue, Color.yellow, new Color(0.6f, 0.6f, 0.6f), Color.yellow, Color.red, Color.white, Color.yellow, Color.green, Color.blue};
     public List<char> compoundStates = new List<char> { 'a', 'a', 'l', 'a', 's', 'a', 's', 's', 's', 'a', 's' };
 
     //                                            H2SO4       KOH              H20        K2SO4              Al                  KAl(OH)4
@@ -1090,7 +1090,7 @@ void CalculateHeat()
                     Material crystallizationMaterial = crystallizationRenderer.material;
 
                     // Decrease freeze progress at a constant rate
-                    freezeProgress = Mathf.Clamp01(freezeProgress + .02f * Time.deltaTime);
+                    freezeProgress = Mathf.Clamp01(freezeProgress + .07f * Time.deltaTime);
 
                     // Apply to material property
                     crystallizationMaterial.SetFloat("_Growth", freezeProgress);
@@ -1100,13 +1100,13 @@ void CalculateHeat()
 
         if (liquidTemperature < 273.15f)
         {
-            if (percentKAlSO42 >= .05f && percentH2O >= .5f)
+            if (percentKAlSO42 >= .05f)
             {
                 List<string> reactants = new List<string> { "KAl(SO4)2*12H2O" };
                 List<string> products = new List<string> { "Alum" };
                 List<float> Rratio = new List<float> { 1 };
                 List<float> Pratio = new List<float> { 1 };
-                StartCoroutine(react(reactants, Rratio, products, Pratio, .1f));
+                StartCoroutine(react(reactants, Rratio, products, Pratio, .01f, "none", 0, false));
                 isCrystalizedAlum = true;
             }
         }
@@ -1358,14 +1358,15 @@ void CalculateHeat()
         //if they are crystal forming then it will ruin the crytsalization and if they produce H2 gas it needs a vent or it could catch fire those with precipitants wont precipitate with added heat (boiling)
         if (!reactionHappening){
             //tested and working
-            if (percentAl > 0.02f){ 
+            if (percentAl > 0.002f){ 
                 //reaction releases 3 mols of H2 which is flamable and makes bubbles
                 //releases heat
                 //dark gritty material on the top of the solution
                 //accelerated by heat
                 //CORRECT PATH
-                if (percentKOH > 0.02f && percentH2O > 0.06f){
+                if (percentKOH > 0.002f && percentH2O > 0.06f){
                     currReactionID = 1;
+                    Debug.Log("start reaction");
                     List<string> reactants = new List<string> {"Al", "KOH", "H2O"};
                     List<string> products = new List<string> {"KAl(OH)4"};
                     List<float> Rratio = new List<float> {2, 2, 6};
@@ -1373,7 +1374,7 @@ void CalculateHeat()
                     StartCoroutine(react(reactants, Rratio, products, Pratio, .1f, "H2", 3, false));
                 }
                 //Tested and Working
-                if (percentH2SO4 > 0.03f){
+                if (percentH2SO4 > 0.02f){
                     //reaction releases 3 mols of H2 which is flamable and makes bubbles
                     //film on aluminum balls if concentrated H2SO4
                     //accelerated by heat

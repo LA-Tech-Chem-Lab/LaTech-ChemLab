@@ -791,9 +791,10 @@ public class doCertainThingWith : MonoBehaviour
                 MeltingPointTool.transform.SetParent(closestBeaker.transform);
 
                 // Apply local position, rotation, and scale
-                MeltingPointTool.transform.localPosition = new Vector3(-0.5699997f, -0.7067311f, 0.09368933f);
+                MeltingPointTool.transform.localPosition = new Vector3(-0.0810000002f,-0.125f,-0.0160000008f);
+                
                 MeltingPointTool.transform.localRotation = Quaternion.Euler(0f, 0f, -25.826f);
-                MeltingPointTool.transform.localScale = new Vector3(6.905945f, 5.176058f, 7.692307f);
+                //MeltingPointTool.transform.localScale = new Vector3(6.905945f, 5.176058f, 7.692307f);
 
                 Debug.Log("Melting Point Apparatus placed successfully with specified transform settings.");
             }
