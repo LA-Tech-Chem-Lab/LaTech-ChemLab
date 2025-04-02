@@ -7,12 +7,12 @@ public class WhiteboardController : MonoBehaviour
     // List to store all LiquidScript components
     private List<liquidScript> liquidScripts = new List<liquidScript>();
     private List<GameObject> canvasChildrenExcludingFirst = new List<GameObject>();
-    private int onStep = 0;
+    private int onStep = 1;
 
     void Start()
     {
         // Find all GameObjects with the tag "liquidHolder"
-        GameObject[] liquidHolders = GameObject.FindGameObjectsWithTag("liquidHolder");
+        GameObject[] liquidHolders = GameObject.FindGameObjectsWithTag("LiquidHolder");
 
         // Loop through each one and try to get the LiquidScript component
         foreach (GameObject holder in liquidHolders)
@@ -36,7 +36,7 @@ public class WhiteboardController : MonoBehaviour
         foreach (liquidScript liquid in liquidScripts)
         {
             if (liquid.currReactionID == onStep){
-                canvasChildrenExcludingFirst[onStep].SetActive(true);
+                canvasChildrenExcludingFirst[onStep - 1].SetActive(true);
                 onStep += 1; 
             }
         }
