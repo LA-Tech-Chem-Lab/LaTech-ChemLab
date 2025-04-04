@@ -56,7 +56,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 67ac645a28c7fff43ae7c2211f62fb8d, type: 2}
+  - {fileID: 2100000, guid: 80654e172b3be854c8d40012f3a513d5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -279,6 +279,8 @@ MonoBehaviour:
   totalVolume_mL: 0.25
   currentVolume_mL: 0
   scaleDown: 1
+  readHere: 0
+  testScale: 1
   surfaceColor: {r: 0, g: 0, b: 0, a: 0}
   topColor: {r: 0, g: 0, b: 0, a: 0}
   densityOfLiquid: 1
@@ -357,6 +359,7 @@ MonoBehaviour:
   - 2400000
   compoundStates: 610061006c0061007300610073007300730073007300
   reactionHappening: 0
+  currReactionID: 0
   dotProduct: 0
   maxSpillRate: 0
   liquidTransform: {fileID: 0}
@@ -364,12 +367,25 @@ MonoBehaviour:
   currentHeat: 1
   liquidTemperature: 293.15
   roomTemp: 293.15
+  isinIceBath: 0
   isFiltering: 0
   liquidPercent: 0
   isPouring: 0
+  isCrystalizedAlum: 0
+  crystallizationPrefab: {fileID: 0}
+  liquidCrystalPrefab: {fileID: 0}
   H2Released: 0
   boilingEffect: {fileID: 0}
   isBoiling: 0
+  explosion: {fileID: 0}
+  explosionDuration: 5
+  exploded: 0
+  detectionRadius: 1
+  firePrefab: {fileID: 0}
+  boomSound: {fileID: 0}
+  isViolent: 0
+  player: {fileID: 0}
+  stuffInEyesFilter: {fileID: 0}
 --- !u!4 &1968481727774086031 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7e68e29a4dcb6e543bfc13899615a715,
