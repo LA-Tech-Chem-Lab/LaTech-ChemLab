@@ -22,7 +22,7 @@ public class makeNoiseOnImpact : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         float impactForce = collision.impulse.magnitude / Time.fixedDeltaTime / rb.mass;
-        Debug.Log("Impact Force: " + impactForce);
+        //Debug.Log("Impact Force: " + impactForce);
 
         if (impactForce > breakThreshold && breakThreshold > soundThreshold){
             breakObject();

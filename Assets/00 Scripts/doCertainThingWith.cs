@@ -44,7 +44,7 @@ public class doCertainThingWith : MonoBehaviour
     public bool isRodInBeaker = false;
     public GameObject rodInBeaker = null;
     public bool beginStirring = false;
-    public Animator stirAnimator;                           // bays ip
+    public Animator stirAnimator;                       
 
     public bool tryingToPipetteSolid = false; 
 
@@ -174,7 +174,7 @@ public class doCertainThingWith : MonoBehaviour
     {
         if (isRodInBeaker == true){
             beginStirring = true;
-            Debug.Log("Stir animator: " + stirAnimator);
+            //Debug.Log("Stir animator: " + stirAnimator);
             if (stirAnimator != null) {
                 stirAnimator.enabled = true;
                 stirAnimator.SetBool("IsStirring", true);
@@ -866,7 +866,8 @@ public class doCertainThingWith : MonoBehaviour
     }
 
     void putStirRodInBeaker(GameObject stirRod)
-    {
+    {   Debug.Log("Stir Rod was put in beaker");
+
         float minDist = Mathf.Infinity;
         GameObject closestBeaker = null;
         Transform stirPosition = null;
