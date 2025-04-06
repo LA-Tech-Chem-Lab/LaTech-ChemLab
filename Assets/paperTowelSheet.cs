@@ -66,6 +66,8 @@ public class paperTowelSheet : MonoBehaviour
     }
 
     void snapToExistingPaperTowel(GameObject existing){
+        GameObject.FindGameObjectWithTag("Player").GetComponent<pickUpObjects>().DropItem();
+
         Vector3 avgPos = transform.position / 2f + existing.transform.position / 2f + Vector3.up * 0.1f;
         float yRotation = existing.transform.localEulerAngles.y - 90f;
 
