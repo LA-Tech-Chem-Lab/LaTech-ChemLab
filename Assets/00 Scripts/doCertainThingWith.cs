@@ -866,7 +866,7 @@ public class doCertainThingWith : MonoBehaviour
     }
 
     void putStirRodInBeaker(GameObject stirRod)
-    {   Debug.Log("Stir Rod was put in beaker");
+    {   //Debug.Log("Stir Rod was put in beaker");
 
         float minDist = Mathf.Infinity;
         GameObject closestBeaker = null;
@@ -897,7 +897,7 @@ public class doCertainThingWith : MonoBehaviour
 
             stirRod.transform.position = stirPosition.position;
             stirRod.transform.rotation = stirPosition.rotation;
-            Debug.Log("Stir rod position: " + stirRod.transform.position);
+            //Debug.Log("Stir rod position: " + stirRod.transform.position);
 
             // Make it a child so it follows movement
             stirRod.transform.SetParent(closestBeaker.transform);
@@ -1330,6 +1330,7 @@ public class doCertainThingWith : MonoBehaviour
 
     void GatherAluminumPelletsFromContainerOrDropThem()
     {
+        
         GameObject scoopula = pickUpScript.other;
 
         // Find Closest Aluminum Container in the room
