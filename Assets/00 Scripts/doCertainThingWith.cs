@@ -246,9 +246,14 @@ public class doCertainThingWith : MonoBehaviour
 
     void findObjectAndPerformLiftedMouseAction()  // Lifted Right Click
     {
-        beginStirring = false;
-        stirAnimator.SetBool("IsStirring", false);
-        stirAnimator.enabled = false;
+        if (isRodInBeaker == true){
+            beginStirring = false;
+            //Debug.Log("Stir animator: " + stirAnimator);
+            if (stirAnimator != null) {
+                stirAnimator.enabled = false;
+                stirAnimator.SetBool("IsStirring", false);
+            }
+        }
 
         if (pickUpScript.other != null)
         {
