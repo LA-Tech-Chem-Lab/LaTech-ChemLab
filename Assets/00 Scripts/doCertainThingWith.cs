@@ -53,6 +53,7 @@ public class doCertainThingWith : MonoBehaviour
     private Coroutine pouringCoroutine; // Store reference to coroutine
     public GameObject paperTowelSheet;
     public GameObject combinedApparatusPrefab;
+    public bool tryingToPourLiquidOnPaperTowel = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -88,7 +89,7 @@ public class doCertainThingWith : MonoBehaviour
             }
         }
         if (pickUpScript.other){
-            if (pickUpScript.other.transform.name.StartsWith("Beaker") || pickUpScript.other.transform.name == "Weigh Boat" || pickUpScript.other.transform.name.StartsWith("Erlenmeyer Flask") || pickUpScript.other.transform.name == "Paper Cone" || pickUpScript.other.transform.name == "Pipette" || pickUpScript.other.transform.name == "Graduated Cylinder"){
+            if (pickUpScript.other.transform.name.StartsWith("Beaker") || pickUpScript.other.transform.name == "Weigh Boat" || pickUpScript.other.transform.name.StartsWith("Erlenmeyer Flask") || pickUpScript.other.transform.name == "Paper Cone" || pickUpScript.other.transform.name == "Pipette" || pickUpScript.other.transform.name == "Graduated Cylinder" || pickUpScript.other.transform.name.StartsWith("Paper Towel")){
                 lightUpBeaker();
                 if (pickUpScript.other.GetComponent<liquidScript>()){
                     if (pickUpScript.other.GetComponent<liquidScript>().isPouring){
@@ -123,6 +124,7 @@ public class doCertainThingWith : MonoBehaviour
 
     void findObjectAndPerformAction()       // Right click once
     {
+        tryingToPourLiquidOnPaperTowel = false;
         if (pickUpScript.other != null)
         {
             GameObject obj = pickUpScript.other;
@@ -292,7 +294,7 @@ public class doCertainThingWith : MonoBehaviour
                     stopPour();
                 }
             }
-            if (obj.name == "Weigh Boat"){
+            if (obj.name == "Weigh Boat" || obj.name.StartsWith("Paper Towel")){
                 if (Input.GetKey(KeyCode.P)) // While "P" is held
                 {
                     if (!obj.GetComponent<weighboatscript>().isPouring) // Only start pouring if it's not already pouring
@@ -321,13 +323,35 @@ public class doCertainThingWith : MonoBehaviour
 
         Debug.Log("ispouring");
         LS.isPouring = true;
-        GameObject closestBeakerOrFlask = findClosestItemWithTag("LiquidHolder", pickUpScript.other);
+        //GameObject closestBeakerOrFlask = findClosestItemWithTag("LiquidHolder", pickUpScript.other);
+
+        float minDist = Mathf.Infinity;
+        GameObject closestBeakerOrFlask = null;
+
+        foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
+        {
+            if ((currentObject.tag == "LiquidHolder" || currentObject.name.StartsWith("Paper Towel") || currentObject.name.StartsWith("Weigh Boat")) && currentObject != pickUpScript.other)
+            {
+
+                var pipetteTip = pickUpScript.other.transform.position; pipetteTip.y = 0f;
+                var beakerOrFlask = currentObject.transform.position; beakerOrFlask.y = 0f;
+
+                float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
+
+                if (distFromTip < minDist)
+                {
+                    minDist = distFromTip;
+                    closestBeakerOrFlask = currentObject;
+                }
+            }
+        }
 
         if (closestBeakerOrFlask == null)
         {
             Debug.LogWarning("No liquid container found nearby!");
             return;
         }
+
         float maxPourDistance = PIPETTE_GRAB_DISTANCE * 5f;
         float distance = Vector3.Distance(pickUpScript.other.transform.position, closestBeakerOrFlask.transform.position);
 
@@ -335,17 +359,29 @@ public class doCertainThingWith : MonoBehaviour
         {
             return; // Exit the function
         }
-        Transform pourPos = closestBeakerOrFlask.transform.Find("pourPos");
-        pickUpScript.other.transform.position = pourPos.position;
 
-        pickUpScript.other.transform.rotation = Quaternion.Euler(90f, 0f, 0f); // Keep beaker tilted
-        //pickUpScript.other.GetComponent<MeshCollider>().isTrigger = true;
+        if (closestBeakerOrFlask.name.StartsWith("Paper Towel") || closestBeakerOrFlask.name.StartsWith("Weigh Boat")){
+            if (LS.liquidPercent < 0.2f){
+                pickUpScript.other.transform.rotation = Quaternion.Euler(90f, 0f, 0f); // Keep beaker tilted
+                pouringCoroutine = StartCoroutine(PourToWeighBoatContinuously(LS, closestBeakerOrFlask.transform));
+            }
+            else{
+                tryingToPourLiquidOnPaperTowel = true;
+            }
+        }
+        else{
+            Transform pourPos = closestBeakerOrFlask.transform.Find("pourPos");
+            pickUpScript.other.transform.position = pourPos.position;
 
-        //pickUpScript.other.transform.eulerAngles = new Vector3(90f, 0f, 0f);
-        Debug.Log("Pouring into: " + closestBeakerOrFlask.name);
+            pickUpScript.other.transform.rotation = Quaternion.Euler(90f, 0f, 0f); // Keep beaker tilted
+            //pickUpScript.other.GetComponent<MeshCollider>().isTrigger = true;
 
-        // Store the coroutine reference
-        pouringCoroutine = StartCoroutine(PourContinuously(LS, closestBeakerOrFlask.transform));
+            //pickUpScript.other.transform.eulerAngles = new Vector3(90f, 0f, 0f);
+            Debug.Log("Pouring into: " + closestBeakerOrFlask.name);
+
+            // Store the coroutine reference
+            pouringCoroutine = StartCoroutine(PourContinuously(LS, closestBeakerOrFlask.transform));
+        }
     }
 
     void stopPour()
@@ -382,6 +418,27 @@ public class doCertainThingWith : MonoBehaviour
         }
     }
 
+    IEnumerator PourToWeighBoatContinuously(liquidScript LS, Transform targetContainer)
+    {
+        float maxPourDistance = PIPETTE_GRAB_DISTANCE; // Set the max allowed distance for pouring
+
+        while (LS.isPouring)
+        {
+            // Check if target container is still within range
+            float distance = Vector3.Distance(pickUpScript.other.transform.position, targetContainer.position);
+
+            if (distance > maxPourDistance) // Stop pouring if too far
+            {
+                stopPour();
+                yield break; // Exit the coroutine
+            }
+
+            LS.currentVolume_mL -= 0.1852f;
+            targetContainer.GetComponent<weighboatscript>().addScoop(LS.solutionMakeup);
+            yield return new WaitForSeconds(0.2f); // Controls pour speed
+        }
+    }
+
     void startWeighBoatPour()
     {
         weighboatscript WBS = pickUpScript.other.GetComponent<weighboatscript>();
@@ -395,6 +452,14 @@ public class doCertainThingWith : MonoBehaviour
         {
             Debug.LogWarning("No liquid container found nearby!");
             return;
+        }
+
+        float maxPourDistance = PIPETTE_GRAB_DISTANCE * 5f;
+        float distance = Vector3.Distance(pickUpScript.other.transform.position, closestBeakerOrFlask.transform.position);
+
+        if (distance > maxPourDistance) // Stop pouring if too far
+        {
+            return; // Exit the function
         }
         pickUpScript.other.transform.rotation = Quaternion.Euler(90f, 0f, 0f); // Keep beaker tilted
 
@@ -420,7 +485,7 @@ public class doCertainThingWith : MonoBehaviour
     }
     IEnumerator PourWeighBoatContinuously(weighboatscript WBS, Transform targetContainer)
     {
-        float maxPourDistance = PIPETTE_GRAB_DISTANCE; // Set the max allowed distance for pouring
+        float maxPourDistance = PIPETTE_GRAB_DISTANCE* 3f; // Set the max allowed distance for pouring
 
         while (WBS.isPouring)
         {
@@ -439,7 +504,7 @@ public class doCertainThingWith : MonoBehaviour
                 Debug.Log("Made it after remove scoop");
                 targetContainer.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f }, 0.1852f);
             }
-            yield return new WaitForSeconds(0.1f); // Controls pour speed
+            yield return new WaitForSeconds(0.5f); // Controls pour speed
         }
     }
 
@@ -1342,7 +1407,7 @@ public class doCertainThingWith : MonoBehaviour
 
         foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
         {
-            if (currentObject.name == "Aluminum Container" || currentObject.name == "Paper Cone" || currentObject.name.StartsWith("Beaker") || currentObject.name == "Weigh Boat")
+            if (currentObject.name == "Aluminum Container" || currentObject.name == "Paper Cone" || currentObject.name.StartsWith("Beaker") || currentObject.name == "Weigh Boat" || currentObject.name.StartsWith("Paper Towel"))
             {
                 float distFromTip = Vector3.Distance(scoopula.transform.position, currentObject.transform.position);
 
@@ -1488,6 +1553,7 @@ public class doCertainThingWith : MonoBehaviour
     
         if (scoopula == null) yield break;
         scoopula.transform.Find("Aluminum").gameObject.SetActive(true);
+        scoopula.GetComponent<ScoopulaScript>().solutionMakeup = new List<float> {0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f};
     
         if (scoopula == null) yield break;
         yield return new WaitForSeconds(0.7f * speedMult);
@@ -1519,7 +1585,6 @@ public class doCertainThingWith : MonoBehaviour
         GetComponent<pickUpObjects>().canRotateItem = true;
     }
 
-
     IEnumerator scoopulaDip(GameObject scoopula, GameObject closestWeighBoat){
         float speedMult = 1 / 2f;
         tryingToMixCompoundsInNonLiquidHolder = false;
@@ -1530,7 +1595,10 @@ public class doCertainThingWith : MonoBehaviour
         //scoopula drops pellets
         if (scoopula.transform.Find("Aluminum").gameObject.activeInHierarchy){
             if (closestWeighBoat.GetComponent<weighboatscript>()){ //object is a weigh boat
-                if (scoopula.GetComponent<ScoopulaScript>().solutionMakeup.SequenceEqual(closestWeighBoat.GetComponent<weighboatscript>().solutionMakeup))
+                for (int i = 0; i < scoopula.GetComponent<ScoopulaScript>().solutionMakeup.Count; i++){
+                    Debug.Log(scoopula.GetComponent<ScoopulaScript>().solutionMakeup[i]);
+                }
+                if (scoopula.GetComponent<ScoopulaScript>().solutionMakeup.SequenceEqual(closestWeighBoat.GetComponent<weighboatscript>().solutionMakeup) || closestWeighBoat.GetComponent<weighboatscript>().solutionMakeup.All(num => num == 0f))
                     closestWeighBoat.GetComponent<weighboatscript>().addScoop(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f });
                 else{
                     tryingToMixCompoundsInNonLiquidHolder = true;
@@ -1546,7 +1614,12 @@ public class doCertainThingWith : MonoBehaviour
 
         if (scoopula.transform.Find("Sugar Powder").gameObject.activeInHierarchy){
             if (closestWeighBoat.GetComponent<weighboatscript>()){ //object is a weigh boat
-                closestWeighBoat.GetComponent<weighboatscript>().addScoop(scoopula.GetComponent<ScoopulaScript>().solutionMakeup);
+                if (scoopula.GetComponent<ScoopulaScript>().solutionMakeup.SequenceEqual(closestWeighBoat.GetComponent<weighboatscript>().solutionMakeup) || closestWeighBoat.GetComponent<weighboatscript>().solutionMakeup.All(num => num == 0f)){
+                    closestWeighBoat.GetComponent<weighboatscript>().addScoop(scoopula.GetComponent<ScoopulaScript>().solutionMakeup);
+                }
+                else{
+                    tryingToMixCompoundsInNonLiquidHolder = true;
+                }
             }
             else{ //object is a beaker or other
                 closestWeighBoat.GetComponent<liquidScript>().addSolution(scoopula.GetComponent<ScoopulaScript>().solutionMakeup, 0.1852f);  // Add 0.37 mL of arbitrary solution
