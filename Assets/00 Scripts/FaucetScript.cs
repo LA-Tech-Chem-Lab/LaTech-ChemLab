@@ -7,6 +7,8 @@ public class FaucetScript : MonoBehaviour
     public bool FaucetCold; float coldWaterFlow = 3f;
     faucetHandleScript LFaucetColdScript;
     public bool FaucetHot; float hotWaterFlow = 3f;
+
+    public AudioSource audioSrc;
     faucetHandleScript LFaucetHotScript;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -14,6 +16,7 @@ public class FaucetScript : MonoBehaviour
     {
         LFaucetColdScript = transform.Find("Hinge L2").GetChild(0).GetComponent<faucetHandleScript>();
         LFaucetHotScript  = transform.Find("Hinge L1").GetChild(0).GetComponent<faucetHandleScript>();
+        audioSrc = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -23,5 +26,12 @@ public class FaucetScript : MonoBehaviour
         FaucetHot  = !LFaucetHotScript.faucetIsOff;
         
         LFaucetEmitter.speed = (FaucetCold ? coldWaterFlow : 0f) + (FaucetHot ? hotWaterFlow : 0f); 
+
+        if (FaucetCold || FaucetHot)
+            if (!audioSrc.isPlaying)
+                audioSrc.Play();
+                
+        if (!FaucetCold && !FaucetHot)
+            audioSrc.Stop();
     }
 }

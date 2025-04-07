@@ -40,6 +40,7 @@ public class pickUpObjects : MonoBehaviour
     public Vector3 objShift;
     public GameObject shadowGameobject;
     public DecalProjector shadowProjector;
+    public AudioClip puttingGogglesOnClip;
 
 
     
@@ -397,6 +398,14 @@ public class pickUpObjects : MonoBehaviour
         if (hitObject.name == "Hanging Goggles" && !GetComponent<interactWithObjects>().gogglesOn){
             hitObject.SetActive(false);
             GetComponent<interactWithObjects>().gogglesOn = true;
+
+            // Play audio
+            GameObject tempAudio = new GameObject("TempAudio");
+            AudioSource audioSource = tempAudio.AddComponent<AudioSource>();
+            audioSource.clip = puttingGogglesOnClip;
+            audioSource.volume = 0.6f;
+            audioSource.Play();
+            Destroy(tempAudio, puttingGogglesOnClip.length); // Cleanup
         }
 
         if (hitObject.name == "Goggles Hanger" && !hitObject.transform.Find("Hanging Goggles").gameObject.activeInHierarchy){
