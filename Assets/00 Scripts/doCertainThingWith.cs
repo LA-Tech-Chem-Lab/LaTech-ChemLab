@@ -11,6 +11,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Linq;
 
 public class doCertainThingWith : MonoBehaviour
 {
@@ -1328,53 +1329,118 @@ public class doCertainThingWith : MonoBehaviour
         pickUpScript.canRotateItem = true;
     }
 
+/// <summary>
+/// //////As pertains to the scoopula: I just want yall to know that I know that this code is bad and not efficient but it works like a charm so dont touch it pls :)
+/// </summary>/
     void GatherAluminumPelletsFromContainerOrDropThem()
     {
-        
         GameObject scoopula = pickUpScript.other;
 
         // Find Closest Aluminum Container in the room
         float minDist = Mathf.Infinity;
-        GameObject closestAluminumContainer = null;
+        GameObject closestScoopableObject = null;
 
         foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
         {
-
-            if (currentObject.name == "Aluminum Container")
+            if (currentObject.name == "Aluminum Container" || currentObject.name == "Paper Cone" || currentObject.name.StartsWith("Beaker") || currentObject.name == "Weigh Boat")
             {
-
                 float distFromTip = Vector3.Distance(scoopula.transform.position, currentObject.transform.position);
 
                 if (distFromTip < minDist)
                 {
                     minDist = distFromTip;
-                    closestAluminumContainer = currentObject;
+                    closestScoopableObject = currentObject;
                 }
-            }
+            } 
         }
 
-        if (closestAluminumContainer && minDist <= SCOOPULA_GRAB_DISTANCE) // Now we have closest Flask
+        if (closestScoopableObject && minDist <= SCOOPULA_GRAB_DISTANCE) // Now we have closest object
         {
             if (!scoopulaAnimationPlaying)
             {
-                StartCoroutine(getAluminumUsingScoopula(closestAluminumContainer));
-                return;
+                if ((scoopula.transform.Find("Aluminum").gameObject.activeInHierarchy || scoopula.transform.Find("Sugar Powder").gameObject.activeInHierarchy) && closestScoopableObject.name != "Aluminum Container"){ //drop the aluminum if there is aluminum to drop and the target container is not the aluminum container
+                    StartCoroutine(scoopulaDip(scoopula, closestScoopableObject));
+                }
+                else if (closestScoopableObject.name == "Aluminum Container"){ //get aluminum out of aluminum container (with unscrewing)
+                    StartCoroutine(getAluminumUsingScoopula(closestScoopableObject));
+                }
+                else if (closestScoopableObject.GetComponent<weighboatscript>()){ // get aluminum out of weighboat
+                    //Debug.Log("retrieving aluminum from weighboat");
+                    if (closestScoopableObject.GetComponent<weighboatscript>().solutionMakeup.SequenceEqual(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f })){  // get aluminum
+                        //Debug.Log("for real");
+                        StartCoroutine(pickUpAluminum(closestScoopableObject, scoopula));
+                    }
+                    else if (closestScoopableObject.GetComponent<weighboatscript>().solutionMakeup != new List<float> { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f }){  //get arbitrary substance
+                        StartCoroutine(pickUpArbitrarySolid(closestScoopableObject, scoopula));
+                    }
+                }
+                else if (closestScoopableObject.GetComponent<liquidScript>()){
+                    if (closestScoopableObject.GetComponent<liquidScript>().liquidPercent < 0.1f){
+                        StartCoroutine(pickUpArbitrarySolidFromArbitraryContainer(closestScoopableObject, scoopula));
+                    }
+                }
             }
         }
+    }
 
-        // Okay, fine lets try to drop it instead then
-        GameObject scoopulaEnd = scoopula.transform.Find("Tip")?.gameObject;
-        GameObject closestWeighBoat = findClosestItemWithTag("Weigh Boat", scoopulaEnd);
-        Debug.Log(closestWeighBoat);
-        var pipetteTip = scoopula.transform.Find("Tip").transform.position; pipetteTip.y = 0f;
-        Vector3 weighBoat = closestWeighBoat.transform.position;
-        weighBoat.y = 0f; 
-        float distFromTip2 = Vector3.Distance(pipetteTip, weighBoat);
+    IEnumerator pickUpAluminum(GameObject closestScoopableObject, GameObject scoopula){
+        float speedMult = 1 / 2f;
 
-        if (closestWeighBoat && distFromTip2 <= ALUMINUM_DROPOFF_RANGE && scoopula.transform.Find("Aluminum").gameObject.activeInHierarchy)
-        { // We have a beaker or flask within range
-            StartCoroutine(scoopulaDip(scoopula, closestWeighBoat));
-        }
+        //scoopula dips down
+        StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 0f, 30f, 1.2f * speedMult));
+        yield return new WaitForSeconds(1.2f * speedMult);
+        //scoopula picks up aluminum
+        scoopula.transform.Find("Aluminum").gameObject.SetActive(true);
+        //scoopula.transform.Find("Sugar Powder").gameObject.SetActive(false);
+        //closestWeighBoat.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f }, 0.7407f);  // Add 0.37 mL of Aluminum
+        Debug.Log(scoopula.GetComponent<ScoopulaScript>().solutionMakeup);
+        Debug.Log(closestScoopableObject.GetComponent<weighboatscript>().solutionMakeup);
+        scoopula.GetComponent<ScoopulaScript>().solutionMakeup = closestScoopableObject.GetComponent<weighboatscript>().solutionMakeup;
+        closestScoopableObject.GetComponent<weighboatscript>().removeScoop();
+        closestScoopableObject.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+        //scoopula returns to original position
+        yield return new WaitForSeconds(0.7f * speedMult);
+        StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 30f, 0f, 0.5f * speedMult));
+        yield return new WaitForSeconds(0.8f * speedMult);
+    }
+
+    IEnumerator pickUpArbitrarySolid(GameObject closestScoopableObject, GameObject scoopula){
+        float speedMult = 1 / 2f;
+
+        //scoopula dips down
+        StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 0f, 30f, 1.2f * speedMult));
+        yield return new WaitForSeconds(1.2f * speedMult);
+        //scoopula picks up aluminum
+        scoopula.transform.Find("Aluminum").gameObject.SetActive(false);
+        scoopula.transform.Find("Sugar Powder").gameObject.SetActive(true);
+
+        scoopula.GetComponent<ScoopulaScript>().solutionMakeup = closestScoopableObject.GetComponent<weighboatscript>().solutionMakeup;
+        //closestWeighBoat.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f }, 0.7407f);  // Add 0.37 mL of Aluminum
+        closestScoopableObject.GetComponent<weighboatscript>().removeScoop();
+        closestScoopableObject.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+        //scoopula returns to original position
+        yield return new WaitForSeconds(0.7f * speedMult);
+        StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 30f, 0f, 0.5f * speedMult));
+        yield return new WaitForSeconds(0.8f * speedMult);
+    }
+
+    IEnumerator pickUpArbitrarySolidFromArbitraryContainer(GameObject closestScoopableObject, GameObject scoopula){
+        float speedMult = 1 / 2f;
+
+        //scoopula dips down
+        StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 0f, 30f, 1.2f * speedMult));
+        yield return new WaitForSeconds(1.2f * speedMult);
+        //scoopula picks up aluminum
+        scoopula.transform.Find("Aluminum").gameObject.SetActive(false);
+        scoopula.transform.Find("Sugar Powder").gameObject.SetActive(true);
+        //closestWeighBoat.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f }, 0.7407f);  // Add 0.37 mL of Aluminum
+        scoopula.GetComponent<ScoopulaScript>().solutionMakeup = closestScoopableObject.GetComponent<liquidScript>().solutionMakeup;
+        closestScoopableObject.GetComponent<liquidScript>().currentVolume_mL -= 0.1852f;
+        closestScoopableObject.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
+        //scoopula returns to original position
+        yield return new WaitForSeconds(0.7f * speedMult);
+        StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 30f, 0f, 0.5f * speedMult));
+        yield return new WaitForSeconds(0.8f * speedMult);
     }
 
     IEnumerator getAluminumUsingScoopula(GameObject container)
@@ -1456,15 +1522,38 @@ public class doCertainThingWith : MonoBehaviour
 
     IEnumerator scoopulaDip(GameObject scoopula, GameObject closestWeighBoat){
         float speedMult = 1 / 2f;
-
+        tryingToMixCompoundsInNonLiquidHolder = false;
         //scoopula dips down
         StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 0f, 30f, 1.2f * speedMult));
         yield return new WaitForSeconds(1.2f * speedMult);
 
         //scoopula drops pellets
-        scoopula.transform.Find("Aluminum").gameObject.SetActive(false);
-        //closestWeighBoat.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f }, 0.7407f);  // Add 0.37 mL of Aluminum
-        closestWeighBoat.GetComponent<weighboatscript>().addScoop(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f });
+        if (scoopula.transform.Find("Aluminum").gameObject.activeInHierarchy){
+            if (closestWeighBoat.GetComponent<weighboatscript>()){ //object is a weigh boat
+                if (scoopula.GetComponent<ScoopulaScript>().solutionMakeup.SequenceEqual(closestWeighBoat.GetComponent<weighboatscript>().solutionMakeup))
+                    closestWeighBoat.GetComponent<weighboatscript>().addScoop(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f });
+                else{
+                    tryingToMixCompoundsInNonLiquidHolder = true;
+                }
+            }
+            else{ //object is a beaker or other
+                    closestWeighBoat.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f }, 0.1852f);  // Add 0.37 mL of Aluminum
+            }
+            if (!tryingToMixCompoundsInNonLiquidHolder){
+                scoopula.transform.Find("Aluminum").gameObject.SetActive(false);
+            }
+        }
+
+        if (scoopula.transform.Find("Sugar Powder").gameObject.activeInHierarchy){
+            if (closestWeighBoat.GetComponent<weighboatscript>()){ //object is a weigh boat
+                closestWeighBoat.GetComponent<weighboatscript>().addScoop(scoopula.GetComponent<ScoopulaScript>().solutionMakeup);
+            }
+            else{ //object is a beaker or other
+                closestWeighBoat.GetComponent<liquidScript>().addSolution(scoopula.GetComponent<ScoopulaScript>().solutionMakeup, 0.1852f);  // Add 0.37 mL of arbitrary solution
+            }
+            scoopula.transform.Find("Sugar Powder").gameObject.SetActive(false);
+        }
+
         closestWeighBoat.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
 
         //scoopula returns to original position

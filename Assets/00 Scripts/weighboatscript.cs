@@ -14,6 +14,7 @@ public class weighboatscript : MonoBehaviour
     public doCertainThingWith doCertainThingWithScript;
     public bool isPouring = false;
     public float density;
+    public String meshType = "";
 
     void Start()
     {
@@ -30,9 +31,15 @@ public class weighboatscript : MonoBehaviour
             //adds mass to the rigidbody to compensate
             calculateDensity();
             GetComponent<Rigidbody>().mass += 0.1852f * density / 1000;
+            if (solutionMakeup[4] == 1f){ // if its aluminum
+                meshType = "Aluminum";
+            }
+            else{
+                meshType = "scoop";
+            }
             foreach (Transform child in transform)
             {
-                if(!child.gameObject.activeSelf){
+                if(!child.gameObject.activeSelf && child.gameObject.transform.name.StartsWith(meshType)){
                     child.gameObject.SetActive(true);
                     return;
                 }
