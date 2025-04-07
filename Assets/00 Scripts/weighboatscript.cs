@@ -9,8 +9,9 @@ public class weighboatscript : MonoBehaviour
     public int maxScoops = 10;
     //this references a list in liquidScript
     public int scoopsHeld = 0;
-    public List<float> densities = new List<float> {1.83f, 2.12f, 1f, 2.66f, 2.7f, 1.5f, 2.672f, 1.76f, 2.42f, 1.75f, 1.57f};
+    List<float> densities = new List<float> {1.83f, 2.12f, 1f, 2.66f, 2.7f, 1.5f, 2.672f, 1.76f, 2.42f, 1.75f, 1.57f};
     public List<float> solutionMakeup = new List<float> {0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
+    public List<char> compoundStates = new List<char> { 'a', 'a', 'l', 'a', 's', 'a', 's', 's', 's', 'a', 's' };
     public doCertainThingWith doCertainThingWithScript;
     public bool isPouring = false;
     public float density;
@@ -20,6 +21,39 @@ public class weighboatscript : MonoBehaviour
     {
         GameObject player = GameObject.Find("Player");
         doCertainThingWithScript = player.GetComponent<doCertainThingWith>();
+    }
+
+    void Update()
+    {
+        if (transform.name.StartsWith("Paper Towel") && scoopsHeld > 0){
+            List<float> liquidSolution = Enumerable.Repeat(0f, 11).ToList();
+            float liquidPercent = 0f;
+            for (int i = 0; i < solutionMakeup.Count; i++)
+            {
+                if (compoundStates[i] == 'l' || compoundStates[i] == 'a')
+                {
+                    liquidSolution[i] = solutionMakeup[i];
+                    liquidPercent += solutionMakeup[i];
+                }
+                else
+                {
+                    liquidSolution[i] = 0f;  // Ensure only liquids are transferred
+                }
+            }
+
+            float liquidVolume = liquidPercent * 0.1852f * scoopsHeld;  // Calculate volume of liquid part
+
+            // Normalize `liquidSolution` to sum to 100%
+            for (int i = 0; i < solutionMakeup.Count; i++)
+            {
+                if (liquidVolume != 0){  //prevent divide by 0
+                    liquidSolution[i] = (liquidSolution[i] * 0.1852f * scoopsHeld) / liquidVolume;
+                }
+                else{
+                    liquidSolution[i] = 0;
+                }
+            }
+        }
     }
 
     public void addScoop(List<float> compoundType){
