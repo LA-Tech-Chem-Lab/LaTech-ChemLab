@@ -113,24 +113,24 @@ public class multihandler : MonoBehaviour
         //     Cursor.visible = true;
         // }
         
-        // textChatAndAIChat();
+        textChatAndAIChat();
         
         
 
     }
 
-    // void textChatAndAIChat(){
-    //     if (isTyping)
-    //         getTextChatFromInput();
+    void textChatAndAIChat(){
+        // if (isTyping)
+        //     getTextChatFromInput();
         
-    //     if (messageList.Count > 0)
-    //         displayMessages();
+        // if (messageList.Count > 0)
+        //     displayMessages();
 
-    //     timeSinceLastResponse = Time.time - timeOfLastResponse;
-    //     timeSinceLastQuestion = Time.time - timeOfLastQuestion;
+        timeSinceLastResponse = Time.time - timeOfLastResponse;
+        timeSinceLastQuestion = Time.time - timeOfLastQuestion;
 
-    //     TeacherResponseCanvas.SetActive(timeSinceLastResponse <= 15f);
-    // }
+        TeacherResponseCanvas.SetActive(timeSinceLastResponse <= 15f);
+    }
 
     public void QuitGame()
     {
@@ -214,8 +214,7 @@ public class multihandler : MonoBehaviour
         }
 
 
-        // if (!isTyping) // We pressed enter and ended our typing spree, send it off
-        //     sendOffTextToOtherPerson();
+        
     }
 
     // public void getTextChatFromInput()

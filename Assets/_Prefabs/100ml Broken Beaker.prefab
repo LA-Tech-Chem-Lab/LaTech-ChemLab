@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2009566244432061422}
   m_Layer: 0
   m_Name: BeakerTEMP.002
-  m_TagString: Untagged
+  m_TagString: NoPickup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -118,7 +118,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1728812275613197840}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.0000001
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -152,7 +152,7 @@ GameObject:
   - component: {fileID: 4683332378945650092}
   m_Layer: 0
   m_Name: BeakerTEMP.005
-  m_TagString: Untagged
+  m_TagString: NoPickup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -255,7 +255,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1951212223833271829}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.0000001
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -289,7 +289,7 @@ GameObject:
   - component: {fileID: 6380492693747358978}
   m_Layer: 0
   m_Name: BeakerTEMP.003
-  m_TagString: Untagged
+  m_TagString: NoPickup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -392,7 +392,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3779903342901010587}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.0000001
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -421,6 +421,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6757064992114887385}
   - component: {fileID: 2803035666941186361}
+  - component: {fileID: 4186382571513071618}
   m_Layer: 0
   m_Name: 100ml Broken Beaker
   m_TagString: Untagged
@@ -546,6 +547,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4186382571513071618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4649585246204284039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b4775a77becc324b9003ffb403521a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeout: 5
 --- !u!1 &8513633966618408547
 GameObject:
   m_ObjectHideFlags: 0
@@ -561,7 +575,7 @@ GameObject:
   - component: {fileID: 9197243916435026723}
   m_Layer: 0
   m_Name: BeakerTEMP
-  m_TagString: Untagged
+  m_TagString: NoPickup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -664,7 +678,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8513633966618408547}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.0000001
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -698,7 +712,7 @@ GameObject:
   - component: {fileID: 3919362821615843529}
   m_Layer: 0
   m_Name: BeakerTEMP.004
-  m_TagString: Untagged
+  m_TagString: NoPickup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -801,7 +815,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8589240971055007979}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.0000001
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -835,7 +849,7 @@ GameObject:
   - component: {fileID: 8305088394481003810}
   m_Layer: 0
   m_Name: BeakerTEMP.001
-  m_TagString: Untagged
+  m_TagString: NoPickup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -938,7 +952,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8959977924103614912}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.0000001
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}

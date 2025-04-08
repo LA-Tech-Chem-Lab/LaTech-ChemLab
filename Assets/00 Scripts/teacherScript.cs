@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
-public class teacherScript : NetworkBehaviour
+public class teacherScript : MonoBehaviour
 {      
     
     public bool IsWeirdWalter;
@@ -67,7 +67,6 @@ public class teacherScript : NetworkBehaviour
     void WaveToPlayer(){
         
         teacherAnimator.SetTrigger("Wave");
-        UpdateAnimationTriggerServerRpc("Wave");
     }
 
     Transform findClosestPlayer(){
@@ -81,22 +80,4 @@ public class teacherScript : NetworkBehaviour
         return closest.transform;
     }
 
-    [ServerRpc]
-    private void UpdateAnimationTriggerServerRpc(string parameter)
-    {
-        // Set the trigger on the server-side Animator
-        teacherAnimator.SetTrigger(parameter);
-
-        // Propagate the trigger to all other clients
-        UpdateAnimationTriggerClientRpc(parameter);
-    }
-
-    [ClientRpc]
-    private void UpdateAnimationTriggerClientRpc(string parameter)
-        {
-            if (!IsOwner) // Prevent re-triggering on the owning client
-            {
-                teacherAnimator.SetTrigger(parameter);
-            }
-        }
 }

@@ -118,7 +118,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2199814431202098826}
   serializedVersion: 4
-  m_Mass: 0.004415
+  m_Mass: 0.0000001
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -147,6 +147,7 @@ GameObject:
   m_Component:
   - component: {fileID: 246638829571574678}
   - component: {fileID: 169300395288795261}
+  - component: {fileID: 9178497952020043529}
   m_Layer: 0
   m_Name: Broken Stir Rod
   m_TagString: Untagged
@@ -268,6 +269,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &9178497952020043529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2425740110766299339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b4775a77becc324b9003ffb403521a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeout: 5
 --- !u!1 &8897900216565814121
 GameObject:
   m_ObjectHideFlags: 0
@@ -386,7 +400,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8897900216565814121}
   serializedVersion: 4
-  m_Mass: 0.004409
+  m_Mass: 0.0000001
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}

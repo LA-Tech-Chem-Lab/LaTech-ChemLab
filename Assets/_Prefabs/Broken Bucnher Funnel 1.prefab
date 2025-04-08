@@ -68,6 +68,11 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: cf27eea0fb52b554ebaa1d4caec839e9, type: 2}
+    - target: {fileID: -3756473180518285571, guid: dee18f1f90b836942818d4f30993832b,
+        type: 3}
+      propertyPath: m_TagString
+      value: NoPickup
+      objectReference: {fileID: 0}
     - target: {fileID: -2245623774801616189, guid: dee18f1f90b836942818d4f30993832b,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -78,10 +83,25 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: cf27eea0fb52b554ebaa1d4caec839e9, type: 2}
+    - target: {fileID: -1025663018108745142, guid: dee18f1f90b836942818d4f30993832b,
+        type: 3}
+      propertyPath: m_TagString
+      value: NoPickup
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: dee18f1f90b836942818d4f30993832b,
         type: 3}
       propertyPath: m_Name
       value: Broken Bucnher Funnel 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2891746525080496957, guid: dee18f1f90b836942818d4f30993832b,
+        type: 3}
+      propertyPath: m_TagString
+      value: NoPickup
+      objectReference: {fileID: 0}
+    - target: {fileID: 6335250783087129314, guid: dee18f1f90b836942818d4f30993832b,
+        type: 3}
+      propertyPath: m_TagString
+      value: NoPickup
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -91,6 +111,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6889126939391887314}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dee18f1f90b836942818d4f30993832b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6037564734115124938}
     - targetCorrespondingSourceObject: {fileID: -3756473180518285571, guid: dee18f1f90b836942818d4f30993832b,
         type: 3}
       insertIndex: -1
@@ -138,7 +162,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 444047957159449921}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.0000001
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -193,7 +217,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1881543454848883038}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.0000001
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -248,7 +272,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4338052911067652598}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.0000001
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -309,7 +333,7 @@ AudioSource:
   m_Resource: {fileID: 8300000, guid: 7938b9fcd5f745b47bbed3ae540366d5, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.6
-  m_Pitch: 1
+  m_Pitch: 1.05
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -392,6 +416,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6037564734115124938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4699129189458761453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b4775a77becc324b9003ffb403521a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeout: 5
 --- !u!1 &7338137221904613505 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2891746525080496957, guid: dee18f1f90b836942818d4f30993832b,
@@ -406,7 +443,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7338137221904613505}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.0000001
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
