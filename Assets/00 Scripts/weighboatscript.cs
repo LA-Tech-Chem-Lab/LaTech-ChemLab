@@ -26,7 +26,7 @@ public class weighboatscript : MonoBehaviour
     void Update()
     {
         if (transform.name.StartsWith("Paper Towel") && scoopsHeld > 0){
-            List<float> liquidSolution = Enumerable.Repeat(0f, 11).ToList();
+            List<float> liquidSolution = Enumerable.Repeat(0f, 11).ToList();   //separate out liquid solution
             float liquidPercent = 0f;
             for (int i = 0; i < solutionMakeup.Count; i++)
             {
@@ -52,6 +52,23 @@ public class weighboatscript : MonoBehaviour
                 else{
                     liquidSolution[i] = 0;
                 }
+            }
+            float volumeToRemove = liquidVolume / 100f;
+            
+            List<float> volumes = Enumerable.Repeat(0f, 11).ToList();
+            //remove part of liquid Solution
+            float totalVolume = 0f;
+            for (int i = 0; i < solutionMakeup.Count; i++){
+                volumes[i] = solutionMakeup[i] * scoopsHeld * 0.1852f;
+                if (compoundStates[i] == 'l' || compoundStates[i] == 'a')
+                {
+                    volumes[i] = volumes[i] * 0.999f;
+                }
+                totalVolume += volumes[i];
+            }
+
+            for (int i = 0; i < solutionMakeup.Count; i++){
+                solutionMakeup[i] = volumes[i] / totalVolume;
             }
         }
     }
