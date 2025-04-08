@@ -256,7 +256,7 @@ public class pickUpObjects : MonoBehaviour
         }
 
         if (other.name.StartsWith("Beaker") || other.name.StartsWith("Erlenmeyer Flask") || other.name.StartsWith("Paper Cone")){
-            if (other.transform.Find("Melting Point Tool") != null)
+            /* if (other.transform.Find("Melting Point Tool") != null)
             {
                 if (Input.GetMouseButton(1))
                 {
@@ -283,6 +283,7 @@ public class pickUpObjects : MonoBehaviour
                                 if (capillaryTemp < meltingPoint)
                                 {
                                     helpText = $"Heating up... Current Temperature: {capillaryTemp:F1}°C";
+ 
                                 }
                                 else
                                 {
@@ -297,8 +298,9 @@ public class pickUpObjects : MonoBehaviour
                 {
                     multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents. You can also hold P to pour into another container.");
                 }
+                */
             }
-            else if (Input.GetMouseButton(1))
+            if (Input.GetMouseButton(1))
             {
                 string helpText = "Contents: \n";
                 liquidScript LS = other.GetComponent<liquidScript>();
@@ -332,7 +334,6 @@ public class pickUpObjects : MonoBehaviour
                 multiHandlerScript.setHelpText("This solution is too wet to pour onto a paper towel.");
             }
         }
-    }
     void checkForInput()
     {
         if (Input.GetMouseButtonDown(0) && !Cursor.visible){

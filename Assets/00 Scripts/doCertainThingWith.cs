@@ -53,6 +53,7 @@ public class doCertainThingWith : MonoBehaviour
     private Coroutine pouringCoroutine; // Store reference to coroutine
     public GameObject paperTowelSheet;
     public GameObject combinedApparatusPrefab;
+    public GameObject ApparatusCanvasPrefab;
     public bool tryingToPourLiquidOnPaperTowel = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -765,12 +766,26 @@ public class doCertainThingWith : MonoBehaviour
             GameObject newApparatus = Instantiate(combinedApparatusPrefab, thermometer.transform.position, thermometer.transform.rotation);
             newApparatus.name = combinedApparatusPrefab.name; // Remove "(Clone)"
 
+
+
             // Destroy individual components
             pickUpScript.DropItem();
             Destroy(thermometer);
             Destroy(rubberBand);
-            Destroy(capillaryTube);
-
+            Transform capillaryTubeHolder = newApparatus.transform.Find("Capilary tube");
+            if (capillaryTubeHolder != null)
+            {
+                capillaryTube.transform.SetParent(capillaryTubeHolder, false);
+                capillaryTube.transform.localPosition = Vector3.zero;
+                capillaryTube.transform.localRotation = Quaternion.identity;
+                capillaryTube.transform.localScale = Vector3.one;
+                capillaryTube.GetComponent<CapsuleCollider>().enabled = false;
+                capillaryTube.GetComponent<Rigidbody>().isKinematic = true;
+            }
+            else
+            {
+                Debug.LogWarning("Capilary tube not found in new apparatus.");
+            }
             Debug.Log("Melting Point Apparatus Assembled Successfully!");
         }
         else
@@ -865,6 +880,13 @@ public class doCertainThingWith : MonoBehaviour
                 MeltingPointTool.transform.localPosition = new Vector3(-0.0810000002f,-0.125f,-0.0160000008f);
                 
                 MeltingPointTool.transform.localRotation = Quaternion.Euler(0f, 0f, -25.826f);
+                GameObject newCanvas = Instantiate(ApparatusCanvasPrefab, MeltingPointTool.transform.position, Quaternion.identity);
+                newCanvas.name = ApparatusCanvasPrefab.name;
+
+                newCanvas.transform.SetParent(closestBeaker.transform, false);
+                newCanvas.transform.localPosition = Vector3.zero;
+                newCanvas.transform.localRotation = Quaternion.identity;
+                newCanvas.transform.localScale = Vector3.one;
                 //MeltingPointTool.transform.localScale = new Vector3(6.905945f, 5.176058f, 7.692307f);
 
                 Debug.Log("Melting Point Apparatus placed successfully with specified transform settings.");
