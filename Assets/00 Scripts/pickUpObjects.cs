@@ -215,7 +215,6 @@ public class pickUpObjects : MonoBehaviour
         if (other.name == "Paper Cone")             multiHandlerScript.setHelpText("This is a paper filter used with a funnel to filter solids from a solution.");
         if (other.name == "Buchner Funnel")         multiHandlerScript.setHelpText("This is a Buchner funnel used for filtering out solids from solutions. Right click on an Buchner flask to attatch it.");
         if (other.name == "Aluminum Container")     multiHandlerScript.setHelpText("This is a container of aluminum pellets. Use the scoopula to scoop the pellets into a weigh boat.");
-        if (other.name.StartsWith("Paper Towel"))   multiHandlerScript.setHelpText("This is a paper towel. You can pour or scoop dry-ish substanses onto them in order to dry them further.");
     }
 
     void setHelpTextConstantly(){
@@ -299,7 +298,6 @@ public class pickUpObjects : MonoBehaviour
                     multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents. You can also hold P to pour into another container.");
                 }
                 */
-            }
             if (Input.GetMouseButton(1))
             {
                 string helpText = "Contents: \n";
@@ -334,6 +332,34 @@ public class pickUpObjects : MonoBehaviour
                 multiHandlerScript.setHelpText("This solution is too wet to pour onto a paper towel.");
             }
         }
+        if (other.name.StartsWith("Paper Towel")){
+            if (Input.GetMouseButton(1)){
+                string helpText = "Contents: \n";
+                weighboatscript WBS = other.GetComponent<weighboatscript>();
+                List<float> solutionMols = Enumerable.Repeat(0f, 11).ToList();
+                // Convert percentages to moles for reactants
+                for (int i = 0; i < solutionMols.Count; i++)
+                {
+                    float reactantMol = WBS.solutionMakeup[i] * WBS.density / WBS.molarMasses[i] * 1000;
+                    solutionMols[i] = reactantMol;
+                }
+                for (int i = 0; i < WBS.solutionMakeup.Count; i++)
+                {
+                    if (WBS.solutionMakeup[i] > 0.001)
+                    {
+                        helpText += WBS.compoundNames[i];
+                        helpText += ": ";
+                        helpText += (solutionMols[i]).ToString("F2");
+                        helpText += " M\n";
+                    }
+                }
+                multiHandlerScript.setHelpText(helpText);
+            }
+            else{
+                multiHandlerScript.setHelpText("This is a paper towel. You can pour or scoop dry-ish substanses onto them in order to dry them further.");
+            }
+        }
+    }
     void checkForInput()
     {
         if (Input.GetMouseButtonDown(0) && !Cursor.visible){
