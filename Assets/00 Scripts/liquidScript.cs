@@ -1654,7 +1654,7 @@ void CalculateHeat()
         }
 
         // Calculate the weighted average melting point
-        float meltingPoint = (
+        float meltingPointAvg = (
             (percentH2SO4 * meltingPointH2SO4) +
             (percentKOH * meltingPointKOH) +
             (percentH2O * meltingPointH2O) +
@@ -1668,6 +1668,27 @@ void CalculateHeat()
             (percentKAlO2 * meltingPointKAlO2)
         ) / totalPercent;
 
+        float molality = 0f;
+        List<float> Mols = Enumerable.Repeat(0f, 11).ToList();
+        float soluteMols = 0f;
+        float solutionMols = 0f;
+        // Convert percentages to moles for reactants
+        for (int i = 0; i < Mols.Count; i++)
+        { 
+            Mols[i] = solutionMakeup[i] * densityOfLiquid / molarMasses[i] * 1000;
+            if (compoundStates[i] == 'l' || compoundStates[i] == 'a'){
+                solutionMols += Mols[i];
+            }
+            else{
+                soluteMols += Mols[i];
+            }
+        }
+        molality = soluteMols / solutionMols;
+
+        float freezingPointDep = 2 * meltingPointAvg * molality;
+
+        float meltingPoint = meltingPointAvg - freezingPointDep;
+        
         return meltingPoint;
     }
 
