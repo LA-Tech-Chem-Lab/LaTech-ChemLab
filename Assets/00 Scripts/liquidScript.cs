@@ -20,7 +20,6 @@ public class liquidScript : MonoBehaviour
 {
     public float totalVolume_mL;
     public float currentVolume_mL;
-    public float scaleDown = 1f;
     public float readHere;
     public float readHere2;
     public float testScale = 1f;
@@ -306,6 +305,9 @@ public class liquidScript : MonoBehaviour
 
     void handleLiquid(){
 
+        
+        objectRigidbody.mass = initialObjectMass + currentVolume_mL * densityOfLiquid / 1000f;
+
         // Liquid Colors
         rend.material.SetColor("_SideColor", surfaceColor);
         rend.material.SetColor("_TopColor", topColor);
@@ -314,7 +316,6 @@ public class liquidScript : MonoBehaviour
         currentVolume_mL = Mathf.Clamp(currentVolume_mL, 0f, totalVolume_mL);
 
         float percentFull = currentVolume_mL / totalVolume_mL;
-        float scaledPercentRender = percentFull / scaleDown;
         
         // Just Beakers Level Oh Boy
         if (transform.name.StartsWith("Beaker")) {
@@ -867,24 +868,23 @@ public class liquidScript : MonoBehaviour
         
         if (transform.name == "Paper Cone"){  // 1 to 1 in this case
             
-            float paperConeScale = 1f;
-            
-            paperConeScale = Map(percentFull, 0f, 1f, 3f, 1.5f);
-            // if (inRange(percentFull, 0f, 0.1f))
-            //     sideWaysPipetteScale = Mathf.Lerp(3.5f, 1f, reScale(percentFull, 0f, 0.1f));
-            // else if (inRange(percentFull, 0.1f, 0.2f))
-            //     sideWaysPipetteScale = Mathf.Lerp(1f, 0.5f, reScale(percentFull, 0.1f, 0.2f));
-            // else if (inRange(percentFull, 0.2f, 0.6f))
-            //     sideWaysPipetteScale = Mathf.Lerp(0.5f, 0.37f, reScale(percentFull, 0.2f, 0.6f));
-            // else if (inRange(percentFull, 0.6f, 1f))
-            //     sideWaysPipetteScale = Mathf.Lerp(0.37f, 0.33f, reScale(percentFull, 0.6f, 1f));
-            // if (percentFull == 1)
-            //     sideWaysPipetteScale = 0.33f;
+            float paperConeVerticalScale = 1f;
+
+            if (inRange(percentFull, 0f, 0.05f))
+                paperConeVerticalScale = Mathf.Lerp(2.62f, 1.64f, reScale(percentFull, 0f, 0.05f));
+            else if (inRange(percentFull, 0.05f, 0.25f))
+                paperConeVerticalScale = Mathf.Lerp(1.64f, 0.68f, reScale(percentFull, 0.05f, 0.25f));
+            else if (inRange(percentFull, 0.25f, 0.5f))
+                paperConeVerticalScale = Mathf.Lerp(0.68f, 0.77f, reScale(percentFull, 0.25f, 0.5f));
+            else if (inRange(percentFull, 0.5f, 1f))
+                paperConeVerticalScale = Mathf.Lerp(0.77f, 0.51f, reScale(percentFull, 0.5f, 1f));
+            if (percentFull == 1)
+                paperConeVerticalScale = 0.51f;
             readHere = percentFull;
-            paperConeScale = testScale;
+            // paperConeVerticalScale = testScale;
             // float actualPipetteScale = Mathf.Lerp(sideWaysPipetteScale, uprightPipetteScale, Mathf.Abs(dotProduct));
             
-            rend.material.SetFloat("_FillAmount", percentFull * paperConeScale);
+            rend.material.SetFloat("_FillAmount", percentFull * paperConeVerticalScale);
         }
 
         if (transform.name == "Pipette"){  // 1 to 1 in this case
@@ -909,17 +909,19 @@ public class liquidScript : MonoBehaviour
             rend.material.SetFloat("_FillAmount", percentFull * actualPipetteScale);
         }
 
+        if (transform.name == "Capilary tube"){
+            
+            float capillaryTubeScale = 1f;
 
+            capillaryTubeScale = Map(percentFull, 0f, 1f, 0.43f, 0.2f);
+            // readHere = percentFull;
+            // capillaryTubeScale = testScale;
+            // float actualPipetteScale = Mathf.Lerp(sideWaysPipetteScale, uprightPipetteScale, Mathf.Abs(dotProduct));
+            
+            rend.material.SetFloat("_FillAmount", percentFull * capillaryTubeScale);
+        }
         
-        // Simulate new object mass now containing liquid
-        if (gameObject.name == "Capilary tube")
-        {
-            return;
-        }
-        else
-        {
-            objectRigidbody.mass = initialObjectMass + currentVolume_mL * densityOfLiquid / 1000f;
-        }
+
         
 
     }

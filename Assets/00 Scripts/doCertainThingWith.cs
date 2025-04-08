@@ -621,7 +621,7 @@ public class doCertainThingWith : MonoBehaviour
             filter.transform.SetParent(closestFunnel.transform);
 
             // Disable physics and collisions so it stays attached
-            Physics.IgnoreCollision(filter.GetComponent<Collider>(), closestFunnel.GetComponent<Collider>(), true);
+            Physics.IgnoreCollision(filter.GetComponent<MeshCollider>(), closestFunnel.GetComponent<Collider>(), true);
 
             Rigidbody rb = filter.GetComponent<Rigidbody>();
             if (rb)
@@ -656,14 +656,14 @@ public class doCertainThingWith : MonoBehaviour
         if (filter.transform.parent.name == "Glass Funnel")
         {
             // Re-enable physics and collisions
-            Physics.IgnoreCollision(filter.GetComponent<Collider>(), filteredFunnel.GetComponent<Collider>(), false);
+            Physics.IgnoreCollision(filter.GetComponent<MeshCollider>(), filteredFunnel.GetComponent<Collider>(), false);
             filteredFunnel = null;
             filterIsAttatched = false;
         }
         else
         {
             // Re-enable physics and collisions
-            Physics.IgnoreCollision(filter.GetComponent<Collider>(), buchnerfilteredFunnel.GetComponent<Collider>(), false);
+            Physics.IgnoreCollision(filter.GetComponent<MeshCollider>(), buchnerfilteredFunnel.GetComponent<Collider>(), false);
             buchnerfilteredFunnel = null;
             buchnerfilterIsAttached = false;
         }

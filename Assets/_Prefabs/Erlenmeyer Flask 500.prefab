@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 2599696932114408569}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.332, z: 0}
+  m_LocalPosition: {x: 0, y: 0.2451, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -323,16 +323,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   totalVolume_mL: 500
-  currentVolume_mL: 250
-  scaleDown: 1
+  currentVolume_mL: 0
   readHere: 0
-  testScale: 1
+  readHere2: 0
+  testScale: 4.97
+  dotProduct: 0
+  maxSpillRate: 200
+  autoAssignSpillRate: 0
   surfaceColor: {r: 0, g: 0, b: 0, a: 0}
   topColor: {r: 0, g: 0, b: 0, a: 0}
   densityOfLiquid: 1
   percentH2SO4: 0
   percentKOH: 0
-  percentH2O: 1
+  percentH2O: 0
   percentK2SO4: 0
   percentAl: 0
   percentKAlOH4: 0
@@ -353,7 +356,7 @@ MonoBehaviour:
   - Al2(SO4)3
   - Alum
   - Al(OH)3
-  - KAl(SO4)2
+  - KAl(SO4)2*12H2O
   - KAlO2
   densities:
   - 1.83
@@ -377,7 +380,7 @@ MonoBehaviour:
   - 342.14
   - 474.39
   - 78
-  - 258.42
+  - 464.46
   - 98.075
   specificHeatCapacities:
   - 1380
@@ -403,19 +406,23 @@ MonoBehaviour:
   - 2300000
   - 2300000
   - 2400000
-  compoundStates: 610061006c0061007300610073007300730073007300
+  compoundStates: 610061006c0061007300610073007300730061007300
   reactionHappening: 0
-  dotProduct: 0
-  maxSpillRate: 100
+  currReactionID: 0
   liquidTransform: {fileID: 0}
-  maxHeat: 100
-  currentHeat: 0
+  maxHeat: 1200
+  currentHeat: 1
   liquidTemperature: 293.15
   roomTemp: 293.15
   isinIceBath: 0
   isFiltering: 0
   liquidPercent: 0
   isPouring: 0
+  isCrystalizedAlum: 0
+  crystallizationPrefab: {fileID: 7101083427400679780, guid: 16b9d89f19b3172468735915bc702aa2,
+    type: 3}
+  liquidCrystalPrefab: {fileID: 4618146047653720111, guid: 47eaef1f785d40e4a9664d311cfcdecc,
+    type: 3}
   H2Released: 0
   boilingEffect: {fileID: 0}
   isBoiling: 0
@@ -426,6 +433,8 @@ MonoBehaviour:
   firePrefab: {fileID: 0}
   boomSound: {fileID: 8300000, guid: 3b957f95e58696f468dbd2b4d3ffc7a4, type: 3}
   isViolent: 0
+  player: {fileID: 0}
+  stuffInEyesFilter: {fileID: 0}
 --- !u!114 &7243602351125644732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -725,7 +734,7 @@ PrefabInstance:
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 80654e172b3be854c8d40012f3a513d5, type: 2}
+      objectReference: {fileID: 2100000, guid: 67ac645a28c7fff43ae7c2211f62fb8d, type: 2}
     - target: {fileID: 919132149155446097, guid: 314934607da81ec40aa07a6f21af0e35,
         type: 3}
       propertyPath: m_Name
