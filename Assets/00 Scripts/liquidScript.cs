@@ -22,7 +22,16 @@ public class liquidScript : MonoBehaviour
     public float currentVolume_mL;
     public float scaleDown = 1f;
     public float readHere;
+    public float readHere2;
     public float testScale = 1f;
+    [Header("Spillage")]
+    
+    public float dotProduct; 
+    public float maxSpillRate;
+    public bool autoAssignSpillRate;
+    Renderer rend;
+    Rigidbody objectRigidbody;
+    float initialObjectMass;
     public Color surfaceColor;
     public Color topColor;
     public float densityOfLiquid = 1f;
@@ -52,13 +61,6 @@ public class liquidScript : MonoBehaviour
     public bool reactionHappening;
     public int currReactionID = 0;
 
-    [Header("Spillage")]
-    
-    public float dotProduct; 
-    public float maxSpillRate;
-    Renderer rend;
-    Rigidbody objectRigidbody;
-    float initialObjectMass;
 
     public Transform liquidTransform;
 
@@ -135,7 +137,8 @@ public class liquidScript : MonoBehaviour
         if (currentVolume_mL > 0){
             calculateDensity();
         }
-        maxSpillRate = totalVolume_mL * 0.2f;
+        if (autoAssignSpillRate)
+            maxSpillRate = totalVolume_mL * 0.2f;
 
         updatePercentages();
     }
@@ -861,30 +864,49 @@ public class liquidScript : MonoBehaviour
                 rend.material.SetFloat("_FillAmount", percentFull * renderedGradCylinder50);
             }
         }
-        if (transform.name == "Paper Cone" || transform.name == "Ice Bucket"){  // 1 to 1 in this case
+        
+        if (transform.name == "Paper Cone"){  // 1 to 1 in this case
             
-            if (rend.material != null)
-            {   
-                // Make sure to use the instance material, not the shared one
-                if (scaledPercentRender > 0f)
-                {
-                    transform.Find("Liquid").GetComponent<MeshRenderer>().enabled = true;
-                    rend.material.SetFloat("_FillAmount", scaledPercentRender);
-                }
-                if (scaledPercentRender <= 0f)
-                {
-                    transform.Find("Liquid").GetComponent<MeshRenderer>().enabled = false;
-                }
-            }
+            float paperConeScale = 1f;
+            
+            paperConeScale = Map(percentFull, 0f, 1f, 3f, 1.5f);
+            // if (inRange(percentFull, 0f, 0.1f))
+            //     sideWaysPipetteScale = Mathf.Lerp(3.5f, 1f, reScale(percentFull, 0f, 0.1f));
+            // else if (inRange(percentFull, 0.1f, 0.2f))
+            //     sideWaysPipetteScale = Mathf.Lerp(1f, 0.5f, reScale(percentFull, 0.1f, 0.2f));
+            // else if (inRange(percentFull, 0.2f, 0.6f))
+            //     sideWaysPipetteScale = Mathf.Lerp(0.5f, 0.37f, reScale(percentFull, 0.2f, 0.6f));
+            // else if (inRange(percentFull, 0.6f, 1f))
+            //     sideWaysPipetteScale = Mathf.Lerp(0.37f, 0.33f, reScale(percentFull, 0.6f, 1f));
+            // if (percentFull == 1)
+            //     sideWaysPipetteScale = 0.33f;
+            readHere = percentFull;
+            paperConeScale = testScale;
+            // float actualPipetteScale = Mathf.Lerp(sideWaysPipetteScale, uprightPipetteScale, Mathf.Abs(dotProduct));
+            
+            rend.material.SetFloat("_FillAmount", percentFull * paperConeScale);
         }
 
         if (transform.name == "Pipette"){  // 1 to 1 in this case
-            
-            float x = percentFull;
-            float heightFromVolume = Mathf.Pow(x, 0.8f);
-            float scaledHeight = heightFromVolume/scaleDown;
 
-            rend.material.SetFloat("_FillAmount", scaledHeight);
+            float uprightPipetteScale = 1f;
+            float sideWaysPipetteScale = 1f;
+            
+            uprightPipetteScale = Map(percentFull, 0f, 1f, 3f, 1.5f);
+            if (inRange(percentFull, 0f, 0.1f))
+                sideWaysPipetteScale = Mathf.Lerp(3.5f, 1f, reScale(percentFull, 0f, 0.1f));
+            else if (inRange(percentFull, 0.1f, 0.2f))
+                sideWaysPipetteScale = Mathf.Lerp(1f, 0.5f, reScale(percentFull, 0.1f, 0.2f));
+            else if (inRange(percentFull, 0.2f, 0.6f))
+                sideWaysPipetteScale = Mathf.Lerp(0.5f, 0.37f, reScale(percentFull, 0.2f, 0.6f));
+            else if (inRange(percentFull, 0.6f, 1f))
+                sideWaysPipetteScale = Mathf.Lerp(0.37f, 0.33f, reScale(percentFull, 0.6f, 1f));
+            if (percentFull == 1)
+                sideWaysPipetteScale = 0.33f;
+
+            float actualPipetteScale = Mathf.Lerp(sideWaysPipetteScale, uprightPipetteScale, Mathf.Abs(dotProduct));
+            
+            rend.material.SetFloat("_FillAmount", percentFull * actualPipetteScale);
         }
 
 
@@ -900,6 +922,11 @@ public class liquidScript : MonoBehaviour
         }
         
 
+    }
+
+    float Map(float var, float s1, float e1, float s2, float e2)
+    {
+        return ((var - s1) / (e1 - s1)) * (e2 - s2) + s2;
     }
 
     void handleLiquidColor(){
