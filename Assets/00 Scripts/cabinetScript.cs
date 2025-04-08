@@ -90,4 +90,19 @@ public class cabinetScript : MonoBehaviour
             obj.transform.Translate(cabinetVel, Space.World);
         }
     }
+
+    // void OnDrawGizmosSelected()
+    // {
+    //     Gizmos.color = new Color(1, 0, 0, 0.3f); // Semi-transparent red
+    //     if (roomMesh != null)
+    //     {
+    //         Vector3 boxCenter = transform.position + transform.TransformVector(boxOffset);
+    //         Quaternion boxRotation = transform.rotation;
+
+    //         Gizmos.matrix = Matrix4x4.TRS(boxCenter, boxRotation, Vector3.one);
+    //         Gizmos.DrawCube(Vector3.zero, boxSize);
+    //         Gizmos.color = Color.red;
+    //         Gizmos.DrawWireCube(Vector3.zero, boxSize);
+    //     }
+    // }
 }
