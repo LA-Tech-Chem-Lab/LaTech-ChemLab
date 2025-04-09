@@ -87,7 +87,7 @@ public class liquidScript : MonoBehaviour
     private float meltingPointAl = 660f;
     private float meltingPointKAlOH4 = 100f;
     private float meltingPointAl2SO43 = 770f;
-    private float meltingPointAlum = 92f;
+    private float meltingPointAlum = 330f;
     private float meltingPointAlOH3 = 300f;
     private float meltingPointKAlSO42 = 1200f;
     private float meltingPointKAlO2 = 1000f;
@@ -1761,9 +1761,9 @@ void CalculateHeat()
     public float GetMeltingPoint()
     {
         // Calculate the total percentage to ensure it sums to 100% or 1
-        float totalPercent = percentH2SO4 + percentKOH + percentH2O + percentK2SO4 +
-                             percentAl + percentKAlOH4 + percentAl2SO43 + percentAlum +
-                             percentAlOH3 + percentKAlSO42 + percentKAlO2;
+        float totalPercent = meltingPointH2SO4 + meltingPointKOH + meltingPointH2O + meltingPointK2SO4 +
+                             meltingPointAl + meltingPointKAlOH4 + meltingPointAl2SO43 + meltingPointAlum +
+                             meltingPointAlOH3 + meltingPointKAlSO42 + meltingPointKAlO2;
 
         // Prevent division by zero if totalPercent is zero
         if (totalPercent == 0f)
@@ -1785,7 +1785,7 @@ void CalculateHeat()
             (percentAlOH3 * meltingPointAlOH3) +
             (percentKAlSO42 * meltingPointKAlSO42) +
             (percentKAlO2 * meltingPointKAlO2)
-        ) / totalPercent;
+        );
 
         float molality = 0f;
         List<float> Mols = Enumerable.Repeat(0f, 11).ToList();
@@ -1806,9 +1806,11 @@ void CalculateHeat()
 
         float freezingPointDep = 2 * meltingPointAvg * molality;
 
-        float meltingPoint = meltingPointAvg - freezingPointDep;
+        float meltingPoint = meltingPointAvg;
+
+        Debug.Log(meltingPoint);
         
-        return meltingPoint;
+        return 330f;
     }
 
 
