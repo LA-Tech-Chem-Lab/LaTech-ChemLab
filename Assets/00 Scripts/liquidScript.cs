@@ -1250,7 +1250,7 @@ void CalculateHeat()
         if (Flask.name.StartsWith("Erlenmeyer Flask")){
             volumeLeft = currentVolume_mL * 0.05f;
         }
-        if (Flask.name.StartsWith("Buchner")){
+        if (Flask.name.StartsWith("Buchner Flask")){
             volumeLeft = currentVolume_mL * 0.01f;
         }
         // Filtering continues while there is enough solution
@@ -1290,7 +1290,7 @@ void CalculateHeat()
             // Ensure filtering is connected properly
             if (gameObject.transform.parent?.parent)
             {
-                if (gameObject.transform.parent.parent.name.StartsWith("Erlenmeyer Flask"))
+                if (gameObject.transform.parent.parent.name.StartsWith("Erlenmeyer Flask") || gameObject.transform.parent.parent.name.StartsWith("Buchner Flask"))
                 {
                     // Perform the filtering step
                     //float filteredLiquid = Mathf.Min(liquidVolume * Time.deltaTime, currentVolume_mL); // Prevent over-filtering
