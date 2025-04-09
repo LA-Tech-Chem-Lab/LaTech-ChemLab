@@ -239,7 +239,7 @@ public class doCertainThingWith : MonoBehaviour
             if (obj.name.StartsWith("Erlenmeyer Flask"))
                 BringObjectCloser(-1.5f);
             
-            if (obj.name.StartsWith("Buchner Funnel")){
+            if (obj.name.StartsWith("Buchner Flask")){
                 BringObjectCloser(-1.5f);
             }
 
@@ -292,16 +292,18 @@ public class doCertainThingWith : MonoBehaviour
 
             if (obj.name.StartsWith("Beaker") || obj.name.StartsWith("Erlenmeyer Flask")|| obj.name == "Paper Cone" || obj.name == "Graduated Cylinder" || obj.name == "Buchner Flask")
             {
-                if (Input.GetKey(KeyCode.P)) // While "P" is held
-                {
-                    if (!obj.GetComponent<liquidScript>().isPouring) // Only start pouring if it's not already pouring
+                if (obj.transform.Find("Melting Point Tool") == null){
+                    if (Input.GetKey(KeyCode.P)) // While "P" is held
                     {
-                        startPour();
+                        if (!obj.GetComponent<liquidScript>().isPouring) // Only start pouring if it's not already pouring
+                        {
+                            startPour();
+                        }
                     }
-                }
-                else if (Input.GetKeyUp(KeyCode.P)) // When "P" is released
-                {
-                    stopPour();
+                    else if (Input.GetKeyUp(KeyCode.P)) // When "P" is released
+                    {
+                        stopPour();
+                    }
                 }
             }
             if (obj.name == "Weigh Boat" || obj.name.StartsWith("Paper Towel")){
@@ -423,7 +425,9 @@ public class doCertainThingWith : MonoBehaviour
                 yield break; // Exit the coroutine
             }
 
-            LS.filterSolution(LS.solutionMakeup, LS.currentVolume_mL * Time.deltaTime * 2, targetContainer); // Pour 1 unit per frame
+            if(targetContainer.GetComponent<liquidScript>().currentVolume_mL + 1f < targetContainer.GetComponent<liquidScript>().totalVolume_mL){
+                LS.filterSolution(LS.solutionMakeup, LS.currentVolume_mL * Time.deltaTime * 2, targetContainer); // Pour 1 unit per frame
+            }
             yield return new WaitForSeconds(0.1f); // Controls pour speed
         }
     }
