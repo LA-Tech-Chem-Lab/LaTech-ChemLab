@@ -24,7 +24,8 @@ public class liquidScript : MonoBehaviour
     public float readHere2;
     public float testScale = 1f;
     [Header("Spillage")]
-    
+
+    private AudioSource BoilingAudioSource;
     public float dotProduct; 
     public float maxSpillRate;
     public bool autoAssignSpillRate;
@@ -71,6 +72,7 @@ public class liquidScript : MonoBehaviour
     float specificHeatCapacity = 4184f;
     public float roomTemp = 293.15f;
     public bool isinIceBath;
+    public AudioClip boilingSound;
 
     [Header("Filtering")]
     public bool isFiltering = false;
@@ -110,11 +112,13 @@ public class liquidScript : MonoBehaviour
     public bool isViolent = false; 
     public GameObject player;
     public GameObject stuffInEyesFilter;
+ 
 
 
     // Use this for initialization
     void Start()
     {
+        BoilingAudioSource = GetComponent<AudioSource>();
         isCrystalizedAlum = false;
         liquidTransform = transform.Find("Liquid").transform;
         rend = transform.Find("Liquid").GetComponent<Renderer>();
@@ -235,6 +239,14 @@ public class liquidScript : MonoBehaviour
 
         if (isViolent && Vector3.Distance(player.transform.position, transform.position) < 2f && player.GetComponent<interactWithObjects>().gogglesOn == false){
             stuffInEyesFilter.SetActive(true);
+        }
+        if (isBoiling && !BoilingAudioSource.isPlaying)
+        {
+            BoilingAudioSource.Play();
+        }
+        if (!isBoiling)
+        {
+            BoilingAudioSource.Stop();
         }
     }
 
@@ -1047,10 +1059,12 @@ void CalculateHeat()
         {
             if (!isBoiling){
                 currentBoilingEffect = Instantiate(boilingEffect, transform);
-                currentBoilingEffect.transform.localPosition = new Vector3(0f, -0.7f, 0f);
+                currentBoilingEffect.transform.localPosition = new Vector3(0f, 0f, 0f);
                 currentBoilingEffect.GetComponent<Renderer>().material.color = surfaceColor;
             }
             isBoiling = true;
+
+
 
             float temperatureDifference = liquidTemperature - boilingPoint;
             
