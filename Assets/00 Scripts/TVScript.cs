@@ -9,7 +9,8 @@ public class TVScript : MonoBehaviour
         NONE,
         PIPETTE,
         BUNSEN_BURNER,
-        SCALE
+        SCALE,
+        PPE
     }
 
     public int totalVideoCount;
@@ -40,6 +41,7 @@ public class TVScript : MonoBehaviour
     public VideoClip pipetteClip;
     public VideoClip bunsenBurnerClip;
     public VideoClip scaleClip;
+    public VideoClip ppeClip;
 
 
 
@@ -131,6 +133,8 @@ public class TVScript : MonoBehaviour
             vidPlayer.clip = bunsenBurnerClip; 
         if (vidTitle == "SCALE")
             vidPlayer.clip = scaleClip; 
+        if (vidTitle == "PPE")
+            vidPlayer.clip = ppeClip; 
     }
 
     void startPlayingOrPause(){

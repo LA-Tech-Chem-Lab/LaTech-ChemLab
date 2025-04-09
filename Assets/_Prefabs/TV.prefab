@@ -1609,3 +1609,4 @@ MonoBehaviour:
   pipetteClip: {fileID: 32900000, guid: d3a512d08b8a20b4ea5ba87c331845ee, type: 3}
   bunsenBurnerClip: {fileID: 32900000, guid: dcdfc326b5f5d2e478297ab220427e00, type: 3}
   scaleClip: {fileID: 32900000, guid: 4a02ea375f54884499de793f8051a4d8, type: 3}
+  ppeClip: {fileID: 32900000, guid: f083d74931edd3343817de2177ae1b59, type: 3}
