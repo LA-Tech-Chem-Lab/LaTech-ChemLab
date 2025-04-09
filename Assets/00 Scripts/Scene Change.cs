@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,5 +14,13 @@ public class SceneChange : MonoBehaviour
     public void ChangeSceneByIndex(int sceneIndex)
     {
         SceneManager.LoadScene(sceneIndex);
+    }
+
+    public void QuitGame(){
+        Application.Quit();
+
+        #if UNITY_EDITOR
+            EditorApplication.isPlaying = false;
+        #endif
     }
 }
