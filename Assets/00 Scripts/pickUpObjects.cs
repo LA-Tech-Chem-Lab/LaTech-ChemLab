@@ -332,7 +332,9 @@ public class pickUpObjects : MonoBehaviour
                 else if (other.name.StartsWith("Erlenmeyer Flask")){
                     multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL Erlenmeyer. Hold right click to observe its contents. You can also hold P to pour into another container.");
                 }
-                
+                else if (other.name.StartsWith("Buchner Flask")){
+                    multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL Erlenmeyer. Hold right click to observe its contents. You can also hold P to pour into another container.");
+                }
             }
             if (GetComponent<doCertainThingWith>().tryingToPourLiquidOnPaperTowel){
                 multiHandlerScript.setHelpText("This solution is too wet to pour onto a paper towel.");

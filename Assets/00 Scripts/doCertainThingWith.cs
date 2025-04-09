@@ -90,7 +90,7 @@ public class doCertainThingWith : MonoBehaviour
             }
         }
         if (pickUpScript.other){
-            if (pickUpScript.other.transform.name.StartsWith("Beaker") || pickUpScript.other.transform.name == "Weigh Boat" || pickUpScript.other.transform.name.StartsWith("Erlenmeyer Flask") || pickUpScript.other.transform.name == "Paper Cone" || pickUpScript.other.transform.name == "Pipette" || pickUpScript.other.transform.name == "Graduated Cylinder" || pickUpScript.other.transform.name.StartsWith("Paper Towel")){
+            if (pickUpScript.other.transform.name.StartsWith("Beaker") || pickUpScript.other.transform.name == "Weigh Boat" || pickUpScript.other.transform.name.StartsWith("Erlenmeyer Flask") || pickUpScript.other.transform.name == "Paper Cone" || pickUpScript.other.transform.name == "Pipette" || pickUpScript.other.transform.name == "Graduated Cylinder" || pickUpScript.other.transform.name.StartsWith("Paper Towel") || pickUpScript.other.transform.name.StartsWith("Buchner Flask")){
                 lightUpBeaker();
                 if (pickUpScript.other.GetComponent<liquidScript>()){
                     if (pickUpScript.other.GetComponent<liquidScript>().isPouring){
@@ -238,6 +238,10 @@ public class doCertainThingWith : MonoBehaviour
 
             if (obj.name.StartsWith("Erlenmeyer Flask"))
                 BringObjectCloser(-1.5f);
+            
+            if (obj.name.StartsWith("Buchner Funnel")){
+                BringObjectCloser(-1.5f);
+            }
 
             if (obj.name == "Bunsen Burner")
                 manipulateBunsenBurner();
