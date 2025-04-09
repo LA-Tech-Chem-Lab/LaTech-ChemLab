@@ -96,6 +96,8 @@ public class liquidScript : MonoBehaviour
     public GameObject crystallizationPrefab;
     public GameObject liquidCrystalPrefab;
     private Transform crystallizationTransform;
+    public GameObject solidinliquideffect;
+    public bool hasSpawnedSolid = false;
 
     [Header("Toxic Gas")]
     public float H2Released = 0f;
@@ -148,7 +150,29 @@ public class liquidScript : MonoBehaviour
 
     private void Update()
     {
-        
+        if (!hasSpawnedSolid && liquidPercent < 0.95f && liquidPercent > 0f)
+        {
+            if (solidinliquideffect != null)
+            {
+                // Use percentFull for position
+                float percentFull = currentVolume_mL / totalVolume_mL;
+                float sludgeY = GetSludgeYPosition(percentFull);
+
+                Vector3 spawnPosition = new Vector3(transform.position.x, sludgeY, transform.position.z);
+                GameObject newSolid = Instantiate(solidinliquideffect, spawnPosition, Quaternion.identity, transform);
+                hasSpawnedSolid = true;
+
+                // Use liquidPercent for dissolve effect
+                Renderer rend = newSolid.GetComponent<Renderer>();
+                if (rend != null && rend.material.HasProperty("_DissolveAmount"))
+                {
+                    float clampedPercent = Mathf.Clamp(liquidPercent, 0.70f, 0.95f);
+                    float dissolveAmount = Mathf.Lerp(0.07f, -0.4f, Mathf.InverseLerp(0.95f, 0.70f, clampedPercent));
+                    rend.material.SetFloat("_DissolveAmount", dissolveAmount);
+                }
+            }
+        }
+
         // Calculate tilt using the dot product of the beaker's up direction and world up
         dotProduct = Vector3.Dot(transform.up.normalized, Vector3.up);
 
@@ -312,6 +336,12 @@ public class liquidScript : MonoBehaviour
 
     float reScale(float p, float lo, float hi){
         return (p - lo) / (hi - lo);
+    }
+
+    private float GetSludgeYPosition(float fillAmount)
+    {
+        fillAmount = Mathf.Clamp(fillAmount, 0.199f, 1f);
+        return 0.3113f * fillAmount - 0.18641f;
     }
 
     void handleLiquid(){
