@@ -1,4 +1,4 @@
-Library: C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
+Library: C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
 --platform=Windows
 --backend=burst-llvm-16
 --target=X64_SSE2
@@ -9,10 +9,10 @@ Library: C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Pl
 --target-framework=NetFramework
 --linker-options=PdbAltPath="ChemLab_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
---temp-folder=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\Burst
+--temp-folder=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.0.32f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
---decode-folder=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Library\Burst
---output=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
+--decode-folder=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Library\Burst
+--output=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/
 
 --method=Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[UnityEngine.Rendering.GPUInstanceDataBuffer+ConvertCPUInstancesToGPUInstancesJob, Unity.RenderPipelines.GPUDriven.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.GPUInstanceDataBuffer+ConvertCPUInstancesToGPUInstancesJob&, Unity.RenderPipelines.GPUDriven.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--a917331aad44b603aa293fb2ddd84845
@@ -88,10 +88,10 @@ Library: C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Pl
 --target-framework=NetFramework
 --linker-options=PdbAltPath="ChemLab_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
---temp-folder=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\Burst
+--temp-folder=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.0.32f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
---decode-folder=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Library\Burst
---output=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
+--decode-folder=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Library\Burst
+--output=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/
 
 --method=Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[UnityEngine.Rendering.GPUInstanceDataBuffer+ConvertCPUInstancesToGPUInstancesJob, Unity.RenderPipelines.GPUDriven.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.GPUInstanceDataBuffer+ConvertCPUInstancesToGPUInstancesJob&, Unity.RenderPipelines.GPUDriven.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--a917331aad44b603aa293fb2ddd84845
@@ -167,10 +167,10 @@ Library: C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Pl
 --target-framework=NetFramework
 --linker-options=PdbAltPath="ChemLab_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
---temp-folder=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\Burst
+--temp-folder=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.0.32f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
---decode-folder=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Library\Burst
---output=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
+--decode-folder=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Library\Burst
+--output=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/
 
 --method=Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[Obi.BurstStretchShearConstraintsBatch+StretchShearConstraintsBatchJob, Obi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(Obi.BurstStretchShearConstraintsBatch+StretchShearConstraintsBatchJob&, Obi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--d618769a9d5b920400315ce5438da984
@@ -283,10 +283,10 @@ Library: C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Pl
 --target-framework=NetFramework
 --linker-options=PdbAltPath="ChemLab_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
---temp-folder=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\Burst
+--temp-folder=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.0.32f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
---decode-folder=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Library\Burst
---output=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
+--decode-folder=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Library\Burst
+--output=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/
 
 --method=Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[Obi.BurstStretchShearConstraintsBatch+StretchShearConstraintsBatchJob, Obi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(Obi.BurstStretchShearConstraintsBatch+StretchShearConstraintsBatchJob&, Obi, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--d618769a9d5b920400315ce5438da984
@@ -401,10 +401,10 @@ Library: C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Pl
 --float-mode=Fast
 --linker-options=PdbAltPath="ChemLab_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
---temp-folder=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\Burst
+--temp-folder=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.0.32f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
---decode-folder=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Library\Burst
---output=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
+--decode-folder=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Library\Burst
+--output=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/
 
 --method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.ZBinningJob, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.ZBinningJob&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--77fc393cb521ac129b1392d4eb94d29a
@@ -421,10 +421,10 @@ Library: C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Pl
 --float-mode=Fast
 --linker-options=PdbAltPath="ChemLab_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
---temp-folder=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\Burst
+--temp-folder=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.0.32f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
---decode-folder=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Library\Burst
---output=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
+--decode-folder=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Library\Burst
+--output=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/
 
 --method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.ZBinningJob, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.ZBinningJob&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--77fc393cb521ac129b1392d4eb94d29a
@@ -439,10 +439,10 @@ Library: C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Pl
 --target-framework=NetFramework
 --linker-options=PdbAltPath="ChemLab_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
---temp-folder=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\Burst
+--temp-folder=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.0.32f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
---decode-folder=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Library\Burst
---output=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
+--decode-folder=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Library\Burst
+--output=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/
 
 --method=Unity.Burst.BurstCompiler+BurstCompilerHelper, Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::IsBurstEnabled()--8c2be93e18276203cbd918daa2748a10
@@ -555,10 +555,10 @@ Library: C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Pl
 --target-framework=NetFramework
 --linker-options=PdbAltPath="ChemLab_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
---temp-folder=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\Burst
+--temp-folder=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.0.32f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
---decode-folder=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Library\Burst
---output=C:\Users\evanm\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
+--decode-folder=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Library\Burst
+--output=C:\Users\evanm\OneDrive\Documents\GitHub\LaTech-ChemLab\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/
 
 --method=Unity.Burst.BurstCompiler+BurstCompilerHelper, Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::IsBurstEnabled()--8c2be93e18276203cbd918daa2748a10
