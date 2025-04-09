@@ -106,7 +106,7 @@ public class liquidScript : MonoBehaviour
     public bool isBoiling = false;
     GameObject currentBoilingEffect;
     public GameObject explosion;
-    float explosionHeightOffset = 0f;
+    float explosionHeightOffset = -1.55f;
     public float explosionDuration = 5f;
     public bool exploded = false; 
     public float detectionRadius = 1f;
@@ -1747,10 +1747,10 @@ void CalculateHeat()
             {
                 duration = 0.1f; // Default to a safe value
             }
-            if (player.GetComponent<doCertainThingWith>().beginStirring)
-            {
-                duration = duration / 4f;
-            }
+            // if (player.GetComponent<doCertainThingWith>().beginStirring)
+            // {
+            //     duration = duration / 4f;
+            // }
 
             yield return new WaitForSeconds(duration);  // Allow other game logic to continue
         }
