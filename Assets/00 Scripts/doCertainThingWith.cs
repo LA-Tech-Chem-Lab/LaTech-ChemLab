@@ -286,7 +286,7 @@ public class doCertainThingWith : MonoBehaviour
                     obj.GetComponent<bunsenBurnerScript>().AdjustGearRotation(Input.mouseScrollDelta.y * 2f);
                 }
 
-            if (obj.name.StartsWith("Beaker") || obj.name.StartsWith("Erlenmeyer Flask")|| obj.name == "Paper Cone" || obj.name == "Graduated Cylinder")
+            if (obj.name.StartsWith("Beaker") || obj.name.StartsWith("Erlenmeyer Flask")|| obj.name == "Paper Cone" || obj.name == "Graduated Cylinder" || obj.name == "Buchner Flask")
             {
                 if (Input.GetKey(KeyCode.P)) // While "P" is held
                 {
@@ -914,7 +914,7 @@ public class doCertainThingWith : MonoBehaviour
         foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
         {
 
-            if (currentObject.name.StartsWith("Erlenmeyer Flask"))
+            if (currentObject.name.StartsWith("Erlenmeyer Flask") || currentObject.name.StartsWith("Buchner Flask"))
             {
 
                 float distFromTip = Vector3.Distance(tongs.transform.Find("Tip").transform.position, currentObject.transform.position);
@@ -1035,6 +1035,9 @@ public class doCertainThingWith : MonoBehaviour
         Vector3 offset = Vector3.zero;
 
         if (itemHeldByTongs.name == "Erlenmeyer Flask 250")
+            offset = pickUpScript.other.transform.TransformDirection(0f, -0.361f, 0.1056f);
+
+        if (itemHeldByTongs.name == "Buchner Flask")
             offset = pickUpScript.other.transform.TransformDirection(0f, -0.361f, 0.1056f);
 
         if (itemHeldByTongs.name == "Erlenmeyer Flask 500")
@@ -1204,6 +1207,24 @@ public class doCertainThingWith : MonoBehaviour
                 foreach (Transform flaskChild in liquidHolder.transform)
                 {
                     if (flaskChild.name.StartsWith("Glass Funnel"))
+                    {
+                        foreach (Transform funnelChild in flaskChild.transform)
+                        {
+                            if (funnelChild.name.StartsWith("Paper Cone"))
+                            {
+                                GameObject whiteOutline = funnelChild.GetChild(0).gameObject;
+                                bool isClosest = funnelChild.gameObject == closestBeakerOrFlask && distFromTip <= distanceAllowed;
+                                whiteOutline.SetActive(isClosest);
+                            }
+                        }
+                    }
+                }
+            }
+            if (liquidHolder.name.StartsWith("Buchner Flask"))
+            {
+                foreach (Transform flaskChild in liquidHolder.transform)
+                {
+                    if (flaskChild.name.StartsWith("Buchner Funnel"))
                     {
                         foreach (Transform funnelChild in flaskChild.transform)
                         {

@@ -254,7 +254,7 @@ public class pickUpObjects : MonoBehaviour
             }
         }
 
-        if (other.name.StartsWith("Beaker") || other.name.StartsWith("Erlenmeyer Flask") || other.name.StartsWith("Paper Cone")){
+        if (other.name.StartsWith("Beaker") || other.name.StartsWith("Erlenmeyer Flask") || other.name.StartsWith("Paper Cone") || other.name.StartsWith("Buchner Flask")){
             /* if (other.transform.Find("Melting Point Tool") != null)
             {
                 if (Input.GetMouseButton(1))
@@ -326,7 +326,13 @@ public class pickUpObjects : MonoBehaviour
             }
             else
             {
-                multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents. You can also hold P to pour into another container.");
+                if (other.name.StartsWith("Beaker")){
+                    multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents. You can also hold P to pour into another container.");
+                }
+                else if (other.name.StartsWith("Erlenmeyer Flask")){
+                    multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL Erlenmeyer. Hold right click to observe its contents. You can also hold P to pour into another container.");
+                }
+                
             }
             if (GetComponent<doCertainThingWith>().tryingToPourLiquidOnPaperTowel){
                 multiHandlerScript.setHelpText("This solution is too wet to pour onto a paper towel.");
