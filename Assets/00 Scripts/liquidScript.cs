@@ -240,14 +240,13 @@ public class liquidScript : MonoBehaviour
         if (isViolent && Vector3.Distance(player.transform.position, transform.position) < 2f && player.GetComponent<interactWithObjects>().gogglesOn == false){
             stuffInEyesFilter.SetActive(true);
         }
-        if (isBoiling && !BoilingAudioSource.isPlaying)
-        {
-            BoilingAudioSource.Play();
+        if (BoilingAudioSource){
+            if (isBoiling && !BoilingAudioSource.isPlaying)
+                if (BoilingAudioSource) BoilingAudioSource.Play();
+            if (!isBoiling)
+                if (BoilingAudioSource) BoilingAudioSource.Stop();
         }
-        if (!isBoiling)
-        {
-            BoilingAudioSource.Stop();
-        }
+        
     }
 
     private bool IsLitMatchNearby()
@@ -813,6 +812,62 @@ public class liquidScript : MonoBehaviour
                 readHere =  percentFull * renderedFlask250;
                 rend.material.SetFloat("_FillAmount", percentFull * renderedFlask250);
             }
+        }
+
+        if (transform.name == "Buchner Flask"){
+            float renderedFlask250 = 1f;
+            if (inRange(percentFull, 0f, 0.002f))
+                renderedFlask250 = 17f;
+            if (inRange(percentFull, 0.002f, 0.004f))
+                renderedFlask250 = Mathf.Lerp(17f, 8.8f, reScale(percentFull, 0.002f, 0.004f));
+            if (inRange(percentFull, 0.004f, 0.008f))
+                renderedFlask250 = Mathf.Lerp(8.8f, 4.75f, reScale(percentFull, 0.004f, 0.008f));
+            if (inRange(percentFull, 0.008f, 0.014f))
+                renderedFlask250 = Mathf.Lerp(4.75f, 2.94f, reScale(percentFull, 0.008f, 0.014f));
+            if (inRange(percentFull, 0.014f, 0.02f))
+                renderedFlask250 = Mathf.Lerp(2.94f, 2.12f, reScale(percentFull, 0.014f, 0.02f));
+            if (inRange(percentFull, 0.02f, 0.03f))
+                renderedFlask250 = Mathf.Lerp(2.12f, 1.58f, reScale(percentFull, 0.02f, 0.03f));
+            if (inRange(percentFull, 0.03f, 0.04f))
+                renderedFlask250 = Mathf.Lerp(1.58f, 1.33f, reScale(percentFull, 0.03f, 0.04f));
+            if (inRange(percentFull, 0.04f, 0.06f))
+                renderedFlask250 = Mathf.Lerp(1.33f, 1.04f, reScale(percentFull, 0.04f, 0.06f));
+            if (inRange(percentFull, 0.06f, 0.08f))
+                renderedFlask250 = Mathf.Lerp(1.04f, 0.903f, reScale(percentFull, 0.06f, 0.08f));
+            if (inRange(percentFull, 0.08f, 0.1f))
+                renderedFlask250 = Mathf.Lerp(0.903f, 0.82f, reScale(percentFull, 0.08f, 0.1f));
+            if (inRange(percentFull, 0.1f, 0.12f))
+                renderedFlask250 = Mathf.Lerp(0.82f, 0.762f, reScale(percentFull, 0.1f, 0.12f));
+            if (inRange(percentFull, 0.12f, 0.16f))
+                renderedFlask250 = Mathf.Lerp(0.762f, 0.693f, reScale(percentFull, 0.12f, 0.16f));
+            if (inRange(percentFull, 0.16f, 0.2f))
+                renderedFlask250 = Mathf.Lerp(0.693f, 0.65f, reScale(percentFull, 0.16f, 0.2f));
+            if (inRange(percentFull, 0.2f, 0.24f))
+                renderedFlask250 = Mathf.Lerp(0.65f, 0.622f, reScale(percentFull, 0.2f, 0.24f));
+            if (inRange(percentFull, 0.24f, 0.28f))
+                renderedFlask250 = Mathf.Lerp(0.622f, 0.6021f, reScale(percentFull, 0.24f, 0.28f));
+            if (inRange(percentFull, 0.28f, 0.32f))
+                renderedFlask250 = Mathf.Lerp(0.6021f, 0.587f, reScale(percentFull, 0.28f, 0.32f));
+            if (inRange(percentFull, 0.32f, 0.4f))
+                renderedFlask250 = Mathf.Lerp(0.587f, 0.562f, reScale(percentFull, 0.32f, 0.4f));
+            if (inRange(percentFull, 0.4f, 0.6f))
+                renderedFlask250 = Mathf.Lerp(0.562f, 0.557f, reScale(percentFull, 0.4f, 0.6f));
+            if (inRange(percentFull, 0.6f, 0.7f))
+                renderedFlask250 = Mathf.Lerp(0.557f, 0.578f, reScale(percentFull, 0.6f, 0.7f));
+            if (inRange(percentFull, 0.7f, 0.8f))
+                renderedFlask250 = Mathf.Lerp(0.578f, 0.595f, reScale(percentFull, 0.7f, 0.8f));
+            if (inRange(percentFull, 0.8f, 0.9f))
+                renderedFlask250 = Mathf.Lerp(0.595f, 0.64f, reScale(percentFull, 0.8f, 0.9f));
+            if (inRange(percentFull, 0.9f, 1.0f))
+                renderedFlask250 = Mathf.Lerp(0.64f, 0.67f, reScale(percentFull, 0.9f, 1.0f));
+            if (percentFull == 1.0f)
+                renderedFlask250 = 0.67f;
+
+            // renderedFlask250 = testScale;
+            // readHere = percentFull;
+
+            readHere =  percentFull * renderedFlask250;
+            rend.material.SetFloat("_FillAmount", percentFull * renderedFlask250);
         }
 
         if (transform.name == "Graduated Cylinder") {
