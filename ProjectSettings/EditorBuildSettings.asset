@@ -5,27 +5,15 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Single Player/OLD MAIN.unity
-    guid: 8124e5870f4fd4c779e7a5f994e84ad1
+  - enabled: 1
+    path: Assets/TERMS OF SERVICE.unity
+    guid: ea9d3cbfd42695a4ba17c6c6ef4022ec
   - enabled: 1
     path: Assets/Starting UI.unity
     guid: 17c2b98b8313b374494547c44d762b0e
   - enabled: 1
     path: Assets/Two Person Lab Selection UI.unity
     guid: 96e0ace4f0fa2f04e997f5cf2f2005cc
-  - enabled: 0
-    path: Assets/{Main - Multiplayer}.unity
-    guid: 60ccb3ee2e539444483848083ab45f6a
-  - enabled: 0
-    path: Assets/2. Evan/Evan.unity
-    guid: 95dafdc119d2ff64b971e7897f2d38a3
-  - enabled: 0
-    path: Assets/1. Ellie/Ellie Scene.unity
-    guid: 9a44b68915e0b184bb3707fcd223d0a8
-  - enabled: 0
-    path: Assets/2. Evan/Evan Scene.unity
-    guid: 93800f845f5a93e499d1d5e18487d53d
   - enabled: 1
     path: Assets/{MAIN}.unity
     guid: 1bb9d119179ecbe4aa02ad74cb9ee809
