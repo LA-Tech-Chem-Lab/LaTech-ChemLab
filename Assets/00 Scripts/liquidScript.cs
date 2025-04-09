@@ -98,6 +98,7 @@ public class liquidScript : MonoBehaviour
     private Transform crystallizationTransform;
     public GameObject solidinliquideffect;
     public bool hasSpawnedSolid = false;
+    public GameObject newSolid = null;
 
     [Header("Toxic Gas")]
     public float H2Released = 0f;
@@ -150,25 +151,38 @@ public class liquidScript : MonoBehaviour
 
     private void Update()
     {
-        if (!hasSpawnedSolid && liquidPercent < 0.95f && liquidPercent > 0f)
+        if (solidinliquideffect != null)
         {
-            if (solidinliquideffect != null)
+            float percentFull = currentVolume_mL / totalVolume_mL;
+            float sludgeY = GetSludgeYPosition(percentFull);
+
+            if (!hasSpawnedSolid && liquidPercent > 0f)
             {
-                // Use percentFull for position
-                float percentFull = currentVolume_mL / totalVolume_mL;
-                float sludgeY = GetSludgeYPosition(percentFull);
-
-                Vector3 spawnPosition = new Vector3(transform.position.x, sludgeY, transform.position.z);
-                GameObject newSolid = Instantiate(solidinliquideffect, spawnPosition, Quaternion.identity, transform);
+                newSolid = Instantiate(solidinliquideffect, transform.position, Quaternion.identity, transform);
                 hasSpawnedSolid = true;
+            }
 
-                // Use liquidPercent for dissolve effect
+            if (newSolid != null)
+            {
+                // Always follow the sludge level
+                newSolid.transform.localPosition = new Vector3(0f, sludgeY, 0f);
+
                 Renderer rend = newSolid.GetComponent<Renderer>();
-                if (rend != null && rend.material.HasProperty("_DissolveAmount"))
+                if (rend != null && rend.material.HasProperty("_Dissolve_Amount"))
                 {
-                    float clampedPercent = Mathf.Clamp(liquidPercent, 0.70f, 0.95f);
-                    float dissolveAmount = Mathf.Lerp(0.07f, -0.4f, Mathf.InverseLerp(0.95f, 0.70f, clampedPercent));
-                    rend.material.SetFloat("_DissolveAmount", dissolveAmount);
+                    float dissolveAmount;
+
+                    if (liquidPercent > 0.95f)
+                    {
+                        dissolveAmount = 0.1f; // Constant at high fill level
+                    }
+                    else
+                    {
+                        float clampedPercent = Mathf.Clamp(liquidPercent, 0.70f, 0.95f);
+                        dissolveAmount = Mathf.Lerp(0.08f, -0.4f, Mathf.InverseLerp(0.95f, 0.70f, clampedPercent));
+                    }
+
+                    rend.material.SetFloat("_Dissolve_Amount", dissolveAmount);
                 }
             }
         }
@@ -270,7 +284,6 @@ public class liquidScript : MonoBehaviour
             if (!isBoiling)
                 if (BoilingAudioSource) BoilingAudioSource.Stop();
         }
-        
     }
 
     private bool IsLitMatchNearby()
@@ -340,8 +353,15 @@ public class liquidScript : MonoBehaviour
 
     private float GetSludgeYPosition(float fillAmount)
     {
-        fillAmount = Mathf.Clamp(fillAmount, 0.199f, 1f);
-        return 0.3113f * fillAmount - 0.18641f;
+        fillAmount = Mathf.Clamp(fillAmount, 0f, 1f);
+        if (fillAmount <= 0.1f)
+        {
+            return 0.3113f * fillAmount - .177f;
+        }
+        else
+        {
+            return 0.3113f * fillAmount - 0.186f;
+        }
     }
 
     void handleLiquid(){
