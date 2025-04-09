@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UIElements;
+using UnityEngine.AI;
 
 public class TemperatureCanvas : MonoBehaviour
 {
@@ -66,7 +67,16 @@ public class TemperatureCanvas : MonoBehaviour
             float dotProduct = Vector3.Dot(playerCamera.transform.forward, directionToBeaker.normalized);
 
             // Display temperature and state of matter
-            temperatureText.text = temperature.ToString("F1") + " °C" + "\nState of Matter: Solid";
+            var meltingpointvalue = liquid.GetMeltingPoint();
+            Debug.Log(meltingpointvalue);
+            if (liquid.liquidTemperature < meltingpointvalue)
+            {
+                temperatureText.text = temperature.ToString("F1") + " °C" + "\nState of Matter: Solid";
+            }
+            else if (liquid.liquidTemperature >= meltingpointvalue)
+            {
+                temperatureText.text = temperature.ToString("F1") + " °C" + "\nState of Matter: Liquid";
+            }
 
 
             // Enable the canvas panel if looking at the beaker (dot product > 0.7)
