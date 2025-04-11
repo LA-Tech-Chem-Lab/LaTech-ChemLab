@@ -45,7 +45,8 @@ public class doCertainThingWith : MonoBehaviour
     public bool isRodInBeaker = false;
     public GameObject rodInBeaker = null;
     public bool beginStirring = false;
-    public Animator stirAnimator;                       
+    public Animator stirAnimator;
+    public Animator smallStirAnimator;                       
 
     public bool tryingToPipetteSolid = false; 
 
@@ -56,6 +57,10 @@ public class doCertainThingWith : MonoBehaviour
     public GameObject ApparatusCanvasPrefab;
     public bool tryingToPourLiquidOnPaperTowel = false;
 
+    public bool smallerBeakers = false;
+    public bool biggerBeakers = false;
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -63,6 +68,9 @@ public class doCertainThingWith : MonoBehaviour
 
         stirAnimator = GameObject.Find("Stir Rod").GetComponent<Animator>();
         stirAnimator.enabled = false;
+
+        smallStirAnimator = GameObject.Find("Small Stir Rod").GetComponent<Animator>();
+        smallStirAnimator.enabled = false;
 
         ironMesh = GameObject.Find("Iron Mesh");
         Rigidbody rb = ironMesh.GetComponent<Rigidbody>();
@@ -976,18 +984,32 @@ public class doCertainThingWith : MonoBehaviour
         // locate closest beaker
         foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
         {
-            if (currentObject.name.StartsWith("Beaker"))
-            {
+            if (pickUpScript.other && pickUpScript.other.name == "Stir Rod" && (currentObject.name == "Beaker 800mL" || currentObject.name == "Beaker 400mL")) {
                 float distFromBeaker = Vector3.Distance(stirRod.transform.position, currentObject.transform.position);
 
-                if (distFromBeaker < minDist)
-                {
+                if (distFromBeaker < minDist) {
                     minDist = distFromBeaker;
                     closestBeaker = currentObject;
 
                     // designated position
                     stirPosition = closestBeaker.transform.Find("StirPos");
                 }
+                smallerBeakers = true;
+                Debug.Log("This is a larger beaker");
+            }
+
+            if (pickUpScript.other && pickUpScript.other.name == "Small Stir Rod" && (currentObject.name == "Beaker 250mL" || currentObject.name == "Beaker 150mL" || currentObject.name == "Beaker 100mL" || currentObject.name == "Beaker 50mL")) {
+                float distFromBeaker = Vector3.Distance(stirRod.transform.position, currentObject.transform.position);
+
+                if (distFromBeaker < minDist) {
+                    minDist = distFromBeaker;
+                    closestBeaker = currentObject;
+
+                    // designated position
+                    stirPosition = closestBeaker.transform.Find("StirPos");
+                }
+                biggerBeakers = true;
+                Debug.Log("This is a larger beaker");
             }
         }
 
@@ -1015,7 +1037,6 @@ public class doCertainThingWith : MonoBehaviour
             rodInBeaker = closestBeaker;
             rodInBeaker.tag = "Untagged";
             isRodInBeaker = true;
-
         }
     }
 
