@@ -171,7 +171,7 @@ public class doCertainThingWith : MonoBehaviour
             //if (obj.name == "Buchner Paper Cone")
             //    insertBuchnerFilter(obj);
 
-            if (obj.name == "Stir Rod")
+            if (obj.name == "Stir Rod" || obj.name == "Small Stir Rod")
                 putStirRodInBeaker(obj);
 
             if (obj.name == "Capilary tube")
@@ -1009,7 +1009,7 @@ public class doCertainThingWith : MonoBehaviour
                     stirPosition = closestBeaker.transform.Find("StirPos");
                 }
                 biggerBeakers = true;
-                Debug.Log("This is a larger beaker");
+                Debug.Log("This is a smaller beaker");
             }
         }
 
