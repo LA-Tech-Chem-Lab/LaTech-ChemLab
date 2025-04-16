@@ -80,17 +80,21 @@ public class liquidScript : MonoBehaviour
 
     public bool isPouring = false;
 
-    private float meltingPointH2SO4 = -10f;
-    private float meltingPointKOH = 360f;
-    private float meltingPointH2O = 0f;
-    private float meltingPointK2SO4 = 1069f;
-    private float meltingPointAl = 660f;
-    private float meltingPointKAlOH4 = 100f;
-    private float meltingPointAl2SO43 = 770f;
-    private float meltingPointAlum = 330f;
-    private float meltingPointAlOH3 = 300f;
-    private float meltingPointKAlSO42 = 1200f;
-    private float meltingPointKAlO2 = 1000f;
+    List<float> meltingPoints_K = new List<float>
+    {
+        283.45f,  // H2SO4 (10.3 + 273.15)
+        633.15f,  // KOH (360 + 273.15)
+        273.15f,  // H2O (0 + 273.15)
+        1342.15f, // K2SO4 (1069 + 273.15)
+        933.45f,  // Al (660.3 + 273.15)
+        473.15f,  // KAl(OH)4 (estimated ~200 + 273.15)
+        1043.15f, // Al2(SO4)3 (770 + 273.15)
+        365.15f,  // Alum (~92 + 273.15)
+        573.15f,  // Al(OH)3 (~300 + 273.15)
+        365.15f,  // KAl(SO4)2·12H2O (same as Alum)
+        1233.15f  // KAlO2 (~960 + 273.15)
+    };
+
     private float freezeProgress = 1f;
     public bool isCrystalizedAlum;
     public GameObject crystallizationPrefab;
@@ -1763,57 +1767,33 @@ void CalculateHeat()
     }
     public float GetMeltingPoint()
     {
-        // Calculate the total percentage to ensure it sums to 100% or 1
-        float totalPercent = meltingPointH2SO4 + meltingPointKOH + meltingPointH2O + meltingPointK2SO4 +
-                             meltingPointAl + meltingPointKAlOH4 + meltingPointAl2SO43 + meltingPointAlum +
-                             meltingPointAlOH3 + meltingPointKAlSO42 + meltingPointKAlO2;
-
-        // Prevent division by zero if totalPercent is zero
-        if (totalPercent == 0f)
-        {
-            //Debug.LogWarning("Total percentage is 0, returning a default value of 0�C");
-            return 0f; // Return 0 if the percentages don't sum up to a meaningful value
+        float meltingPointAvg = 0f;
+        for (int i = 0; i < solutionMakeup.Count; i++){
+            meltingPointAvg += solutionMakeup[i] * meltingPoints_K[i];
         }
 
-        // Calculate the weighted average melting point
-        float meltingPointAvg = (
-            (percentH2SO4 * meltingPointH2SO4) +
-            (percentKOH * meltingPointKOH) +
-            (percentH2O * meltingPointH2O) +
-            (percentK2SO4 * meltingPointK2SO4) +
-            (percentAl * meltingPointAl) +
-            (percentKAlOH4 * meltingPointKAlOH4) +
-            (percentAl2SO43 * meltingPointAl2SO43) +
-            (percentAlum * meltingPointAlum) +
-            (percentAlOH3 * meltingPointAlOH3) +
-            (percentKAlSO42 * meltingPointKAlSO42) +
-            (percentKAlO2 * meltingPointKAlO2)
-        );
-
-        float molality = 0f;
-        List<float> Mols = Enumerable.Repeat(0f, 11).ToList();
-        float soluteMols = 0f;
-        float solutionMols = 0f;
-        // Convert percentages to moles for reactants
-        for (int i = 0; i < Mols.Count; i++)
-        { 
-            Mols[i] = solutionMakeup[i] * densityOfLiquid / molarMasses[i] * 1000;
-            if (compoundStates[i] == 'l' || compoundStates[i] == 'a'){
-                solutionMols += Mols[i];
-            }
-            else{
-                soluteMols += Mols[i];
-            }
-        }
-        molality = soluteMols / solutionMols;
-
-        float freezingPointDep = 2 * meltingPointAvg * molality;
+        //float molality = 0f;
+        //List<float> Mols = Enumerable.Repeat(0f, 11).ToList();
+        //float soluteMols = 0f;
+        //float solutionMols = 0f;
+        //// Convert percentages to moles for reactants
+        //for (int i = 0; i < Mols.Count; i++)
+        //{ 
+        //    Mols[i] = solutionMakeup[i] * densityOfLiquid / molarMasses[i] * 1000;
+        //    if (compoundStates[i] == 'l' || compoundStates[i] == 'a'){
+        //        solutionMols += Mols[i];
+        //    }
+        //    else{
+        //        soluteMols += Mols[i];
+        //    }
+        //}
+        //molality = soluteMols / solutionMols;
+//
+        //float freezingPointDep = 2 * meltingPointAvg * molality;
 
         float meltingPoint = meltingPointAvg;
-
-        Debug.Log(meltingPoint);
         
-        return 330f;
+        return meltingPoint;
     }
 
 
