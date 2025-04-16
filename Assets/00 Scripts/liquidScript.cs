@@ -1249,19 +1249,6 @@ void CalculateHeat()
                 }
             }
         }
-
-        if (liquidTemperature < 273.15f)
-        {
-            if (percentKAlSO42 >= .05f)
-            {
-                List<string> reactants = new List<string> { "KAl(SO4)2*12H2O" };
-                List<string> products = new List<string> { "Alum" };
-                List<float> Rratio = new List<float> { 1 };
-                List<float> Pratio = new List<float> { 1 };
-                StartCoroutine(react(reactants, Rratio, products, Pratio, .01f, "none", 0, false));
-                isCrystalizedAlum = true;
-            }
-        }
     }
 
     IEnumerator handleFiltering(Transform Flask)
@@ -1662,6 +1649,18 @@ void CalculateHeat()
                     StartCoroutine(react(reactants, Rratio, products, Pratio, 8f, "none", 0, false));
                 }
             }
+            if (liquidTemperature < 273.15f)
+            {
+                if (percentKAlSO42 >= .05f)
+                {
+                    List<string> reactants = new List<string> { "KAl(SO4)2*12H2O" };
+                    List<string> products = new List<string> { "Alum" };
+                    List<float> Rratio = new List<float> { 1 };
+                    List<float> Pratio = new List<float> { 1 };
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 0.1f, "none", 0, false));
+                    isCrystalizedAlum = true;
+                }
+            }
         }
     }
 
@@ -1746,7 +1745,7 @@ void CalculateHeat()
             updatePercentages();
 
             // Validate duration to prevent NaN/negative
-            float duration = (1f / reactSpeed) / liquidTemperature * roomTemp / 2;
+            float duration = (1f / reactSpeed); /// liquidTemperature * roomTemp / 2;
             if (float.IsNaN(duration) || duration <= 0f || float.IsInfinity(duration))
             {
                 duration = 0.1f; // Default to a safe value

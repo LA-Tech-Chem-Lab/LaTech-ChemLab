@@ -224,6 +224,7 @@ public class doCertainThingWith : MonoBehaviour
             }
 
             if (obj.name.StartsWith("Beaker")){
+                BringObjectCloser(-1.5f);
                 if (obj.name == "Beaker 800mL")
                     BringObjectCloser(-1.74f);
                 if (obj.name == "Beaker 400mL")
