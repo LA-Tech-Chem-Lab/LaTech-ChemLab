@@ -147,6 +147,11 @@ public class liquidScript : MonoBehaviour
             maxSpillRate = totalVolume_mL * 0.2f;
 
         updatePercentages();
+
+        player = GameObject.Find("Player");
+        GameObject UI = GameObject.Find("Canvases");
+        GameObject InGame = UI.transform.Find("In Game Canvas").gameObject;
+        stuffInEyesFilter = InGame.transform.Find("stuffInEyesFilter").gameObject;
     }
 
     private void Update()
@@ -274,8 +279,7 @@ public class liquidScript : MonoBehaviour
                 H2Released = H2Released / 2f;
             }
         }
-
-        if (isViolent && Vector3.Distance(player.transform.position, transform.position) < 2f && player.GetComponent<interactWithObjects>().gogglesOn == false){
+        if (isViolent && player.GetComponent<interactWithObjects>().gogglesOn == false){
             stuffInEyesFilter.SetActive(true);
         }
         if (BoilingAudioSource){
