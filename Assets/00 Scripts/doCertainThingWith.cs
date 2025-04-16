@@ -43,7 +43,6 @@ public class doCertainThingWith : MonoBehaviour
     public bool buchnerfilterIsAttached = false;
 
     public bool isRodInBeaker = false;
-    public bool isSmallRodInBeaker = false;
     public GameObject rodInBeaker = null;
     public bool beginStirring = false;
     public Animator stirAnimator;
@@ -192,8 +191,6 @@ public class doCertainThingWith : MonoBehaviour
                 stirAnimator.enabled = true;
                 stirAnimator.SetBool("IsStirring", true);
             }
-        } else if (isSmallRodInBeaker == true) {
-            Debug.Log("Big stir rod should NOT be stirring rn, because the small stir rod is in the beaker");
         }
 
         if (pickUpScript.other != null)
@@ -1003,7 +1000,7 @@ public class doCertainThingWith : MonoBehaviour
                     // designated position
                     stirPosition = closestBeaker.transform.Find("StirPos");
                 }
-                biggerBeakers = true;
+                smallerBeakers = true;
                 Debug.Log("This is a larger beaker");
             }
 
@@ -1017,7 +1014,7 @@ public class doCertainThingWith : MonoBehaviour
                     // designated position
                     stirPosition = closestBeaker.transform.Find("StirPos");
                 }
-                smallerBeakers = true;
+                biggerBeakers = true;
                 Debug.Log("This is a smaller beaker");
             }
         }
@@ -1045,13 +1042,7 @@ public class doCertainThingWith : MonoBehaviour
 
             rodInBeaker = closestBeaker;
             rodInBeaker.tag = "Untagged";
-            if (closestBeaker.name == "Beaker 800mL" || closestBeaker.name == "Beaker 400mL") {
-                isRodInBeaker = true;
-                Debug.Log("isRodInBeaker = true");
-            } else {
-                isSmallRodInBeaker = true;
-                Debug.Log("isSmallRodInBeaker = true");
-            }
+            isRodInBeaker = true;
         }
     }
 
@@ -1068,15 +1059,9 @@ public class doCertainThingWith : MonoBehaviour
         {
             rb.isKinematic = false;
         }
-        rodInBeaker.tag = "LiquidHolder";
+        rodInBeaker.tag = "StirRod";
         rodInBeaker = null;
-        if (pickUpScript.other && pickUpScript.other.name == "Stir Rod") {
-            isRodInBeaker = false;
-            Debug.Log("Because we're picking up stir rod, boolean is set to false again");
-        } else {
-            isSmallRodInBeaker = false;
-            Debug.Log("Because we're picking up small stir rod, boolean is set to false again");
-        }
+        isRodInBeaker = false;
     }
 
     void handleTongObject()

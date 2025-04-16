@@ -154,15 +154,9 @@ public class pickUpObjects : MonoBehaviour
             }
         }
 
-        if (other.name == "Stir Rod"){
+        if (other.name == "Stir Rod" || other.name == "Small Stir Rod"){
             initialHoldingDistance = 1.3f;
             if (GetComponent<doCertainThingWith>().isRodInBeaker == true)
-                GetComponent<doCertainThingWith>().removeStirRod(other);
-        }
-
-        if (other.name == "Small Stir Rod"){
-            initialHoldingDistance = 1.3f;
-            if (GetComponent<doCertainThingWith>().isSmallRodInBeaker == true)
                 GetComponent<doCertainThingWith>().removeStirRod(other);
         }
         
