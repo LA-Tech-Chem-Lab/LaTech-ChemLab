@@ -250,6 +250,9 @@ public class doCertainThingWith : MonoBehaviour
             if (obj.name.StartsWith("Buchner Flask")){
                 BringObjectCloser(-1.5f);
             }
+            if (obj.name.StartsWith("Paper Cone")){
+                BringObjectCloser(-1.5f);
+            }
 
             if (obj.name == "Bunsen Burner")
                 manipulateBunsenBurner();
@@ -393,7 +396,9 @@ public class doCertainThingWith : MonoBehaviour
             Transform pourPos = closestBeakerOrFlask.transform.Find("pourPos");
             pickUpScript.other.transform.position = pourPos.position;
 
-            pickUpScript.other.transform.rotation = Quaternion.Euler(90f, 0f, 0f); // Keep beaker tilted
+            pickUpScript.other.transform.localRotation =  pourPos.transform.localRotation;
+            pickUpScript.other.transform.rotation = Quaternion.Euler(90f, 90f, 0f); // Keep beaker tilted
+            
             //pickUpScript.other.GetComponent<MeshCollider>().isTrigger = true;
 
             //pickUpScript.other.transform.eulerAngles = new Vector3(90f, 0f, 0f);

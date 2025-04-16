@@ -212,7 +212,7 @@ public class pickUpObjects : MonoBehaviour
         if (other.name == "Erlenmeyer Flask 500")   multiHandlerScript.setHelpText("500 mL Erlenmeyer flask");
         if (other.name == "Weigh Boat")             multiHandlerScript.setHelpText("This is a weigh boat. You can use it to measure out the aluminum pellets on the scale. When you have the right amount, you can dump its contents into a beaker.");
         if (other.name == "Glass Funnel")           multiHandlerScript.setHelpText("This is a glass funnel used for filtering out solids from solutions. Right click on an Erlenmeyer flask to attatch it.");
-        if (other.name == "Paper Cone")             multiHandlerScript.setHelpText("This is a paper filter used with a funnel to filter solids from a solution.");
+        //if (other.name == "Paper Cone")             multiHandlerScript.setHelpText("This is a paper filter used with a funnel to filter solids from a solution.");
         if (other.name == "Buchner Funnel")         multiHandlerScript.setHelpText("This is a Buchner funnel used for filtering out solids from solutions. Right click on an Buchner flask to attatch it.");
         if (other.name == "Aluminum Container")     multiHandlerScript.setHelpText("This is a container of aluminum pellets. Use the scoopula to scoop the pellets into a weigh boat.");
     }
@@ -330,10 +330,13 @@ public class pickUpObjects : MonoBehaviour
                     multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents. You can also hold P to pour into another container.");
                 }
                 else if (other.name.StartsWith("Erlenmeyer Flask")){
-                    multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL Erlenmeyer. Hold right click to observe its contents. You can also hold P to pour into another container.");
+                    multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL Erlenmeyer Flask. Hold right click to observe its contents. You can also hold P to pour into another container.");
                 }
                 else if (other.name.StartsWith("Buchner Flask")){
-                    multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL Erlenmeyer. Hold right click to observe its contents. You can also hold P to pour into another container.");
+                    multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL Buchner Flask. Hold right click to observe its contents. You can also hold P to pour into another container.");
+                }
+                else if (other.name.StartsWith("Paper Cone")){
+                    multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL Paper Cone. Hold right click to observe its contents. You can also hold P to pour into another container.");
                 }
             }
             if (GetComponent<doCertainThingWith>().tryingToPourLiquidOnPaperTowel){
