@@ -58,9 +58,6 @@ public class doCertainThingWith : MonoBehaviour
     public GameObject ApparatusCanvasPrefab;
     public bool tryingToPourLiquidOnPaperTowel = false;
 
-    public bool smallerBeakers = false;
-    public bool biggerBeakers = false;
-
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -191,9 +188,33 @@ public class doCertainThingWith : MonoBehaviour
             if (stirAnimator != null) {
                 stirAnimator.enabled = true;
                 stirAnimator.SetBool("IsStirring", true);
+                if (rodInBeaker != null && rodInBeaker.name == "Beaker 800mL") {
+                    stirAnimator.SetBool("is800", true);
+                } else if (rodInBeaker != null && rodInBeaker.name == "Beaker 400mL") {
+                    stirAnimator.SetBool("is400", true);
+                } else {
+                    Debug.Log("Big stir animator is null");
+                }
             }
+
         } else if (isSmallRodInBeaker == true) {
-            Debug.Log("Big stir rod should NOT be stirring rn, because the small stir rod is in the beaker");
+            //Debug.Log("Big stir rod should NOT be stirring rn, because the small stir rod is in the beaker");
+            beginStirring = true;
+            if (smallStirAnimator != null) {
+                smallStirAnimator.enabled = true;
+                smallStirAnimator.SetBool("currentlyStirring", true);
+                if (rodInBeaker != null && rodInBeaker.name == "Beaker 250mL") {
+                    smallStirAnimator.SetBool("is250", true);
+                } else if (rodInBeaker != null && rodInBeaker.name == "Beaker 150mL") {
+                    smallStirAnimator.SetBool("is150", true);
+                } else if (rodInBeaker != null && rodInBeaker.name == "Beaker 100mL") {
+                    smallStirAnimator.SetBool("is100", true);
+                } else if (rodInBeaker != null && rodInBeaker.name == "Beaker 50mL") {
+                    smallStirAnimator.SetBool("is50", true);
+                } else {
+                    Debug.Log("Small stir animator is null");
+                }
+            }
         }
 
         if (pickUpScript.other != null)
@@ -272,6 +293,20 @@ public class doCertainThingWith : MonoBehaviour
             if (stirAnimator != null) {
                 stirAnimator.enabled = false;
                 stirAnimator.SetBool("IsStirring", false);
+                stirAnimator.SetBool("is800", false);
+                stirAnimator.SetBool("is400", false);
+            }
+        }
+
+        if (isSmallRodInBeaker == true) {
+            beginStirring = false;
+            if (smallStirAnimator != null) {
+                smallStirAnimator.enabled = false;
+                smallStirAnimator.SetBool("currentlyStirring", false);
+                smallStirAnimator.SetBool("is50", false);
+                smallStirAnimator.SetBool("is100", false);
+                smallStirAnimator.SetBool("is150", false);
+                smallStirAnimator.SetBool("is250", false);
             }
         }
 
@@ -1003,7 +1038,6 @@ public class doCertainThingWith : MonoBehaviour
                     // designated position
                     stirPosition = closestBeaker.transform.Find("StirPos");
                 }
-                biggerBeakers = true;
                 Debug.Log("This is a larger beaker");
             }
 
@@ -1017,7 +1051,6 @@ public class doCertainThingWith : MonoBehaviour
                     // designated position
                     stirPosition = closestBeaker.transform.Find("StirPos");
                 }
-                smallerBeakers = true;
                 Debug.Log("This is a smaller beaker");
             }
         }
