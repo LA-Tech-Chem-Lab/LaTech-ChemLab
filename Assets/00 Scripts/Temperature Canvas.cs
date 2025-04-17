@@ -58,7 +58,7 @@ public class TemperatureCanvas : MonoBehaviour
     {
         if (liquid != null && temperatureText != null)
         {
-            float temperature = liquid.liquidTemperature;
+            float temperature = liquid.liquidTemperature - 273.15f;
 
             // Calculate vector from player camera to beaker
             Vector3 directionToBeaker = beaker.transform.position - playerCamera.transform.position;
