@@ -165,7 +165,7 @@ public class liquidScript : MonoBehaviour
             float percentFull = currentVolume_mL / totalVolume_mL;
             float sludgeY = GetSludgeYPosition(percentFull);
 
-            if (!hasSpawnedSolid && liquidPercent > 0f)
+            if (!hasSpawnedSolid && liquidPercent > 0f && liquidPercent < .95f)
             {
                 newSolid = Instantiate(solidinliquideffect, transform.position, Quaternion.identity, transform);
                 hasSpawnedSolid = true;
@@ -218,6 +218,10 @@ public class liquidScript : MonoBehaviour
         }
         if (transform.Find("Solid In Liquid Effect(Clone)")){
             if (dotProduct <= 0.25f)
+            {
+                transform.Find("Solid In Liquid Effect(Clone)").gameObject.SetActive(false);
+            }
+            else if (isCrystalizedAlum)
             {
                 transform.Find("Solid In Liquid Effect(Clone)").gameObject.SetActive(false);
             }
