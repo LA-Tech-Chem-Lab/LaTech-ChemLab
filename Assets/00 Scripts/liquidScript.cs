@@ -216,6 +216,17 @@ public class liquidScript : MonoBehaviour
                     currentVolume_mL = 0f; 
             }
         }
+        if (transform.Find("Solid In Liquid Effect(Clone)")){
+            if (dotProduct <= 0.25f)
+            {
+                transform.Find("Solid In Liquid Effect(Clone)").gameObject.SetActive(false);
+            }
+            else
+            {
+                transform.Find("Solid In Liquid Effect(Clone)").gameObject.SetActive(true);
+            }
+        }
+        
         if (isCrystalizedAlum)
         {
             Transform liquidTransform = transform.Find("Liquid");
@@ -1144,7 +1155,7 @@ void CalculateHeat()
         float ambientCoolingRate = 0.05f; // Adjust for faster cooling
         float coolingLoss = ambientCoolingRate * beakerSurfaceArea * (liquidTemperature - currentHeat) * 1000;
         if ((GetComponent<Rigidbody>().mass * specificHeatCapacity) != 0){
-            liquidTemperature -= coolingLoss / (GetComponent<Rigidbody>().mass * specificHeatCapacity);
+            //liquidTemperature -= coolingLoss / (GetComponent<Rigidbody>().mass * specificHeatCapacity);
         }       
     }
 
@@ -1157,7 +1168,7 @@ void CalculateHeat()
         {
             float temperatureChange = (heatTransferRate / (GetComponent<Rigidbody>().mass * specificHeatCapacity)) * Time.deltaTime;
         }
-    //liquidTemperature = Mathf.Lerp(liquidTemperature, currentHeat, Time.deltaTime / 15f);
+    liquidTemperature = Mathf.Lerp(liquidTemperature, currentHeat, Time.deltaTime / 25f);
 
         // Calculate total mass of the solution (assume mass of liquid is given or available)
         float totalSolutionMass = densityOfLiquid * currentVolume_mL;
