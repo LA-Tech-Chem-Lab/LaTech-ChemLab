@@ -1157,7 +1157,7 @@ void CalculateHeat()
         {
             float temperatureChange = (heatTransferRate / (GetComponent<Rigidbody>().mass * specificHeatCapacity)) * Time.deltaTime;
         }
-    liquidTemperature = Mathf.Lerp(liquidTemperature, currentHeat, Time.deltaTime / 15f);
+    //liquidTemperature = Mathf.Lerp(liquidTemperature, currentHeat, Time.deltaTime / 15f);
 
         // Calculate total mass of the solution (assume mass of liquid is given or available)
         float totalSolutionMass = densityOfLiquid * currentVolume_mL;
