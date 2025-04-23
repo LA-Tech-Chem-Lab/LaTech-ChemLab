@@ -86,6 +86,7 @@ public class LabProgress : MonoBehaviour
                 GameObject title3 = scrollContent.transform.Find("Step 3 Title").gameObject;
                 GameObject check3 = title3.transform.Find("Check").gameObject;
                 check3.SetActive(true);
+                StartCoroutine(Step4());
                 currentState = LabState.Step4;
                 break;
 
@@ -93,6 +94,7 @@ public class LabProgress : MonoBehaviour
                 GameObject title4 = scrollContent.transform.Find("Step 4 Title").gameObject;
                 GameObject check4 = title4.transform.Find("Check").gameObject;
                 check4.SetActive(true);
+                StartCoroutine(Step5());
                 currentState = LabState.Step5;
                 break;
 
@@ -186,21 +188,60 @@ public class LabProgress : MonoBehaviour
                 break;
 
             case LabState.Step2:
-                if(step1Erlenmeyer.GetComponent<liquidScript>().currentVolume_mL > 25f && step1Erlenmeyer.GetComponent<liquidScript>().currentVolume_mL < 26f && step1Erlenmeyer.GetComponent<liquidScript>().percentAl > 0.2f && step1Erlenmeyer.GetComponent<liquidScript>().percentAl < 0.25f && step1Erlenmeyer.GetComponent<liquidScript>().percentKOH > 0.1f && step1Erlenmeyer.GetComponent<liquidScript>().percentKOH < 0.15f){
-                    TransitionToNextState();
+                GameObject[] liquidHolders1 = GameObject.FindGameObjectsWithTag("LiquidHolder");
+
+                foreach (GameObject obj in liquidHolders1)
+                {
+                    if (obj.transform.name.StartsWith("Erlenmeyer Flask 250")){
+                        if(obj.GetComponent<liquidScript>().currentVolume_mL > 25f && obj.GetComponent<liquidScript>().currentVolume_mL < 26f && obj.GetComponent<liquidScript>().percentAl > 0.2f && obj.GetComponent<liquidScript>().percentAl < 0.25f && obj.GetComponent<liquidScript>().percentKOH > 0.1f && obj.GetComponent<liquidScript>().percentKOH < 0.15f){
+                            step1Erlenmeyer = obj;
+                            TransitionToNextState();
+                        }
+                    }
                 }
+                
                 break;
 
             case LabState.Step3:
-                if (step1Erlenmeyer.GetComponent<liquidScript>().liquidTemperature > 343.15f && step1Erlenmeyer.GetComponent<liquidScript>().currentVolume_mL > 24.5f && step1Erlenmeyer.GetComponent<liquidScript>().percentKAlOH4 > 0.375f){
-                    TransitionToNextState();
+                GameObject[] liquidHolders2 = GameObject.FindGameObjectsWithTag("LiquidHolder");
+
+                foreach (GameObject obj in liquidHolders2)
+                {
+                    if (obj.transform.name.StartsWith("Erlenmeyer Flask 250")){
+                        if (obj.GetComponent<liquidScript>().liquidTemperature > 343.15f && obj.GetComponent<liquidScript>().currentVolume_mL > 24.5f && obj.GetComponent<liquidScript>().percentKAlOH4 > 0.375f){
+                            step1Erlenmeyer = obj;
+                            TransitionToNextState();
+                        }
+                    }
                 }
                 break;
 
             case LabState.Step4:
+                GameObject[] liquidHolders3 = GameObject.FindGameObjectsWithTag("LiquidHolder");
+
+                foreach (GameObject obj in liquidHolders3)
+                {
+                    if (obj.transform.name.StartsWith("Erlenmeyer Flask 250")){
+                        if (obj.GetComponent<liquidScript>().liquidTemperature <= 295.15f && obj.GetComponent<liquidScript>().currentVolume_mL > 20f && obj.GetComponent<liquidScript>().percentKAlOH4 > 0.43f && obj.GetComponent<liquidScript>().percentAl <= 0.01f){
+                            step1Erlenmeyer = obj;
+                            TransitionToNextState();
+                        }
+                    }
+                }
                 break;
 
             case LabState.Step5:
+                GameObject[] liquidHolders4 = GameObject.FindGameObjectsWithTag("LiquidHolder");
+
+                foreach (GameObject obj in liquidHolders4)
+                {
+                    if (obj.transform.name.StartsWith("Erlenmeyer Flask 250")){
+                        if (obj.GetComponent<liquidScript>().currentVolume_mL > 45f && obj.GetComponent<liquidScript>().percentKAlSO42 > 0.45f && player.GetComponent<doCertainThingWith>().beginStirring){
+                            step1Erlenmeyer = obj;
+                            TransitionToNextState();
+                        }
+                    }
+                }
                 break;
 
             case LabState.Step6:
@@ -226,7 +267,7 @@ public class LabProgress : MonoBehaviour
 
     IEnumerator Intro(){
         // give them a couple of seconds to view the lab
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
         content.text = "Hello There! My name is Walter. Welcome to the Synthesis of Alum Lab! If you have any questions, please press T on your keyboard and I would be happy to assist you.";
@@ -301,7 +342,8 @@ public class LabProgress : MonoBehaviour
         yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        float KOHvol = (step1Erlenmeyer.GetComponent<liquidScript>().percentKOH + step1Erlenmeyer.GetComponent<liquidScript>().percentKOH) * step1Erlenmeyer.GetComponent<liquidScript>().currentVolume_mL;
+        Debug.Log(step1Erlenmeyer.transform.name);
+        float KOHvol = (step1Erlenmeyer.GetComponent<liquidScript>().percentKOH + step1Erlenmeyer.GetComponent<liquidScript>().percentH2O) * step1Erlenmeyer.GetComponent<liquidScript>().currentVolume_mL;
         content.text = "Awesome! You have measured out " + KOHvol + " mL of potassium hydroxide (KOH) into the 250 mL Erlenmeyer Flask with the aluminum. Record this number for later use. ";
         while (!nextButtonClicked){
             yield return null;
@@ -318,6 +360,42 @@ public class LabProgress : MonoBehaviour
         }
         nextButtonClicked = false;
         content.text = "CAUTION: Hydrogen Gas (H2) is evolved in this reaction. This gas is highly flamable and can cause fires and explosions. You should allow this reaction to take place under the vents. Manipulate the vents so that they are in the desired position and then use the lever handle to turn them on. This will evacuate the Hydrogen gas (H2). Make sure you are also using the vents anytime that you are using the bunsen burner. ";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        popUpPanel.SetActive(false);
+        GetComponent<multihandler>().ToggleCursor();
+    }
+
+    IEnumerator Step4(){
+        yield return new WaitForSeconds(1f);
+        popUpPanel.SetActive(true);
+        GetComponent<multihandler>().ToggleCursor();
+        content.text = "Great! The reaction has proceded as expected. Now it's time to filter out the remaining solid waste. When you are trying to filter out solids to get a liquid product, gravity filtering is the prefered method. ";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        content.text = "In order to use the gravity filter, you insert the glass funnel into an empty Erlenmeyer Flask. Then you get the paper filter cone and insert it into the funnel/flask combination. From here, you can slowly pour or pipette the solution that you wish to filter into the gravity filter you jsut assembled. After you are finished filtering, you can take the paper cone and put it in the trash and remove the glass funnel. The solution remaining in the flask below is a filtered liquid solution. ";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        content.text = "Be careful of hot glassware. Make sure that you allow the solution to cool before attempting to use the filter. ";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        popUpPanel.SetActive(false);
+        GetComponent<multihandler>().ToggleCursor();
+    }
+
+    IEnumerator Step5(){
+        yield return new WaitForSeconds(1f);
+        popUpPanel.SetActive(true);
+        GetComponent<multihandler>().ToggleCursor();
+        content.text = "Good work! The filtering looks like it went well. Next, you need to add 30 mL of Sulfuric Acid (H2SO4) to the solution. Use the stir rod to accelerate and ensure a complete reaction. ";
         while (!nextButtonClicked){
             yield return null;
         }
