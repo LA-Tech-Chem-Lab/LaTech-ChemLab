@@ -1764,7 +1764,7 @@ void CalculateHeat()
             updatePercentages();
 
             // Validate duration to prevent NaN/negative
-            float duration = (1f / reactSpeed); /// liquidTemperature * roomTemp / 2;
+            float duration = (1f / reactSpeed) / liquidTemperature * roomTemp / 2;
             if (float.IsNaN(duration) || duration <= 0f || float.IsInfinity(duration))
             {
                 duration = 0.1f; // Default to a safe value

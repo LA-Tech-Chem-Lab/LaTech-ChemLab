@@ -78,6 +78,7 @@ public class LabProgress : MonoBehaviour
                 GameObject title2 = scrollContent.transform.Find("Step 2 Title").gameObject;
                 GameObject check2 = title2.transform.Find("Check").gameObject;
                 check2.SetActive(true);
+                StartCoroutine(Step3());
                 currentState = LabState.Step3;
                 break;
 
@@ -191,6 +192,9 @@ public class LabProgress : MonoBehaviour
                 break;
 
             case LabState.Step3:
+                if (step1Erlenmeyer.GetComponent<liquidScript>().liquidTemperature > 343.15f && step1Erlenmeyer.GetComponent<liquidScript>().currentVolume_mL > 24.5f && step1Erlenmeyer.GetComponent<liquidScript>().percentKAlOH4 > 0.375f){
+                    TransitionToNextState();
+                }
                 break;
 
             case LabState.Step4:
@@ -284,6 +288,36 @@ public class LabProgress : MonoBehaviour
         }
         nextButtonClicked = false;
         content.text = "CAUTION: KOH is a caustic material and is harmful to skin! Immediately rinse affected area with plenty of water if skin comes in contact with KOH.";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        popUpPanel.SetActive(false);
+        GetComponent<multihandler>().ToggleCursor();
+    }
+
+    IEnumerator Step3()
+    {
+        yield return new WaitForSeconds(1f);
+        popUpPanel.SetActive(true);
+        GetComponent<multihandler>().ToggleCursor();
+        float KOHvol = (step1Erlenmeyer.GetComponent<liquidScript>().percentKOH + step1Erlenmeyer.GetComponent<liquidScript>().percentKOH) * step1Erlenmeyer.GetComponent<liquidScript>().currentVolume_mL;
+        content.text = "Awesome! You have measured out " + KOHvol + " mL of potassium hydroxide (KOH) into the 250 mL Erlenmeyer Flask with the aluminum. Record this number for later use. ";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        content.text = "Now it's time to let it react. In the IESB labs, this would take around 15 minutes, but time moves differently here. Let it react for a few minutes and then use a bunsen burner to raise the activation energy of the reactants and drive the remainder of the reaction forwards. ";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        content.text = "WARNING: This is an exothermic reaction meaning that it produces heat. This may cause the glass to be hot. You may want to use tongs to transport it from place to place. ";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        content.text = "CAUTION: Hydrogen Gas (H2) is evolved in this reaction. This gas is highly flamable and can cause fires and explosions. You should allow this reaction to take place under the vents. Manipulate the vents so that they are in the desired position and then use the lever handle to turn them on. This will evacuate the Hydrogen gas (H2). Make sure you are also using the vents anytime that you are using the bunsen burner. ";
         while (!nextButtonClicked){
             yield return null;
         }
