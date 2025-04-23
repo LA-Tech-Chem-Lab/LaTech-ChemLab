@@ -1561,13 +1561,15 @@ public class doCertainThingWith : MonoBehaviour
                     StartCoroutine(getAluminumUsingScoopula(closestScoopableObject));
                 }
                 else if (closestScoopableObject.GetComponent<weighboatscript>()){ // get aluminum out of weighboat
-                    //Debug.Log("retrieving aluminum from weighboat");
-                    if (closestScoopableObject.GetComponent<weighboatscript>().solutionMakeup.SequenceEqual(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f })){  // get aluminum
-                        //Debug.Log("for real");
-                        StartCoroutine(pickUpAluminum(closestScoopableObject, scoopula));
-                    }
-                    else if (closestScoopableObject.GetComponent<weighboatscript>().solutionMakeup != new List<float> { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f }){  //get arbitrary substance
-                        StartCoroutine(pickUpArbitrarySolid(closestScoopableObject, scoopula));
+                    if (closestScoopableObject.GetComponent<weighboatscript>().scoopsHeld > 0){
+                        //Debug.Log("retrieving aluminum from weighboat");
+                        if (closestScoopableObject.GetComponent<weighboatscript>().solutionMakeup.SequenceEqual(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f })){  // get aluminum
+                            //Debug.Log("for real");
+                            StartCoroutine(pickUpAluminum(closestScoopableObject, scoopula));
+                        }
+                        else if (closestScoopableObject.GetComponent<weighboatscript>().solutionMakeup != new List<float> { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f }){  //get arbitrary substance
+                            StartCoroutine(pickUpArbitrarySolid(closestScoopableObject, scoopula));
+                        }
                     }
                 }
                 else if (closestScoopableObject.GetComponent<liquidScript>()){

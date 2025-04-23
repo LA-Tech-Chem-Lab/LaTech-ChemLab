@@ -141,7 +141,7 @@ public class multihandler : MonoBehaviour
         #endif
     }
 
-    void ToggleCursor()
+    public void ToggleCursor()
     {
         if (Cursor.lockState == CursorLockMode.Locked)
         {
@@ -177,6 +177,7 @@ public class multihandler : MonoBehaviour
 
     public void PauseOrUnpause(){
         isPaused = !isPaused;
+        ToggleCursor();
 
         if (isPaused){
             Cursor.lockState = CursorLockMode.None;

@@ -1,0 +1,301 @@
+using System.Collections;
+using Unity.VisualScripting;
+
+//using Tripolygon.UModeler.UI.Controls;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class LabProgress : MonoBehaviour
+{
+    // Current state of the lab progress
+    public enum LabState
+    {
+        safetyCheck, 
+        Step1, 
+        Step2, 
+        Step3, 
+        Step4, 
+        Step5, 
+        Step6, 
+        Step7, 
+        Step8,
+        Step9, 
+        Step10,
+        Finished
+    }
+    private LabState currentState;
+    public Button nextButton;
+    private bool nextButtonClicked = false; 
+    public GameObject popUpPanel;
+    public TextMeshProUGUI content;
+    public GameObject player;
+    public GameObject scrollContent;
+    public GameObject step1Erlenmeyer; 
+
+    // Initialize the first state
+    private void Start()
+    {
+        GameObject Canvases = GameObject.Find("Canvases");
+        GameObject InGame = Canvases.transform.Find("In Game Canvas").gameObject;
+        popUpPanel = InGame.transform.Find("Pop Up Panel").gameObject;
+        nextButton = popUpPanel.transform.Find("Next Button").GetComponent<Button>();
+        nextButton.onClick.AddListener(nextButtonClick);
+        content = popUpPanel.transform.Find("content").GetComponent<TextMeshProUGUI>();
+        player = GameObject.Find("Player");
+        GameObject Pause = Canvases.transform.Find("Pause Canvas").gameObject;
+        GameObject Notebook = Pause.transform.Find("Notebook").gameObject;
+        GameObject Scroll = Notebook.transform.Find("Scroll View").gameObject;
+        GameObject View = Scroll.transform.Find("Viewport").gameObject;
+        scrollContent = View.transform.Find("Content").gameObject;
+        currentState = LabState.safetyCheck;
+        DisplayCurrentState();
+        StartCoroutine(Intro());
+    }
+
+    // Transition to the next state
+    public void TransitionToNextState()
+    {
+        switch (currentState)
+        {
+            case LabState.safetyCheck:
+                GameObject title = scrollContent.transform.Find("Safety Check").gameObject;
+                GameObject check = title.transform.Find("Check").gameObject;
+                check.SetActive(true);
+                StartCoroutine(Step1());
+                currentState = LabState.Step1;
+                break;
+
+            case LabState.Step1:
+                GameObject title1 = scrollContent.transform.Find("Step 1 Title").gameObject;
+                GameObject check1 = title1.transform.Find("Check").gameObject;
+                check1.SetActive(true);
+                StartCoroutine(Step2());
+                currentState = LabState.Step2;
+                break;
+
+            case LabState.Step2:
+                GameObject title2 = scrollContent.transform.Find("Step 2 Title").gameObject;
+                GameObject check2 = title2.transform.Find("Check").gameObject;
+                check2.SetActive(true);
+                currentState = LabState.Step3;
+                break;
+
+            case LabState.Step3:
+                GameObject title3 = scrollContent.transform.Find("Step 3 Title").gameObject;
+                GameObject check3 = title3.transform.Find("Check").gameObject;
+                check3.SetActive(true);
+                currentState = LabState.Step4;
+                break;
+
+            case LabState.Step4:
+                GameObject title4 = scrollContent.transform.Find("Step 4 Title").gameObject;
+                GameObject check4 = title4.transform.Find("Check").gameObject;
+                check4.SetActive(true);
+                currentState = LabState.Step5;
+                break;
+
+            case LabState.Step5:
+                GameObject title5 = scrollContent.transform.Find("Step 5 Title").gameObject;
+                GameObject check5 = title5.transform.Find("Check").gameObject;
+                check5.SetActive(true);
+                currentState = LabState.Step6;
+                break;
+
+            case LabState.Step6:
+                GameObject title6 = scrollContent.transform.Find("Step 6 Title").gameObject;
+                GameObject check6 = title6.transform.Find("Check").gameObject;
+                check6.SetActive(true);
+                currentState = LabState.Step7;
+                break;
+
+            case LabState.Step7:
+                GameObject title7 = scrollContent.transform.Find("Step 7 Title").gameObject;
+                GameObject check7 = title7.transform.Find("Check").gameObject;
+                check7.SetActive(true);
+                currentState = LabState.Step8;
+                break;
+
+            case LabState.Step8:
+                GameObject title8 = scrollContent.transform.Find("Step 8 Title").gameObject;
+                GameObject check8 = title8.transform.Find("Check").gameObject;
+                check8.SetActive(true);
+                currentState = LabState.Step9;
+                break;
+
+            case LabState.Step9:
+                GameObject title9 = scrollContent.transform.Find("Step 9 Title").gameObject;
+                GameObject check9 = title9.transform.Find("Check").gameObject;
+                check9.SetActive(true);
+                currentState = LabState.Step10;
+                break;
+
+            case LabState.Step10:
+                GameObject title10 = scrollContent.transform.Find("Step 10 Title").gameObject;
+                GameObject check10 = title10.transform.Find("Check").gameObject;
+                check10.SetActive(true);
+                currentState = LabState.Finished;
+                break;
+
+            case LabState.Finished:
+                Debug.Log("Lab is complete!");
+                return; // Do not transition further
+        }
+
+        DisplayCurrentState();
+    }
+
+    // Display the current state in the Unity Console
+    private void DisplayCurrentState()
+    {
+        Debug.Log($"Current State: {currentState}");
+        // You can also update UI elements here based on the state, such as changing text or images
+    }
+
+    void Update()
+    {
+        PerformStateActions();
+    }
+
+    // You could implement additional methods to perform actions in each state
+    private void PerformStateActions()
+    {
+        switch (currentState)
+        {
+            //check if safety goggles have been donned
+            case LabState.safetyCheck:
+                if (player.GetComponent<interactWithObjects>().gogglesOn){
+                    TransitionToNextState();
+                }
+                break;
+
+            //check if 1 g of aluminum has been placed alone in a 250 mL Erlenmeyer
+            case LabState.Step1:
+                GameObject[] liquidHolders = GameObject.FindGameObjectsWithTag("LiquidHolder");
+
+                foreach (GameObject obj in liquidHolders)
+                {
+                    if (obj.transform.name.StartsWith("Erlenmeyer Flask 250")){
+                        if (obj.GetComponent<liquidScript>().currentVolume_mL < 0.375f && obj.GetComponent<liquidScript>().currentVolume_mL > 0.365f && obj.GetComponent<liquidScript>().percentAl >= 0.95f){
+                            step1Erlenmeyer = obj;
+                            TransitionToNextState();
+                        }
+                    }
+                }
+                break;
+
+            case LabState.Step2:
+                if(step1Erlenmeyer.GetComponent<liquidScript>().currentVolume_mL > 25f && step1Erlenmeyer.GetComponent<liquidScript>().currentVolume_mL < 26f && step1Erlenmeyer.GetComponent<liquidScript>().percentAl > 0.2f && step1Erlenmeyer.GetComponent<liquidScript>().percentAl < 0.25f && step1Erlenmeyer.GetComponent<liquidScript>().percentKOH > 0.1f && step1Erlenmeyer.GetComponent<liquidScript>().percentKOH < 0.15f){
+                    TransitionToNextState();
+                }
+                break;
+
+            case LabState.Step3:
+                break;
+
+            case LabState.Step4:
+                break;
+
+            case LabState.Step5:
+                break;
+
+            case LabState.Step6:
+                break;
+
+            case LabState.Step7:
+                break;
+
+            case LabState.Step8:
+                break;
+
+            case LabState.Step9:
+                break;
+
+            case LabState.Step10:
+                break;
+
+            case LabState.Finished:
+                // Mark the lab as completed, maybe show results or feedback
+                break;
+        }
+    }
+
+    IEnumerator Intro(){
+        // give them a couple of seconds to view the lab
+        yield return new WaitForSeconds(3f);
+        popUpPanel.SetActive(true);
+        GetComponent<multihandler>().ToggleCursor();
+        content.text = "Hello There! My name is Walter. Welcome to the Synthesis of Alum Lab! If you have any questions, please press T on your keyboard and I would be happy to assist you.";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        content.text = "You can use WASD or the arrow keys to move throughout the lab. You can use left click to pick up or drop objects or right click to use the objects in your hand. If you press tab or escape, you will be able to veiw the menu where you can check out your lab book, settings, ask questions or exit the game.";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        content.text = "Check that you are wearing proper atire and that you remove any rings on your fingers. Before starting any lab, make sure that you put on your safety goggles! You can find them hanging on the wall in the lab.";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        popUpPanel.SetActive(false);
+        GetComponent<multihandler>().ToggleCursor();
+    }
+
+    IEnumerator Step1(){
+        yield return new WaitForSeconds(1f);
+        popUpPanel.SetActive(true);
+        GetComponent<multihandler>().ToggleCursor();
+        content.text = "Congratulations! Your eyes are now protected from hazardous chemicals. Now to begin the experiment. First, you will need to measure out 1 gram of aluminum pellets using the scoopula, weight boat and scale. Don't forget to tere the weigh boat first so that you can tell how much aluminum you are weighing out.";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        popUpPanel.SetActive(false);
+        GetComponent<multihandler>().ToggleCursor();
+    }
+
+    IEnumerator Step2(){
+        yield return new WaitForSeconds(1f);
+        popUpPanel.SetActive(true);
+        GetComponent<multihandler>().ToggleCursor();
+        float aluminumVol = step1Erlenmeyer.GetComponent<liquidScript>().currentVolume_mL;
+        float aluminumGrams = aluminumVol * 2.7f;
+        content.text = "Nice Work! You have measured out " + aluminumGrams + " grams of aluminum into the 250 mL Erlenmeyer Flask. Record this number for later use. ";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        content.text = "The next step is to measure out 25 mL of potassium hydroxide or KOH into the flask containing the aluminum. The KOH can be found in one of the hoods. You can pick up the beakers and hold right click to see what is in them.";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        content.text = "In order to measure the correct amount of potassium hydroxide (KOH), you can use the graduated cylinder. This is a tool used for measuring precise volumes of liquid. While holding the graduated cylinder, you can hold down right click to view the precice volume of its contents. ";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        content.text = "Once you have poured an approximate volume from the KOH beaker into the graduated cylinder, you can use the pipette to move small amounts of liquid and get the exact volume that you want. Then you can record this volume and pour its contents into the flask containing the aluminum. ";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        content.text = "CAUTION: KOH is a caustic material and is harmful to skin! Immediately rinse affected area with plenty of water if skin comes in contact with KOH.";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        popUpPanel.SetActive(false);
+        GetComponent<multihandler>().ToggleCursor();
+    }
+
+    private void nextButtonClick()
+    {
+        // Set the flag to true when the button is clicked
+        nextButtonClicked = true;
+    }
+}
+

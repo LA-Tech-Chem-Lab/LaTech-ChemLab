@@ -40,7 +40,7 @@ public class gameHandler : MonoBehaviour
         #endif
     }
 
-    void ToggleCursor()
+    public void ToggleCursor()
     {
         if (Cursor.lockState == CursorLockMode.Locked)
         {
