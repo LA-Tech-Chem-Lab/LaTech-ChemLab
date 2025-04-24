@@ -121,6 +121,7 @@ public class LabProgress : MonoBehaviour
                 GameObject title7 = scrollContent.transform.Find("Step 7 Title").gameObject;
                 GameObject check7 = title7.transform.Find("Check").gameObject;
                 check7.SetActive(true);
+                StartCoroutine(Step8());
                 currentState = LabState.Step8;
                 break;
 
@@ -128,6 +129,7 @@ public class LabProgress : MonoBehaviour
                 GameObject title8 = scrollContent.transform.Find("Step 8 Title").gameObject;
                 GameObject check8 = title8.transform.Find("Check").gameObject;
                 check8.SetActive(true);
+                StartCoroutine(Step9());
                 currentState = LabState.Step9;
                 break;
 
@@ -135,6 +137,7 @@ public class LabProgress : MonoBehaviour
                 GameObject title9 = scrollContent.transform.Find("Step 9 Title").gameObject;
                 GameObject check9 = title9.transform.Find("Check").gameObject;
                 check9.SetActive(true);
+                StartCoroutine(Step10());
                 currentState = LabState.Step10;
                 break;
 
@@ -142,6 +145,7 @@ public class LabProgress : MonoBehaviour
                 GameObject title10 = scrollContent.transform.Find("Step 10 Title").gameObject;
                 GameObject check10 = title10.transform.Find("Check").gameObject;
                 check10.SetActive(true);
+                StartCoroutine(Finished());
                 currentState = LabState.Finished;
                 break;
 
@@ -451,6 +455,58 @@ public class LabProgress : MonoBehaviour
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
         content.text = "You're really in your element! It looks like there may be some solid impurities in your solution. Use the gravity filter again with a clean peice of filter paper to remove these impurities.";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        popUpPanel.SetActive(false);
+        GetComponent<multihandler>().ToggleCursor();
+    }
+
+    IEnumerator Step8(){
+        yield return new WaitForSeconds(1f);
+        popUpPanel.SetActive(true);
+        GetComponent<multihandler>().ToggleCursor();
+        content.text = "It looks like you're ready to start crystalization. For this step, place the beaker containing your solution into the ice bath. This will allow the solution to cool and begin to crystalize. ";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        popUpPanel.SetActive(false);
+        GetComponent<multihandler>().ToggleCursor();
+    }
+
+    IEnumerator Step9(){
+        yield return new WaitForSeconds(1f);
+        popUpPanel.SetActive(true);
+        GetComponent<multihandler>().ToggleCursor();
+        content.text = "Congratulations! Crystalization is complete. Now it is time to use the Buchner funnel. Do step 9.";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        popUpPanel.SetActive(false);
+        GetComponent<multihandler>().ToggleCursor();
+    }
+
+    IEnumerator Step10(){
+        yield return new WaitForSeconds(1f);
+        popUpPanel.SetActive(true);
+        GetComponent<multihandler>().ToggleCursor();
+        content.text = "Do Step 10 ";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        popUpPanel.SetActive(false);
+        GetComponent<multihandler>().ToggleCursor();
+    }
+
+    IEnumerator Finished(){
+        yield return new WaitForSeconds(1f);
+        popUpPanel.SetActive(true);
+        GetComponent<multihandler>().ToggleCursor();
+        content.text = "You did it ";
         while (!nextButtonClicked){
             yield return null;
         }
