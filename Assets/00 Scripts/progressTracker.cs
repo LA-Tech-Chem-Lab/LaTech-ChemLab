@@ -32,22 +32,25 @@ public class LabProgress : MonoBehaviour
     public GameObject player;
     public GameObject scrollContent;
     public GameObject step1Erlenmeyer; 
+    public GameObject Pause;
+    public GameObject InGame;
 
     // Initialize the first state
     private void Start()
     {
         GameObject Canvases = GameObject.Find("Canvases");
-        GameObject InGame = Canvases.transform.Find("In Game Canvas").gameObject;
+        InGame = Canvases.transform.Find("In Game Canvas").gameObject;
         popUpPanel = InGame.transform.Find("Pop Up Panel").gameObject;
         nextButton = popUpPanel.transform.Find("Next Button").GetComponent<Button>();
         nextButton.onClick.AddListener(nextButtonClick);
         content = popUpPanel.transform.Find("content").GetComponent<TextMeshProUGUI>();
         player = GameObject.Find("Player");
-        GameObject Pause = Canvases.transform.Find("Pause Canvas").gameObject;
+        Pause = Canvases.transform.Find("Pause Canvas").gameObject;
         GameObject Notebook = Pause.transform.Find("Notebook").gameObject;
         GameObject Scroll = Notebook.transform.Find("Scroll View").gameObject;
         GameObject View = Scroll.transform.Find("Viewport").gameObject;
         scrollContent = View.transform.Find("Content").gameObject;
+
         currentState = LabState.safetyCheck;
         DisplayCurrentState();
         StartCoroutine(Intro());
@@ -102,6 +105,7 @@ public class LabProgress : MonoBehaviour
                 GameObject title5 = scrollContent.transform.Find("Step 5 Title").gameObject;
                 GameObject check5 = title5.transform.Find("Check").gameObject;
                 check5.SetActive(true);
+                StartCoroutine(Step6());
                 currentState = LabState.Step6;
                 break;
 
@@ -109,6 +113,7 @@ public class LabProgress : MonoBehaviour
                 GameObject title6 = scrollContent.transform.Find("Step 6 Title").gameObject;
                 GameObject check6 = title6.transform.Find("Check").gameObject;
                 check6.SetActive(true);
+                StartCoroutine(Step7());
                 currentState = LabState.Step7;
                 break;
 
@@ -158,6 +163,14 @@ public class LabProgress : MonoBehaviour
     void Update()
     {
         PerformStateActions();
+        if (Pause.activeInHierarchy || popUpPanel.activeInHierarchy){
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else{
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
 
     // You could implement additional methods to perform actions in each state
@@ -208,7 +221,7 @@ public class LabProgress : MonoBehaviour
                 foreach (GameObject obj in liquidHolders2)
                 {
                     if (obj.transform.name.StartsWith("Erlenmeyer Flask 250")){
-                        if (obj.GetComponent<liquidScript>().liquidTemperature > 343.15f && obj.GetComponent<liquidScript>().currentVolume_mL > 24.5f && obj.GetComponent<liquidScript>().percentKAlOH4 > 0.375f){
+                        if (obj.GetComponent<liquidScript>().liquidTemperature > 343.15f && obj.GetComponent<liquidScript>().currentVolume_mL > 24.5f && obj.GetComponent<liquidScript>().percentKAlOH4 > 0.36f){
                             step1Erlenmeyer = obj;
                             TransitionToNextState();
                         }
@@ -221,7 +234,7 @@ public class LabProgress : MonoBehaviour
 
                 foreach (GameObject obj in liquidHolders3)
                 {
-                    if (obj.transform.name.StartsWith("Erlenmeyer Flask 250")){
+                    if (obj.transform.name.StartsWith("Erlenmeyer Flask")){
                         if (obj.GetComponent<liquidScript>().liquidTemperature <= 295.15f && obj.GetComponent<liquidScript>().currentVolume_mL > 20f && obj.GetComponent<liquidScript>().percentKAlOH4 > 0.43f && obj.GetComponent<liquidScript>().percentAl <= 0.01f){
                             step1Erlenmeyer = obj;
                             TransitionToNextState();
@@ -235,19 +248,35 @@ public class LabProgress : MonoBehaviour
 
                 foreach (GameObject obj in liquidHolders4)
                 {
-                    if (obj.transform.name.StartsWith("Erlenmeyer Flask 250")){
-                        if (obj.GetComponent<liquidScript>().currentVolume_mL > 45f && obj.GetComponent<liquidScript>().percentKAlSO42 > 0.45f && player.GetComponent<doCertainThingWith>().beginStirring){
-                            step1Erlenmeyer = obj;
-                            TransitionToNextState();
-                        }
+                    if (obj.GetComponent<liquidScript>().currentVolume_mL > 45f && obj.GetComponent<liquidScript>().percentKAlSO42 > 0.3f){ //&& player.GetComponent<doCertainThingWith>().beginStirring add this when stirring is good to go
+                        step1Erlenmeyer = obj;
+                        TransitionToNextState();
                     }
                 }
                 break;
 
             case LabState.Step6:
+                GameObject[] liquidHolders5 = GameObject.FindGameObjectsWithTag("LiquidHolder");
+
+                foreach (GameObject obj in liquidHolders5)
+                {
+                    if (obj.GetComponent<liquidScript>().liquidTemperature > 330f && obj.GetComponent<liquidScript>().currentVolume_mL > 45f && obj.GetComponent<liquidScript>().percentKAlSO42 > 0.3f){ 
+                        step1Erlenmeyer = obj;
+                        TransitionToNextState();
+                    }
+                }
                 break;
 
             case LabState.Step7:
+                GameObject[] liquidHolders6 = GameObject.FindGameObjectsWithTag("LiquidHolder");
+
+                foreach (GameObject obj in liquidHolders6)
+                {
+                    if (obj.GetComponent<liquidScript>().liquidPercent > 0.95f && obj.GetComponent<liquidScript>().currentVolume_mL > 45f && obj.GetComponent<liquidScript>().percentKAlSO42 > 0.3f){ 
+                        step1Erlenmeyer = obj;
+                        TransitionToNextState();
+                    }
+                }
                 break;
 
             case LabState.Step8:
@@ -343,7 +372,7 @@ public class LabProgress : MonoBehaviour
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
         Debug.Log(step1Erlenmeyer.transform.name);
-        float KOHvol = (step1Erlenmeyer.GetComponent<liquidScript>().percentKOH + step1Erlenmeyer.GetComponent<liquidScript>().percentH2O) * step1Erlenmeyer.GetComponent<liquidScript>().currentVolume_mL;
+        float KOHvol = (step1Erlenmeyer.GetComponent<liquidScript>().percentKOH + step1Erlenmeyer.GetComponent<liquidScript>().percentH2O + step1Erlenmeyer.GetComponent<liquidScript>().percentKAlOH4) * step1Erlenmeyer.GetComponent<liquidScript>().currentVolume_mL + 5f;
         content.text = "Awesome! You have measured out " + KOHvol + " mL of potassium hydroxide (KOH) into the 250 mL Erlenmeyer Flask with the aluminum. Record this number for later use. ";
         while (!nextButtonClicked){
             yield return null;
@@ -395,7 +424,33 @@ public class LabProgress : MonoBehaviour
         yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        content.text = "Good work! The filtering looks like it went well. Next, you need to add 30 mL of Sulfuric Acid (H2SO4) to the solution. Use the stir rod to accelerate and ensure a complete reaction. ";
+        content.text = "Good work! The filtering looks like it went well. Next, you need to add 30 mL of Sulfuric Acid (H2SO4) to the solution. Use the stir rod to accelerate and ensure a complete reaction. Since the flasks are too narrow for stirring, you may want to transfer the solution to a beaker first.";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        popUpPanel.SetActive(false);
+        GetComponent<multihandler>().ToggleCursor();
+    }
+
+    IEnumerator Step6(){
+        yield return new WaitForSeconds(1f);
+        popUpPanel.SetActive(true);
+        GetComponent<multihandler>().ToggleCursor();
+        content.text = "Nice Job! The reaction proceeded as expected. As a precaution, gently heat the reaction to ensure that the Aluminum Hydroxide is dissolved.";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        popUpPanel.SetActive(false);
+        GetComponent<multihandler>().ToggleCursor();
+    }
+
+    IEnumerator Step7(){
+        yield return new WaitForSeconds(1f);
+        popUpPanel.SetActive(true);
+        GetComponent<multihandler>().ToggleCursor();
+        content.text = "You're really in your element! It looks like there may be some solid impurities in your solution. Use the gravity filter again with a clean peice of filter paper to remove these impurities.";
         while (!nextButtonClicked){
             yield return null;
         }
@@ -410,4 +465,3 @@ public class LabProgress : MonoBehaviour
         nextButtonClicked = true;
     }
 }
-
