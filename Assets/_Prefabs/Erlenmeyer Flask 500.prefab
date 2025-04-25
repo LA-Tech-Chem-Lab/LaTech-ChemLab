@@ -142,7 +142,7 @@ Transform:
   m_GameObject: {fileID: 4051363178763128287}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.388, z: -0.432}
+  m_LocalPosition: {x: -0.312, y: 0.388, z: -0.004}
   m_LocalScale: {x: 0.08125, y: 0.13, z: 0.08125}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -328,7 +328,7 @@ MonoBehaviour:
   readHere2: 0
   testScale: 4.97
   dotProduct: 0
-  maxSpillRate: 200
+  maxSpillRate: 0
   autoAssignSpillRate: 0
   surfaceColor: {r: 0, g: 0, b: 0, a: 0}
   topColor: {r: 0, g: 0, b: 0, a: 0}
@@ -415,6 +415,7 @@ MonoBehaviour:
   liquidTemperature: 293.15
   roomTemp: 293.15
   isinIceBath: 0
+  boilingSound: {fileID: 0}
   isFiltering: 0
   liquidPercent: 0
   isPouring: 0
@@ -423,6 +424,9 @@ MonoBehaviour:
     type: 3}
   liquidCrystalPrefab: {fileID: 4618146047653720111, guid: 47eaef1f785d40e4a9664d311cfcdecc,
     type: 3}
+  solidinliquideffect: {fileID: 0}
+  hasSpawnedSolid: 0
+  newSolid: {fileID: 0}
   H2Released: 0
   boilingEffect: {fileID: 0}
   isBoiling: 0
@@ -460,7 +464,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11759ad9640d893459018b55958ce4a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceLimit: 480
+  forceLimit: 580
   brokenVersionOfGlass: {fileID: 3097386346157474432, guid: 8aaabf5916ebd4e40958a7c49a100e67,
     type: 3}
   dinkSound: {fileID: 8300000, guid: 4c3e6173fbb642340abdd58981a875d2, type: 3}

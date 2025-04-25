@@ -42,6 +42,9 @@ public class pickUpObjects : MonoBehaviour
     public DecalProjector shadowProjector;
     public AudioClip puttingGogglesOnClip;
 
+    public float currentLiquidHoldingTempCELSIUS = 0f;
+    public liquidScript heldLiquidScript;
+
 
     
     // Def dont need to touch
@@ -78,9 +81,21 @@ public class pickUpObjects : MonoBehaviour
         handleObjectShadow();
 
         if (holdingItem) setHelpTextConstantly();
+        constantLiquidStuff();
 
         if(stuffInEyesFilter.activeSelf){
             multiHandlerScript.setHelpText("Warning! It looks like you were standing near a violent reaction without your protective goggles and you have some in your eyes. Immediately use the eye wash station to evacuate the contaminent.");
+        }
+        
+    }
+
+    void constantLiquidStuff(){
+        if (heldLiquidScript) currentLiquidHoldingTempCELSIUS = heldLiquidScript.liquidTemperature - 273.15f;
+        else currentLiquidHoldingTempCELSIUS = 0f;
+
+        if (currentLiquidHoldingTempCELSIUS > 49f && other.transform.name.StartsWith("Erlenmeyer")){
+            DropItem();
+            multiHandlerScript.setHelpText("The flask got too hot to hold, be sure to use tongs.");
         }
     }
 
@@ -102,6 +117,7 @@ public class pickUpObjects : MonoBehaviour
         targetQuaternion = Quaternion.Euler(targetRotation);
         objRenderer = other.GetComponent<Renderer>();
         objExtents = other.GetComponent<Collider>().bounds.extents;
+        if (other.GetComponent<liquidScript>()) heldLiquidScript = other.GetComponent<liquidScript>();
 
         Renderer renderer = other.GetComponent<Renderer>();
         if (renderer){
@@ -178,7 +194,7 @@ public class pickUpObjects : MonoBehaviour
         canRotateItem = true;
         other.layer = otherObjectLayer;
         Rigidbody rb = other.GetComponent<Rigidbody>();
-        rb.linearVelocity = launchTraj; // Launch it
+        rb.linearVelocity = Vector3.ClampMagnitude(launchTraj, 10f);; // Launch it up to 10
         rb.angularVelocity = launchSpin; // Spin it
         rb.useGravity = true;
         objRenderer = null;
@@ -188,6 +204,7 @@ public class pickUpObjects : MonoBehaviour
         targetPositionShift = Vector3.zero;
         checkRadius = 0f;
         initialHoldingDistance = untouchedHoldingDistance;
+        heldLiquidScript = null;
         
         if (other.name == "Tongs")
             GetComponent<doCertainThingWith>().dropItemFromTongsCorrectly();
@@ -336,7 +353,7 @@ public class pickUpObjects : MonoBehaviour
                     multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents. You can also hold P to pour into another container.");
                 }
                 else if (other.name.StartsWith("Erlenmeyer Flask")){
-                    multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL Erlenmeyer Flask. Hold right click to observe its contents. You can also hold P to pour into another container.");
+                    multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL Erlenmeyer Flask. Hold right click to observe its contents. P to pour. Use tongs to hold when hot. ({currentLiquidHoldingTempCELSIUS}°C.)");
                 }
                 else if (other.name.StartsWith("Buchner Flask")){
                     multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL Buchner Flask. Hold right click to observe its contents. You can also hold P to pour into another container.");
@@ -377,6 +394,9 @@ public class pickUpObjects : MonoBehaviour
             }
         }
     }
+
+    
+
     void checkForInput()
     {
         if (Input.GetMouseButtonDown(0) && !Cursor.visible){
@@ -416,11 +436,11 @@ public class pickUpObjects : MonoBehaviour
 
             if (rb && rb.GetComponent<Rigidbody>().isKinematic) // We are trying to pick up a kinematic object - not normal
             {
-                // if (hit.collider.gameObject.tag == "IronRing"){
-                //     DetachIronRingServerRpc(netObj.NetworkObjectId);
-                //     return;
-                // }
-                // Debug.Log(hit.collider.gameObject.name);
+                if (hit.collider.gameObject.tag == "IronRing"){
+                    DetachIronRing(hitObject);
+                    return;
+                }
+                Debug.Log(hit.collider.gameObject.name);
             }
 
             // Can also be the funnel even if it is kinematic because we want to be able to pick it up when it is attatched to the flask
@@ -605,58 +625,58 @@ public class pickUpObjects : MonoBehaviour
     {
         if (ironRing == null)
         {
-            Debug.LogError("DetachIronRing: ironRing is null!");
+            // Debug.LogError("DetachIronRing: ironRing is null!");
             return;
         }
 
-        Debug.Log($"DetachIronRing: Attempting to detach {ironRing.name}");
+        // Debug.Log($"DetachIronRing: Attempting to detach {ironRing.name}");
 
         Rigidbody rb = ironRing.GetComponent<Rigidbody>();
         if (rb)
         {
             rb.isKinematic = false;
-            Debug.Log($"DetachIronRing: Rigidbody found, set isKinematic to {rb.isKinematic}");
+            // Debug.Log($"DetachIronRing: Rigidbody found, set isKinematic to {rb.isKinematic}");
         }
         else
         {
-            Debug.LogWarning("DetachIronRing: Rigidbody not found on object!");
+            // Debug.LogWarning("DetachIronRing: Rigidbody not found on object!");
         }
 
-        Debug.Log($"DetachIronRing: Parent before change: {ironRing.transform.parent}");
+        // Debug.Log($"DetachIronRing: Parent before change: {ironRing.transform.parent}");
         ironRing.transform.SetParent(null);
-        Debug.Log($"DetachIronRing: Parent after change: {ironRing.transform.parent}");
+        // Debug.Log($"DetachIronRing: Parent after change: {ironRing.transform.parent}");
 
         Transform ring = ironRing.transform.Find("Ring");
         if (ring)
         {
             ring.localPosition = new Vector3(0.0256326012f, 0f, 0.0123416251f);
-            Debug.Log("DetachIronRing: Ring position reset");
+            // Debug.Log("DetachIronRing: Ring position reset");
         }
         else
         {
-            Debug.LogWarning("DetachIronRing: Ring not found!");
+            // Debug.LogWarning("DetachIronRing: Ring not found!");
         }
 
         Transform screw = ironRing.transform.Find("Screw");
         if (screw)
         {
             screw.localPosition = new Vector3(-0.161500007f, -0.000211842445f, 0.0122618228f);
-            Debug.Log("DetachIronRing: Screw position reset");
+            // Debug.Log("DetachIronRing: Screw position reset");
         }
         else
         {
-            Debug.LogWarning("DetachIronRing: Screw not found!");
+            // Debug.LogWarning("DetachIronRing: Screw not found!");
         }
 
         BoxCollider collider = ironRing.GetComponent<BoxCollider>();
         if (collider)
         {
             collider.center = new Vector3(0f, 0.001574993f, 0.015f);
-            Debug.Log("DetachIronRing: BoxCollider center updated");
+            // Debug.Log("DetachIronRing: BoxCollider center updated");
         }
         else
         {
-            Debug.LogWarning("DetachIronRing: BoxCollider not found!");
+            // Debug.LogWarning("DetachIronRing: BoxCollider not found!");
         }
 
         Transform ironMesh = ironRing.transform.Find("Iron Mesh");
@@ -666,20 +686,20 @@ public class pickUpObjects : MonoBehaviour
             if (ironMeshRb)
             {
                 ironMeshRb.isKinematic = false;
-                Debug.Log($"DetachIronRing: Iron Mesh Rigidbody set isKinematic to {ironMeshRb.isKinematic}");
+                // Debug.Log($"DetachIronRing: Iron Mesh Rigidbody set isKinematic to {ironMeshRb.isKinematic}");
             }
             else
             {
-                Debug.LogWarning("DetachIronRing: Iron Mesh Rigidbody not found!");
+                // Debug.LogWarning("DetachIronRing: Iron Mesh Rigidbody not found!");
             }
 
-            Debug.Log($"DetachIronRing: Iron Mesh Parent before change: {ironMesh.parent}");
+            // Debug.Log($"DetachIronRing: Iron Mesh Parent before change: {ironMesh.parent}");
             ironMesh.SetParent(null);
-            Debug.Log($"DetachIronRing: Iron Mesh Parent after change: {ironMesh.parent}");
+            // Debug.Log($"DetachIronRing: Iron Mesh Parent after change: {ironMesh.parent}");
         }
         else
         {
-            Debug.LogWarning("DetachIronRing: Iron Mesh not found!");
+            // Debug.LogWarning("DetachIronRing: Iron Mesh not found!");
         }
     }
 }

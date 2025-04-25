@@ -1114,17 +1114,17 @@ public class doCertainThingWith : MonoBehaviour
 
     void handleTongObject()
     {    // Here Tongs are pos.other
-
+        // pickUpScript.other.transform.TransformDirection(testingOffset);
         Vector3 offset = Vector3.zero;
 
         if (itemHeldByTongs.name == "Erlenmeyer Flask 250")
-            offset = pickUpScript.other.transform.TransformDirection(0f, -0.361f, 0.1056f);
+            offset = pickUpScript.other.transform.TransformDirection(0f,-0.317f,0.1056f);
 
         if (itemHeldByTongs.name == "Buchner Flask")
-            offset = pickUpScript.other.transform.TransformDirection(0f, -0.361f, 0.1056f);
+            offset = pickUpScript.other.transform.TransformDirection(0f,-0.317f,0.1056f);
 
         if (itemHeldByTongs.name == "Erlenmeyer Flask 500")
-            offset = pickUpScript.other.transform.TransformDirection(0f, -0.452f, 0.1056f);
+            offset = pickUpScript.other.transform.TransformDirection(0f,-0.39f,0.1056f);
 
 
 
@@ -1461,6 +1461,9 @@ public class doCertainThingWith : MonoBehaviour
             }
         }
 
+        // if (closestIronRing.transform.parent == null)
+        //     return;
+
         if (closestIronRing == null || minDist > IRON_RING_SNAP_DISTANCE)
         {
             closestIronRing = null;
@@ -1484,6 +1487,7 @@ public class doCertainThingWith : MonoBehaviour
     public void SnapIronMeshToRing()
     {
         GameObject ironMesh = pickUpScript.other;
+
 
         if (ironMesh.transform.Find("Ghost").gameObject.activeInHierarchy)
         {
