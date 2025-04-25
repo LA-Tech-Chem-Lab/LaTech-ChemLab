@@ -46,16 +46,35 @@ public class liquidScript : MonoBehaviour
     public float percentAlOH3 = 0f; 
     public float percentKAlSO42 = 0f; 
     public float percentKAlO2 = 0f; 
+    public float percentCH3CH2OH = 0f; 
     public float limreactnum;
     public List<float> solutionMakeup = new List<float>();
-    public List<string> compoundNames = new List<string> {"H2SO4", "KOH", "H2O", "K2SO4", "Al", "KAl(OH)4", "Al2(SO4)3", "Alum", "Al(OH)3", "KAl(SO4)2*12H2O", "KAlO2"};
-    public List<float> densities = new List<float> {1.83f, 2.12f, 1f, 2.66f, 2.7f, 1.5f, 2.672f, 1.76f, 2.42f, 1.75f, 1.57f};
-    public List<float> molarMasses = new List<float> {98.079f, 56.1056f, 18.01528f, 174.259f, 26.982f, 134.12f, 342.14f, 474.39f, 78f, 464.46f, 98.075f};
-    public List<float> specificHeatCapacities = new List<float> {1380f, 1300f, 4186f, 1060f, 900f, 1500f, 1300f, 1200f, 900f, 1060f, 1250f};
-    float[] boilingPoints = new float[] {611f, 1388f, 373.15f, 1685f, 2792f, 1110f, 1073f, 1383f, 773f, 1383f, 1280f};
-    public List<float> latentHeat = new List<float> {2257000f, 2000000f, 2257000f, 2500000f, 2920000f, 2200000f, 2500000f, 2400000f, 2300000f, 2300000f, 2400000f};
-    List<Color> liquidColors = new List<Color> {Color.red, Color.green, Color.blue, Color.yellow, new Color(0.6f, 0.6f, 0.6f), Color.yellow, Color.red, Color.white, Color.yellow, Color.green, Color.blue};
-    public List<char> compoundStates = new List<char> { 'a', 'a', 'l', 'a', 's', 'a', 's', 's', 's', 'a', 's' };
+    public List<string> compoundNames = new List<string> {
+        "H2SO4", "KOH", "H2O", "K2SO4", "Al", "KAl(OH)4", "Al2(SO4)3", "Alum", "Al(OH)3", "KAl(SO4)2*12H2O", "KAlO2", "CH3CH2OH"
+    };
+
+    public List<float> densities = new List<float> {
+        1.83f, 2.12f, 1f, 2.66f, 2.7f, 1.5f, 2.672f, 1.76f, 2.42f, 1.75f, 1.57f, 0.789f
+    };
+
+    public List<float> molarMasses = new List<float> {
+        98.079f, 56.1056f, 18.01528f, 174.259f, 26.982f, 134.12f, 342.14f, 474.39f, 78f, 464.46f, 98.075f, 46.069f 
+    };
+
+    public List<float> specificHeatCapacities = new List<float> {
+        1380f, 1300f, 4186f, 1060f, 900f, 1500f, 1300f, 1200f, 900f, 1060f, 1250f, 2440f 
+    };
+
+    public float[] boilingPoints = new float[] {
+        611f, 1388f, 373.15f, 1685f, 2792f, 1110f, 1073f, 1383f, 773f, 1383f, 1280f, 351.44f  
+    };
+
+    public List<float> latentHeat = new List<float> {
+        2257000f, 2000000f, 2257000f, 2500000f, 2920000f, 2200000f, 2500000f, 2400000f, 2300000f, 2300000f, 2400000f, 846000f 
+    };
+
+    List<Color> liquidColors = new List<Color> {Color.red, Color.green, Color.blue, Color.yellow, new Color(0.6f, 0.6f, 0.6f), Color.yellow, Color.red, Color.white, Color.yellow, Color.green, Color.blue, new Color(0.9f, 0.5f, 0.3f)};
+    public List<char> compoundStates = new List<char> { 'a', 'a', 'l', 'a', 's', 'a', 's', 's', 's', 'a', 's', 'l' };
 
     //                                            H2SO4       KOH              H20        K2SO4              Al                  KAl(OH)4
     public bool reactionHappening;
@@ -92,7 +111,8 @@ public class liquidScript : MonoBehaviour
         365.15f,  // Alum (~92 + 273.15)
         573.15f,  // Al(OH)3 (~300 + 273.15)
         365.15f,  // KAl(SO4)2·12H2O (same as Alum)
-        1233.15f  // KAlO2 (~960 + 273.15)
+        1233.15f,  // KAlO2 (~960 + 273.15)
+        159f //ethanol
     };
 
     private float freezeProgress = 1f;
@@ -133,6 +153,10 @@ public class liquidScript : MonoBehaviour
         boilingEffect = Resources.Load<GameObject>("boilingEffect");
         explosion = Resources.Load<GameObject>("Explosion Effect");
         firePrefab = Resources.Load<GameObject>("Flame");
+        crystallizationPrefab = Resources.Load<GameObject>("Crystalization");
+        liquidCrystalPrefab = Resources.Load<GameObject>("Crystalized Liquid");
+        solidinliquideffect = Resources.Load<GameObject>("Solid In Liquid Effect");
+        boomSound = Resources.Load<AudioClip>("boomSound");
 
         //doCertainThingWith certainThingWith = player.GetComponent<doCertainThingWith>();
         if (gameObject.name == "Capilary tube")
@@ -143,7 +167,7 @@ public class liquidScript : MonoBehaviour
         {
             initialObjectMass = objectRigidbody.mass; // Otherwise, use the Rigidbody's mass
         }
-        solutionMakeup.AddRange(new float[] { percentH2SO4, percentKOH , percentH2O, percentK2SO4, percentAl, percentKAlOH4, percentAl2SO43, percentAlum, percentAlOH3, percentKAlSO42, percentKAlO2});
+        solutionMakeup.AddRange(new float[] { percentH2SO4, percentKOH , percentH2O, percentK2SO4, percentAl, percentKAlOH4, percentAl2SO43, percentAlum, percentAlOH3, percentKAlSO42, percentKAlO2, percentCH3CH2OH});
         if (currentVolume_mL > 0){
             calculateDensity();
         }
@@ -1150,6 +1174,8 @@ void CalculateHeat()
 
         // Apply heat transfer equation
         specificHeatCapacity = 0f;
+        //Debug.Log(solutionMakeup.Count);
+        //Debug.Log(specificHeatCapacities.Count);
     for (int i = 0; i < solutionMakeup.Count; i++){
         specificHeatCapacity += solutionMakeup[i] * specificHeatCapacities[i];
     }
@@ -1274,14 +1300,19 @@ void CalculateHeat()
     {
         isFiltering = true;
         float liquidVolume = 10f;
-        List<float> liquidSolution = Enumerable.Repeat(0f, 11).ToList();
+        List<float> liquidSolution = Enumerable.Repeat(0f, 12).ToList();
 
         float volumeLeft = 0f;
         if (Flask.name.StartsWith("Erlenmeyer Flask")){
             volumeLeft = currentVolume_mL * 0.05f;
         }
         if (Flask.name.StartsWith("Buchner Flask")){
-            volumeLeft = currentVolume_mL * 0.01f;
+            if (solutionMakeup[11] > 0.05f){
+                volumeLeft = currentVolume_mL * 0.01f;
+            }
+            else{
+                volumeLeft = currentVolume_mL * 0.05f;
+            }
         }
         // Filtering continues while there is enough solution
         while (liquidVolume > 0.1f && currentVolume_mL > volumeLeft)
@@ -1492,6 +1523,7 @@ void CalculateHeat()
         percentAlOH3 = solutionMakeup[8]; 
         percentKAlSO42 = solutionMakeup[9]; 
         percentKAlO2 = solutionMakeup[10]; 
+        percentCH3CH2OH = solutionMakeup[11];
 
         calculateDensity();
 
@@ -1694,7 +1726,7 @@ void CalculateHeat()
             if (liquidTemperature > 25){
                 isViolent = violence;
             }
-            List<float> solutionMols = Enumerable.Repeat(0f, 11).ToList();
+            List<float> solutionMols = Enumerable.Repeat(0f, 12).ToList();
 
             // Convert percentages to moles for reactants
             for (int i = 0; i < solutionMols.Count; i++)

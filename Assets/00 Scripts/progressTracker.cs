@@ -300,7 +300,7 @@ public class LabProgress : MonoBehaviour
 
     IEnumerator Intro(){
         // give them a couple of seconds to view the lab
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(3f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
         content.text = "Hello There! My name is Walter. Welcome to the Synthesis of Alum Lab! If you have any questions, please press T on your keyboard and I would be happy to assist you.";

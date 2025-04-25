@@ -9,11 +9,11 @@ public class weighboatscript : MonoBehaviour
     public int maxScoops = 10;
     //this references a list in liquidScript
     public int scoopsHeld = 0;
-    List<float> densities = new List<float> {1.83f, 2.12f, 1f, 2.66f, 2.7f, 1.5f, 2.672f, 1.76f, 2.42f, 1.75f, 1.57f};
-    public List<float> solutionMakeup = new List<float> {0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
-    public List<char> compoundStates = new List<char> { 'a', 'a', 'l', 'a', 's', 'a', 's', 's', 's', 'a', 's' };
-    public List<float> molarMasses = new List<float> {98.079f, 56.1056f, 18.01528f, 174.259f, 26.982f, 134.12f, 342.14f, 474.39f, 78f, 464.46f, 98.075f};
-    public List<string> compoundNames = new List<string> {"H2SO4", "KOH", "H2O", "K2SO4", "Al", "KAl(OH)4", "Al2(SO4)3", "Alum", "Al(OH)3", "KAl(SO4)2*12H2O", "KAlO2"};
+    List<float> densities = new List<float> {1.83f, 2.12f, 1f, 2.66f, 2.7f, 1.5f, 2.672f, 1.76f, 2.42f, 1.75f, 1.57f, 0.789f};
+    public List<float> solutionMakeup = new List<float> {0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
+    public List<char> compoundStates = new List<char> { 'a', 'a', 'l', 'a', 's', 'a', 's', 's', 's', 'a', 's', 'l'};
+    public List<float> molarMasses = new List<float> {98.079f, 56.1056f, 18.01528f, 174.259f, 26.982f, 134.12f, 342.14f, 474.39f, 78f, 464.46f, 98.075f, 46.069f};
+    public List<string> compoundNames = new List<string> {"H2SO4", "KOH", "H2O", "K2SO4", "Al", "KAl(OH)4", "Al2(SO4)3", "Alum", "Al(OH)3", "KAl(SO4)2*12H2O", "KAlO2", "CH3CH2OH"};
     public doCertainThingWith doCertainThingWithScript;
     public bool isPouring = false;
     public float density;
@@ -28,7 +28,7 @@ public class weighboatscript : MonoBehaviour
     void Update()
     {
         if (transform.name.StartsWith("Paper Towel") && scoopsHeld > 0){
-            List<float> liquidSolution = Enumerable.Repeat(0f, 11).ToList();   //separate out liquid solution
+            List<float> liquidSolution = Enumerable.Repeat(0f, 12).ToList();   //separate out liquid solution
             float liquidPercent = 0f;
             for (int i = 0; i < solutionMakeup.Count; i++)
             {
@@ -57,7 +57,7 @@ public class weighboatscript : MonoBehaviour
             }
             float volumeToRemove = liquidVolume / 100f;
             
-            List<float> volumes = Enumerable.Repeat(0f, 11).ToList();
+            List<float> volumes = Enumerable.Repeat(0f, 12).ToList();
             //remove part of liquid Solution
             float totalVolume = 0f;
             for (int i = 0; i < solutionMakeup.Count; i++){
