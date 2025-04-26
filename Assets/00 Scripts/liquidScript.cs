@@ -49,6 +49,8 @@ public class liquidScript : MonoBehaviour
     public float percentCH3CH2OH = 0f; 
     public float limreactnum;
     public List<float> solutionMakeup = new List<float>();
+    public bool step3Done = false;
+    public bool step4Done = false;
     public List<string> compoundNames = new List<string> {
         "H2SO4", "KOH", "H2O", "K2SO4", "Al", "KAl(OH)4", "Al2(SO4)3", "Alum", "Al(OH)3", "KAl(SO4)2*12H2O", "KAlO2", "CH3CH2OH"
     };
@@ -1780,6 +1782,7 @@ void CalculateHeat()
                 // CORRECT PATH
                 if (percentAlOH3 > 0.02f){
                     currReactionID = 3;
+                    step3Done = true;
                     List<string> reactants = new List<string> {"Al(OH)3", "H2SO4"};
                     List<string> products = new List<string> {"Al2(SO4)3", "H2O"};
                     List<float> Rratio = new List<float> {2, 3};
@@ -1834,6 +1837,7 @@ void CalculateHeat()
                     //CORRECT PATH
                     // GOAL PRODUCT
                     currReactionID = 4;
+                    step4Done = true;
                     List<string> reactants = new List<string> {"Al2(SO4)3", "K2SO4", "H2O"};
                     List<string> products = new List<string> {"KAl(SO4)2*12H2O"};
                     List<float> Rratio = new List<float> {1, 1, 24};

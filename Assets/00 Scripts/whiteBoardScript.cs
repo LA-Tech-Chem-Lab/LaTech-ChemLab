@@ -8,6 +8,7 @@ public class WhiteboardController : MonoBehaviour
     private List<liquidScript> liquidScripts = new List<liquidScript>();
     private List<GameObject> canvasChildrenExcludingFirst = new List<GameObject>();
     private int onStep = 1;
+    
 
     void Start()
     {
@@ -38,6 +39,12 @@ public class WhiteboardController : MonoBehaviour
             if (liquid.currReactionID == onStep){
                 canvasChildrenExcludingFirst[onStep - 1].SetActive(true);
                 onStep += 1; 
+            }
+            if (liquid.step3Done){
+                canvasChildrenExcludingFirst[2].SetActive(true);
+            }
+            if (liquid.step4Done){
+                canvasChildrenExcludingFirst[3].SetActive(true);
             }
         }
     }

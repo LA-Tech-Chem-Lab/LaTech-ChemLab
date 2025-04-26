@@ -5921,18 +5921,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxScoops: 30
   scoopsHeld: 0
-  densities:
-  - 1.83
-  - 2.12
-  - 1
-  - 2.66
-  - 2.7
-  - 1.5
-  - 2.672
-  - 1.76
-  - 2.42
-  - 1.75
-  - 1.57
   solutionMakeup:
   - 0
   - 0
@@ -5945,6 +5933,34 @@ MonoBehaviour:
   - 0
   - 0
   - 0
+  - 0
+  compoundStates: 610061006c00610073006100730073007300610073006c00
+  molarMasses:
+  - 98.079
+  - 56.1056
+  - 18.01528
+  - 174.259
+  - 26.982
+  - 134.12
+  - 342.14
+  - 474.39
+  - 78
+  - 464.46
+  - 98.075
+  - 46.069
+  compoundNames:
+  - H2SO4
+  - KOH
+  - H2O
+  - K2SO4
+  - Al
+  - KAl(OH)4
+  - Al2(SO4)3
+  - Alum
+  - Al(OH)3
+  - KAl(SO4)2*12H2O
+  - KAlO2
+  - CH3CH2OH
   doCertainThingWithScript: {fileID: 0}
   isPouring: 0
   density: 0

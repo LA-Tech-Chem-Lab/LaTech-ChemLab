@@ -566,9 +566,11 @@ public class doCertainThingWith : MonoBehaviour
                 stopPour();
                 yield break; // Exit the coroutine
             }
-
-            LS.currentVolume_mL -= 0.1852f;
-            targetContainer.GetComponent<weighboatscript>().addScoop(LS.solutionMakeup);
+            if (LS.currentVolume_mL > 0.2f){
+                LS.currentVolume_mL -= 0.1852f;
+                targetContainer.GetComponent<weighboatscript>().addScoop(LS.solutionMakeup);
+            }
+        
             yield return new WaitForSeconds(0.2f); // Controls pour speed
         }
     }
