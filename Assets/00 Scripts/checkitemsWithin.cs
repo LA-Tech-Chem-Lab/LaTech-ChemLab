@@ -45,8 +45,8 @@ public class CheckItemsWithin : MonoBehaviour
             if (obj.layer == LayerMask.NameToLayer("HeldObject"))
                 return;
                 
-            obj.transform.position = spawnPoint.position;
-            if (obj.GetComponent<Rigidbody>()) obj.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+            obj.transform.Translate(Vector3.up * 0.02f);
+            if (obj.GetComponent<Rigidbody>()) obj.GetComponent<Rigidbody>().linearVelocity = Vector3.up;
         }
     }
 

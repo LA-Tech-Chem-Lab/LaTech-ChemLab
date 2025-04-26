@@ -85,6 +85,7 @@ public class interactWithObjects : MonoBehaviour
             CheckForCabinets();
             CheckForTareButton();
             CheckForFaucets();
+            CheckForGasHandles();
         }
 
         if (Input.GetMouseButton(0) && !playerHoldingObject)
@@ -371,10 +372,23 @@ public class interactWithObjects : MonoBehaviour
         {
             faucetHandleScript faucetObject = hit.collider.GetComponent<faucetHandleScript>();
 
-            if (faucetObject) // We hit a door
+            if (faucetObject) // We hit
             {
-                    faucetObject.InteractWithThisFaucet();
+                faucetObject.InteractWithThisFaucet();
                 
+            }
+        }
+    }
+
+    void CheckForGasHandles(){
+        Ray forwardRay = new Ray(playerCamera.transform.position, playerCamera.forward);
+        if (Physics.Raycast(forwardRay, out RaycastHit hit, range))
+        {
+            gasHandleScript gasValveObject = hit.collider.GetComponent<gasHandleScript>();
+
+            if (gasValveObject) // We hit
+            {
+                gasValveObject.InteractWithThisValve();
             }
         }
     }
