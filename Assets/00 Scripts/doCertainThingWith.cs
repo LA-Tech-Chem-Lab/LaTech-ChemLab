@@ -1944,12 +1944,24 @@ public class doCertainThingWith : MonoBehaviour
             smallStirAnimator.enabled = true;
             smallStirAnimator.SetBool("currentlyStirring", true);
             if (rodInBeaker != null && rodInBeaker.name == "Beaker 250mL") {
+                smallStirAnimator.SetBool("is50", false);
+                smallStirAnimator.SetBool("is100", false);
+                smallStirAnimator.SetBool("is150", false);
                 smallStirAnimator.SetBool("is250", true);
             } else if (rodInBeaker != null && rodInBeaker.name == "Beaker 150mL") {
+                smallStirAnimator.SetBool("is50", false);
+                smallStirAnimator.SetBool("is100", false);
+                smallStirAnimator.SetBool("is250", false);
                 smallStirAnimator.SetBool("is150", true);
             } else if (rodInBeaker != null && rodInBeaker.name == "Beaker 100mL") {
+                smallStirAnimator.SetBool("is50", false);
+                smallStirAnimator.SetBool("is150", false);
+                smallStirAnimator.SetBool("is250", false);
                 smallStirAnimator.SetBool("is100", true);
             } else if (rodInBeaker != null && rodInBeaker.name == "Beaker 50mL") {
+                smallStirAnimator.SetBool("is100", false);
+                smallStirAnimator.SetBool("is150", false);
+                smallStirAnimator.SetBool("is250", false);
                 smallStirAnimator.SetBool("is50", true);
             } else {
                 Debug.Log("Small stir animator is null");
