@@ -182,40 +182,25 @@ public class doCertainThingWith : MonoBehaviour
 
     void findObjectAndPerformHeldAction()  // Held right click
     {
-        if (isRodInBeaker == true){
-            beginStirring = true;
-            //Debug.Log("Stir animator: " + stirAnimator);
-            if (stirAnimator != null) {
-                stirAnimator.enabled = true;
-                stirAnimator.SetBool("IsStirring", true);
-                if (rodInBeaker != null && rodInBeaker.name == "Beaker 800mL") {
-                    stirAnimator.SetBool("is800", true);
-                } else if (rodInBeaker != null && rodInBeaker.name == "Beaker 400mL") {
-                    stirAnimator.SetBool("is400", true);
-                } else {
-                    Debug.Log("Big stir animator is null");
-                }
-            }
-
-        } else if (isSmallRodInBeaker == true) {
-            //Debug.Log("Big stir rod should NOT be stirring rn, because the small stir rod is in the beaker");
-            beginStirring = true;
-            if (smallStirAnimator != null) {
-                smallStirAnimator.enabled = true;
-                smallStirAnimator.SetBool("currentlyStirring", true);
-                if (rodInBeaker != null && rodInBeaker.name == "Beaker 250mL") {
-                    smallStirAnimator.SetBool("is250", true);
-                } else if (rodInBeaker != null && rodInBeaker.name == "Beaker 150mL") {
-                    smallStirAnimator.SetBool("is150", true);
-                } else if (rodInBeaker != null && rodInBeaker.name == "Beaker 100mL") {
-                    smallStirAnimator.SetBool("is100", true);
-                } else if (rodInBeaker != null && rodInBeaker.name == "Beaker 50mL") {
-                    smallStirAnimator.SetBool("is50", true);
-                } else {
-                    Debug.Log("Small stir animator is null");
-                }
+        if (beginStirring == false) {
+            if (isRodInBeaker) {
+                beginStirring = true;
+                handleBigStirringAnims();
+            } else if (isSmallRodInBeaker) {
+                beginStirring = true;
+                handleSmallStirringAnims();
             }
         }
+        //if (isRodInBeaker == true){
+        //    beginStirring = true;
+            //Debug.Log("Stir animator: " + stirAnimator);
+        //    handleBigStirringAnims();
+
+        //} else if (isSmallRodInBeaker == true) {
+            //Debug.Log("Big stir rod should NOT be stirring rn, because the small stir rod is in the beaker");
+        //    beginStirring = true;
+        //    handleSmallStirringAnims()
+        //}
 
         if (pickUpScript.other != null)
         {
@@ -1886,6 +1871,38 @@ public class doCertainThingWith : MonoBehaviour
         {
 
             matchScript.LightMatch();
+        }
+    }
+
+    public void handleBigStirringAnims() {
+        if (stirAnimator != null) {
+            stirAnimator.enabled = true;
+            stirAnimator.SetBool("IsStirring", true);
+            if (rodInBeaker != null && rodInBeaker.name == "Beaker 800mL") {
+                stirAnimator.SetBool("is800", true);
+            } else if (rodInBeaker != null && rodInBeaker.name == "Beaker 400mL") {
+                stirAnimator.SetBool("is400", true);
+            } else {
+                Debug.Log("Big stir animator is null");
+            }
+        }
+    }
+
+    public void handleSmallStirringAnims() {
+        if (smallStirAnimator != null) {
+            smallStirAnimator.enabled = true;
+            smallStirAnimator.SetBool("currentlyStirring", true);
+            if (rodInBeaker != null && rodInBeaker.name == "Beaker 250mL") {
+                smallStirAnimator.SetBool("is250", true);
+            } else if (rodInBeaker != null && rodInBeaker.name == "Beaker 150mL") {
+                smallStirAnimator.SetBool("is150", true);
+            } else if (rodInBeaker != null && rodInBeaker.name == "Beaker 100mL") {
+                smallStirAnimator.SetBool("is100", true);
+            } else if (rodInBeaker != null && rodInBeaker.name == "Beaker 50mL") {
+                smallStirAnimator.SetBool("is50", true);
+            } else {
+                Debug.Log("Small stir animator is null");
+            }
         }
     }
 }
