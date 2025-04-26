@@ -23,6 +23,7 @@ public class weighboatscript : MonoBehaviour
     {
         GameObject player = GameObject.Find("Player");
         doCertainThingWithScript = player.GetComponent<doCertainThingWith>();
+        Debug.Log("solution makeup length" + solutionMakeup.Count);
     }
 
     void Update()
@@ -122,22 +123,22 @@ public class weighboatscript : MonoBehaviour
     }
 
     void calculateDensity()
-{
-    float weightedDensitySum = 0f;
+    {
+        float weightedDensitySum = 0f;
 
-    for (int i = 0; i < densities.Count; i++)
-    {
-        weightedDensitySum += solutionMakeup[i] / densities[i]; // Weighting by fraction
-    }
+        for (int i = 0; i < densities.Count; i++)
+        {
+            weightedDensitySum += solutionMakeup[i] / densities[i]; // Weighting by fraction
+        }
 
-    if (weightedDensitySum > 0)
-    {
-        density = 1f / weightedDensitySum; // Harmonic mean of densities
+        if (weightedDensitySum > 0)
+        {
+            density = 1f / weightedDensitySum; // Harmonic mean of densities
+        }
+        else
+        {
+            density = 0f; // No valid solution
+        }
     }
-    else
-    {
-        density = 0f; // No valid solution
-    }
-}
 
 }

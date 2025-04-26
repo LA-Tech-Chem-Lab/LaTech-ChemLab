@@ -553,7 +553,7 @@ public class doCertainThingWith : MonoBehaviour
                 Debug.Log("Made it here");
                 WBS.removeScoop();
                 Debug.Log("Made it after remove scoop");
-                targetContainer.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f }, 0.1852f);
+                targetContainer.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f }, 0.1852f);
             }
             yield return new WaitForSeconds(0.5f); // Controls pour speed
         }
@@ -1675,7 +1675,7 @@ public class doCertainThingWith : MonoBehaviour
     
         if (scoopula == null) yield break;
         scoopula.transform.Find("Aluminum").gameObject.SetActive(true);
-        scoopula.GetComponent<ScoopulaScript>().solutionMakeup = new List<float> {0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f};
+        scoopula.GetComponent<ScoopulaScript>().solutionMakeup = new List<float> {0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
     
         if (scoopula == null) yield break;
         yield return new WaitForSeconds(0.7f * speedMult);
@@ -1721,13 +1721,13 @@ public class doCertainThingWith : MonoBehaviour
                     Debug.Log(scoopula.GetComponent<ScoopulaScript>().solutionMakeup[i]);
                 }
                 if (scoopula.GetComponent<ScoopulaScript>().solutionMakeup.SequenceEqual(closestWeighBoat.GetComponent<weighboatscript>().solutionMakeup) || closestWeighBoat.GetComponent<weighboatscript>().solutionMakeup.All(num => num == 0f))
-                    closestWeighBoat.GetComponent<weighboatscript>().addScoop(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f });
+                    closestWeighBoat.GetComponent<weighboatscript>().addScoop(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f});
                 else{
                     tryingToMixCompoundsInNonLiquidHolder = true;
                 }
             }
             else{ //object is a beaker or other
-                    closestWeighBoat.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f }, 0.1852f);  // Add 0.37 mL of Aluminum
+                    closestWeighBoat.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}, 0.1852f);  // Add 0.37 mL of Aluminum
             }
             if (!tryingToMixCompoundsInNonLiquidHolder){
                 scoopula.transform.Find("Aluminum").gameObject.SetActive(false);

@@ -284,6 +284,15 @@ public class LabProgress : MonoBehaviour
                 break;
 
             case LabState.Step8:
+                GameObject[] liquidHolders7 = GameObject.FindGameObjectsWithTag("LiquidHolder");
+
+                foreach (GameObject obj in liquidHolders7)
+                {
+                    if (obj.GetComponent<liquidScript>().currentVolume_mL > 45f && obj.GetComponent<liquidScript>().percentAlum > 0.5f){ 
+                        step1Erlenmeyer = obj;
+                        TransitionToNextState();
+                    }
+                }
                 break;
 
             case LabState.Step9:
@@ -480,7 +489,17 @@ public class LabProgress : MonoBehaviour
         yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        content.text = "Congratulations! Crystalization is complete. Now it is time to use the Buchner funnel. Do step 9.";
+        content.text = "Congratulations! Crystalization is complete. Now it is time to use the Buchner funnel to isolate the crystals. First, assemble the Buchner Funnel in the same way that you assembled the glass funnel. Then, right click to attach the hose to the correct position on the sink.";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        content.text = "Turn on the sink to draw air out of the Buchner flask and create a vacuum. This vacuum will draw any fluids out of the paper filter cone into the flask, essentially drying the crystals. Pour ethanol over the solution in the paper cone as you filter it to wash the crystals and draw out impurities.";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        content.text = "Once you are finished, Pour the waste in the Buchner flask into the waste bucket in the hood.";
         while (!nextButtonClicked){
             yield return null;
         }
@@ -493,7 +512,7 @@ public class LabProgress : MonoBehaviour
         yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        content.text = "Do Step 10 ";
+        content.text = "Good Job! Pour the contents of the paper cone onto a paper towel to dry the crystals further. ";
         while (!nextButtonClicked){
             yield return null;
         }
@@ -506,7 +525,7 @@ public class LabProgress : MonoBehaviour
         yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        content.text = "You did it ";
+        content.text = "You did it! You have succesfully synthesized Alum! Now weigh and record the mass of your final product.";
         while (!nextButtonClicked){
             yield return null;
         }
