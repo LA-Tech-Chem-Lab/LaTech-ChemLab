@@ -128,6 +128,7 @@ public class liquidScript : MonoBehaviour
     public float H2Released = 0f;
     public GameObject boilingEffect;
     public bool isBoiling = false;
+    bool startedBoiling = false;
     GameObject currentBoilingEffect;
     public GameObject explosion;
     float explosionHeightOffset = -1.55f;
@@ -1222,15 +1223,14 @@ void CalculateHeat()
             // If the temperature exceeds the boiling point, calculate evaporation rate
             if (liquidTemperature >= boilingPoint && solutionMakeup[i] > 0.1f)
             {
-                if (!isBoiling){
+                isBoiling = true;
+                if (!startedBoiling){
                     currentBoilingEffect = Instantiate(boilingEffect, transform);
                     currentBoilingEffect.transform.localPosition = new Vector3(0f, 0f, 0f);
                     currentBoilingEffect.GetComponent<Renderer>().material.color = surfaceColor;
+                    startedBoiling = true;
                 }
-                isBoiling = true;
-
-
-
+                
                 float temperatureDifference = liquidTemperature - boilingPoint;
 
                 // Evaporation rate calculation (rate at which mass evaporates per second)
@@ -1252,10 +1252,12 @@ void CalculateHeat()
                 // Update the solution makeup percentage based on the new mass of the compound
                 solutionMakeup[i] = compoundMass / totalSolutionMass;
             }
-            else if (!isBoiling){
+            
+        }
+        if (!isBoiling){
+                startedBoiling = false;
                 Destroy(currentBoilingEffect);
             }
-        }
         //Beaker Frost Effect
         if (liquidTemperature < 273.15f)
         {
