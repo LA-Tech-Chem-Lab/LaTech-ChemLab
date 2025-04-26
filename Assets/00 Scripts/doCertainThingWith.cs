@@ -22,6 +22,7 @@ public class doCertainThingWith : MonoBehaviour
     const float FUNNEL_INSERT_DISTANCE = 1.5f;
     const float ASSEMBLY_DISTANCE = 1.5f;
     const float ALUMINUM_DROPOFF_RANGE = 0.8f;
+    const float BUCHNER_FUNNEL_ATTATCH = 1f;
 
 
     public GameObject itemHeldByTongs; int itemHeldByTongsLayer;
@@ -57,6 +58,7 @@ public class doCertainThingWith : MonoBehaviour
     public GameObject combinedApparatusPrefab;
     public GameObject ApparatusCanvasPrefab;
     public bool tryingToPourLiquidOnPaperTowel = false;
+    public List<Transform> buchnerFunnelNozzleLocations = new List<Transform>();
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -166,6 +168,10 @@ public class doCertainThingWith : MonoBehaviour
             if (obj.name == "Buchner Funnel")
                 insertBuchnerFunnel(obj);
 
+            if (obj.name.StartsWith("Buchner Flask"))
+                tryToAttachToTableNozzle();
+
+
             //if (obj.name == "Buchner Paper Cone")
             //    insertBuchnerFilter(obj);
 
@@ -257,9 +263,9 @@ public class doCertainThingWith : MonoBehaviour
             if (obj.name.StartsWith("Erlenmeyer Flask"))
                 BringObjectCloser(-1.5f);
             
-            if (obj.name.StartsWith("Buchner Flask")){
-                BringObjectCloser(-1.5f);
-            }
+            // if (obj.name.StartsWith("Buchner Flask")){
+            //     BringObjectCloser(-1.5f);
+            // }
             if (obj.name.StartsWith("Paper Cone")){
                 BringObjectCloser(-1.5f);
             }
@@ -361,6 +367,30 @@ public class doCertainThingWith : MonoBehaviour
     {
         pickUpScript.distOffset = dist;
     }
+
+    void tryToAttachToTableNozzle(){
+        float minDist = Mathf.Infinity;
+        Transform closestNozzle = null;
+        
+        foreach (Transform nozzle in buchnerFunnelNozzleLocations){
+            if (Vector3.Distance(pickUpScript.other.transform.position, nozzle.position) < minDist) {
+                minDist = Vector3.Distance(pickUpScript.other.transform.position, nozzle.position);
+                closestNozzle = nozzle;
+            }
+        }
+        
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     void startPour()
     {

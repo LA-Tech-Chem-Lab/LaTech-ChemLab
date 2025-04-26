@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class matchScript : MonoBehaviour
 {   
-    const float MATCH_LIGHT_RADUIS = 0.4f;
+    const float MATCH_LIGHT_RADUIS = 0.65f;
     public GameObject closestBunsenBurner;
     public Transform tip;
     public ParticleSystem flame;
