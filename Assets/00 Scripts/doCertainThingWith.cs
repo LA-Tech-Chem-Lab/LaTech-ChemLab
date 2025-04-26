@@ -1539,7 +1539,7 @@ public class doCertainThingWith : MonoBehaviour
             ironMesh.transform.Find("Ghost").gameObject.SetActive(false);
             ironMesh.GetComponent<BoxCollider>().enabled = false;
         }
-        else if (closestIronRing.transform.parent != null)
+        else if (closestIronRing.transform.parent != null && closestIronRing.transform.parent.name != "Science Gear")
         {
             ironMesh.transform.Find("Real").gameObject.SetActive(false);
             ironMesh.transform.Find("Ghost").gameObject.SetActive(true);
@@ -1556,6 +1556,8 @@ public class doCertainThingWith : MonoBehaviour
     {
         GameObject ironMesh = pickUpScript.other;
 
+        if (closestIronRing.transform.parent.name == "Science Gear")
+            return;
 
         if (ironMesh.transform.Find("Ghost").gameObject.activeInHierarchy)
         {

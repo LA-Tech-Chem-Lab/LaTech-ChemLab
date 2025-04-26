@@ -51,7 +51,7 @@ public class makeNoiseOnImpact : MonoBehaviour
         AudioSource audioSource = tempAudio.AddComponent<AudioSource>();
         audioSource.clip = Sound;
         audioSource.volume = VolumeScale;
-        audioSource.pitch = PitchScale; // Adjusts speed and pitch
+        audioSource.pitch = PitchScale * Random.Range(0.9f, 1.1f); // Adjusts speed and pitch
         audioSource.Play();
         Destroy(tempAudio, Sound.length / PitchScale); // Adjust cleanup time based on speed
     }
@@ -61,7 +61,7 @@ public class makeNoiseOnImpact : MonoBehaviour
         AudioSource audioSource = tempAudio.AddComponent<AudioSource>();
         audioSource.clip = Sound;
         audioSource.volume = VolumeScale * Mathf.Clamp(givenScale, 0f, 1f);
-        audioSource.pitch = PitchScale; // Adjusts speed and pitch
+        audioSource.pitch = PitchScale * Random.Range(0.9f, 1.1f); // Adjusts speed and pitch
         audioSource.Play();
         Destroy(tempAudio, Sound.length); // Cleanup
     }
