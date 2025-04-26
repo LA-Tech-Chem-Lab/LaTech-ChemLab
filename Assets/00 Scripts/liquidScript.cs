@@ -128,7 +128,6 @@ public class liquidScript : MonoBehaviour
     public float H2Released = 0f;
     public GameObject boilingEffect;
     public bool isBoiling = false;
-    bool startedBoiling = false;
     GameObject currentBoilingEffect;
     public GameObject explosion;
     float explosionHeightOffset = -1.55f;
@@ -188,36 +187,120 @@ public class liquidScript : MonoBehaviour
     {
         if (solidinliquideffect != null)
         {
-            float percentFull = currentVolume_mL / totalVolume_mL;
-            float sludgeY = GetSludgeYPosition(percentFull);
+            if (gameObject.transform.name.StartsWith("Beaker")) {
 
-            if (!hasSpawnedSolid && liquidPercent > 0f && liquidPercent < .95f)
-            {
-                newSolid = Instantiate(solidinliquideffect, transform.position, Quaternion.identity, transform);
-                hasSpawnedSolid = true;
-            }
+                float percentFull = currentVolume_mL / totalVolume_mL;
+                float sludgeY = GetSludgeYPositionBeaker(percentFull);
 
-            if (newSolid != null)
-            {
-                // Always follow the sludge level
-                newSolid.transform.localPosition = new Vector3(0f, sludgeY, 0f);
-
-                Renderer rend = newSolid.GetComponent<Renderer>();
-                if (rend != null && rend.material.HasProperty("_Dissolve_Amount"))
+                if (!hasSpawnedSolid && liquidPercent > 0f && liquidPercent < .95f && currentVolume_mL > 0f)
                 {
-                    float dissolveAmount;
+                    newSolid = Instantiate(solidinliquideffect, transform.position, Quaternion.identity, transform);
+                    hasSpawnedSolid = true;
+                }
 
-                    if (liquidPercent > 0.95f)
-                    {
-                        dissolveAmount = 0.1f; // Constant at high fill level
-                    }
-                    else
-                    {
-                        float clampedPercent = Mathf.Clamp(liquidPercent, 0.70f, 0.95f);
-                        dissolveAmount = Mathf.Lerp(0.08f, -0.4f, Mathf.InverseLerp(0.95f, 0.70f, clampedPercent));
-                    }
+                if (newSolid != null)
+                {
+                    // Always follow the sludge level
+                    newSolid.transform.localPosition = new Vector3(0f, sludgeY, 0f);
 
-                    rend.material.SetFloat("_Dissolve_Amount", dissolveAmount);
+                    Renderer rend = newSolid.GetComponent<Renderer>();
+                    if (rend != null && rend.material.HasProperty("_Dissolve_Amount"))
+                    {
+                        float dissolveAmount;
+
+                        if (liquidPercent > 0.95f)
+                        {
+                            dissolveAmount = 0.1f; // Constant at high fill level
+                        }
+                        else
+                        {
+                            float clampedPercent = Mathf.Clamp(liquidPercent, 0.70f, 0.95f);
+                            dissolveAmount = Mathf.Lerp(0.08f, -0.4f, Mathf.InverseLerp(0.95f, 0.70f, clampedPercent));
+                        }
+
+                        rend.material.SetFloat("_Dissolve_Amount", dissolveAmount);
+                    }
+                }
+            }
+            else if (gameObject.transform.name == "Erlenmeyer Flask 500")
+            {
+                float percentFull = currentVolume_mL / totalVolume_mL;
+                float sludgeY = GetSludgeYPositionFlaskLarge(percentFull);
+
+                if (!hasSpawnedSolid && liquidPercent > 0f && liquidPercent < .95f && currentVolume_mL > 0f)
+                {
+                    newSolid = Instantiate(solidinliquideffect, transform.position, Quaternion.identity, transform);
+                    hasSpawnedSolid = true;
+                }
+
+                if (newSolid != null)
+                {
+                    // Always follow the sludge level
+                    newSolid.transform.localPosition = new Vector3(0f, sludgeY, 0f);
+
+                    // Scale based on fill amount
+                    Vector3 bottomScale = new Vector3(0.15f, 0.002f, 0.15f);
+                    Vector3 topScale = new Vector3(0.05f, 0.002f, 0.05f);
+                    float curvedFill = Mathf.Pow(percentFull, 0.6f);
+                    newSolid.transform.localScale = Vector3.Lerp(bottomScale, topScale, curvedFill);
+
+                    Renderer rend = newSolid.GetComponent<Renderer>();
+                    if (rend != null && rend.material.HasProperty("_Dissolve_Amount"))
+                    {
+                        float dissolveAmount;
+
+                        if (liquidPercent > 0.95f)
+                        {
+                            dissolveAmount = 0.1f;
+                        }
+                        else
+                        {
+                            float clampedPercent = Mathf.Clamp(liquidPercent, 0.70f, 0.95f);
+                            dissolveAmount = Mathf.Lerp(0.08f, -0.4f, Mathf.InverseLerp(0.95f, 0.70f, clampedPercent));
+                        }
+
+                        rend.material.SetFloat("_Dissolve_Amount", dissolveAmount);
+                    }
+                }
+            }
+            else if (gameObject.transform.name.StartsWith("Erlenmeyer")) {
+                float percentFull = currentVolume_mL / totalVolume_mL;
+                float sludgeY = GetSludgeYPositionFlask(percentFull);
+
+                if (!hasSpawnedSolid && liquidPercent > 0f && liquidPercent < .95f && currentVolume_mL > 0f)
+                {
+                    newSolid = Instantiate(solidinliquideffect, transform.position, Quaternion.identity, transform);
+                    hasSpawnedSolid = true;
+                }
+
+                if (newSolid != null)
+                {
+                    // Always follow the sludge level
+                    newSolid.transform.localPosition = new Vector3(0f, sludgeY, 0f);
+
+                    // Scale based on fill amount
+                    Vector3 bottomScale = new Vector3(0.15f, 0.002f, 0.15f);
+                    Vector3 topScale = new Vector3(0.05f, 0.002f, 0.05f);
+                    float curvedFill = Mathf.Pow(percentFull, 0.6f);
+                    newSolid.transform.localScale = Vector3.Lerp(bottomScale, topScale, curvedFill);
+
+                    Renderer rend = newSolid.GetComponent<Renderer>();
+                    if (rend != null && rend.material.HasProperty("_Dissolve_Amount"))
+                    {
+                        float dissolveAmount;
+
+                        if (liquidPercent > 0.95f)
+                        {
+                            dissolveAmount = 0.1f;
+                        }
+                        else
+                        {
+                            float clampedPercent = Mathf.Clamp(liquidPercent, 0.70f, 0.95f);
+                            dissolveAmount = Mathf.Lerp(0.08f, -0.4f, Mathf.InverseLerp(0.95f, 0.70f, clampedPercent));
+                        }
+
+                        rend.material.SetFloat("_Dissolve_Amount", dissolveAmount);
+                    }
                 }
             }
         }
@@ -409,7 +492,7 @@ public class liquidScript : MonoBehaviour
         return (p - lo) / (hi - lo);
     }
 
-    private float GetSludgeYPosition(float fillAmount)
+    private float GetSludgeYPositionBeaker(float fillAmount)
     {
         fillAmount = Mathf.Clamp(fillAmount, 0f, 1f);
         if (fillAmount <= 0.1f)
@@ -419,6 +502,52 @@ public class liquidScript : MonoBehaviour
         else
         {
             return 0.3113f * fillAmount - 0.186f;
+        }
+    }
+
+    private float GetSludgeYPositionFlask(float fillAmount)
+    {
+        fillAmount = Mathf.Clamp01(fillAmount);
+
+        if (fillAmount <= 0.5f)
+        {
+            // 0% to 50%
+            return Mathf.Lerp(0.008f, 0.0694f, fillAmount / 0.5f);
+        }
+        else if (fillAmount <= 0.75f)
+        {
+            // 50% to 75%
+            return Mathf.Lerp(0.0694f, 0.1152f, (fillAmount - 0.5f) / 0.25f);
+        }
+        else
+        {
+            // 75% to 100%
+            return Mathf.Lerp(0.1152f, 0.18f, (fillAmount - 0.75f) / 0.25f);
+        }
+    }
+    private float GetSludgeYPositionFlaskLarge(float fillAmount)
+    {
+        fillAmount = Mathf.Clamp01(fillAmount);
+
+        if (fillAmount <= 0.25f)
+        {
+            // 0% to 25%
+            return Mathf.Lerp(0.008f, 0.0503f, fillAmount / 0.25f);
+        }
+        else if (fillAmount <= 0.5f)
+        {
+            // 25% to 50%
+            return Mathf.Lerp(0.0503f, 0.0903f, (fillAmount - 0.25f) / 0.25f);
+        }
+        else if (fillAmount <= 0.75f)
+        {
+            // 50% to 75% 
+            return Mathf.Lerp(0.0903f, 0.1304f, (fillAmount - 0.5f) / 0.25f);
+        }
+        else
+        {
+            // 75% to 100% 
+            return Mathf.Lerp(0.1304f, 0.1864f, (fillAmount - 0.75f) / 0.25f);
         }
     }
 
@@ -1223,14 +1352,15 @@ void CalculateHeat()
             // If the temperature exceeds the boiling point, calculate evaporation rate
             if (liquidTemperature >= boilingPoint && solutionMakeup[i] > 0.1f)
             {
-                isBoiling = true;
-                if (!startedBoiling){
+                if (!isBoiling){
                     currentBoilingEffect = Instantiate(boilingEffect, transform);
                     currentBoilingEffect.transform.localPosition = new Vector3(0f, 0f, 0f);
                     currentBoilingEffect.GetComponent<Renderer>().material.color = surfaceColor;
-                    startedBoiling = true;
                 }
-                
+                isBoiling = true;
+
+
+
                 float temperatureDifference = liquidTemperature - boilingPoint;
 
                 // Evaporation rate calculation (rate at which mass evaporates per second)
@@ -1252,12 +1382,10 @@ void CalculateHeat()
                 // Update the solution makeup percentage based on the new mass of the compound
                 solutionMakeup[i] = compoundMass / totalSolutionMass;
             }
-            
-        }
-        if (!isBoiling){
-                startedBoiling = false;
+            else if (!isBoiling){
                 Destroy(currentBoilingEffect);
             }
+        }
         //Beaker Frost Effect
         if (liquidTemperature < 273.15f)
         {
