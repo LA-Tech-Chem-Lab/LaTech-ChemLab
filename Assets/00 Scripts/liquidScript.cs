@@ -139,6 +139,7 @@ public class liquidScript : MonoBehaviour
     public bool isViolent = false; 
     public GameObject player;
     public GameObject stuffInEyesFilter;
+    public GameObject placeholderFaucet;
  
 
 
@@ -298,7 +299,17 @@ public class liquidScript : MonoBehaviour
         //is the filter in the funneled flask?
         if (gameObject.name == "Paper Cone" && gameObject.transform.parent?.parent && !isFiltering && currentVolume_mL > 1f){
             Transform Flask = gameObject.transform.parent?.parent;
-            StartCoroutine(handleFiltering(Flask));
+            if (Flask.name.StartsWith("Buchner")){
+                if (placeholderFaucet){
+                    if (placeholderFaucet.GetComponent<FaucetScript>().FaucetHot || placeholderFaucet.GetComponent<FaucetScript>().FaucetCold){
+                        Debug.Log("FILTERRRRRR");
+                        StartCoroutine(handleFiltering(Flask));
+                    }
+                }  
+            }
+            else{
+                StartCoroutine(handleFiltering(Flask));
+            }
         }
 
         if (H2Released > 0.1f && !exploded && IsLitMatchNearby()){
