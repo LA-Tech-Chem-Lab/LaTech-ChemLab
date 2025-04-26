@@ -20,9 +20,9 @@ public class doCertainThingWith : MonoBehaviour
     const float IRON_RING_SNAP_DISTANCE = 0.7f;
     const float SCOOPULA_GRAB_DISTANCE = 1.2f;
     const float FUNNEL_INSERT_DISTANCE = 1.5f;
-    const float ASSEMBLY_DISTANCE = 1.5f;
+    const float CAPILLARY_ASSEMBLY_DISTANCE = 1.5f;
     const float ALUMINUM_DROPOFF_RANGE = 0.8f;
-    const float BUCHNER_FUNNEL_ATTATCH = 1f;
+    const float BUCHNER_FUNNEL_ATTATCH_DIST = 2f;
 
 
     public GameObject itemHeldByTongs; int itemHeldByTongsLayer;
@@ -377,6 +377,20 @@ public class doCertainThingWith : MonoBehaviour
                 minDist = Vector3.Distance(pickUpScript.other.transform.position, nozzle.position);
                 closestNozzle = nozzle;
             }
+        }
+
+        if (closestNozzle && minDist <= BUCHNER_FUNNEL_ATTATCH_DIST){
+            print("ATTATCH TO THIS ONE");
+            closestNozzle.parent.Find("Hanging Hose").gameObject.SetActive(false);
+            closestNozzle.parent.Find("Buchner Hose").gameObject.SetActive(true);
+            GameObject buchnerFunnel = pickUpScript.other;
+            
+            pickUpScript.DropItem();
+            buchnerFunnel.transform.position = closestNozzle.TransformPoint(new Vector3(-0.0427360535f, 0.0219124556f, 0.633605659f));
+
+
+            buchnerFunnel.GetComponent<Rigidbody>().isKinematic = true;
+        
         }
         
     }
@@ -833,7 +847,7 @@ public class doCertainThingWith : MonoBehaviour
         Debug.Log("Rubber Band distance: " + distRubberBand);
 
         // Check if all components are within range
-        if (distThermometer <= ASSEMBLY_DISTANCE && distRubberBand <= ASSEMBLY_DISTANCE)
+        if (distThermometer <= CAPILLARY_ASSEMBLY_DISTANCE && distRubberBand <= CAPILLARY_ASSEMBLY_DISTANCE)
         {
             Debug.Log("All components within assembly range. Creating assembled apparatus...");
 
@@ -879,7 +893,7 @@ public class doCertainThingWith : MonoBehaviour
             liquidScript LS = capillaryTube.GetComponent<liquidScript>();
             liquidScript CBLS = closestBeakerOrFlask.GetComponent<liquidScript>();
 
-            LS.addSolution(CBLS.solutionMakeup, 0.1f);
+            LS.addSolution(CBLS.solutionMakeup, 1f); // FILL IT UP
         }
     }
 
@@ -933,7 +947,7 @@ public class doCertainThingWith : MonoBehaviour
             float distBeaker = Vector3.Distance(MeltingPointTool.transform.position, closestBeaker.transform.position);
             Debug.Log("Distance to beaker: " + distBeaker);
 
-            if (distBeaker <= ASSEMBLY_DISTANCE)
+            if (distBeaker <= CAPILLARY_ASSEMBLY_DISTANCE)
             {
                 Debug.Log("Melting Point Apparatus successfully placed near the beaker.");
                 pickUpScript.DropItem();
