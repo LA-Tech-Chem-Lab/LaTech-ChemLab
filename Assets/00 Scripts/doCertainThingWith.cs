@@ -22,7 +22,10 @@ public class doCertainThingWith : MonoBehaviour
     const float FUNNEL_INSERT_DISTANCE = 1.5f;
     const float CAPILLARY_ASSEMBLY_DISTANCE = 1.5f;
     const float ALUMINUM_DROPOFF_RANGE = 0.8f;
-    const float BUCHNER_FUNNEL_ATTATCH_DIST = 2f;
+    const float BUCHNER_FUNNEL_ATTATCH_DIST = 2f;const float BUCHNER_FLASK_ATTATCH_DIST = 1.4f;
+
+
+    public multihandler multiHandlerScript;
 
 
     public GameObject itemHeldByTongs; int itemHeldByTongsLayer;
@@ -58,12 +61,13 @@ public class doCertainThingWith : MonoBehaviour
     public GameObject combinedApparatusPrefab;
     public GameObject ApparatusCanvasPrefab;
     public bool tryingToPourLiquidOnPaperTowel = false;
-    public List<Transform> buchnerFunnelNozzleLocations = new List<Transform>();
+    public List<Transform> buchnerFlaskNozzleLocations = new List<Transform>();
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        multiHandlerScript = GameObject.FindGameObjectWithTag("GameController").GetComponent<multihandler>();
         pickUpScript = GetComponent<pickUpObjects>();
 
         stirAnimator = GameObject.Find("Stir Rod").GetComponent<Animator>();
@@ -113,6 +117,12 @@ public class doCertainThingWith : MonoBehaviour
 
         if (pickUpScript.other && pickUpScript.other.name == "Iron Mesh") // Snap mesh to ring
             CheckForIronRingNearby(pickUpScript.other);
+    }
+
+    void LateUpdate()
+    {
+        if (pickUpScript.other && pickUpScript.other.name == "Buchner Flask") // If we can snap buchner flask tell user
+            CheckForSinkSetupForBuchnerFlaskNearby(pickUpScript.other);
     }
 
     void checkForInput()
@@ -263,9 +273,6 @@ public class doCertainThingWith : MonoBehaviour
             if (obj.name.StartsWith("Erlenmeyer Flask"))
                 BringObjectCloser(-1.5f);
             
-            // if (obj.name.StartsWith("Buchner Flask")){
-            //     BringObjectCloser(-1.5f);
-            // }
             if (obj.name.StartsWith("Paper Cone")){
                 BringObjectCloser(-1.5f);
             }
@@ -368,32 +375,64 @@ public class doCertainThingWith : MonoBehaviour
         pickUpScript.distOffset = dist;
     }
 
-    void tryToAttachToTableNozzle(){
+    void CheckForSinkSetupForBuchnerFlaskNearby(GameObject buchnerFlask){
         float minDist = Mathf.Infinity;
         Transform closestNozzle = null;
-        
-        foreach (Transform nozzle in buchnerFunnelNozzleLocations){
-            if (Vector3.Distance(pickUpScript.other.transform.position, nozzle.position) < minDist) {
-                minDist = Vector3.Distance(pickUpScript.other.transform.position, nozzle.position);
+
+        foreach (Transform nozzle in buchnerFlaskNozzleLocations){
+            if (Vector3.Distance(buchnerFlask.transform.position, nozzle.position) < minDist) {
+                minDist = Vector3.Distance(buchnerFlask.transform.position, nozzle.position);
                 closestNozzle = nozzle;
             }
         }
 
-        if (closestNozzle && minDist <= BUCHNER_FUNNEL_ATTATCH_DIST){
-            print("ATTATCH TO THIS ONE");
-            closestNozzle.parent.Find("Hanging Hose").gameObject.SetActive(false);
-            closestNozzle.parent.Find("Buchner Hose").gameObject.SetActive(true);
-            GameObject buchnerFunnel = pickUpScript.other;
-            
-            pickUpScript.DropItem();
-            buchnerFunnel.transform.position = closestNozzle.TransformPoint(new Vector3(-0.0427360535f, 0.0219124556f, 0.633605659f));
+        if (closestNozzle && minDist <= BUCHNER_FLASK_ATTATCH_DIST){
+            multiHandlerScript.setHelpText("Right Click to attatch Buchner Flask to Sink.");
+        };
 
-
-            buchnerFunnel.GetComponent<Rigidbody>().isKinematic = true;
-        
-        }
-        
     }
+    void tryToAttachToTableNozzle(){
+            float minDist = Mathf.Infinity;
+            Transform closestNozzle = null;
+
+            foreach (Transform nozzle in buchnerFlaskNozzleLocations){
+                if (Vector3.Distance(pickUpScript.other.transform.position, nozzle.position) < minDist) {
+                    minDist = Vector3.Distance(pickUpScript.other.transform.position, nozzle.position);
+                    closestNozzle = nozzle;
+                }
+            }
+            if (closestNozzle && minDist <= BUCHNER_FLASK_ATTATCH_DIST){
+                closestNozzle.parent.Find("Hanging Hose").gameObject.SetActive(false);
+                closestNozzle.parent.Find("Buchner Hose").gameObject.SetActive(true);
+                GameObject buchnerFlask = pickUpScript.other;
+                pickUpScript.DropItem();
+                buchnerFlask.transform.position = closestNozzle.parent.TransformPoint(new Vector3(-0.0427360535f, 0.0219124556f, 0.633605659f));
+                buchnerFlask.transform.localEulerAngles = new Vector3(0f, 270f, 0f);
+                buchnerFlask.GetComponent<Rigidbody>().isKinematic = true;
+            }
+
+        }
+
+        public void disconnectBuchnerFlask(GameObject flask){
+
+            float minDist = Mathf.Infinity;
+            Transform closestNozzle = null;
+            foreach (Transform nozzle in buchnerFlaskNozzleLocations){
+                if (Vector3.Distance(flask.transform.position, nozzle.position) < minDist) {
+                    minDist = Vector3.Distance(flask.transform.position, nozzle.position);
+                    closestNozzle = nozzle;
+                }
+            }
+            // print("DISCONNECT");
+            closestNozzle.parent.Find("Hanging Hose").gameObject.SetActive(true);
+            closestNozzle.parent.Find("Buchner Hose").gameObject.SetActive(false);
+
+            pickUpScript.PickUpItem(flask);
+            // buchnerFlask.transform.position = closestNozzle.parent.TransformPoint(new Vector3(-0.0427360535f, 0.0219124556f, 0.633605659f));
+
+
+            flask.GetComponent<Rigidbody>().isKinematic = false;
+        }
 
 
 

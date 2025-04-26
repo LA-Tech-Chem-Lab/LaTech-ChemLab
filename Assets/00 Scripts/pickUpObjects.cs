@@ -444,13 +444,28 @@ public class pickUpObjects : MonoBehaviour
             }
 
             // Can also be the funnel even if it is kinematic because we want to be able to pick it up when it is attatched to the flask
+            if (rb && rb.isKinematic && hitObject.tag != "NoPickup") // KINEMATIC
+            {
+                triedToPickUpKinematic(hitObject);
+            }
+            
             if (rb && hitObject.tag != "NoPickup") // ITEM PICKUP
             {
                 PickUpItem(hitObject);
             }
 
-            if (hitObject.tag == "NoPickup")
+            
+
+            if (hitObject.tag == "NoPickup")                        // NoPickup Tag
                 alternativeToPickingUp(hitObject);
+        }
+    }
+
+    void triedToPickUpKinematic(GameObject hitObject){
+        print(hitObject.name);
+
+        if (hitObject.name == "Buchner Flask"){
+            GetComponent<doCertainThingWith>().disconnectBuchnerFlask(hitObject);
         }
     }
 
