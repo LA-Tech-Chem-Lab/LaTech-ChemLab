@@ -34,11 +34,13 @@ public class LabProgress : MonoBehaviour
     public GameObject step1Erlenmeyer; 
     public GameObject Pause;
     public GameObject InGame;
+    public CompletionScreen completionScreen;
 
     // Initialize the first state
     private void Start()
     {
         GameObject Canvases = GameObject.Find("Canvases");
+        completionScreen = GameObject.Find("Completion Canvas").GetComponentInChildren<CompletionScreen>();
         InGame = Canvases.transform.Find("In Game Canvas").gameObject;
         popUpPanel = InGame.transform.Find("Pop Up Panel").gameObject;
         nextButton = popUpPanel.transform.Find("Next Button").GetComponent<Button>();
@@ -531,6 +533,7 @@ public class LabProgress : MonoBehaviour
         }
         nextButtonClicked = false;
         popUpPanel.SetActive(false);
+        completionScreen.ShowCompletionScreen();
         GetComponent<multihandler>().ToggleCursor();
     }
 
