@@ -1555,10 +1555,7 @@ public class doCertainThingWith : MonoBehaviour
     public void SnapIronMeshToRing()
     {
         GameObject ironMesh = pickUpScript.other;
-
-        if (closestIronRing.transform.parent.name == "Science Gear")
-            return;
-
+        
         if (ironMesh.transform.Find("Ghost").gameObject.activeInHierarchy)
         {
             ironMesh.transform.Find("Real").gameObject.SetActive(true);
