@@ -5,7 +5,7 @@ public class FireSpread : MonoBehaviour
 {
     public GameObject firePrefab;        // The fire prefab that will spread and multiply (should be itself)
     public float spreadRadius = 0.2f;      // How far the fire spreads each time
-    public float spreadInterval = 2f;    // How often the fire spreads (in seconds)
+    float spreadInterval = 4f;    // How often the fire spreads (in seconds)
     public float lifespan = 5f;          // How long each fire prefab lasts before destroying itself
     public int maxFires = 50;            // Maximum number of fires allowed in the scene
     public float flameGrowthRate = 1.01f; // Multiplier for how much bigger each generation of flames gets

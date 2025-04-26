@@ -1860,10 +1860,17 @@ public class doCertainThingWith : MonoBehaviour
             if (!foam.isPlaying)
             {
                 TriggerFoam(pickUpScript.other);
+                // Extinguish Fires
+                StartCoroutine(extinguishFiresConstantly());
             }
+        }
+    }
 
-            // Extinguish Fires
+    IEnumerator extinguishFiresConstantly(){
+        for(int i = 0; i < 80; i++)
+        {
             ExtinguishFires(pickUpScript.other.transform);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 
