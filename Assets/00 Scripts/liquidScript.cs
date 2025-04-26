@@ -27,7 +27,7 @@ public class liquidScript : MonoBehaviour
 
     private AudioSource BoilingAudioSource;
     public float dotProduct; 
-    public float maxSpillRate;
+    float maxSpillRate = 0f;
     public bool autoAssignSpillRate;
     Renderer rend;
     Rigidbody objectRigidbody;
@@ -225,22 +225,22 @@ public class liquidScript : MonoBehaviour
         dotProduct = Vector3.Dot(transform.up.normalized, Vector3.up);
 
         // Spill logic
-        if (!isPouring){
-            if (dotProduct <= 0.25f)
-            {
-                float loss = (-0.8f * dotProduct + 0.2f) * maxSpillRate * Time.deltaTime;
-                currentVolume_mL -= loss;
-
-                if (gameObject.name.StartsWith("Erlenmeyer") && currentVolume_mL / totalVolume_mL < 0.45f)
-                    currentVolume_mL = 0f;
-                if (gameObject.name.StartsWith("Beaker") && currentVolume_mL / totalVolume_mL < 0.19f)
-                    currentVolume_mL = 0f;
-                if (gameObject.name.StartsWith("Paper Cone") && currentVolume_mL / totalVolume_mL < 0.19f)
-                    currentVolume_mL = 0f; 
-                if (gameObject.name.StartsWith("Graduated") && currentVolume_mL / totalVolume_mL < 0.19f)
-                    currentVolume_mL = 0f; 
-            }
-        }
+       // if (!isPouring){
+       //     if (dotProduct <= 0.25f)
+       //     {
+       //         float loss = (-0.8f * dotProduct + 0.2f) * maxSpillRate * Time.deltaTime;
+       //         currentVolume_mL -= loss;
+//
+       //         if (gameObject.name.StartsWith("Erlenmeyer") && currentVolume_mL / totalVolume_mL < 0.45f)
+       //             currentVolume_mL = 0f;
+       //         if (gameObject.name.StartsWith("Beaker") && currentVolume_mL / totalVolume_mL < 0.19f)
+       //             currentVolume_mL = 0f;
+       //         if (gameObject.name.StartsWith("Paper Cone") && currentVolume_mL / totalVolume_mL < 0.19f)
+       //             currentVolume_mL = 0f; 
+       //         if (gameObject.name.StartsWith("Graduated") && currentVolume_mL / totalVolume_mL < 0.19f)
+       //             currentVolume_mL = 0f; 
+       //     }
+       // }
         if (transform.Find("Solid In Liquid Effect(Clone)")){
             if (dotProduct <= 0.25f)
             {
@@ -302,7 +302,6 @@ public class liquidScript : MonoBehaviour
             if (Flask.name.StartsWith("Buchner")){
                 if (placeholderFaucet){
                     if (placeholderFaucet.GetComponent<FaucetScript>().FaucetHot || placeholderFaucet.GetComponent<FaucetScript>().FaucetCold){
-                        Debug.Log("FILTERRRRRR");
                         StartCoroutine(handleFiltering(Flask));
                     }
                 }  
@@ -345,23 +344,23 @@ public class liquidScript : MonoBehaviour
     }
 
     private bool IsLitMatchNearby()
-{
-    Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRadius);
-
-    foreach (Collider collider in colliders)
     {
-        if (collider.CompareTag("Match")) // Check if the object is tagged as "Match"
+        Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRadius);
+    
+        foreach (Collider collider in colliders)
         {
-            matchScript matchScript = collider.GetComponent<matchScript>();
-
-            if (matchScript != null && matchScript.lit) // Check if the match is lit
+            if (collider.CompareTag("Match")) // Check if the object is tagged as "Match"
             {
-                return true; // A lit match is nearby
+                matchScript matchScript = collider.GetComponent<matchScript>();
+    
+                if (matchScript != null && matchScript.lit) // Check if the match is lit
+                {
+                    return true; // A lit match is nearby
+                }
             }
         }
+        return false; // No lit match found in range
     }
-    return false; // No lit match found in range
-}
 
     bool ventIsNear()  // Changed the return type to bool since it's returning true or false
     {
@@ -1187,75 +1186,76 @@ void CalculateHeat()
         specificHeatCapacity = 0f;
         //Debug.Log(solutionMakeup.Count);
         //Debug.Log(specificHeatCapacities.Count);
-    for (int i = 0; i < solutionMakeup.Count; i++){
-        specificHeatCapacity += solutionMakeup[i] * specificHeatCapacities[i];
-    }
-
-    if (currentHeat < liquidTemperature)
-    {
-        float ambientCoolingRate = 0.05f; // Adjust for faster cooling
-        float coolingLoss = ambientCoolingRate * beakerSurfaceArea * (liquidTemperature - currentHeat) * 1000;
-        if ((GetComponent<Rigidbody>().mass * specificHeatCapacity) != 0){
-            //liquidTemperature -= coolingLoss / (GetComponent<Rigidbody>().mass * specificHeatCapacity);
-        }       
-    }
-
-    float heatTransferRate = convectiveHeatTransferCoeff * beakerSurfaceArea * (currentHeat - liquidTemperature);
-    if (gameObject.name == "Capilary tube")
-        {
-            float temperatureChange = (heatTransferRate / (1 * specificHeatCapacity)) * Time.deltaTime;
+        for (int i = 0; i < solutionMakeup.Count; i++){
+            specificHeatCapacity += solutionMakeup[i] * specificHeatCapacities[i];
         }
-    else
+
+        if (currentHeat < liquidTemperature)
         {
-            float temperatureChange = (heatTransferRate / (GetComponent<Rigidbody>().mass * specificHeatCapacity)) * Time.deltaTime;
+            float ambientCoolingRate = 0.05f; // Adjust for faster cooling
+            float coolingLoss = ambientCoolingRate * beakerSurfaceArea * (liquidTemperature - currentHeat) * 1000;
+            if ((GetComponent<Rigidbody>().mass * specificHeatCapacity) != 0){
+                //liquidTemperature -= coolingLoss / (GetComponent<Rigidbody>().mass * specificHeatCapacity);
+            }       
         }
-    liquidTemperature = Mathf.Lerp(liquidTemperature, currentHeat, Time.deltaTime / 25f);
+
+        float heatTransferRate = convectiveHeatTransferCoeff * beakerSurfaceArea * (currentHeat - liquidTemperature);
+        if (gameObject.name == "Capilary tube")
+            {
+                float temperatureChange = (heatTransferRate / (1 * specificHeatCapacity)) * Time.deltaTime;
+            }
+        else
+            {
+                float temperatureChange = (heatTransferRate / (GetComponent<Rigidbody>().mass * specificHeatCapacity)) * Time.deltaTime;
+            }
+        liquidTemperature = Mathf.Lerp(liquidTemperature, currentHeat, Time.deltaTime / 25f);
 
         // Calculate total mass of the solution (assume mass of liquid is given or available)
         float totalSolutionMass = densityOfLiquid * currentVolume_mL;
-    // Check for evaporation
-    for (int i = 0; i < compoundNames.Count; i++)
-    {
-        float boilingPoint = boilingPoints[i]; // Get the boiling point for the compound
-        float latentHeatOfVaporization = latentHeat[i]; // Latent heat of vaporization for each compound
-
-        // If the temperature exceeds the boiling point, calculate evaporation rate
-        if (liquidTemperature >= boilingPoint && solutionMakeup[i] > 0.1f)
+        isBoiling = false;
+        // Check for evaporation
+        for (int i = 0; i < compoundNames.Count; i++)
         {
-            if (!isBoiling){
-                currentBoilingEffect = Instantiate(boilingEffect, transform);
-                currentBoilingEffect.transform.localPosition = new Vector3(0f, 0f, 0f);
-                currentBoilingEffect.GetComponent<Renderer>().material.color = surfaceColor;
+            float boilingPoint = boilingPoints[i]; // Get the boiling point for the compound
+            float latentHeatOfVaporization = latentHeat[i]; // Latent heat of vaporization for each compound
+
+            // If the temperature exceeds the boiling point, calculate evaporation rate
+            if (liquidTemperature >= boilingPoint && solutionMakeup[i] > 0.1f)
+            {
+                if (!isBoiling){
+                    currentBoilingEffect = Instantiate(boilingEffect, transform);
+                    currentBoilingEffect.transform.localPosition = new Vector3(0f, 0f, 0f);
+                    currentBoilingEffect.GetComponent<Renderer>().material.color = surfaceColor;
+                }
+                isBoiling = true;
+
+
+
+                float temperatureDifference = liquidTemperature - boilingPoint;
+
+                // Evaporation rate calculation (rate at which mass evaporates per second)
+                float evaporationRate = (convectiveHeatTransferCoeff * beakerSurfaceArea * temperatureDifference) / latentHeatOfVaporization;
+
+                // Calculate the mass of the compound based on its percent makeup in the solution
+                float compoundMass = solutionMakeup[i] * totalSolutionMass;
+
+                // Calculate the amount of mass to evaporate
+                float massToEvaporate = evaporationRate * Time.deltaTime;
+
+                // Reduce the compound's mass in the solution, based on the evaporation rate
+                compoundMass -= massToEvaporate;
+
+                // If the compound mass is reduced to 0, set it to 0 (avoid negative mass)
+                if (compoundMass < 0)
+                    compoundMass = 0;
+
+                // Update the solution makeup percentage based on the new mass of the compound
+                solutionMakeup[i] = compoundMass / totalSolutionMass;
             }
-            isBoiling = true;
-
-
-
-            float temperatureDifference = liquidTemperature - boilingPoint;
-            
-            // Evaporation rate calculation (rate at which mass evaporates per second)
-            float evaporationRate = (convectiveHeatTransferCoeff * beakerSurfaceArea * temperatureDifference) / latentHeatOfVaporization;
-
-            // Calculate the mass of the compound based on its percent makeup in the solution
-            float compoundMass = solutionMakeup[i] * totalSolutionMass;
-
-            // Calculate the amount of mass to evaporate
-            float massToEvaporate = evaporationRate * Time.deltaTime;
-
-            // Reduce the compound's mass in the solution, based on the evaporation rate
-            compoundMass -= massToEvaporate;
-
-            // If the compound mass is reduced to 0, set it to 0 (avoid negative mass)
-            if (compoundMass < 0)
-                compoundMass = 0;
-
-            // Update the solution makeup percentage based on the new mass of the compound
-            solutionMakeup[i] = compoundMass / totalSolutionMass;
+            else if (!isBoiling){
+                Destroy(currentBoilingEffect);
+            }
         }
-        else if (!isBoiling){
-            Destroy(currentBoilingEffect);
-        }
-    }
         //Beaker Frost Effect
         if (liquidTemperature < 273.15f)
         {
