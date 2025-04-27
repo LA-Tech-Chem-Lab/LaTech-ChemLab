@@ -93,7 +93,7 @@ public class pickUpObjects : MonoBehaviour
         if (heldLiquidScript) currentLiquidHoldingTempCELSIUS = heldLiquidScript.liquidTemperature - 273.15f;
         else currentLiquidHoldingTempCELSIUS = 0f;
 
-        if (currentLiquidHoldingTempCELSIUS > 49f && other.transform.name.StartsWith("Erlenmeyer")){
+        if (currentLiquidHoldingTempCELSIUS > 49f){
             DropItem();
             multiHandlerScript.setHelpText("The flask got too hot to hold, be sure to use tongs.");
         }
