@@ -35,6 +35,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3305184736971902905}
+  - {fileID: 4387690851676220411}
   - {fileID: 1338038951772479617}
   - {fileID: 8910089728744365583}
   m_Father: {fileID: 0}
@@ -155,12 +156,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   totalVolume_mL: 20
   currentVolume_mL: 0
-  scaleDown: 1
   readHere: 0
   readHere2: 0
   testScale: 1
   dotProduct: 0
-  maxSpillRate: 0
   autoAssignSpillRate: 0
   surfaceColor: {r: 0, g: 0, b: 0, a: 0}
   topColor: {r: 0, g: 0, b: 0, a: 0}
@@ -176,8 +175,11 @@ MonoBehaviour:
   percentAlOH3: 0
   percentKAlSO42: 0
   percentKAlO2: 0
+  percentCH3CH2OH: 0
   limreactnum: 0
   solutionMakeup: []
+  step3Done: 0
+  step4Done: 0
   compoundNames:
   - H2SO4
   - KOH
@@ -226,6 +228,19 @@ MonoBehaviour:
   - 900
   - 1060
   - 1250
+  boilingPoints:
+  - 611
+  - 1388
+  - 373.15
+  - 1685
+  - 2792
+  - 1110
+  - 1073
+  - 1383
+  - 773
+  - 1383
+  - 1280
+  - 351.44
   latentHeat:
   - 2257000
   - 2000000
@@ -247,6 +262,7 @@ MonoBehaviour:
   liquidTemperature: 293.15
   roomTemp: 293.15
   isinIceBath: 0
+  boilingSound: {fileID: 0}
   isFiltering: 0
   liquidPercent: 0
   isPouring: 0
@@ -255,6 +271,9 @@ MonoBehaviour:
     type: 3}
   liquidCrystalPrefab: {fileID: 4618146047653720111, guid: 47eaef1f785d40e4a9664d311cfcdecc,
     type: 3}
+  solidinliquideffect: {fileID: 0}
+  hasSpawnedSolid: 0
+  newSolid: {fileID: 0}
   H2Released: 0
   boilingEffect: {fileID: 0}
   isBoiling: 0
@@ -267,6 +286,94 @@ MonoBehaviour:
   isViolent: 0
   player: {fileID: 0}
   stuffInEyesFilter: {fileID: 0}
+  placeholderFaucet: {fileID: 0}
+  startedBoiling: 0
+--- !u!1 &6388446208850036112
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4387690851676220411}
+  - component: {fileID: 4384757044395296066}
+  - component: {fileID: 8378680442697124792}
+  m_Layer: 0
+  m_Name: red outline
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &4387690851676220411
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6388446208850036112}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9119201206035558929}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &4384757044395296066
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6388446208850036112}
+  m_Mesh: {fileID: -6195245291975648998, guid: 91d9769256f411745b1b307a0abaa473, type: 3}
+--- !u!23 &8378680442697124792
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6388446208850036112}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 246f3e49a6b36ae4c9670c3d914f654e, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &6528614895910315926
 GameObject:
   m_ObjectHideFlags: 0

@@ -142,6 +142,7 @@ public class liquidScript : MonoBehaviour
     public GameObject player;
     public GameObject stuffInEyesFilter;
     public GameObject placeholderFaucet;
+    public bool startedBoiling = false;
  
 
 
@@ -1354,14 +1355,13 @@ void CalculateHeat()
             // If the temperature exceeds the boiling point, calculate evaporation rate
             if (liquidTemperature >= boilingPoint && solutionMakeup[i] > 0.1f)
             {
-                if (!isBoiling){
+                isBoiling = true;
+                if (!startedBoiling){
                     currentBoilingEffect = Instantiate(boilingEffect, transform);
                     currentBoilingEffect.transform.localPosition = new Vector3(0f, 0f, 0f);
                     currentBoilingEffect.GetComponent<Renderer>().material.color = surfaceColor;
+                    startedBoiling = true;
                 }
-                isBoiling = true;
-
-
 
                 float temperatureDifference = liquidTemperature - boilingPoint;
 
@@ -1384,10 +1384,14 @@ void CalculateHeat()
                 // Update the solution makeup percentage based on the new mass of the compound
                 solutionMakeup[i] = compoundMass / totalSolutionMass;
             }
-            else if (!isBoiling){
+            //else if (!isBoiling){
+            //    Destroy(currentBoilingEffect);
+            //}
+        }
+        if (!isBoiling){
+                startedBoiling = false;
                 Destroy(currentBoilingEffect);
             }
-        }
         //Beaker Frost Effect
         if (liquidTemperature < 273.15f)
         {
@@ -1437,6 +1441,16 @@ void CalculateHeat()
                 }
             }
         }
+
+        if (transform.Find("red outline")){
+            if (liquidTemperature > 322f){
+                transform.Find("red outline").gameObject.SetActive(true);
+            }
+            else{
+                transform.Find("red outline").gameObject.SetActive(false);
+            }
+        }
+        
     }
 
     IEnumerator handleFiltering(Transform Flask)
