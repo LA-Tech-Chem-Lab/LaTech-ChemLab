@@ -171,7 +171,7 @@ public class doCertainThingWith : MonoBehaviour
 
             if (obj.CompareTag("LiquidHolder"))
             {
-                Debug.Log("TRYING");
+                Debug.Log("TRYING");                // lmao - bays
                 SnapLiquidHolderToIronMesh();
             }
 
@@ -219,16 +219,6 @@ public class doCertainThingWith : MonoBehaviour
                 handleSmallStirringAnims();
             }
         }
-        //if (isRodInBeaker == true){
-        //    beginStirring = true;
-            //Debug.Log("Stir animator: " + stirAnimator);
-        //    handleBigStirringAnims();
-
-        //} else if (isSmallRodInBeaker == true) {
-            //Debug.Log("Big stir rod should NOT be stirring rn, because the small stir rod is in the beaker");
-        //    beginStirring = true;
-        //    handleSmallStirringAnims()
-        //}
 
         if (pickUpScript.other != null)
         {
@@ -1132,6 +1122,7 @@ public class doCertainThingWith : MonoBehaviour
 
                     // designated position
                     stirPosition = closestBeaker.transform.Find("StirPos");
+                    Debug.Log("Starting rod at position: " + stirPosition.localPosition);
                 }
                 Debug.Log("This is a smaller beaker");
             }
