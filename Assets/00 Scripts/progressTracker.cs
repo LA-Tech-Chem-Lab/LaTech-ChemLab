@@ -212,7 +212,7 @@ public class LabProgress : MonoBehaviour
                 foreach (GameObject obj in liquidHolders1)
                 {
                     if (obj.transform.name.StartsWith("Erlenmeyer Flask 250")){
-                        if(obj.GetComponent<liquidScript>().currentVolume_mL > 25f && obj.GetComponent<liquidScript>().currentVolume_mL < 26f && obj.GetComponent<liquidScript>().percentAl > 0.2f && obj.GetComponent<liquidScript>().percentAl < 0.25f && obj.GetComponent<liquidScript>().percentKOH > 0.1f && obj.GetComponent<liquidScript>().percentKOH < 0.15f){
+                        if(obj.GetComponent<liquidScript>().currentVolume_mL > 24f && obj.GetComponent<liquidScript>().currentVolume_mL < 28f && obj.GetComponent<liquidScript>().percentAl > 0.2f && obj.GetComponent<liquidScript>().percentAl < 0.25f && obj.GetComponent<liquidScript>().percentKOH > 0.1f && obj.GetComponent<liquidScript>().percentKOH < 0.15f){
                             step1Erlenmeyer = obj;
                             TransitionToNextState();
                         }
@@ -254,7 +254,7 @@ public class LabProgress : MonoBehaviour
 
                 foreach (GameObject obj in liquidHolders4)
                 {
-                    if (obj.GetComponent<liquidScript>().currentVolume_mL > 45f && obj.GetComponent<liquidScript>().percentKAlSO42 > 0.3f){ //&& player.GetComponent<doCertainThingWith>().beginStirring add this when stirring is good to go
+                    if (obj.GetComponent<liquidScript>().currentVolume_mL > 45f && obj.GetComponent<liquidScript>().percentKAlSO42 > 0.15f){ //&& player.GetComponent<doCertainThingWith>().beginStirring add this when stirring is good to go
                         step1Erlenmeyer = obj;
                         TransitionToNextState();
                     }
@@ -266,7 +266,7 @@ public class LabProgress : MonoBehaviour
 
                 foreach (GameObject obj in liquidHolders5)
                 {
-                    if (obj.GetComponent<liquidScript>().liquidTemperature > 330f && obj.GetComponent<liquidScript>().currentVolume_mL > 45f && obj.GetComponent<liquidScript>().percentKAlSO42 > 0.3f){ 
+                    if (obj.GetComponent<liquidScript>().liquidTemperature > 330f && obj.GetComponent<liquidScript>().currentVolume_mL > 4f && obj.GetComponent<liquidScript>().percentKAlSO42 > 0.15f){ 
                         step1Erlenmeyer = obj;
                         TransitionToNextState();
                     }
@@ -278,7 +278,7 @@ public class LabProgress : MonoBehaviour
 
                 foreach (GameObject obj in liquidHolders6)
                 {
-                    if (obj.GetComponent<liquidScript>().liquidPercent > 0.95f && obj.GetComponent<liquidScript>().currentVolume_mL > 45f && obj.GetComponent<liquidScript>().percentKAlSO42 > 0.3f){ 
+                    if (obj.GetComponent<liquidScript>().liquidPercent > 0.95f && obj.GetComponent<liquidScript>().currentVolume_mL > 20f && obj.GetComponent<liquidScript>().percentKAlSO42 > 0.3f){ 
                         step1Erlenmeyer = obj;
                         TransitionToNextState();
                     }
@@ -290,7 +290,7 @@ public class LabProgress : MonoBehaviour
 
                 foreach (GameObject obj in liquidHolders7)
                 {
-                    if (obj.GetComponent<liquidScript>().currentVolume_mL > 45f && obj.GetComponent<liquidScript>().percentAlum > 0.5f){ 
+                    if (obj.GetComponent<liquidScript>().currentVolume_mL > 20f && obj.GetComponent<liquidScript>().percentAlum > 0.3f){ 
                         step1Erlenmeyer = obj;
                         TransitionToNextState();
                     }
@@ -298,13 +298,32 @@ public class LabProgress : MonoBehaviour
                 break;
 
             case LabState.Step9:
+                GameObject[] liquidHolders8 = GameObject.FindGameObjectsWithTag("LiquidHolder");
+
+                foreach (GameObject obj in liquidHolders8)
+                {
+                    if (obj.transform.name == "Paper Cone" && obj.GetComponent<liquidScript>().percentAlum > 0.9f){ 
+                        step1Erlenmeyer = obj;
+                        TransitionToNextState();
+                    }
+                }
                 break;
 
             case LabState.Step10:
+                GameObject[] liquidHolders9 = GameObject.FindGameObjectsWithTag("LiquidHolder");
+
+                foreach (GameObject obj in liquidHolders9)
+                {
+                    if (obj.transform.name.StartsWith("Paper Towel") && obj.GetComponent<liquidScript>().percentAlum > 0.95f){ 
+                        step1Erlenmeyer = obj;
+                        TransitionToNextState();
+                    }
+                }
                 break;
 
             case LabState.Finished:
                 // Mark the lab as completed, maybe show results or feedback
+                
                 break;
         }
     }

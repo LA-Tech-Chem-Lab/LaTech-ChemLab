@@ -675,15 +675,15 @@ public class doCertainThingWith : MonoBehaviour
         {
             pickUpScript.DropItem();
 
+            // Disable physics and collisions so it stays attached
+            Physics.IgnoreCollision(funnel.GetComponent<Collider>(), closestFlask.GetComponent<Collider>(), true);
+
             // Attach funnel to flask
             funnel.transform.position = flaskOpening.position;
             funnel.transform.rotation = flaskOpening.rotation;
 
             // Make it a child so it follows movement
             funnel.transform.SetParent(closestFlask.transform);
-
-            // Disable physics and collisions so it stays attached
-            Physics.IgnoreCollision(funnel.GetComponent<Collider>(), closestFlask.GetComponent<Collider>(), true);
 
             Rigidbody rb = funnel.GetComponent<Rigidbody>();
             if (rb)
@@ -744,6 +744,8 @@ public class doCertainThingWith : MonoBehaviour
         // Attach the funnel to the flask if within range
         if (closestFunnel && funnelOpening && minDist <= FUNNEL_INSERT_DISTANCE)
         {
+            // Disable physics and collisions so it stays attached
+            Physics.IgnoreCollision(filter.GetComponent<MeshCollider>(), closestFunnel.GetComponent<Collider>(), true);
             pickUpScript.DropItem();
 
             // Attach funnel to flask
@@ -752,9 +754,6 @@ public class doCertainThingWith : MonoBehaviour
 
             // Make it a child so it follows movement
             filter.transform.SetParent(closestFunnel.transform);
-
-            // Disable physics and collisions so it stays attached
-            Physics.IgnoreCollision(filter.GetComponent<MeshCollider>(), closestFunnel.GetComponent<Collider>(), true);
 
             Rigidbody rb = filter.GetComponent<Rigidbody>();
             if (rb)

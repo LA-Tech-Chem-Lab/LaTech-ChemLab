@@ -5,7 +5,7 @@ public class GlassScript : MonoBehaviour
 {
     GameObject unbroken;
     GameObject broken;
-    public float breakThreshold = 220f; // Example threshold
+    public float breakThreshold = 300f; // Example threshold
 
     private bool isBroken = false;
 

@@ -100,6 +100,7 @@ public class weighboatscript : MonoBehaviour
                 }
 
             }
+            GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
         } 
         //the weigh boat compound type does not match that of the scoopula
         else{

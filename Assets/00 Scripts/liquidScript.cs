@@ -1383,11 +1383,22 @@ void CalculateHeat()
 
                 // Update the solution makeup percentage based on the new mass of the compound
                 solutionMakeup[i] = compoundMass / totalSolutionMass;
+
             }
-            //else if (!isBoiling){
-            //    Destroy(currentBoilingEffect);
-            //}
         }
+
+        //normalize solution makeup after evaporation change
+        float totalPercent = 0f;
+        for (int i = 0; i < solutionMakeup.Count; i++){
+            totalPercent += solutionMakeup[i];
+        }
+        if (totalPercent != 0f){
+            for (int i = 0; i < solutionMakeup.Count; i++){
+                solutionMakeup[i] = solutionMakeup[i] / totalPercent;
+            }
+        }
+
+        //turn off boiling if needed
         if (!isBoiling){
                 startedBoiling = false;
                 Destroy(currentBoilingEffect);
