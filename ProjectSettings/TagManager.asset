@@ -15,6 +15,7 @@ TagManager:
   - Weigh Boat
   - Match
   - NoPickup
+  - IronMesh
   layers:
   - Default
   - TransparentFX

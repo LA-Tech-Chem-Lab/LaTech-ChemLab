@@ -8,12 +8,14 @@ public class shatterGlassScript : MonoBehaviour
     public float dinkVolumeScale = 1f;
     public float dinkPitchScale = 1f;
     public bool scaleAudioFromSurvivingFall = true;
+    pickUpObjects pickUpScript;
 
     private Rigidbody rb;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        pickUpScript = FindObjectOfType<pickUpObjects>();
     }
 
     void OnCollisionEnter(Collision collision)
@@ -31,6 +33,7 @@ public class shatterGlassScript : MonoBehaviour
     }
 
     void breakGlass(){
+        pickUpScript.DropItem();
         Instantiate(brokenVersionOfGlass, transform.position, transform.rotation);
         Destroy(gameObject);
     }

@@ -18,6 +18,7 @@ public class doCertainThingWith : MonoBehaviour
     const float TONG_GRAB_DISTANCE = 3f;
     const float PIPETTE_GRAB_DISTANCE = 0.5f;
     const float IRON_RING_SNAP_DISTANCE = 0.7f;
+    const float IRON_MESH_SNAP_DISTANCE = .7f;
     const float SCOOPULA_GRAB_DISTANCE = 1.2f;
     const float FUNNEL_INSERT_DISTANCE = 1.5f;
     const float CAPILLARY_ASSEMBLY_DISTANCE = 1.5f;
@@ -31,7 +32,7 @@ public class doCertainThingWith : MonoBehaviour
     public GameObject itemHeldByTongs; int itemHeldByTongsLayer;
 
     public GameObject heldPipette; public float pipetteSpeed;
-    public GameObject closestIronStand; public GameObject closestIronRing;
+    public GameObject closestIronStand; public GameObject closestIronRing; public GameObject closestIronMesh;
     public GameObject ironMesh;
     private bool flowLock = false;
     private bool scoopulaAnimationPlaying = false;
@@ -53,7 +54,8 @@ public class doCertainThingWith : MonoBehaviour
     public Animator stirAnimator;
     public Animator smallStirAnimator;                       
 
-    public bool tryingToPipetteSolid = false; 
+    public bool tryingToPipetteSolid = false;
+    public bool MeshSnapped = false;
 
     public bool tryingToMixCompoundsInNonLiquidHolder = false;
     private Coroutine pouringCoroutine; // Store reference to coroutine
@@ -117,6 +119,10 @@ public class doCertainThingWith : MonoBehaviour
 
         if (pickUpScript.other && pickUpScript.other.name == "Iron Mesh") // Snap mesh to ring
             CheckForIronRingNearby(pickUpScript.other);
+
+        if (pickUpScript.other && pickUpScript.other.CompareTag("LiquidHolder")) // Snap liquid to iron mesh
+            CheckForIronMeshNearby(pickUpScript.other);
+
     }
 
     void LateUpdate()
@@ -162,6 +168,12 @@ public class doCertainThingWith : MonoBehaviour
 
             if (obj.name == "Iron Mesh")
                 SnapIronMeshToRing();
+
+            if (obj.CompareTag("LiquidHolder"))
+            {
+                Debug.Log("TRYING");
+                SnapLiquidHolderToIronMesh();
+            }
 
             if (obj.name == "Bunsen Burner")
                 faceItemAwayFromPlayer();
@@ -1231,7 +1243,15 @@ public class doCertainThingWith : MonoBehaviour
         pickUpScript.other.transform.Find("Real").gameObject.SetActive(true);
         pickUpScript.other.transform.Find("Ghost").gameObject.SetActive(false);
         pickUpScript.other.GetComponent<BoxCollider>().enabled = true;
-        pickUpScript.other.tag = "Untagged";
+        pickUpScript.other.tag = "IronMesh";
+    }
+
+    public void dropLiquidHolderCorrectly()
+    {
+        GameObject liquidHolder = pickUpScript.other;
+        liquidHolder.GetComponent<MeshCollider>().enabled = true;
+
+        liquidHolder.tag = "LiquidHolder";
     }
 
 
@@ -1568,7 +1588,9 @@ public class doCertainThingWith : MonoBehaviour
             Vector3 localPosition = closestIronRing.transform.Find("Ring").localPosition +
                                     closestIronRing.transform.Find("Ring/Center").localPosition;
 
-            pickUpScript.DropItem();
+            GameObject temp = pickUpScript.other;
+            pickUpScript.DropItem(); // Probably the only way
+            temp.tag = "IronMesh";
 
             // Set the position of the iron mesh
             ironMesh.transform.position = closestIronRing.transform.Find("Ring/Center").position;
@@ -1576,8 +1598,120 @@ public class doCertainThingWith : MonoBehaviour
 
             Debug.Log("Iron Mesh Snapped to Ring");
             Debug.Log($"Iron Mesh Position: {ironMesh.transform.localPosition}");
+            MeshSnapped = true;
         }
     }
+
+    public void CheckForIronMeshNearby(GameObject liquidHolder)
+    {
+        float minDist = float.MaxValue;
+        closestIronMesh = null;
+
+        foreach (GameObject currentObject in GameObject.FindGameObjectsWithTag("IronMesh"))
+        {
+            Vector3 liquidHolderPos = liquidHolder.transform.position;
+            Vector3 ironMeshPos = currentObject.transform.position;
+
+            float distFromHolder = Vector3.Distance(liquidHolderPos, ironMeshPos);
+
+            if (distFromHolder < minDist)
+            {
+                minDist = distFromHolder;
+                closestIronMesh = currentObject;
+            }
+        }
+
+        if (closestIronMesh == null || minDist > IRON_MESH_SNAP_DISTANCE)
+        {
+            closestIronMesh = null;
+        }
+    }
+    void SnapLiquidHolderToIronMesh()
+    {
+        GameObject liquidHolder = pickUpScript.other;
+
+        if (MeshSnapped == true)
+        {
+            if (liquidHolder == null)
+            {
+                Debug.Log("FAIL-1");
+                return;
+            }
+            if (closestIronMesh == null)
+            {
+                Debug.Log("FAIL0");
+                return;
+            }
+
+            // Find the snap point on the IronMesh
+            Transform attachmentPoint = closestIronMesh.transform.Find("White");
+
+            // Default Y offset
+            float yOffset = 0.14f;
+
+            // Adjust Y offset based on the name of the LiquidHolder (e.g., beaker size, flask type)
+            string holderName = liquidHolder.name.ToLower();
+
+            if (holderName.Contains("beaker"))
+            {
+                
+                if (holderName.Contains("400ml"))
+                    yOffset = 0.14f;  
+                else if (holderName.Contains("250ml"))
+                    yOffset = 0.115f; 
+                else if (holderName.Contains("150ml"))
+                    yOffset = 0.1f; 
+                else if (holderName.Contains("100ml"))
+                    yOffset = 0.09f; 
+                else if (holderName.Contains("800ml"))
+                    yOffset = 0.18f;
+                else if (holderName.Contains("50ml"))
+                    yOffset = 0.07f;
+            }
+            else if (holderName.Contains("erlenmeyer flask"))
+            {
+                if (holderName.Contains("500"))
+                    yOffset = 0.005f;
+                else if (holderName.Contains("250"))
+                    yOffset = 0.005f; 
+            }
+            else if (holderName.Contains("buchner flask"))
+            {
+                yOffset = 0.005f; 
+            }
+
+            // Adjust position and rotation based on attachment point
+            if (attachmentPoint != null)
+            {
+                Debug.Log("1");
+                liquidHolder.transform.position = new Vector3(attachmentPoint.position.x, attachmentPoint.position.y + yOffset, attachmentPoint.position.z);
+                liquidHolder.transform.rotation = attachmentPoint.rotation;
+            }
+            else
+            {
+                Debug.Log("2");
+                liquidHolder.transform.position = new Vector3(closestIronMesh.transform.position.x, closestIronMesh.transform.position.y + yOffset, closestIronMesh.transform.position.z);
+                liquidHolder.transform.rotation = Quaternion.identity;
+            }
+
+            liquidHolder.transform.SetParent(closestIronMesh.transform);
+
+            // Drop from pickup script so it's no longer "held"
+            pickUpScript.DropItem();
+
+            Rigidbody rb = liquidHolder.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                Debug.Log("3");
+                rb.isKinematic = true;
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
+
+            Debug.Log("LiquidHolder snapped to IronMesh!");
+        }
+    }
+
 
     void faceItemAwayFromPlayer()
     {

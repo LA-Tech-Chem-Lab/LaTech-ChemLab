@@ -215,6 +215,9 @@ public class pickUpObjects : MonoBehaviour
         if (other.name == "Iron Mesh")
             GetComponent<doCertainThingWith>().dropIronMeshCorrectly();
 
+        if (other.CompareTag("LiquidHolder"))
+            GetComponent<doCertainThingWith>().dropLiquidHolderCorrectly();
+
         if (other.name == "Pipette") {
             other.transform.Find("Tip").GetComponent<ObiEmitter>().speed = 0f;   
             GetComponent<doCertainThingWith>().turnOffBeakers();
@@ -438,6 +441,18 @@ public class pickUpObjects : MonoBehaviour
             {
                 if (hit.collider.gameObject.tag == "IronRing"){
                     DetachIronRing(hitObject);
+                    return;
+                }
+
+                else if (hit.collider.gameObject.tag == "IronMesh")
+                {
+                    DetachIronMesh(hitObject);
+                    return;
+                }
+
+                else if (hit.collider.gameObject.tag == "LiquidHolder")
+                {
+                    DetachLiquidHolder(hitObject); // Handle the LiquidHolder case
                     return;
                 }
                 Debug.Log(hit.collider.gameObject.name);
@@ -710,11 +725,71 @@ public class pickUpObjects : MonoBehaviour
 
             // Debug.Log($"DetachIronRing: Iron Mesh Parent before change: {ironMesh.parent}");
             ironMesh.SetParent(null);
+            GetComponent<doCertainThingWith>().MeshSnapped = false;
             // Debug.Log($"DetachIronRing: Iron Mesh Parent after change: {ironMesh.parent}");
         }
-        else
+
+        // Find the LiquidHolder object under the IronRing
+        foreach (Transform child in ironRing.transform)
         {
-            // Debug.LogWarning("DetachIronRing: Iron Mesh not found!");
+            if (child.CompareTag("LiquidHolder"))
+            {
+                GameObject liquidHolder = child.gameObject;
+                DetachLiquidHolder(liquidHolder);
+                Debug.Log("LiquidHolder found under IronRing: " + liquidHolder.name);
+            }
         }
     }
+
+    private void DetachIronMesh(GameObject ironMesh)
+    {
+        if (ironMesh == null)
+        {
+            // Debug.LogError("DetachIronRing: ironRing is null!");
+            return;
+        }
+
+        if (ironMesh)
+        {
+            Rigidbody ironMeshRb = ironMesh.GetComponent<Rigidbody>();
+            if (ironMeshRb)
+            {
+                ironMeshRb.isKinematic = false;
+                // Debug.Log($"DetachIronRing: Iron Mesh Rigidbody set isKinematic to {ironMeshRb.isKinematic}");
+            }
+
+            // Debug.Log($"DetachIronRing: Iron Mesh Parent before change: {ironMesh.parent}");
+            ironMesh.transform.SetParent(null);
+            GetComponent<doCertainThingWith>().MeshSnapped = false;
+            // Debug.Log($"DetachIronRing: Iron Mesh Parent after change: {ironMesh.parent}");
+        }
+
+        // Find the LiquidHolder object under the IronRing
+        foreach (Transform child in ironMesh.transform)
+        {
+            if (child.CompareTag("LiquidHolder"))
+            {
+                GameObject liquidHolder = child.gameObject;
+                DetachLiquidHolder(liquidHolder);
+                Debug.Log("LiquidHolder found under IronRing: " + liquidHolder.name);
+            }
+        }
+    }
+
+    void DetachLiquidHolder(GameObject liquidHolder)
+    {
+        // Example logic for detaching the LiquidHolder
+        // You might want to reset some properties or just drop it
+  
+        Rigidbody rb = liquidHolder.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = false; // Make sure it's not kinematic anymore if that's desired
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+        liquidHolder.transform.SetParent(null); // Detach it from its parent
+        Debug.Log("LiquidHolder detached: " + liquidHolder.name);
+    }
+
 }
