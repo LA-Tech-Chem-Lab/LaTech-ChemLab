@@ -453,13 +453,13 @@ public class pickUpObjects : MonoBehaviour
                     return;
                 }
 
-                else if (hit.collider.gameObject.tag == "LiquidHolder")
+                else if (hit.collider.gameObject.tag == "LiquidHolder" && hit.collider.name != "Paper Cone")
                 {
                     DetachLiquidHolder(hitObject); 
                     PickUpItem(hitObject);
                     return;
                 }
-                Debug.Log(hit.collider.gameObject.name);
+                // Debug.Log(hit.collider.gameObject.name);
             }
 
             // Can also be the funnel even if it is kinematic because we want to be able to pick it up when it is attatched to the flask
@@ -481,7 +481,7 @@ public class pickUpObjects : MonoBehaviour
     }
 
     void triedToPickUpKinematic(GameObject hitObject){
-        print(hitObject.name);
+        // print(hitObject.name);
 
         if (hitObject.name == "Buchner Flask"){
             GetComponent<doCertainThingWith>().disconnectBuchnerFlask(hitObject);
