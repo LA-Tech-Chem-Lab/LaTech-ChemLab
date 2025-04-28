@@ -141,9 +141,9 @@ public class liquidScript : MonoBehaviour
     public bool isViolent = false; 
     public GameObject player;
     public GameObject stuffInEyesFilter;
-    public GameObject placeholderFaucet;
+    //public GameObject placeholderFaucet;
     public bool startedBoiling = false;
- 
+    //public GameObject buchnerFaucet;
 
 
     // Use this for initialization
@@ -387,11 +387,12 @@ public class liquidScript : MonoBehaviour
         if (gameObject.name == "Paper Cone" && gameObject.transform.parent?.parent && !isFiltering && currentVolume_mL > 1f){
             Transform Flask = gameObject.transform.parent?.parent;
             if (Flask.name.StartsWith("Buchner")){
-                if (placeholderFaucet){
-                    if (placeholderFaucet.GetComponent<FaucetScript>().FaucetHot || placeholderFaucet.GetComponent<FaucetScript>().FaucetCold){
+                //if (buchnerFaucet){
+                //    Debug.Log(buchnerFaucet.transform.name); //FIX THIS TOMORROW!!!!!
+                //    if (buchnerFaucet.GetComponent<FaucetScript>().FaucetHot || buchnerFaucet.GetComponent<FaucetScript>().FaucetCold){
                         StartCoroutine(handleFiltering(Flask));
-                    }
-                }  
+                //    }
+                //}  
             }
             else{
                 StartCoroutine(handleFiltering(Flask));
@@ -928,9 +929,7 @@ public class liquidScript : MonoBehaviour
             }
         }
 
-        if (transform.name.StartsWith("Erlenmeyer Flask")){
-            
-            
+        if (transform.name.StartsWith("Erlenmeyer Flask")){         
             if (totalVolume_mL ==  500f){ // 500 mL Flask
                 float renderedFlask500 = 1f;
                 if (inRange(percentFull, 0, 0.001f)) 
@@ -1226,11 +1225,7 @@ public class liquidScript : MonoBehaviour
             // float actualPipetteScale = Mathf.Lerp(sideWaysPipetteScale, uprightPipetteScale, Mathf.Abs(dotProduct));
             
             rend.material.SetFloat("_FillAmount", percentFull * capillaryTubeScale);
-        }
-        
-
-        
-
+        }   
     }
 
     float Map(float var, float s1, float e1, float s2, float e2)

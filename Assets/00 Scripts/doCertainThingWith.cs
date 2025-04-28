@@ -396,7 +396,6 @@ public class doCertainThingWith : MonoBehaviour
         if (closestNozzle && minDist <= BUCHNER_FLASK_ATTATCH_DIST){
             multiHandlerScript.setHelpText("Right Click to attatch Buchner Flask to Sink.");
         };
-
     }
     void tryToAttachToTableNozzle(){
             float minDist = Mathf.Infinity;
@@ -416,8 +415,15 @@ public class doCertainThingWith : MonoBehaviour
                 buchnerFlask.transform.position = closestNozzle.parent.TransformPoint(new Vector3(-0.0427360535f, 0.0219124556f, 0.633605659f));
                 buchnerFlask.transform.localEulerAngles = new Vector3(0f, 270f, 0f);
                 buchnerFlask.GetComponent<Rigidbody>().isKinematic = true;
+                //if (buchnerFlask.transform.Find("Glass Funnel") != null){
+                //    GameObject glassFunnel = buchnerFlask.transform.Find("Glass Funnel").gameObject;
+                //    if (glassFunnel.transform.Find("Paper Cone") != null){
+                //        GameObject paperCone = glassFunnel.transform.Find("Paper Cone").gameObject;
+                //        paperCone.GetComponent<liquidScript>().buchnerFaucet = closestNozzle.transform.parent.gameObject;
+                //        Debug.Log("");
+                //    }
+                //}
             }
-
         }
 
         public void disconnectBuchnerFlask(GameObject flask){
@@ -439,18 +445,14 @@ public class doCertainThingWith : MonoBehaviour
 
 
             flask.GetComponent<Rigidbody>().isKinematic = false;
+            //if (flask.transform.Find("Glass Funnel").gameObject){
+            //        GameObject glassFunnel = flask.transform.Find("Glass Funnel").gameObject;
+            //        if (glassFunnel.transform.Find("Paper Cone").gameObject){
+            //            GameObject paperCone = glassFunnel.transform.Find("Paper Cone").gameObject;
+            //            paperCone.GetComponent<liquidScript>().buchnerFaucet = closestNozzle.transform.parent.gameObject;
+            //        }
+            //    }
         }
-
-
-
-
-
-
-
-
-
-
-
 
     void startPour()
     {
