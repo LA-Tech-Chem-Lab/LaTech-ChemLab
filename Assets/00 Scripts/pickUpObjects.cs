@@ -441,18 +441,21 @@ public class pickUpObjects : MonoBehaviour
             {
                 if (hit.collider.gameObject.tag == "IronRing"){
                     DetachIronRing(hitObject);
+                    PickUpItem(hitObject);
                     return;
                 }
 
                 else if (hit.collider.gameObject.tag == "IronMesh")
                 {
                     DetachIronMesh(hitObject);
+                    PickUpItem(hitObject);
                     return;
                 }
 
                 else if (hit.collider.gameObject.tag == "LiquidHolder")
                 {
-                    DetachLiquidHolder(hitObject); // Handle the LiquidHolder case
+                    DetachLiquidHolder(hitObject); 
+                    PickUpItem(hitObject);
                     return;
                 }
                 Debug.Log(hit.collider.gameObject.name);
