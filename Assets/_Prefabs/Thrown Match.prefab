@@ -509,7 +509,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   closestBunsenBurner: {fileID: 0}
   tip: {fileID: 0}
-  flame: {fileID: 0}
+  flame: {fileID: 7782335391316763359}
   lit: 0
 --- !u!1 &3720344695401714285
 GameObject:
@@ -640,7 +640,7 @@ ParticleSystem:
   serializedVersion: 8
   lengthInSec: 5
   simulationSpeed: 1.2
-  stopAction: 2
+  stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}

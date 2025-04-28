@@ -24,10 +24,15 @@ public class matchScript : MonoBehaviour
         if (!gameObject) return;
         
         if (flame)
-            lit = flame.isPlaying;
+            lit = flame.IsAlive();
 
         findClosestBunsenBurner();
 
+        
+    }
+
+    void LateUpdate()
+    {
         if (closestBunsenBurner){
             if (lit){ // Light the bunsen burner
                 closestBunsenBurner.GetComponent<bunsenBurnerScript>().isLit = lit;
