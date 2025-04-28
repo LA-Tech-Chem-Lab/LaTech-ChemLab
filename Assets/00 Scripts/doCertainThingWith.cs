@@ -1645,6 +1645,9 @@ public class doCertainThingWith : MonoBehaviour
             // Adjust Y offset based on the name of the LiquidHolder (e.g., beaker size, flask type)
             string holderName = liquidHolder.name.ToLower();
 
+            if (holderName.Contains("graduated cylinder"))
+                return;
+
             if (holderName.Contains("beaker"))
             {
                 
