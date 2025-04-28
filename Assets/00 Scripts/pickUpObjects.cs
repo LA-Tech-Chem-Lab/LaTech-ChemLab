@@ -194,7 +194,7 @@ public class pickUpObjects : MonoBehaviour
         canRotateItem = true;
         other.layer = otherObjectLayer;
         Rigidbody rb = other.GetComponent<Rigidbody>();
-        rb.linearVelocity = Vector3.ClampMagnitude(launchTraj, 10f);; // Launch it up to 10
+        rb.linearVelocity = launchTraj; // Launch it up to 10
         rb.angularVelocity = launchSpin; // Spin it
         rb.useGravity = true;
         objRenderer = null;
@@ -232,6 +232,7 @@ public class pickUpObjects : MonoBehaviour
     }
 
     void setHelpTextBasedOnObject(){
+        if (other.name == "Matchbox")               multiHandlerScript.setHelpText("Right click to strike a match."); 
         if (other.name == "Fire extinguisher")      multiHandlerScript.setHelpText("Right click to use."); 
         if (other.name == "Tongs")                  multiHandlerScript.setHelpText("Right click to grab a flask.");
         if (other.name == "Erlenmeyer Flask 250")   multiHandlerScript.setHelpText("250 mL Erlenmeyer flask");

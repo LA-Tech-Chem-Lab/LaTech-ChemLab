@@ -17,8 +17,8 @@ public class doCertainThingWith : MonoBehaviour
 {
     const float TONG_GRAB_DISTANCE = 3f;
     const float PIPETTE_GRAB_DISTANCE = 0.5f;
-    const float IRON_RING_SNAP_DISTANCE = 0.7f;
-    const float IRON_MESH_SNAP_DISTANCE = .7f;
+    const float IRON_RING_SNAP_DISTANCE = 0.65f;
+    const float IRON_MESH_SNAP_DISTANCE = 0.6f;
     const float SCOOPULA_GRAB_DISTANCE = 1.2f;
     const float FUNNEL_INSERT_DISTANCE = 1.5f;
     const float CAPILLARY_ASSEMBLY_DISTANCE = 1.5f;

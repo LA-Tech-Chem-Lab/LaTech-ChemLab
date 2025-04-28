@@ -268,7 +268,6 @@ MonoBehaviour:
   readHere2: 0
   testScale: 1
   dotProduct: 0
-  maxSpillRate: 0
   autoAssignSpillRate: 0
   surfaceColor: {r: 0, g: 0, b: 0, a: 0}
   topColor: {r: 0, g: 0, b: 0, a: 0}
@@ -284,8 +283,11 @@ MonoBehaviour:
   percentAlOH3: 0
   percentKAlSO42: 0
   percentKAlO2: 0
+  percentCH3CH2OH: 0
   limreactnum: 0
   solutionMakeup: []
+  step3Done: 0
+  step4Done: 0
   compoundNames:
   - H2SO4
   - KOH
@@ -298,6 +300,7 @@ MonoBehaviour:
   - Al(OH)3
   - KAl(SO4)2*12H2O
   - KAlO2
+  - CH3CH2OH
   densities:
   - 1.83
   - 2.12
@@ -310,6 +313,7 @@ MonoBehaviour:
   - 2.42
   - 1.75
   - 1.57
+  - 0.789
   molarMasses:
   - 98.079
   - 56.1056
@@ -322,6 +326,7 @@ MonoBehaviour:
   - 78
   - 464.46
   - 98.075
+  - 46.069
   specificHeatCapacities:
   - 1380
   - 1300
@@ -334,6 +339,20 @@ MonoBehaviour:
   - 900
   - 1060
   - 1250
+  - 2440
+  boilingPoints:
+  - 611
+  - 1388
+  - 373.15
+  - 1685
+  - 2792
+  - 1110
+  - 1073
+  - 1383
+  - 773
+  - 1383
+  - 1280
+  - 351.44
   latentHeat:
   - 2257000
   - 2000000
@@ -346,7 +365,8 @@ MonoBehaviour:
   - 2300000
   - 2300000
   - 2400000
-  compoundStates: 610061006c0061007300610073007300730061007300
+  - 846000
+  compoundStates: 610061006c00610073006100730073007300610073006c00
   reactionHappening: 0
   currReactionID: 0
   liquidTransform: {fileID: 0}
@@ -355,14 +375,16 @@ MonoBehaviour:
   liquidTemperature: 293.15
   roomTemp: 293.15
   isinIceBath: 0
+  boilingSound: {fileID: 0}
   isFiltering: 0
   liquidPercent: 0
   isPouring: 0
   isCrystalizedAlum: 0
-  crystallizationPrefab: {fileID: 7101083427400679780, guid: 16b9d89f19b3172468735915bc702aa2,
-    type: 3}
-  liquidCrystalPrefab: {fileID: 4618146047653720111, guid: 47eaef1f785d40e4a9664d311cfcdecc,
-    type: 3}
+  crystallizationPrefab: {fileID: 0}
+  liquidCrystalPrefab: {fileID: 0}
+  solidinliquideffect: {fileID: 0}
+  hasSpawnedSolid: 0
+  newSolid: {fileID: 0}
   H2Released: 0
   boilingEffect: {fileID: 0}
   isBoiling: 0
@@ -371,10 +393,12 @@ MonoBehaviour:
   exploded: 0
   detectionRadius: 1
   firePrefab: {fileID: 0}
-  boomSound: {fileID: 8300000, guid: 3b957f95e58696f468dbd2b4d3ffc7a4, type: 3}
+  boomSound: {fileID: 0}
   isViolent: 0
   player: {fileID: 0}
   stuffInEyesFilter: {fileID: 0}
+  placeholderFaucet: {fileID: 0}
+  startedBoiling: 0
 --- !u!136 &6730225362079330991
 CapsuleCollider:
   m_ObjectHideFlags: 0
