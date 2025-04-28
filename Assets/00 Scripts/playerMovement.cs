@@ -14,6 +14,7 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
         public bool canMove = true;
         public bool canTurn = true;
         public bool isTyping = false;
+        public bool inSpace;
 
         [Header("Moving")]
         bool isGrounded;
@@ -48,7 +49,7 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
             interactScript = GetComponent<interactWithObjects>();
             cameraTransform = transform.GetChild(0);
 
-
+    
             // if (IsLocalPlayer) // Disable Mesh for current client
             // {
             //     transform.Find("MESH")?.gameObject.SetActive(false);
@@ -63,7 +64,7 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
             if (canTurn) turning();
             handleAnimations();
             handleCamera();
-            
+            inSpace = transform.position.x < -22f || transform.position.y < 0.5f;
             prevPosition = transform.position;
 
             if (transform.position.y < -80f){ // Teleport to the teacher if you fall off terrain
@@ -95,6 +96,7 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
 
             if (Input.GetKeyUp(KeyCode.Space) && playerVelocity.y > 0f) // Stop the jump if you let go of space
                 playerVelocity.y/=2f;
+            
 
         }
 
@@ -115,7 +117,7 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
             
 
             if (!isGrounded) playerVelocity.y += Time.deltaTime * Physics.gravity.y;
-            controller.Move(playerVelocity * Time.deltaTime);
+            controller.Move(playerVelocity * Time.deltaTime * (inSpace ? 0.15f : 1f));
 
             realWorldMoveSpeed = (transform.position - prevPosition).magnitude/Time.deltaTime;
 
