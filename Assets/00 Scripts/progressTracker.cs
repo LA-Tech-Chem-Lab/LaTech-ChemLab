@@ -22,7 +22,8 @@ public class LabProgress : MonoBehaviour
         Step8,
         Step9, 
         Step10,
-        Finished
+        Finished,
+        meltingPoint
     }
     private LabState currentState;
     public Button nextButton;
@@ -35,6 +36,9 @@ public class LabProgress : MonoBehaviour
     public GameObject Pause;
     public GameObject InGame;
     public CompletionScreen completionScreen;
+    public float massOfAluminumUsed;
+    public float mp;
+    public bool foundMP = false;
 
     // Initialize the first state
     private void Start()
@@ -153,7 +157,11 @@ public class LabProgress : MonoBehaviour
 
             case LabState.Finished:
                 Debug.Log("Lab is complete!");
+                currentState = LabState.meltingPoint;
                 return; // Do not transition further
+            
+            case LabState.meltingPoint:
+                return;
         }
 
         DisplayCurrentState();
@@ -314,7 +322,7 @@ public class LabProgress : MonoBehaviour
 
                 foreach (GameObject obj in liquidHolders9)
                 {
-                    if (obj.transform.name.StartsWith("Paper Towel") && obj.GetComponent<liquidScript>().percentAlum > 0.95f){ 
+                    if (obj.GetComponent<liquidScript>().percentAlum > 0.95f){ 
                         step1Erlenmeyer = obj;
                         TransitionToNextState();
                     }
@@ -323,7 +331,16 @@ public class LabProgress : MonoBehaviour
 
             case LabState.Finished:
                 // Mark the lab as completed, maybe show results or feedback
-                
+                if (player.GetComponent<doCertainThingWith>().meltingPointToolPlaced == true){
+                    GameObject mpBeaker = player.GetComponent<doCertainThingWith>().meltingPointBeaker;
+                    if (mpBeaker.GetComponent<liquidScript>().liquidTemperature >= mpBeaker.GetComponent<liquidScript>().GetMeltingPoint()){
+                        TransitionToNextState();
+                        if (!foundMP){
+                            mp = mpBeaker.GetComponent<liquidScript>().liquidTemperature;
+                            foundMP = true;
+                        }
+                    }
+                }
                 break;
         }
     }
@@ -371,6 +388,7 @@ public class LabProgress : MonoBehaviour
         GetComponent<multihandler>().ToggleCursor();
         float aluminumVol = step1Erlenmeyer.GetComponent<liquidScript>().currentVolume_mL;
         float aluminumGrams = aluminumVol * 2.7f;
+        massOfAluminumUsed = aluminumGrams;
         content.text = "Nice Work! You have measured out " + aluminumGrams + " grams of aluminum into the 250 mL Erlenmeyer Flask. Record this number for later use. ";
         while (!nextButtonClicked){
             yield return null;
@@ -533,7 +551,7 @@ public class LabProgress : MonoBehaviour
         yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        content.text = "Good Job! Pour the contents of the paper cone onto a paper towel to dry the crystals further. ";
+        content.text = "Good Job! Pour the contents of the paper cone onto a paper towel to dry the crystals further. Once they are dry move them to a beaker to show off your final product!";
         while (!nextButtonClicked){
             yield return null;
         }
@@ -546,7 +564,43 @@ public class LabProgress : MonoBehaviour
         yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        content.text = "You did it! You have succesfully synthesized Alum! Now weigh and record the mass of your final product.";
+        GameObject[] liquidHolders10 = GameObject.FindGameObjectsWithTag("LiquidHolder");
+        float highestProductAmount = 0f;
+        foreach (GameObject obj in liquidHolders10)
+        {
+            if (obj.GetComponent<liquidScript>().percentAlum > 0.95f){
+                if (obj.GetComponent<liquidScript>().currentVolume_mL >= highestProductAmount){
+                    highestProductAmount = obj.GetComponent<liquidScript>().currentVolume_mL;
+                }
+            }
+        }
+        float AlMols = massOfAluminumUsed / 26.98f;
+        float massAlumTheoretical = AlMols * 474.39f;
+        float percentYield = highestProductAmount / massAlumTheoretical;
+        content.text = "You did it! You have succesfully synthesized Alum! Your percent yeild is " + percentYield + "!";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        content.text = "Now it is time to find your melting point. Find the capillary tube and right click near your alum product to collect a sample. Then, find the thermometer and rubber band and right click to assemble the melting point apparatus. From here, you can right click near a beaker of water to insert the melting point apparatus into the water. ";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        content.text = "Take the beaker and heat it gently with the bunsen burner. Keep a close eye on the panel above it and watch as the temperature increaces. When the sample in the capilary tube melts and turns into a liquid, this will be reflected here. When this happens, note the temperature and record it. This is your melting point. This number is used to help you determine the purity of your product. ";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
+        popUpPanel.SetActive(false);
+        GetComponent<multihandler>().ToggleCursor();
+    }
+
+    IEnumerator foundMeltingPoint(){
+        yield return new WaitForSeconds(1f);
+        popUpPanel.SetActive(true);
+        GetComponent<multihandler>().ToggleCursor();
+        content.text = "Congrats! You found your melting point! It is " + mp + " Kelvin. That's a pretty pure product!";
         while (!nextButtonClicked){
             yield return null;
         }

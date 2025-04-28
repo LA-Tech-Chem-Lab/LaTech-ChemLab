@@ -64,6 +64,8 @@ public class doCertainThingWith : MonoBehaviour
     public GameObject ApparatusCanvasPrefab;
     public bool tryingToPourLiquidOnPaperTowel = false;
     public List<Transform> buchnerFlaskNozzleLocations = new List<Transform>();
+    public bool meltingPointToolPlaced = false;
+    public GameObject meltingPointBeaker;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -1036,6 +1038,8 @@ public class doCertainThingWith : MonoBehaviour
             //Debug.Log(beakerLiquid.percentH2O);
             //Debug.Log((beakerLiquid.percentH2SO4, beakerLiquid.percentKOH, beakerLiquid.percentH2O, beakerLiquid.percentK2SO4, beakerLiquid.percentAl, beakerLiquid.percentKAlOH4, beakerLiquid.percentAl2SO43, beakerLiquid.percentAlum, beakerLiquid.percentAlOH3, beakerLiquid.percentKAlSO42, beakerLiquid.percentKAlO2));
         }
+        meltingPointToolPlaced = true;
+        meltingPointBeaker = closestBeaker;
     }
 
     void GrabFlaskByNeck(GameObject tongs)
