@@ -43,7 +43,7 @@ public class shatterGlassScript : MonoBehaviour
         AudioSource audioSource = tempAudio.AddComponent<AudioSource>();
         audioSource.clip = dinkSound;
         audioSource.volume = scale * dinkVolumeScale;
-        audioSource.pitch = dinkPitchScale; // Adjusts speed and pitch
+        audioSource.pitch = dinkPitchScale * Random.Range(0.9f, 1.1f); // Adjusts speed and pitch
         audioSource.Play();
         Destroy(tempAudio, dinkSound.length); // Cleanup
     }

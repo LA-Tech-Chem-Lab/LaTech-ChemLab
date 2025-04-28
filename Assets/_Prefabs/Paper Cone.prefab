@@ -192,6 +192,7 @@ MonoBehaviour:
   - Al(OH)3
   - KAl(SO4)2*12H2O
   - KAlO2
+  - CH3CH2OH
   densities:
   - 1.83
   - 2.12
@@ -204,6 +205,7 @@ MonoBehaviour:
   - 2.42
   - 1.75
   - 1.57
+  - 0.789
   molarMasses:
   - 98.079
   - 56.1056
@@ -216,6 +218,7 @@ MonoBehaviour:
   - 78
   - 464.46
   - 98.075
+  - 46.069
   specificHeatCapacities:
   - 1380
   - 1300
@@ -228,6 +231,7 @@ MonoBehaviour:
   - 900
   - 1060
   - 1250
+  - 2440
   boilingPoints:
   - 611
   - 1388
@@ -253,7 +257,8 @@ MonoBehaviour:
   - 2300000
   - 2300000
   - 2400000
-  compoundStates: 610061006c0061007300610073007300730061007300
+  - 846000
+  compoundStates: 610061006c00610073006100730073007300610073006c00
   reactionHappening: 0
   currReactionID: 0
   liquidTransform: {fileID: 0}
@@ -267,10 +272,8 @@ MonoBehaviour:
   liquidPercent: 0
   isPouring: 0
   isCrystalizedAlum: 0
-  crystallizationPrefab: {fileID: 7101083427400679780, guid: 16b9d89f19b3172468735915bc702aa2,
-    type: 3}
-  liquidCrystalPrefab: {fileID: 4618146047653720111, guid: 47eaef1f785d40e4a9664d311cfcdecc,
-    type: 3}
+  crystallizationPrefab: {fileID: 0}
+  liquidCrystalPrefab: {fileID: 0}
   solidinliquideffect: {fileID: 0}
   hasSpawnedSolid: 0
   newSolid: {fileID: 0}
@@ -282,7 +285,7 @@ MonoBehaviour:
   exploded: 0
   detectionRadius: 1
   firePrefab: {fileID: 0}
-  boomSound: {fileID: 8300000, guid: 3b957f95e58696f468dbd2b4d3ffc7a4, type: 3}
+  boomSound: {fileID: 0}
   isViolent: 0
   player: {fileID: 0}
   stuffInEyesFilter: {fileID: 0}
@@ -399,7 +402,7 @@ Transform:
   m_GameObject: {fileID: 6528614895910315926}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.49, z: -0.474}
+  m_LocalPosition: {x: -0.307, y: 0.49, z: 0.018}
   m_LocalScale: {x: 0.1625, y: 0.26, z: 0.1625}
   m_ConstrainProportionsScale: 0
   m_Children: []

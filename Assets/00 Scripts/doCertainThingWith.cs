@@ -1242,7 +1242,10 @@ public class doCertainThingWith : MonoBehaviour
     public void dropLiquidHolderCorrectly()
     {
         GameObject liquidHolder = pickUpScript.other;
-        liquidHolder.GetComponent<MeshCollider>().enabled = true;
+        if (liquidHolder.GetComponent<MeshCollider>())
+            liquidHolder.GetComponent<MeshCollider>().enabled = true;
+        else
+            liquidHolder.GetComponent<Collider>().enabled = true;
 
         liquidHolder.tag = "LiquidHolder";
     }

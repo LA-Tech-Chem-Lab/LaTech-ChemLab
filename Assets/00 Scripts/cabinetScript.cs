@@ -75,34 +75,38 @@ public class cabinetScript : MonoBehaviour
         Vector3 boxCenter = transform.position + transform.TransformVector(boxOffset);
         Collider[] colliders = Physics.OverlapBox(boxCenter, boxSize / 2, transform.rotation);
 
+        HashSet<GameObject> uniqueObjects = new HashSet<GameObject>();
+
         foreach (Collider collider in colliders)
         {
-            if (collider.gameObject.tag != "Terrain" && collider.gameObject != gameObject &&
+            GameObject obj = collider.gameObject;
+
+            if (obj.tag != "Terrain" && obj != gameObject &&
                 !collider.transform.IsChildOf(transform.parent.parent) &&
                 !collider.transform.IsChildOf(roomMesh.transform))
             {
-                objectsInArea.Add(collider.gameObject);
+                uniqueObjects.Add(obj); // Only add each GameObject once
             }
         }
 
-        foreach (GameObject obj in objectsInArea)
+        foreach (GameObject obj in uniqueObjects)
         {
             obj.transform.Translate(cabinetVel, Space.World);
         }
     }
 
-    // void OnDrawGizmosSelected()
-    // {
-    //     Gizmos.color = new Color(1, 0, 0, 0.3f); // Semi-transparent red
-    //     if (roomMesh != null)
-    //     {
-    //         Vector3 boxCenter = transform.position + transform.TransformVector(boxOffset);
-    //         Quaternion boxRotation = transform.rotation;
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = new Color(1, 0, 0, 0.3f); // Semi-transparent red
+        if (roomMesh != null)
+        {
+            Vector3 boxCenter = transform.position + transform.TransformVector(boxOffset);
+            Quaternion boxRotation = transform.rotation;
 
-    //         Gizmos.matrix = Matrix4x4.TRS(boxCenter, boxRotation, Vector3.one);
-    //         Gizmos.DrawCube(Vector3.zero, boxSize);
-    //         Gizmos.color = Color.red;
-    //         Gizmos.DrawWireCube(Vector3.zero, boxSize);
-    //     }
-    // }
+            Gizmos.matrix = Matrix4x4.TRS(boxCenter, boxRotation, Vector3.one);
+            Gizmos.DrawCube(Vector3.zero, boxSize);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(Vector3.zero, boxSize);
+        }
+    }
 }
