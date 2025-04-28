@@ -215,7 +215,7 @@ public class pickUpObjects : MonoBehaviour
         if (other.name == "Iron Mesh")
             GetComponent<doCertainThingWith>().dropIronMeshCorrectly();
 
-        if (other.CompareTag("LiquidHolder"))
+        if (other.CompareTag("LiquidHolder") && !other.name.Contains("Graduated Cylinder"))
             GetComponent<doCertainThingWith>().dropLiquidHolderCorrectly();
 
         if (other.name == "Pipette") {
@@ -444,7 +444,7 @@ public class pickUpObjects : MonoBehaviour
                     PickUpItem(hitObject);
                     return;
                 }
-
+ 
                 else if (hit.collider.gameObject.tag == "IronMesh")
                 {
                     DetachIronMesh(hitObject);
