@@ -232,7 +232,9 @@ public class pickUpObjects : MonoBehaviour
     }
 
     void setHelpTextBasedOnObject(){
-        if (other.name == "Matchbox")               multiHandlerScript.setHelpText("Right click to strike a match."); 
+        if (other.name == "Matchbox")               multiHandlerScript.setHelpText("Right click to strike a match.");
+        if (other.name == "Iron Ring")              multiHandlerScript.setHelpText("Right click to connect to iron stand.");
+        if (other.name == "Iron Mesh")              multiHandlerScript.setHelpText("Right click to connect to iron ring. It must be on the iron stand.");
         if (other.name == "Fire extinguisher")      multiHandlerScript.setHelpText("Right click to use."); 
         if (other.name == "Tongs")                  multiHandlerScript.setHelpText("Right click to grab a flask.");
         if (other.name == "Erlenmeyer Flask 250")   multiHandlerScript.setHelpText("250 mL Erlenmeyer flask");
@@ -247,7 +249,7 @@ public class pickUpObjects : MonoBehaviour
     void setHelpTextConstantly(){
         if (other.name == "Pipette"){
             pipetteScript ps = other.GetComponent<pipetteScript>();
-            multiHandlerScript.setHelpText($"{ps.pipetteVolume} / {ps.pipetteMaxVolume} mL");
+            multiHandlerScript.setHelpText($"{Mathf.Clamp(ps.pipetteVolume, 0f, ps.pipetteMaxVolume)} / {ps.pipetteMaxVolume} mL\nR Click to use; Scroll to move in and out");
             if (GetComponent<doCertainThingWith>().tryingToPipetteSolid){
                 multiHandlerScript.setHelpText("It looks like you are trying to pipette a solid. Maybe try pouring this substance by picking up the container and right clicking another container.");
             }
@@ -258,7 +260,7 @@ public class pickUpObjects : MonoBehaviour
             if (other.transform.Find("Aluminum").gameObject.activeInHierarchy){
                 contents = "Aluminum";
             }
-            multiHandlerScript.setHelpText("Scoopula: \nContains: " + contents + "/nRight click on aluminum container to use.");
+            multiHandlerScript.setHelpText("Scoopula: \nContains: " + contents + "\nRight click on aluminum container to use.");
             if (GetComponent<doCertainThingWith>().tryingToMixCompoundsInNonLiquidHolder){
                 multiHandlerScript.setHelpText("It looks like you are trying to mix two different types of compounds in a non-mixing container. This is not allowed. Try using a clean dish");
             }
