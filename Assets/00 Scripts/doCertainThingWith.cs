@@ -87,14 +87,14 @@ public class doCertainThingWith : MonoBehaviour
 
     }
 
+    
     // Update is called once per frame
     void Update()
     {
 
         checkForInput();
 
-        if (itemHeldByTongs)
-            handleTongObject();
+        
 
         if (heldPipette)
         {
@@ -129,6 +129,9 @@ public class doCertainThingWith : MonoBehaviour
     {
         if (pickUpScript.other && pickUpScript.other.name == "Buchner Flask") // If we can snap buchner flask tell user
             CheckForSinkSetupForBuchnerFlaskNearby(pickUpScript.other);
+
+        if (itemHeldByTongs)
+            handleTongObject();
     }
 
     void checkForInput()
