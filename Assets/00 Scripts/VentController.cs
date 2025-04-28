@@ -58,6 +58,7 @@ public class VentController : MonoBehaviour
         {
             audioSource.Stop(); // Stop playing if vacuum is off
         }
+        
     }
 
     void constrainAngles(){

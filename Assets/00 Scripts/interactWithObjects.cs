@@ -124,28 +124,28 @@ public class interactWithObjects : MonoBehaviour
              
             ventColliding = parentVentScript.colliding;
 
-            if (currentJointObject.name == "FIRST JOINT"){
-                var pivotFrom = pivotPointForCurrentJoint;
-                // pivotFrom.y = currentMousePosition.y; // Adjust height but keep XZ movement
+            // if (currentJointObject.name == "FIRST JOINT"){
+            //     var pivotFrom = pivotPointForCurrentJoint;
+            //     // pivotFrom.y = currentMousePosition.y; // Adjust height but keep XZ movement
 
-                var mouseAt = currentMousePosition;
+            //     var mouseAt = currentMousePosition;
 
-                Vector3 direction = (mouseAt - pivotFrom).normalized;
+            //     Vector3 direction = (mouseAt - pivotFrom).normalized;
                 
-                if (actualStartingJointAngle == Mathf.Infinity)
-                    actualStartingJointAngle = parentVentScript.FirstJointY; //////////
+            //     if (actualStartingJointAngle == Mathf.Infinity)
+            //         actualStartingJointAngle = parentVentScript.FirstJointY; //////////
 
-                float angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-                if (startingAngle == Mathf.Infinity)
-                    startingAngle = angle;
+            //     float angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+            //     if (startingAngle == Mathf.Infinity)
+            //         startingAngle = angle;
                 
-                currentAngle = angle;
+            //     currentAngle = angle;
 
-                angleDifference = Mathf.DeltaAngle(startingAngle, currentAngle);
+            //     angleDifference = Mathf.DeltaAngle(startingAngle, currentAngle);
 
-                //////////
-                parentVentScript.FirstJointY = actualStartingJointAngle + angleDifference;
-            }
+            //     //////////
+            //     parentVentScript.FirstJointY = actualStartingJointAngle + angleDifference;
+            // }
 
             if (currentJointObject.name == "SECOND JOINT"){
                 var pivotFrom = pivotPointForCurrentJoint;
