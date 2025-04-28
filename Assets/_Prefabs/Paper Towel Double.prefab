@@ -41663,7 +41663,7 @@ GameObject:
   - component: {fileID: 2414554596249728792}
   - component: {fileID: 6223941549676123610}
   m_Layer: 0
-  m_Name: Paper Towel Sheet 2
+  m_Name: pss2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60373,7 +60373,7 @@ GameObject:
   - component: {fileID: 2836724831699872037}
   - component: {fileID: 1090298686764300257}
   m_Layer: 0
-  m_Name: Paper Towel Sheet 1
+  m_Name: pss1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -502,6 +502,7 @@ public class doCertainThingWith : MonoBehaviour
         if (closestBeakerOrFlask.name.StartsWith("Paper Towel") || closestBeakerOrFlask.name.StartsWith("Weigh Boat")){
             if (LS.liquidPercent < 0.2f){
                 pickUpScript.other.transform.rotation = Quaternion.Euler(90f, 0f, 0f); // Keep beaker tilted
+                Debug.Log(closestBeakerOrFlask.transform.name);
                 pouringCoroutine = StartCoroutine(PourToWeighBoatContinuously(LS, closestBeakerOrFlask.transform));
             }
             else{
