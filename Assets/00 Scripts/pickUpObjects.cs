@@ -101,90 +101,100 @@ public class pickUpObjects : MonoBehaviour
 
     public void PickUpItem(GameObject otherObject)
     {
-        if (!otherObject) return; 
+        if (!otherObject) return;
 
-        holdingItem = true;
-        other = otherObject;
-        
-        // ChangeOwnershipServerRpc(other.GetComponent<NetworkObject>().NetworkObjectId, NetworkManager.Singleton.LocalClientId);
-
-        otherObjectLayer = other.layer;
-        other.layer = LayerMask.NameToLayer("HeldObject");
-        other.GetComponent<Rigidbody>().useGravity = false;
-        targetX = 0f;
-        targetZ = 0f;
-        targetRotation = new Vector3(0f, other.transform.localEulerAngles.y, 0f);
-        targetQuaternion = Quaternion.Euler(targetRotation);
-        objRenderer = other.GetComponent<Renderer>();
-        objExtents = other.GetComponent<Collider>().bounds.extents;
-        if (other.GetComponent<liquidScript>()) heldLiquidScript = other.GetComponent<liquidScript>();
-
-        Renderer renderer = other.GetComponent<Renderer>();
-        if (renderer){
-            Bounds bounds = renderer.bounds;
-            Vector3 extents = bounds.extents; 
-            checkRadius = (extents.x + extents.z) / 2f;
-        
-        } else checkRadius = 0.12f;
-        
-        if (other.GetComponent<shiftBy>()) {
-            meshOffset = other.GetComponent<shiftBy>().GetOffset();  objShift = meshOffset;
-            targetPositionShift = other.GetComponent<shiftBy>().GetTargetPosOffset(); 
-            if (other.GetComponent<shiftBy>().checkRadiusOverride > 0f) checkRadius = other.GetComponent<shiftBy>().checkRadiusOverride; }
-        else {
-            meshOffset = Vector3.zero;  objShift = meshOffset;
-            targetPositionShift = Vector3.zero; }
-
-        initialHoldingDistance = untouchedHoldingDistance;
-
-
-        ////////////////////////////////    Item Specific Stuff    //////////////////////////////////////////////////
-        
-        if (other.name == "Pipette"){
-            initialHoldingDistance = 1.3f;
-            canRotateItem = false;
-            GetComponent<doCertainThingWith>().heldPipette = other;
-        }
-
-        if (other.name == "Thrown Match(Clone)"){
-            initialHoldingDistance = 1.3f;
-            canRotateItem = false;
-        }
-
-        if (other.name == "Bunsen Burner")
-            initialHoldingDistance = 1.8f;
-        
-        if (other.name == "Glass Funnel"){
-            if (GetComponent<doCertainThingWith>().funnelIsAttatched == true)
-                GetComponent<doCertainThingWith>().DetachFunnel(other);
-        }
-
-        if (other.name == "Paper Cone"){
-            if (GetComponent<doCertainThingWith>().filterIsAttatched == true || GetComponent<doCertainThingWith>().buchnerfilterIsAttached == true)
-                GetComponent<doCertainThingWith>().DetachFilter(other);
-        }
-
-        if (other.name == "Buchner Funnel"){
-            if (GetComponent<doCertainThingWith>().buchnerfunnelIsAttached == true){
-                GetComponent<doCertainThingWith>().DetachBuchnerFunnel(other);
+        var liquid = otherObject.GetComponent<liquidScript>();
+        if (liquid)
+        {
+            if (liquid.liquidTemperature >= 322.15f)
+            {
+                multiHandlerScript.setHelpText("Current temperatuer is too hot its at " + liquid.liquidTemperature);
+                return;
             }
         }
 
-        /* if (other.name == "Stir Rod"){
-            initialHoldingDistance = 1.3f;
-            if (GetComponent<doCertainThingWith>().isRodInBeaker == true)
-                GetComponent<doCertainThingWith>().removeStirRod(other);
-        } */
+        holdingItem = true;
+            other = otherObject;
 
-        if (other.name == "Small Stir Rod"){
-            initialHoldingDistance = 1.3f;
-            if (GetComponent<doCertainThingWith>().isSmallRodInBeaker == true)
-                GetComponent<doCertainThingWith>().removeStirRod(other);
+            // ChangeOwnershipServerRpc(other.GetComponent<NetworkObject>().NetworkObjectId, NetworkManager.Singleton.LocalClientId);
+
+            otherObjectLayer = other.layer;
+            other.layer = LayerMask.NameToLayer("HeldObject");
+            other.GetComponent<Rigidbody>().useGravity = false;
+            targetX = 0f;
+            targetZ = 0f;
+            targetRotation = new Vector3(0f, other.transform.localEulerAngles.y, 0f);
+            targetQuaternion = Quaternion.Euler(targetRotation);
+            objRenderer = other.GetComponent<Renderer>();
+            objExtents = other.GetComponent<Collider>().bounds.extents;
+            if (other.GetComponent<liquidScript>()) heldLiquidScript = other.GetComponent<liquidScript>();
+
+            Renderer renderer = other.GetComponent<Renderer>();
+            if (renderer) {
+                Bounds bounds = renderer.bounds;
+                Vector3 extents = bounds.extents;
+                checkRadius = (extents.x + extents.z) / 2f;
+
+            } else checkRadius = 0.12f;
+
+            if (other.GetComponent<shiftBy>()) {
+                meshOffset = other.GetComponent<shiftBy>().GetOffset(); objShift = meshOffset;
+                targetPositionShift = other.GetComponent<shiftBy>().GetTargetPosOffset();
+                if (other.GetComponent<shiftBy>().checkRadiusOverride > 0f) checkRadius = other.GetComponent<shiftBy>().checkRadiusOverride; }
+            else {
+                meshOffset = Vector3.zero; objShift = meshOffset;
+                targetPositionShift = Vector3.zero; }
+
+            initialHoldingDistance = untouchedHoldingDistance;
+
+
+            ////////////////////////////////    Item Specific Stuff    //////////////////////////////////////////////////
+
+            if (other.name == "Pipette") {
+                initialHoldingDistance = 1.3f;
+                canRotateItem = false;
+                GetComponent<doCertainThingWith>().heldPipette = other;
+            }
+
+            if (other.name == "Thrown Match(Clone)") {
+                initialHoldingDistance = 1.3f;
+                canRotateItem = false;
+            }
+
+            if (other.name == "Bunsen Burner")
+                initialHoldingDistance = 1.8f;
+
+            if (other.name == "Glass Funnel") {
+                if (GetComponent<doCertainThingWith>().funnelIsAttatched == true)
+                    GetComponent<doCertainThingWith>().DetachFunnel(other);
+            }
+
+            if (other.name == "Paper Cone") {
+                if (GetComponent<doCertainThingWith>().filterIsAttatched == true || GetComponent<doCertainThingWith>().buchnerfilterIsAttached == true)
+                    GetComponent<doCertainThingWith>().DetachFilter(other);
+            }
+
+            if (other.name == "Buchner Funnel") {
+                if (GetComponent<doCertainThingWith>().buchnerfunnelIsAttached == true) {
+                    GetComponent<doCertainThingWith>().DetachBuchnerFunnel(other);
+                }
+            }
+
+            /* if (other.name == "Stir Rod"){
+                initialHoldingDistance = 1.3f;
+                if (GetComponent<doCertainThingWith>().isRodInBeaker == true)
+                    GetComponent<doCertainThingWith>().removeStirRod(other);
+            } */
+
+            if (other.name == "Small Stir Rod") {
+                initialHoldingDistance = 1.3f;
+                if (GetComponent<doCertainThingWith>().isSmallRodInBeaker == true)
+                    GetComponent<doCertainThingWith>().removeStirRod(other);
+            }
+
+            initialHeldDistForObject = initialHoldingDistance;
+            setHelpTextBasedOnObject();
         }
-        
-        initialHeldDistForObject = initialHoldingDistance;
-        setHelpTextBasedOnObject();
-    }
 
     public void DropItem(){
 
@@ -382,11 +392,6 @@ public class pickUpObjects : MonoBehaviour
                 }
                 else if (other.name.StartsWith("Buchner Flask"))
                 {
-                    if (GetComponent<doCertainThingWith>().IsNearIronMesh)
-                    {
-                        multiHandlerScript.setHelpText("Right click to snap container to iron mesh");
-                    }
-                    else
                     {
                         multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL Buchner Flask. Hold right click to observe its contents. You can also hold P to pour into another container.");
                     }
@@ -483,7 +488,7 @@ public class pickUpObjects : MonoBehaviour
                     return;
                 }
 
-                else if (hit.collider.gameObject.tag == "LiquidHolder" && hit.collider.name != "Paper Cone")
+                else if (hit.collider.gameObject.tag == "LiquidHolder" && hit.collider.name != "Paper Cone" && hit.collider.name != "Buchner Flask")
                 {
                     DetachLiquidHolder(hitObject); 
                     PickUpItem(hitObject);
@@ -514,6 +519,7 @@ public class pickUpObjects : MonoBehaviour
         // print(hitObject.name);
 
         if (hitObject.name == "Buchner Flask"){
+            Debug.Log("buchner attempt");
             GetComponent<doCertainThingWith>().disconnectBuchnerFlask(hitObject);
         }
     }

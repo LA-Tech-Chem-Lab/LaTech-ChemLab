@@ -16,9 +16,9 @@ using System.Linq;
 public class doCertainThingWith : MonoBehaviour
 {
     const float TONG_GRAB_DISTANCE = 3f;
-    const float PIPETTE_GRAB_DISTANCE = 0.5f;
+    const float PIPETTE_GRAB_DISTANCE = 0.55f;
     const float IRON_RING_SNAP_DISTANCE = 0.65f;
-    const float IRON_MESH_SNAP_DISTANCE = 0.6f;
+    const float IRON_MESH_SNAP_DISTANCE = 1.2f;
     const float SCOOPULA_GRAB_DISTANCE = 1.2f;
     const float FUNNEL_INSERT_DISTANCE = 1.5f;
     const float CAPILLARY_ASSEMBLY_DISTANCE = 1.5f;
@@ -1637,12 +1637,10 @@ public class doCertainThingWith : MonoBehaviour
         {
             if (liquidHolder == null)
             {
-                Debug.Log("FAIL-1");
                 return;
             }
             if (closestIronMesh == null)
             {
-                Debug.Log("FAIL0");
                 return;
             }
 
@@ -1656,6 +1654,9 @@ public class doCertainThingWith : MonoBehaviour
             string holderName = liquidHolder.name.ToLower();
 
             if (holderName.Contains("graduated cylinder"))
+                return;
+
+            if (holderName.Contains("buchner flask"))
                 return;
 
             if (holderName.Contains("beaker"))
@@ -1680,10 +1681,6 @@ public class doCertainThingWith : MonoBehaviour
                     yOffset = 0.005f;
                 else if (holderName.Contains("250"))
                     yOffset = 0.005f; 
-            }
-            else if (holderName.Contains("buchner flask"))
-            {
-                yOffset = 0.005f; 
             }
 
             // Adjust position and rotation based on attachment point
