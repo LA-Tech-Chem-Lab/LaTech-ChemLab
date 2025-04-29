@@ -121,6 +121,7 @@ public class liquidScript : MonoBehaviour
     public bool isCrystalizedAlum;
     public GameObject crystallizationPrefab;
     public GameObject liquidCrystalPrefab;
+    public GameObject liquidCrystalPrefab1;
     private Transform crystallizationTransform;
     public GameObject solidinliquideffect;
     public bool hasSpawnedSolid = false;
@@ -159,6 +160,7 @@ public class liquidScript : MonoBehaviour
         firePrefab = Resources.Load<GameObject>("Flame");
         crystallizationPrefab = Resources.Load<GameObject>("Crystalization");
         liquidCrystalPrefab = Resources.Load<GameObject>("Crystalized Liquid");
+        liquidCrystalPrefab1 = Resources.Load<GameObject>("Crystalized Liquid 1");
         solidinliquideffect = Resources.Load<GameObject>("Solid In Liquid Effect");
         boomSound = Resources.Load<AudioClip>("boomSound");
 
@@ -342,7 +344,7 @@ public class liquidScript : MonoBehaviour
                 transform.Find("Solid In Liquid Effect(Clone)").gameObject.SetActive(true);
             }
         }
-        
+
         if (isCrystalizedAlum)
         {
             Transform liquidTransform = transform.Find("Liquid");
@@ -354,10 +356,28 @@ public class liquidScript : MonoBehaviour
             Transform existingCrystalizedLiquid = transform.Find("Crystalized Liquid");
             if (existingCrystalizedLiquid == null)
             {
-                if (liquidCrystalPrefab != null)
+                GameObject prefabToUse = liquidCrystalPrefab; // default
+
+                // Decide which prefab to use
+                if (name.Contains("Erlenmeyer"))
                 {
-                    GameObject newCrystallizedLiquid = Instantiate(liquidCrystalPrefab, transform);
+                    prefabToUse = liquidCrystalPrefab1; // <- NEW one for Erlenmeyer
+                }
+                else if (!name.Contains("Beaker"))
+                {
+                    prefabToUse = null; // If not Beaker or Erlenmeyer, don't instantiate
+                }
+
+                if (prefabToUse != null)
+                {
+                    GameObject newCrystallizedLiquid = Instantiate(prefabToUse, transform);
                     newCrystallizedLiquid.name = "Crystalized Liquid";
+
+                    // Force rotation for Erlenmeyer
+                    if (name.Contains("Erlenmeyer"))
+                    {
+                        newCrystallizedLiquid.transform.localRotation = Quaternion.Euler(0f, 0f, 180f);
+                    }
 
                     // Assign the renderer
                     rend = newCrystallizedLiquid.GetComponent<Renderer>();
@@ -1399,51 +1419,54 @@ void CalculateHeat()
                 Destroy(currentBoilingEffect);
             }
         //Beaker Frost Effect
-        if (liquidTemperature < 273.15f)
+        if (name.ToLower().Contains("beaker"))
         {
-            if (crystallizationTransform == null) // Instantiate if it doesn’t exist
+            if (liquidTemperature < 273.15f)
             {
-                if (crystallizationPrefab != null)
+                if (crystallizationTransform == null) // Instantiate if it doesn’t exist
                 {
-                    GameObject newCrystallization = Instantiate(crystallizationPrefab, transform);
-                    newCrystallization.name = "Crystalization"; 
-                    crystallizationTransform = newCrystallization.transform;
+                    if (crystallizationPrefab != null)
+                    {
+                        GameObject newCrystallization = Instantiate(crystallizationPrefab, transform);
+                        newCrystallization.name = "Crystalization";
+                        crystallizationTransform = newCrystallization.transform;
+                    }
+                }
+                if (crystallizationTransform != null)
+                {
+                    if (!crystallizationTransform.gameObject.activeSelf)
+                    {
+                        crystallizationTransform.gameObject.SetActive(true);
+                    }
+
+                    Renderer crystallizationRenderer = crystallizationTransform.GetComponent<Renderer>();
+                    if (crystallizationRenderer != null)
+                    {
+                        Material crystallizationMaterial = crystallizationRenderer.material;
+                        // Increase freeze progress at a constant rate
+                        freezeProgress = Mathf.Max(0.54298f, Mathf.Clamp01(freezeProgress - 0.02f * Time.deltaTime));
+
+                        // Apply to material property
+                        crystallizationMaterial.SetFloat("_Growth", freezeProgress);
+                    }
                 }
             }
-            if (crystallizationTransform != null)
+            else if (liquidTemperature > 273.15f)
             {
-                if (!crystallizationTransform.gameObject.activeSelf)
+                Transform crystallizationTransform = transform.Find("Crystalization");
+                if (crystallizationTransform != null)
                 {
-                    crystallizationTransform.gameObject.SetActive(true);
-                }
+                    Renderer crystallizationRenderer = crystallizationTransform.GetComponent<Renderer>();
+                    if (crystallizationRenderer != null)
+                    {
+                        Material crystallizationMaterial = crystallizationRenderer.material;
 
-                Renderer crystallizationRenderer = crystallizationTransform.GetComponent<Renderer>();
-                if (crystallizationRenderer != null)
-                {
-                    Material crystallizationMaterial = crystallizationRenderer.material;
-                    // Increase freeze progress at a constant rate
-                    freezeProgress = Mathf.Max(0.54298f, Mathf.Clamp01(freezeProgress - 0.02f * Time.deltaTime));
+                        // Decrease freeze progress at a constant rate
+                        freezeProgress = Mathf.Clamp01(freezeProgress + .07f * Time.deltaTime);
 
-                    // Apply to material property
-                    crystallizationMaterial.SetFloat("_Growth", freezeProgress);
-                }
-            }
-        }
-        else if (liquidTemperature > 273.15f)
-        {
-            Transform crystallizationTransform = transform.Find("Crystalization");
-            if (crystallizationTransform != null)
-            {
-                Renderer crystallizationRenderer = crystallizationTransform.GetComponent<Renderer>();
-                if (crystallizationRenderer != null)
-                {
-                    Material crystallizationMaterial = crystallizationRenderer.material;
-
-                    // Decrease freeze progress at a constant rate
-                    freezeProgress = Mathf.Clamp01(freezeProgress + .07f * Time.deltaTime);
-
-                    // Apply to material property
-                    crystallizationMaterial.SetFloat("_Growth", freezeProgress);
+                        // Apply to material property
+                        crystallizationMaterial.SetFloat("_Growth", freezeProgress);
+                    }
                 }
             }
         }
