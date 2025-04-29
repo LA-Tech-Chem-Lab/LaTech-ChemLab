@@ -774,12 +774,32 @@ public class pickUpObjects : MonoBehaviour
             // Debug.LogWarning("DetachIronRing: BoxCollider not found!");
         }
 
+        // Find the LiquidHolder object under the IronRing
+        foreach (Transform child in ironRing.transform)
+        {
+            if (child.CompareTag("LiquidHolder"))
+            {
+                GameObject liquidHolder = child.gameObject;
+                DetachLiquidHolder(liquidHolder);
+            }
+
+            foreach (Transform grandchild in child)
+            {
+                if (grandchild.CompareTag("LiquidHolder"))
+                {
+                    GameObject liquidHolder = grandchild.gameObject;
+                    DetachLiquidHolder(liquidHolder);
+                }
+            }
+        }
+
         Transform ironMesh = ironRing.transform.Find("Iron Mesh");
         if (ironMesh)
         {
             Rigidbody ironMeshRb = ironMesh.GetComponent<Rigidbody>();
             if (ironMeshRb)
             {
+                
                 ironMeshRb.isKinematic = false;
                 // Debug.Log($"DetachIronRing: Iron Mesh Rigidbody set isKinematic to {ironMeshRb.isKinematic}");
             }
@@ -794,16 +814,7 @@ public class pickUpObjects : MonoBehaviour
             // Debug.Log($"DetachIronRing: Iron Mesh Parent after change: {ironMesh.parent}");
         }
 
-        // Find the LiquidHolder object under the IronRing
-        foreach (Transform child in ironRing.transform)
-        {
-            if (child.CompareTag("LiquidHolder"))
-            {
-                GameObject liquidHolder = child.gameObject;
-                DetachLiquidHolder(liquidHolder);
-                Debug.Log("LiquidHolder found under IronRing: " + liquidHolder.name);
-            }
-        }
+        
     }
 
     private void DetachIronMesh(GameObject ironMesh)
@@ -836,7 +847,6 @@ public class pickUpObjects : MonoBehaviour
             {
                 GameObject liquidHolder = child.gameObject;
                 DetachLiquidHolder(liquidHolder);
-                Debug.Log("LiquidHolder found under IronRing: " + liquidHolder.name);
             }
         }
     }
