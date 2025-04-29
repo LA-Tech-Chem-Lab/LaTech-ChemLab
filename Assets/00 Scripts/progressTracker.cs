@@ -219,8 +219,8 @@ public class LabProgress : MonoBehaviour
 
                 foreach (GameObject obj in liquidHolders1)
                 {
-                    if (obj.transform.name.StartsWith("Erlenmeyer Flask 250")){
-                        if(obj.GetComponent<liquidScript>().currentVolume_mL > 24f && obj.GetComponent<liquidScript>().currentVolume_mL < 28f && obj.GetComponent<liquidScript>().percentAl > 0.2f && obj.GetComponent<liquidScript>().percentAl < 0.25f && obj.GetComponent<liquidScript>().percentKOH > 0.1f && obj.GetComponent<liquidScript>().percentKOH < 0.15f){
+                    if (obj.transform.name.StartsWith("Graduated")){
+                        if(obj.GetComponent<liquidScript>().currentVolume_mL > 24f && obj.GetComponent<liquidScript>().currentVolume_mL < 26f && obj.GetComponent<liquidScript>().percentKOH > 0.18f && obj.GetComponent<liquidScript>().percentKOH < 0.22f){
                             step1Erlenmeyer = obj;
                             TransitionToNextState();
                         }
@@ -235,7 +235,7 @@ public class LabProgress : MonoBehaviour
                 foreach (GameObject obj in liquidHolders2)
                 {
                     if (obj.transform.name.StartsWith("Erlenmeyer Flask 250")){
-                        if (obj.GetComponent<liquidScript>().liquidTemperature > 343.15f && obj.GetComponent<liquidScript>().currentVolume_mL > 24.5f && obj.GetComponent<liquidScript>().percentKAlOH4 > 0.36f){
+                        if (obj.GetComponent<liquidScript>().liquidTemperature > 343.15f && obj.GetComponent<liquidScript>().currentVolume_mL > 24f && obj.GetComponent<liquidScript>().percentKAlOH4 > 0.3f){
                             step1Erlenmeyer = obj;
                             TransitionToNextState();
                         }
@@ -333,6 +333,7 @@ public class LabProgress : MonoBehaviour
                 // Mark the lab as completed, maybe show results or feedback
                 if (player.GetComponent<doCertainThingWith>().meltingPointToolPlaced == true){
                     GameObject mpBeaker = player.GetComponent<doCertainThingWith>().meltingPointBeaker;
+                    Debug.Log("Melting Point Beaker" + mpBeaker.transform.name);
                     if (mpBeaker.GetComponent<liquidScript>().liquidTemperature >= mpBeaker.GetComponent<liquidScript>().GetMeltingPoint()){
                         TransitionToNextState();
                         if (!foundMP){
@@ -424,7 +425,7 @@ public class LabProgress : MonoBehaviour
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
         Debug.Log(step1Erlenmeyer.transform.name);
-        float KOHvol = (step1Erlenmeyer.GetComponent<liquidScript>().percentKOH + step1Erlenmeyer.GetComponent<liquidScript>().percentH2O + step1Erlenmeyer.GetComponent<liquidScript>().percentKAlOH4) * step1Erlenmeyer.GetComponent<liquidScript>().currentVolume_mL + 5f;
+        float KOHvol = step1Erlenmeyer.GetComponent<liquidScript>().currentVolume_mL;
         content.text = "Awesome! You have measured out " + KOHvol + " mL of potassium hydroxide (KOH) into the 250 mL Erlenmeyer Flask with the aluminum. Record this number for later use. ";
         while (!nextButtonClicked){
             yield return null;
