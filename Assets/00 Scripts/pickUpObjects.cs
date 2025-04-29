@@ -473,6 +473,14 @@ public class pickUpObjects : MonoBehaviour
 
             Rigidbody rb = hitObject.GetComponent<Rigidbody>();
 
+            if (hitObject.name == "Capilary tube")
+            {
+                if (GetComponent<doCertainThingWith>().CapilaryAttached == true)
+                {
+                    return;
+                }
+            }
+
             if (rb && rb.GetComponent<Rigidbody>().isKinematic) // We are trying to pick up a kinematic object - not normal
             {
                 if (hit.collider.gameObject.tag == "IronRing"){
@@ -488,11 +496,21 @@ public class pickUpObjects : MonoBehaviour
                     return;
                 }
 
-                else if (hit.collider.gameObject.tag == "LiquidHolder" && hit.collider.name != "Paper Cone" && hit.collider.name != "Buchner Flask")
+                else if (hit.collider.gameObject.tag == "LiquidHolder" && hit.collider.name != "Paper Cone" && hit.collider.name != "Buchner Flask" && hit.collider.name != "Capilary tube")
                 {
                     DetachLiquidHolder(hitObject); 
                     PickUpItem(hitObject);
                     return;
+                }
+
+                else if (hit.collider.gameObject.tag == "Melting Point Tool")
+                {
+                    if (GetComponent<doCertainThingWith>().meltingPointToolPlaced)
+                    {
+                        GetComponent<doCertainThingWith>().DetachMeltingPointTool(hitObject);
+                        PickUpItem(hitObject);
+                        return;
+                    }
                 }
                 // Debug.Log(hit.collider.gameObject.name);
             }

@@ -16,6 +16,7 @@ TagManager:
   - Match
   - NoPickup
   - IronMesh
+  - Melting Point Tool
   layers:
   - Default
   - TransparentFX

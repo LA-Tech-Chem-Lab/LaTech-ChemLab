@@ -67,7 +67,8 @@ public class doCertainThingWith : MonoBehaviour
     public bool meltingPointToolPlaced = false;
     public GameObject meltingPointBeaker;
     public bool IsNearIronMesh { get; private set; }
-
+    public GameObject currentCanvas;
+    public bool CapilaryAttached;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -177,7 +178,6 @@ public class doCertainThingWith : MonoBehaviour
 
             if (obj.CompareTag("LiquidHolder"))
             {
-                Debug.Log("TRYING");                // lmao - bays
                 SnapLiquidHolderToIronMesh();
             }
 
@@ -921,8 +921,10 @@ public class doCertainThingWith : MonoBehaviour
                 capillaryTube.transform.localPosition = Vector3.zero;
                 capillaryTube.transform.localRotation = Quaternion.identity;
                 capillaryTube.transform.localScale = Vector3.one;
-                capillaryTube.GetComponent<CapsuleCollider>().enabled = false;
+                capillaryTube.GetComponent<CapsuleCollider>().isTrigger = true;
                 capillaryTube.GetComponent<Rigidbody>().isKinematic = true;
+                CapilaryAttached = true;
+
             }
             else
             {
@@ -954,7 +956,15 @@ public class doCertainThingWith : MonoBehaviour
     {
         Debug.Log("Trying");
         // Find all beakers in the scene
-        GameObject[] beakers = GameObject.FindGameObjectsWithTag("LiquidHolder");
+        List<GameObject> filteredBeakers = new List<GameObject>();
+        foreach (GameObject beaker in GameObject.FindGameObjectsWithTag("LiquidHolder"))
+        {
+            if (beaker.name != "Capilary tube")
+            {
+                filteredBeakers.Add(beaker);
+            }
+        }
+        GameObject[] beakers = filteredBeakers.ToArray();
 
 
         GameObject closestBeaker = null;
@@ -1007,7 +1017,7 @@ public class doCertainThingWith : MonoBehaviour
                 Rigidbody rb = MeltingPointTool.GetComponent<Rigidbody>();
                 if (rb != null)
                 {
-                    Destroy(rb);
+                    rb.isKinematic = true;
                 }
 
                 BoxCollider collider = MeltingPointTool.GetComponent<BoxCollider>();
@@ -1022,13 +1032,13 @@ public class doCertainThingWith : MonoBehaviour
                 MeltingPointTool.transform.localPosition = new Vector3(-0.0810000002f,-0.125f,-0.0160000008f);
                 
                 MeltingPointTool.transform.localRotation = Quaternion.Euler(0f, 0f, -25.826f);
-                GameObject newCanvas = Instantiate(ApparatusCanvasPrefab, MeltingPointTool.transform.position, Quaternion.identity);
-                newCanvas.name = ApparatusCanvasPrefab.name;
+                currentCanvas = Instantiate(ApparatusCanvasPrefab, MeltingPointTool.transform.position, Quaternion.identity);
+                currentCanvas.name = ApparatusCanvasPrefab.name;
 
-                newCanvas.transform.SetParent(closestBeaker.transform, false);
-                newCanvas.transform.localPosition = Vector3.zero;
-                newCanvas.transform.localRotation = Quaternion.identity;
-                newCanvas.transform.localScale = Vector3.one;
+                currentCanvas.transform.SetParent(closestBeaker.transform, false);
+                currentCanvas.transform.localPosition = Vector3.zero;
+                currentCanvas.transform.localRotation = Quaternion.identity;
+                currentCanvas.transform.localScale = Vector3.one;
                 //MeltingPointTool.transform.localScale = new Vector3(6.905945f, 5.176058f, 7.692307f);
 
                 Debug.Log("Melting Point Apparatus placed successfully with specified transform settings.");
@@ -1048,6 +1058,26 @@ public class doCertainThingWith : MonoBehaviour
         meltingPointBeaker = closestBeaker;
     }
 
+    public void DetachMeltingPointTool(GameObject tool)
+    {
+        if (tool == null)
+        {
+            return;
+        }
+
+        Rigidbody rb = tool.GetComponent<Rigidbody>();
+        if (rb)
+        {
+            rb.isKinematic = false;
+        }
+        tool.transform.SetParent(null);
+        meltingPointToolPlaced = false;
+        if (currentCanvas != null)
+        {
+            Destroy(currentCanvas);
+            currentCanvas = null;
+        }
+    }
     void GrabFlaskByNeck(GameObject tongs)
     {
 
@@ -1657,6 +1687,9 @@ public class doCertainThingWith : MonoBehaviour
                 return;
 
             if (holderName.Contains("buchner flask"))
+                return;
+
+            if (holderName.Contains("Capilary tube"))
                 return;
 
             if (holderName.Contains("beaker"))

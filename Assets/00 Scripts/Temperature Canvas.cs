@@ -58,37 +58,43 @@ public class TemperatureCanvas : MonoBehaviour
     {
         if (liquid != null && temperatureText != null)
         {
-            float temperature = liquid.liquidTemperature - 273.15f;
-
-            // Calculate vector from player camera to beaker
-            Vector3 directionToBeaker = beaker.transform.position - playerCamera.transform.position;
-
-            // Calculate dot product between camera forward vector and the direction to the beaker
-            float dotProduct = Vector3.Dot(playerCamera.transform.forward, directionToBeaker.normalized);
-
-            // Display temperature and state of matter
-            var meltingpointvalue = liquid.GetMeltingPoint();
-            Debug.Log(meltingpointvalue);
-            if (liquid.liquidTemperature < meltingpointvalue)
+            if (liquid.currentVolume_mL <= 0f)
             {
-                temperatureText.text = temperature.ToString("F1") + " °C" + "\nState of Matter: Solid";
-            }
-            else if (liquid.liquidTemperature >= meltingpointvalue)
-            {
-                temperatureText.text = temperature.ToString("F1") + " °C" + "\nState of Matter: Liquid";
-            }
-
-
-            // Enable the canvas panel if looking at the beaker (dot product > 0.7)
-            if (dotProduct > 0.8f)
-            {
-                canvasPanel.SetActive(true); // Show the panel and text
-                TextPanel.SetActive(true);
+                temperatureText.text = "Capilary Tube: empty";
             }
             else
             {
-                TextPanel.SetActive(false);
-                canvasPanel.SetActive(false); // Hide the panel and text
+                float temperature = liquid.liquidTemperature - 273.15f;
+
+                // Calculate vector from player camera to beaker
+                Vector3 directionToBeaker = beaker.transform.position - playerCamera.transform.position;
+
+                // Calculate dot product between camera forward vector and the direction to the beaker
+                float dotProduct = Vector3.Dot(playerCamera.transform.forward, directionToBeaker.normalized);
+
+                // Display temperature and state of matter
+                var meltingpointvalue = liquid.GetMeltingPoint();
+                if (liquid.liquidTemperature < meltingpointvalue)
+                {
+                    temperatureText.text = temperature.ToString("F1") + " °C" + "\nState of Matter: Solid";
+                }
+                else if (liquid.liquidTemperature >= meltingpointvalue)
+                {
+                    temperatureText.text = temperature.ToString("F1") + " °C" + "\nState of Matter: Liquid";
+                }
+
+
+                // Enable the canvas panel if looking at the beaker (dot product > 0.7)
+                if (dotProduct > 0.8f)
+                {
+                    canvasPanel.SetActive(true); // Show the panel and text
+                    TextPanel.SetActive(true);
+                }
+                else
+                {
+                    TextPanel.SetActive(false);
+                    canvasPanel.SetActive(false); // Hide the panel and text
+                }
             }
         }
     }
