@@ -66,6 +66,7 @@ public class doCertainThingWith : MonoBehaviour
     public List<Transform> buchnerFlaskNozzleLocations = new List<Transform>();
     public bool meltingPointToolPlaced = false;
     public GameObject meltingPointBeaker;
+    public bool IsNearIronMesh { get; private set; }
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -1602,6 +1603,7 @@ public class doCertainThingWith : MonoBehaviour
     {
         float minDist = float.MaxValue;
         closestIronMesh = null;
+        IsNearIronMesh = false;
 
         foreach (GameObject currentObject in GameObject.FindGameObjectsWithTag("IronMesh"))
         {
@@ -1620,6 +1622,11 @@ public class doCertainThingWith : MonoBehaviour
         if (closestIronMesh == null || minDist > IRON_MESH_SNAP_DISTANCE)
         {
             closestIronMesh = null;
+            IsNearIronMesh = false;
+        }
+        else
+        {
+            IsNearIronMesh = true;
         }
     }
     void SnapLiquidHolderToIronMesh()

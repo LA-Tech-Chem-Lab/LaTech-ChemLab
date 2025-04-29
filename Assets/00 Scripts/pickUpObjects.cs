@@ -358,16 +358,41 @@ public class pickUpObjects : MonoBehaviour
             }
             else
             {
-                if (other.name.StartsWith("Beaker")){
-                    multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents. You can also hold P to pour into another container.");
+                if (other.name.StartsWith("Beaker"))
+                {
+                    if (GetComponent<doCertainThingWith>().IsNearIronMesh)
+                    {
+                        multiHandlerScript.setHelpText("Right click to snap container to iron mesh");
+                    }
+                    else
+                    {
+                        multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents. You can also hold P to pour into another container.");
+                    }
                 }
-                else if (other.name.StartsWith("Erlenmeyer Flask")){
-                    multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL Erlenmeyer Flask. Hold right click to observe its contents. P to pour. Use tongs to hold when hot. ({currentLiquidHoldingTempCELSIUS}°C.)");
+                else if (other.name.StartsWith("Erlenmeyer Flask"))
+                {
+                    if (GetComponent<doCertainThingWith>().IsNearIronMesh)
+                    {
+                        multiHandlerScript.setHelpText("Right click to snap container to iron mesh");
+                    }
+                    else
+                    {
+                        multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL Erlenmeyer Flask. Hold right click to observe its contents. P to pour. Use tongs to hold when hot. ({currentLiquidHoldingTempCELSIUS}°C.)");
+                    }
                 }
-                else if (other.name.StartsWith("Buchner Flask")){
-                    multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL Buchner Flask. Hold right click to observe its contents. You can also hold P to pour into another container.");
+                else if (other.name.StartsWith("Buchner Flask"))
+                {
+                    if (GetComponent<doCertainThingWith>().IsNearIronMesh)
+                    {
+                        multiHandlerScript.setHelpText("Right click to snap container to iron mesh");
+                    }
+                    else
+                    {
+                        multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL Buchner Flask. Hold right click to observe its contents. You can also hold P to pour into another container.");
+                    }
                 }
-                else if (other.name.StartsWith("Paper Cone")){
+                else if (other.name.StartsWith("Paper Cone"))
+                {
                     multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL Paper Cone. Hold right click to observe its contents. You can also hold P to pour into another container.");
                 }
             }
