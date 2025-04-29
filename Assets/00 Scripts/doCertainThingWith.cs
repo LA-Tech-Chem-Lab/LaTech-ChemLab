@@ -418,14 +418,7 @@ public class doCertainThingWith : MonoBehaviour
                 buchnerFlask.transform.position = closestNozzle.parent.TransformPoint(new Vector3(-0.0427360535f, 0.0219124556f, 0.633605659f));
                 buchnerFlask.transform.localEulerAngles = new Vector3(0f, 270f, 0f);
                 buchnerFlask.GetComponent<Rigidbody>().isKinematic = true;
-                //if (buchnerFlask.transform.Find("Glass Funnel") != null){
-                //    GameObject glassFunnel = buchnerFlask.transform.Find("Glass Funnel").gameObject;
-                //    if (glassFunnel.transform.Find("Paper Cone") != null){
-                //        GameObject paperCone = glassFunnel.transform.Find("Paper Cone").gameObject;
-                //        paperCone.GetComponent<liquidScript>().buchnerFaucet = closestNozzle.transform.parent.gameObject;
-                //        Debug.Log("");
-                //    }
-                //}
+                buchnerFlask.GetComponent<liquidScript>().buchnerFaucet = closestNozzle.transform.parent.gameObject;
             }
         }
 
@@ -448,13 +441,8 @@ public class doCertainThingWith : MonoBehaviour
 
 
             flask.GetComponent<Rigidbody>().isKinematic = false;
-            //if (flask.transform.Find("Glass Funnel").gameObject){
-            //        GameObject glassFunnel = flask.transform.Find("Glass Funnel").gameObject;
-            //        if (glassFunnel.transform.Find("Paper Cone").gameObject){
-            //            GameObject paperCone = glassFunnel.transform.Find("Paper Cone").gameObject;
-            //            paperCone.GetComponent<liquidScript>().buchnerFaucet = closestNozzle.transform.parent.gameObject;
-            //        }
-            //    }
+
+            flask.GetComponent<liquidScript>().buchnerFaucet = null;
         }
 
     void startPour()

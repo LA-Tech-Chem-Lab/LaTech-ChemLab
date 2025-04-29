@@ -144,7 +144,7 @@ public class liquidScript : MonoBehaviour
     public GameObject stuffInEyesFilter;
     //public GameObject placeholderFaucet;
     public bool startedBoiling = false;
-    //public GameObject buchnerFaucet;
+    public GameObject buchnerFaucet;
 
 
     // Use this for initialization
@@ -406,13 +406,16 @@ public class liquidScript : MonoBehaviour
         //is the filter in the funneled flask?
         if (gameObject.name == "Paper Cone" && gameObject.transform.parent?.parent && !isFiltering && currentVolume_mL > 1f){
             Transform Flask = gameObject.transform.parent?.parent;
+            //Debug.Log( "paper cone grandparent" + Flask.transform.name);
             if (Flask.name.StartsWith("Buchner")){
-                //if (buchnerFaucet){
-                //    Debug.Log(buchnerFaucet.transform.name); //FIX THIS TOMORROW!!!!!
-                //    if (buchnerFaucet.GetComponent<FaucetScript>().FaucetHot || buchnerFaucet.GetComponent<FaucetScript>().FaucetCold){
+                //Debug.Log("Its a buchner");
+                if (Flask.GetComponent<liquidScript>().buchnerFaucet){
+                    //Debug.Log("Buchner faucet " + Flask.GetComponent<liquidScript>().buchnerFaucet.transform.name); //FIX THIS TOMORROW!!!!!
+                    if (Flask.GetComponent<liquidScript>().buchnerFaucet.GetComponent<FaucetScript>().FaucetHot || Flask.GetComponent<liquidScript>().buchnerFaucet.GetComponent<FaucetScript>().FaucetCold){
+
                         StartCoroutine(handleFiltering(Flask));
-                //    }
-                //}  
+                    }
+                }  
             }
             else{
                 StartCoroutine(handleFiltering(Flask));
