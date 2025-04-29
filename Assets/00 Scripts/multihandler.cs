@@ -8,6 +8,7 @@ using Unity.Multiplayer.Center.NetcodeForGameObjectsExample;
 using System.Text.RegularExpressions;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 
 
@@ -140,6 +141,11 @@ public class multihandler : MonoBehaviour
             EditorApplication.isPlaying = false;
         #endif
     }
+
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    } 
 
     public void ToggleCursor()
     {
