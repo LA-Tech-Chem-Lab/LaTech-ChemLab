@@ -256,6 +256,7 @@ public class pickUpObjects : MonoBehaviour
         if (other.name == "Aluminum Container")     multiHandlerScript.setHelpText("This is a container of aluminum pellets. Use the scoopula to scoop the pellets into a weigh boat.");
         if (other.name == "Melting Point Tool")     multiHandlerScript.setHelpText("This tool allows you to measure the melting point of the substance in capillary tube. To use it right click next to a beaker of pure water to place it in then boil.");
         if (other.name == "Capilary tube")          multiHandlerScript.setHelpText("Right-click containers to fill the capillary tube. Right-click near the rubber band and thermometer to combine them. Fill it first with the substance you want to measure.");
+        if (other.name == "Small Stir Rod")         multiHandlerScript.setHelpText("This is a Stir Rod. Right click near a beaker to place, and hold right click to stir.");
 
     }
 
@@ -376,7 +377,13 @@ public class pickUpObjects : MonoBehaviour
                     }
                     else
                     {
-                        multiHandlerScript.setHelpText($"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents. You can also hold P to pour into another container.");
+                        string beakerHelpText = $"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents. You can also hold P to pour into another container. ";
+
+                        if (other.transform.Find("Small Stir Rod") != null) {
+                            beakerHelpText += "This solution can be stirred by holding right click.";
+                        }
+                        
+                        multiHandlerScript.setHelpText(beakerHelpText);
                     }
                 }
                 else if (other.name.StartsWith("Erlenmeyer Flask"))
