@@ -373,7 +373,7 @@ public class LabProgress : MonoBehaviour
         yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        content.text = "Congratulations! Your eyes are now protected from hazardous chemicals. Now to begin the experiment. First, you will need to measure out 1 gram of aluminum pellets using the scoopula, weight boat and scale. Don't forget to tere the weigh boat first so that you can tell how much aluminum you are weighing out.";
+        content.text = "Congratulations! Your eyes are now protected from hazardous chemicals. Now to begin the experiment. First, you will need to measure out 1 gram of aluminum pellets using the scoopula, weight boat and scale. Don't forget to tare the weigh boat first so that you can tell how much aluminum you are weighing out.";
         while (!nextButtonClicked){
             yield return null;
         }
