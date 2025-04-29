@@ -1133,7 +1133,7 @@ public class doCertainThingWith : MonoBehaviour
 
                     // designated position
                     stirPosition = closestBeaker.transform.Find("StirPos");
-                    Debug.Log("Starting rod at position: " + stirPosition.localPosition);
+                    //Debug.Log("Starting rod at position: " + stirPosition.localPosition);
                 }
                 Debug.Log("This is a smaller beaker");
             }
@@ -1146,10 +1146,12 @@ public class doCertainThingWith : MonoBehaviour
 
             stirRod.transform.position = stirPosition.position;
             stirRod.transform.rotation = stirPosition.rotation;
-            //Debug.Log("Stir rod position: " + stirRod.transform.position);
-
-            // Make it a child so it follows movement
-            stirRod.transform.SetParent(closestBeaker.transform);
+            stirRod.transform.SetParent(closestBeaker.transform, true);
+            
+            Debug.Log("stirposition" + stirRod.transform.localPosition);
+            Debug.Log("stirrotation " + stirRod.transform.localRotation);
+            Debug.Log("stirposition setting to " + stirPosition.transform.localPosition);
+            Debug.Log("stirposition setting to " + stirPosition.transform.localRotation);
 
             // Disable physics and collisions so it stays attached
             Physics.IgnoreCollision(stirRod.GetComponent<Collider>(), closestBeaker.GetComponent<Collider>(), true);
