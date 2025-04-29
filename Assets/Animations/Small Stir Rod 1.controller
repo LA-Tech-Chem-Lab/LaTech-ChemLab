@@ -70,6 +70,21 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: is800
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is50
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is100
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is150
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is250
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is400
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3411673504416489551}
   m_Solo: 0
@@ -97,6 +112,21 @@ AnimatorStateTransition:
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: currentlyStirring
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is100
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is150
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is250
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is400
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is800
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -2541095064467694595}
@@ -281,6 +311,21 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: is150
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is50
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is100
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is250
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is400
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is800
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -6674279893361986486}
   m_Solo: 0
@@ -427,6 +472,21 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: currentlyStirring
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is50
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is150
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is250
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is400
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is800
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -6219825552932796810}
   m_Solo: 0
@@ -454,6 +514,21 @@ AnimatorStateTransition:
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: is250
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is50
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is100
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is150
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is400
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is800
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5083281461352148994}
@@ -563,6 +638,21 @@ AnimatorStateTransition:
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: is400
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is50
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is100
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is150
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is250
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: is800
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -875480034449539767}
