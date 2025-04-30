@@ -36,6 +36,8 @@ public class multihandler : MonoBehaviour
     public Vector3 startingPosition;
     public bool hasLeftSpawn;
     public bool hasWornGoggles;
+    public GameObject giveWalterSolutionText;
+    public progessTracker progressTrackerScript;
     public GameObject putOnGogglesText;
     private interactWithObjects interactWithObjectsScript;
 
@@ -67,6 +69,7 @@ public class multihandler : MonoBehaviour
     
     [Header("Teacher Chat")]
     public ChatGPTManager teacherAI;
+    public GameObject teacher;
     public GameObject TeacherAskInputFieldObject;
     public TMP_InputField inputField;
     public TextMeshProUGUI inputFieldText;
@@ -89,6 +92,8 @@ public class multihandler : MonoBehaviour
         interactWithObjectsScript = currentPlayer.GetComponent<interactWithObjects>();
 
         startingPosition = currentPlayer.transform.position;
+        progressTrackerScript = GetComponent<progessTracker>();
+        teacher = teacherAI.transform.parent.gameObject;
     }
 
     void Update()
@@ -135,7 +140,8 @@ public class multihandler : MonoBehaviour
         if (!hasLeftSpawn || interactWithObjectsScript.gogglesOn)
             putOnGogglesText.SetActive(false);
         
-        
+        print(progressTrackerScript.currentState);
+        // print(Vector3.Distance(currentPlayer.transform.position, teacher.transform.position));
     }
 
     void textChatAndAIChat(){
