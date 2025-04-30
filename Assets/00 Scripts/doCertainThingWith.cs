@@ -439,8 +439,9 @@ public class doCertainThingWith : MonoBehaviour
             pickUpScript.PickUpItem(flask);
             // buchnerFlask.transform.position = closestNozzle.parent.TransformPoint(new Vector3(-0.0427360535f, 0.0219124556f, 0.633605659f));
 
-
+            flask.transform.position += Vector3.up * 0.1f;
             flask.GetComponent<Rigidbody>().isKinematic = false;
+            flask.gameObject.layer = LayerMask.NameToLayer("Default");
 
             flask.GetComponent<liquidScript>().buchnerFaucet = null;
         }
