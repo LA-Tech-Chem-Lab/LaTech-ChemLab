@@ -21,7 +21,7 @@ public class doCertainThingWith : MonoBehaviour
     const float IRON_MESH_SNAP_DISTANCE = 1.2f;
     const float SCOOPULA_GRAB_DISTANCE = 1.2f;
     const float FUNNEL_INSERT_DISTANCE = 1.5f;
-    const float CAPILLARY_ASSEMBLY_DISTANCE = 1.5f;
+    const float CAPILLARY_ASSEMBLY_DISTANCE = 2f;
     const float ALUMINUM_DROPOFF_RANGE = 0.8f;
     const float BUCHNER_FUNNEL_ATTATCH_DIST = 2f;const float BUCHNER_FLASK_ATTATCH_DIST = 1.4f;
 
