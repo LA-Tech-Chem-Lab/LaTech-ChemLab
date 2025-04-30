@@ -6,6 +6,7 @@ public class cabinetScript : MonoBehaviour
 {
     private Vector3 initialPosition;
     private Vector3 lastPos;
+    public float timeOfLastInteraction;
     public bool cabinetIsClosed = true;
 
     public float cabinetMovement = 2f;
@@ -37,6 +38,7 @@ public class cabinetScript : MonoBehaviour
         targetPosition = initialPosition;
 
         UpdateCabinet(cabinetIsClosed);
+        timeOfLastInteraction = Time.time;
     }
 
     void FixedUpdate()
@@ -54,10 +56,13 @@ public class cabinetScript : MonoBehaviour
     }
 
     public void InteractWithThisCabinet()
-    {
+    {   
+        if (Time.time - timeOfLastInteraction < 0.75f || Cursor.visible)
+            return;
         cabinetIsClosed = !cabinetIsClosed;
         playDrawerSound();
         UpdateCabinet(cabinetIsClosed);
+        timeOfLastInteraction = Time.time;
     }
 
     void playDrawerSound(){
