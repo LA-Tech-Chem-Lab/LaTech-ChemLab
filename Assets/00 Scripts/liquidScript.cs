@@ -146,6 +146,8 @@ public class liquidScript : MonoBehaviour
     public bool startedBoiling = false;
     public GameObject buchnerFaucet;
 
+    public bool InDrawer = false;
+
 
     // Use this for initialization
     void Start()
