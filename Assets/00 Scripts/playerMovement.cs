@@ -172,7 +172,7 @@ namespace Unity.Multiplayer.Center.NetcodeForGameObjectsExample{
             
             Vector3 cameraTargetPosWithOffset = targetCamPosition.position + interactScript.eyeOffset;
             
-            cameraTransform.position = Vector3.Slerp(cameraTransform.position, cameraTargetPosWithOffset, Time.deltaTime * 10f);
+            cameraTransform.position = Vector3.Slerp(cameraTransform.position, cameraTargetPosWithOffset, Time.deltaTime * 50f);
 
 
         }
