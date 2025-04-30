@@ -1097,6 +1097,7 @@ public class doCertainThingWith : MonoBehaviour
         {
             rb.isKinematic = false;
         }
+        tool.GetComponent<BoxCollider>().isTrigger = false;
         tool.transform.SetParent(null);
         meltingPointToolPlaced = false;
         if (currentCanvas != null)
@@ -1883,7 +1884,7 @@ public class doCertainThingWith : MonoBehaviour
     }
 
     IEnumerator pickUpArbitrarySolid(GameObject closestScoopableObject, GameObject scoopula){
-        float speedMult = 1 / 2f;
+        float speedMult = 1 / 4f;
 
         //scoopula dips down
         StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 0f, 30f, 1.2f * speedMult));
@@ -1903,7 +1904,7 @@ public class doCertainThingWith : MonoBehaviour
     }
 
     IEnumerator pickUpArbitrarySolidFromArbitraryContainer(GameObject closestScoopableObject, GameObject scoopula){
-        float speedMult = 1 / 2f;
+        float speedMult = 1 / 4f;
 
         //scoopula dips down
         StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 0f, 30f, 1.2f * speedMult));
@@ -1941,7 +1942,7 @@ public class doCertainThingWith : MonoBehaviour
         if (cap == null)
             yield break; // Stop the coroutine if cap is not found
     
-        float speedMult = 1 / 2f;
+        float speedMult = 1 / 5f;
         Vector3 startPos = cap.position;
         Vector3 targetPos = startPos + cap.parent.up * 0.08f;
         Vector3 leftPos = targetPos - cap.parent.right * 0.14f;
@@ -1999,7 +2000,7 @@ public class doCertainThingWith : MonoBehaviour
     }
 
     IEnumerator scoopulaDip(GameObject scoopula, GameObject closestWeighBoat){
-        float speedMult = 1 / 2f;
+        float speedMult = 1 / 4f;
         tryingToMixCompoundsInNonLiquidHolder = false;
         //scoopula dips down
         StartCoroutine(LerpValue(value => GetComponent<pickUpObjects>().targetX = value, 0f, 30f, 1.2f * speedMult));
