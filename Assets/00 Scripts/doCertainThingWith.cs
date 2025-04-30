@@ -559,7 +559,7 @@ public class doCertainThingWith : MonoBehaviour
             }
 
             if(targetContainer.GetComponent<liquidScript>().currentVolume_mL + 1f < targetContainer.GetComponent<liquidScript>().totalVolume_mL){
-                LS.filterSolution(LS.solutionMakeup, 15 * Time.deltaTime, targetContainer); // Pour 1 unit per frame
+                LS.filterSolution(LS.solutionMakeup, 150 * Time.deltaTime, targetContainer); // Pour 1 unit per frame
             }
             yield return new WaitForSeconds(0.1f); // Controls pour speed
         }
