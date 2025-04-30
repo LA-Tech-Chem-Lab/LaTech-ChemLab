@@ -875,9 +875,36 @@ public class doCertainThingWith : MonoBehaviour
         buchnerfunnelIsAttached = false;
     }
     void insertMeltingPointApparatus(GameObject capillaryTube)
-    {
-        GameObject thermometer = GameObject.Find("Therometer");
-        GameObject rubberBand = GameObject.Find("RubberBand");
+    {   
+        float minDistTherm = Mathf.Infinity;
+        float minDistRubber = Mathf.Infinity;
+        GameObject thermometer = null;
+        GameObject rubberBand = null;
+        foreach (GameObject currentObject in FindObjectsOfType<GameObject>())
+        {
+            if (currentObject.name == "Therometer")
+            {
+                float distFromTherm = Vector3.Distance(capillaryTube.transform.position, currentObject.transform.position);
+
+                if (distFromTherm < minDistTherm)
+                {
+                    minDistTherm = distFromTherm;
+                    thermometer = currentObject;
+                }
+            }
+
+            if (currentObject.name == "RubberBand")
+            {
+                float distFromTherm = Vector3.Distance(capillaryTube.transform.position, currentObject.transform.position);
+
+                if (distFromTherm < minDistRubber)
+                {
+                    minDistRubber = distFromTherm;
+                    rubberBand = currentObject;
+                }
+            }
+        }
+        
 
         if (thermometer == null || rubberBand == null)
         {
