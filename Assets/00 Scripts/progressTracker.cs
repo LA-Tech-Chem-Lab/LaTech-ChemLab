@@ -25,7 +25,7 @@ public class progessTracker : MonoBehaviour
         Finished,
         meltingPoint
     }
-    private LabState currentState;
+    public LabState currentState;
     public Button nextButton;
     private bool nextButtonClicked = false; 
     public GameObject popUpPanel;

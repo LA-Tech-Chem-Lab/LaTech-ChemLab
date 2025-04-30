@@ -599,7 +599,8 @@ public class pickUpObjects : MonoBehaviour
             if (Physics.Raycast(ray, out Prehit, range, LayerMask.GetMask("Ground"))){
                 distFromGroundLayer = Vector3.Distance(playerCamera.position, Prehit.point);
             }
-            readyToMoveBack = !Physics.CheckSphere(targetPosition + other.transform.TransformDirection(targetPositionShift), checkRadius * 1.8f, LayerMask.GetMask("Ground"));
+            if (other)
+                readyToMoveBack = !Physics.CheckSphere(targetPosition + other.transform.TransformDirection(targetPositionShift), checkRadius * 1.8f, LayerMask.GetMask("Ground"));
             bool targetPositionBlocked = Physics.CheckSphere(targetPosition + targetPositionShift, checkRadius, LayerMask.GetMask("Ground"));
 
             if (targetPositionBlocked){
