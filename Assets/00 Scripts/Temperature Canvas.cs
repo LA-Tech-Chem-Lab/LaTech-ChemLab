@@ -1,17 +1,14 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.UIElements;
-using UnityEngine.AI;
 
 public class TemperatureCanvas : MonoBehaviour
 {
-    public GameObject canvasPanel; // The parent panel or canvas to enable/disable
+    public GameObject canvasPanel;
     public GameObject TextPanel;
-    public TextMeshProUGUI temperatureText; // Assign this in the Inspector
+    public TextMeshProUGUI temperatureText;
 
     private liquidScript liquid;
     private Camera playerCamera;
-    float dotproudct;
     public GameObject beaker;
 
     void Start()
@@ -19,29 +16,38 @@ public class TemperatureCanvas : MonoBehaviour
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null)
         {
-            // Get the camera from the player's child object
             playerCamera = player.transform.Find("Camera")?.GetComponent<Camera>();
-
             if (playerCamera == null)
-            {
                 Debug.LogWarning("Camera not found as a child of the player object.");
-            }
         }
         else
         {
             Debug.LogWarning("Player object with tag 'Player' not found.");
         }
-        // Try to find the Capillary Tube object by name
-        GameObject capillaryTube = GameObject.Find("Capilary tube");
-        beaker = capillaryTube.transform.parent?.parent?.parent?.gameObject;
+
+        GameObject capillaryTube = null;
+        float minDist = Mathf.Infinity;
+
+        foreach (GameObject obj in FindObjectsOfType<GameObject>())
+        {
+            if (obj.name == "Capilary tube")
+            {
+                float dist = Vector3.Distance(transform.position, obj.transform.position);
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                    capillaryTube = obj;
+                }
+            }
+        }
 
         if (capillaryTube != null)
         {
+            beaker = capillaryTube.transform.parent?.parent?.parent?.gameObject;
             liquid = capillaryTube.GetComponent<liquidScript>();
+
             if (liquid == null)
-            {
                 Debug.LogWarning("Liquid script not found on Capillary Tube.");
-            }
         }
         else
         {
@@ -56,45 +62,25 @@ public class TemperatureCanvas : MonoBehaviour
 
     void Update()
     {
-        if (liquid != null && temperatureText != null)
+        if (liquid != null && temperatureText != null && playerCamera != null && beaker != null)
         {
             if (liquid.currentVolume_mL <= 0f)
             {
-                temperatureText.text = "Capilary Tube: empty";
+                temperatureText.text = "Capillary Tube: empty";
             }
             else
             {
                 float temperature = liquid.liquidTemperature - 273.15f;
-
-                // Calculate vector from player camera to beaker
                 Vector3 directionToBeaker = beaker.transform.position - playerCamera.transform.position;
-
-                // Calculate dot product between camera forward vector and the direction to the beaker
                 float dotProduct = Vector3.Dot(playerCamera.transform.forward, directionToBeaker.normalized);
 
-                // Display temperature and state of matter
-                var meltingpointvalue = liquid.GetMeltingPoint();
-                if (liquid.liquidTemperature < meltingpointvalue)
-                {
-                    temperatureText.text = temperature.ToString("F1") + " °C" + "\nState of Matter: Solid";
-                }
-                else if (liquid.liquidTemperature >= meltingpointvalue)
-                {
-                    temperatureText.text = temperature.ToString("F1") + " °C" + "\nState of Matter: Liquid";
-                }
+                float meltingPoint = liquid.GetMeltingPoint();
+                string state = liquid.liquidTemperature < meltingPoint ? "Solid" : "Liquid";
+                temperatureText.text = $"{temperature:F1} °C\nState of Matter: {state}";
 
-
-                // Enable the canvas panel if looking at the beaker (dot product > 0.7)
-                if (dotProduct > 0.8f)
-                {
-                    canvasPanel.SetActive(true); // Show the panel and text
-                    TextPanel.SetActive(true);
-                }
-                else
-                {
-                    TextPanel.SetActive(false);
-                    canvasPanel.SetActive(false); // Hide the panel and text
-                }
+                bool isLookingAtBeaker = dotProduct > 0.8f;
+                canvasPanel.SetActive(isLookingAtBeaker);
+                TextPanel.SetActive(isLookingAtBeaker);
             }
         }
     }
