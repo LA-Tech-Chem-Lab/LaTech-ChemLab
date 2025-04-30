@@ -373,7 +373,7 @@ public class pickUpObjects : MonoBehaviour
                 {
                     if (GetComponent<doCertainThingWith>().IsNearIronMesh)
                     {
-                        multiHandlerScript.setHelpText("Right click to snap container to iron mesh");
+                        multiHandlerScript.setHelpText("Right click to snap container to iron mesh if iron mesh is currently connected to iron ring.");
                     }
                     else
                     {
