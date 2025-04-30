@@ -342,6 +342,8 @@ public class progessTracker : MonoBehaviour
                 break;
 
             case LabState.Finished:
+                if (Input.GetKeyDown(KeyCode.C))
+                    TransitionToNextState();
                 // Mark the lab as completed, maybe show results or feedback
                 Debug.Log("checking melting point.");
                 if (player.GetComponent<doCertainThingWith>().meltingPointToolPlaced == true){
