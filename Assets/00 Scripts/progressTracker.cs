@@ -597,13 +597,13 @@ public class progessTracker : MonoBehaviour
 
     IEnumerator foundMeltingPoint(){
         yield return new WaitForSeconds(1f);
-        popUpPanel.SetActive(true);
-        GetComponent<multihandler>().ToggleCursor();
-        content.text = "Congrats! You found your melting point! It is " + mp + " Kelvin. That's a pretty pure product!";
-        while (!nextButtonClicked){
-            yield return null;
-        }
-        nextButtonClicked = false;
+        //popUpPanel.SetActive(true);
+        //GetComponent<multihandler>().ToggleCursor();
+        //content.text = "Congrats! You found your melting point! It is " + mp + " Kelvin. That's a pretty pure product!";
+        //while (!nextButtonClicked){
+        //    yield return null;
+        //}
+        //nextButtonClicked = false;
         popUpPanel.SetActive(false);
         completionScreen.ShowCompletionScreen();
         GetComponent<multihandler>().ToggleCursor();
