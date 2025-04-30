@@ -322,9 +322,9 @@ public class LabProgress : MonoBehaviour
 
                 foreach (GameObject obj in liquidHolders9)
                 {
-                    if (obj.GetComponent<liquidScript>().percentAlum > 0.95f){ 
+                    if (obj.GetComponent<liquidScript>().percentAlum > 0.95f && obj.GetComponent<liquidScript>().currentVolume_mL > 10f){ 
                         step1Erlenmeyer = obj;
-                        TransitionToNextState();
+                        StartCoroutine(waitBeforeTransitioning());
                     }
                 }
                 break;
@@ -344,6 +344,11 @@ public class LabProgress : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    IEnumerator waitBeforeTransitioning(){
+        yield return new WaitForSeconds(5f);
+        TransitionToNextState();
     }
 
     IEnumerator Intro(){
