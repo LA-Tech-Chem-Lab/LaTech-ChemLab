@@ -95,7 +95,7 @@ public class pickUpObjects : MonoBehaviour
 
         if (currentLiquidHoldingTempCELSIUS > 49f){
             DropItem();
-            multiHandlerScript.setHelpText("The flask got too hot to hold, be sure to use tongs.");
+            multiHandlerScript.setHelpText("The container is above 49°C.");
         }
     }
 
@@ -108,7 +108,7 @@ public class pickUpObjects : MonoBehaviour
         {
             if (liquid.liquidTemperature >= 322.15f)
             {
-                multiHandlerScript.setHelpText("Current temperatuer is too hot its at " + liquid.liquidTemperature);
+                multiHandlerScript.setHelpText("Temperature is too hot. It is currently: " + (liquid.liquidTemperature - 273.15f)+"°C");
                 return;
             }
         }
@@ -267,6 +267,10 @@ public class pickUpObjects : MonoBehaviour
             if (GetComponent<doCertainThingWith>().tryingToPipetteSolid){
                 multiHandlerScript.setHelpText("It looks like you are trying to pipette a solid. Maybe try pouring this substance by picking up the container and right clicking another container.");
             }
+        }
+
+        if (other.name == "Thrown Match(Clone)"){
+            multiHandlerScript.setHelpText("Scroll your mouse wheel to move match in and out.");
         }
 
         if (other.name == "Scoopula"){
