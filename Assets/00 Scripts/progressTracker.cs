@@ -567,20 +567,13 @@ public class progessTracker : MonoBehaviour
         yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        GameObject[] liquidHolders10 = GameObject.FindGameObjectsWithTag("LiquidHolder");
-        float highestProductAmount = 0f;
-        foreach (GameObject obj in liquidHolders10)
-        {
-            if (obj.GetComponent<liquidScript>().percentAlum > 0.95f){
-                if (obj.GetComponent<liquidScript>().currentVolume_mL >= highestProductAmount){
-                    highestProductAmount = obj.GetComponent<liquidScript>().currentVolume_mL;
-                }
-            }
-        }
-        float AlMols = massOfAluminumUsed / 26.98f;
-        float massAlumTheoretical = AlMols * 474.39f;
-        float percentYield = highestProductAmount / massAlumTheoretical;
-        content.text = "You did it! You have succesfully synthesized Alum! Your percent yeild is " + percentYield + "!";
+        GameObject finalBeaker = player.GetComponent<pickUpObjects>().other;
+        float highestProductAmount = finalBeaker.GetComponent<liquidScript>().currentVolume_mL * finalBeaker.GetComponent<liquidScript>().percentAlum;
+        float AlMols = 1 / 26.98f;
+        float massAlumTheoretical = 50f;
+        float percentYield = highestProductAmount / massAlumTheoretical * 100f;
+        Debug.Log(massAlumTheoretical);
+        content.text = "You did it! You have succesfully synthesized Alum! Your percent yeild is " + percentYield + "% !";
         while (!nextButtonClicked){
             yield return null;
         }
