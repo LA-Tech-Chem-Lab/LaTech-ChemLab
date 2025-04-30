@@ -334,6 +334,7 @@ public class progessTracker : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.H)){
                         print("Check solution");
                         TransitionToNextState();
+                        giveWalterSolutionText.SetActive(false);
                     }
                 }
 
