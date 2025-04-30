@@ -33,6 +33,10 @@ public class InputMessage
 public class multihandler : MonoBehaviour
 {   
     public GameObject currentPlayer;
+    public Vector3 startingPosition;
+    public bool hasLeftSpawn;
+    public bool hasWornGoggles;
+    public GameObject putOnGogglesText;
     private interactWithObjects interactWithObjectsScript;
 
     //public GameObject JoinCanvas;
@@ -83,6 +87,8 @@ public class multihandler : MonoBehaviour
 
         timeOfLastResponse = Time.time - 11f; timeOfLastQuestion = timeOfLastResponse;
         interactWithObjectsScript = currentPlayer.GetComponent<interactWithObjects>();
+
+        startingPosition = currentPlayer.transform.position;
     }
 
     void Update()
@@ -115,9 +121,21 @@ public class multihandler : MonoBehaviour
         // }
         
         textChatAndAIChat();
-        
-        
 
+        if (Vector3.Distance(currentPlayer.transform.position, startingPosition) > 5f)
+            hasLeftSpawn = true;
+        
+        
+        if (!hasWornGoggles && interactWithObjectsScript.gogglesOn)
+            hasWornGoggles = true;
+
+        if (hasLeftSpawn && !interactWithObjectsScript.gogglesOn && !hasWornGoggles)
+            putOnGogglesText.SetActive(true);
+        
+        if (!hasLeftSpawn || interactWithObjectsScript.gogglesOn)
+            putOnGogglesText.SetActive(false);
+        
+        
     }
 
     void textChatAndAIChat(){

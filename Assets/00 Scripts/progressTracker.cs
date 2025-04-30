@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class LabProgress : MonoBehaviour
+public class progessTracker : MonoBehaviour
 {
     // Current state of the lab progress
     public enum LabState
@@ -39,6 +39,7 @@ public class LabProgress : MonoBehaviour
     public float massOfAluminumUsed;
     public float mp;
     public bool foundMP = false;
+    public multihandler theMULTIHANDLER;
 
     // Initialize the first state
     private void Start()
@@ -56,6 +57,7 @@ public class LabProgress : MonoBehaviour
         GameObject Scroll = Notebook.transform.Find("Scroll View").gameObject;
         GameObject View = Scroll.transform.Find("Viewport").gameObject;
         scrollContent = View.transform.Find("Content").gameObject;
+        theMULTIHANDLER = GameObject.FindGameObjectWithTag("GameController").GetComponent<multihandler>();
 
         currentState = LabState.safetyCheck;
         DisplayCurrentState();
@@ -353,20 +355,20 @@ public class LabProgress : MonoBehaviour
 
     IEnumerator Intro(){
         // give them a couple of seconds to view the lab
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1.8f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        content.text = "Hello There! My name is Walter. Welcome to the Synthesis of Alum Lab! If you have any questions, please press T on your keyboard and I would be happy to assist you.";
+        content.text = "Hello There! My name is Walter. Welcome to the Synthesis of Alum Lab! If you have any questions, press T on your keyboard and I would be happy to assist you.";
         while (!nextButtonClicked){
             yield return null;
         }
         nextButtonClicked = false;
-        content.text = "You can use WASD or the arrow keys to move throughout the lab. You can use left click to pick up or drop objects or right click to use the objects in your hand. If you press tab or escape, you will be able to veiw the menu where you can check out your lab book, settings, ask questions or exit the game.";
+        content.text = "You can use left click to pick up or drop objects or right click to use the objects in your hand.";
         while (!nextButtonClicked){
             yield return null;
         }
         nextButtonClicked = false;
-        content.text = "Check that you are wearing proper atire and that you remove any rings on your fingers. Before starting any lab, make sure that you put on your safety goggles! You can find them hanging on the wall in the lab.";
+        content.text = "Before starting any lab, make sure that you put on your safety goggles! You can find them hanging on the wall in the lab.";
         while (!nextButtonClicked){
             yield return null;
         }
@@ -385,6 +387,7 @@ public class LabProgress : MonoBehaviour
         }
         nextButtonClicked = false;
         popUpPanel.SetActive(false);
+        theMULTIHANDLER.PauseOrUnpause();
         GetComponent<multihandler>().ToggleCursor();
     }
 
