@@ -349,7 +349,7 @@ public class pickUpObjects : MonoBehaviour
             {
                 string helpText = "Contents: \n";
                 liquidScript LS = other.GetComponent<liquidScript>();
-                List<float> solutionMols = Enumerable.Repeat(0f, 11).ToList();
+                List<float> solutionMols = Enumerable.Repeat(0f, 12).ToList();
 
                 // Convert percentages to moles for reactants
                 for (int i = 0; i < solutionMols.Count; i++)
@@ -420,7 +420,7 @@ public class pickUpObjects : MonoBehaviour
             if (Input.GetMouseButton(1)){
                 string helpText = "Contents: \n";
                 weighboatscript WBS = other.GetComponent<weighboatscript>();
-                List<float> solutionMols = Enumerable.Repeat(0f, 11).ToList();
+                List<float> solutionMols = Enumerable.Repeat(0f, 12).ToList();
                 // Convert percentages to moles for reactants
                 for (int i = 0; i < solutionMols.Count; i++)
                 {
