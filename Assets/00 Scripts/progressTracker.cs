@@ -387,7 +387,7 @@ public class progessTracker : MonoBehaviour
         yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        content.text = "Congratulations! Your eyes are now protected from hazardous chemicals. Now to begin the experiment. First, you will need to measure out 1 gram of aluminum pellets using the scoopula, weight boat and scale. Don't forget to tare the weigh boat first so that you can tell how much aluminum you are weighing out.";
+        content.text = "Congratulations! Your eyes are now protected from hazardous chemicals. Now to begin the experiment. Weigh out about 1 g of aluminum metal onto a weigh boat by placing the weigh boat on the scale and clicking the tare button to set the scale to zero. Then grab the scoopula and right click near the jar of aluminum pellets and pour the aluminum from the weigh boar into the 250 mL Erlenmeyer flask.  ";
         while (!nextButtonClicked){
             yield return null;
         }
@@ -404,27 +404,17 @@ public class progessTracker : MonoBehaviour
         float aluminumVol = step1Erlenmeyer.GetComponent<liquidScript>().currentVolume_mL;
         float aluminumGrams = aluminumVol * 2.7f;
         massOfAluminumUsed = aluminumGrams;
-        content.text = "Nice Work! You have measured out " + aluminumGrams + " grams of aluminum into the 250 mL Erlenmeyer Flask. Record this number for later use. ";
+        content.text = "Nice Work! You have measured out " + aluminumGrams + " grams of aluminum into the 250 mL Erlenmeyer Flask. ";
         while (!nextButtonClicked){
             yield return null;
         }
         nextButtonClicked = false;
-        content.text = "The next step is to measure out 25 mL of potassium hydroxide or KOH into the flask containing the aluminum. The KOH can be found in one of the hoods. You can pick up the beakers and hold right click to see what is in them.";
+        content.text = "CAREFULLY add 25 mL of 20% potassium hydroxide (KOH) to the graduated cylinder. This can be found in the hood next to the shower. If you pick it up, you can hold right click to inspect and view its contents. You can pour from this beaker by holding 'P'. ";
         while (!nextButtonClicked){
             yield return null;
         }
         nextButtonClicked = false;
-        content.text = "In order to measure the correct amount of potassium hydroxide (KOH), you can use the graduated cylinder. This is a tool used for measuring precise volumes of liquid. While holding the graduated cylinder, you can hold down right click to view the precice volume of its contents. ";
-        while (!nextButtonClicked){
-            yield return null;
-        }
-        nextButtonClicked = false;
-        content.text = "Once you have poured an approximate volume from the KOH beaker into the graduated cylinder, you can use the pipette to move small amounts of liquid and get the exact volume that you want. Then you can record this volume and pour its contents into the flask containing the aluminum. ";
-        while (!nextButtonClicked){
-            yield return null;
-        }
-        nextButtonClicked = false;
-        content.text = "CAUTION: KOH is a caustic material and is harmful to skin! Immediately rinse affected area with plenty of water if skin comes in contact with KOH.";
+        content.text = "While you are holding the graduated cylinder, you can hold right click to inspect to see the exact volume of its contents. Once you get close to the right amount, you can use a pipette to measure out the exact amount that you need. ";
         while (!nextButtonClicked){
             yield return null;
         }
@@ -440,22 +430,17 @@ public class progessTracker : MonoBehaviour
         GetComponent<multihandler>().ToggleCursor();
         Debug.Log(step1Erlenmeyer.transform.name);
         float KOHvol = step1Erlenmeyer.GetComponent<liquidScript>().currentVolume_mL;
-        content.text = "Awesome! You have measured out " + KOHvol + " mL of potassium hydroxide (KOH) into the 250 mL Erlenmeyer Flask with the aluminum. Record this number for later use. ";
+        content.text = "Awesome! You have measured out " + KOHvol + " mL of potassium hydroxide (KOH). ";
         while (!nextButtonClicked){
             yield return null;
         }
         nextButtonClicked = false;
-        content.text = "Now it's time to let it react. In the IESB labs, this would take around 15 minutes, but time moves differently here. Let it react for a few minutes and then use a bunsen burner to raise the activation energy of the reactants and drive the remainder of the reaction forwards. ";
+        content.text = "Take the KOH in the graduated cylinder and pour it into the 250 mL flask with the Aluminum that you collected in step 1. Then, set up the iron stand which can be found in the left cabinet at every desk. Grab the iron ring and iron mesh from the drawer and snap them into place on the iron mesh for the flask to be snapped on top of.";
         while (!nextButtonClicked){
             yield return null;
         }
         nextButtonClicked = false;
-        content.text = "WARNING: This is an exothermic reaction meaning that it produces heat. This may cause the glass to be hot. You may want to use tongs to transport it from place to place. ";
-        while (!nextButtonClicked){
-            yield return null;
-        }
-        nextButtonClicked = false;
-        content.text = "CAUTION: Hydrogen Gas (H2) is evolved in this reaction. This gas is highly flamable and can cause fires and explosions. You should allow this reaction to take place under the vents. Manipulate the vents so that they are in the desired position and then use the lever handle to turn them on. This will evacuate the Hydrogen gas (H2). Make sure you are also using the vents anytime that you are using the bunsen burner. ";
+        content.text = "Then manipulate the ceiling vent to get it into position over the iron stand and flip the handle to turn it on. Place the bunsen burner underneath the flask, turn on the gas and light the match. Wait for the solution to heat up and react to an acceptable level.";
         while (!nextButtonClicked){
             yield return null;
         }
@@ -473,12 +458,12 @@ public class progessTracker : MonoBehaviour
             yield return null;
         }
         nextButtonClicked = false;
-        content.text = "In order to use the gravity filter, you insert the glass funnel into an empty Erlenmeyer Flask. Then you get the paper filter cone and insert it into the funnel/flask combination. From here, you can slowly pour or pipette the solution that you wish to filter into the gravity filter you jsut assembled. After you are finished filtering, you can take the paper cone and put it in the trash and remove the glass funnel. The solution remaining in the flask below is a filtered liquid solution. ";
+        content.text = "The flask is very hot, so make sure you use tongs when removing it from the iron stand and allow it to cool until the flask is no longer red. While you are waiting, you can assemble the gravity filter apparatus. This consists of a 250 mL Erlenmeyer flask, a glass funnel and a paper filter cone. They should snap into place. ";
         while (!nextButtonClicked){
             yield return null;
         }
         nextButtonClicked = false;
-        content.text = "Be careful of hot glassware. Make sure that you allow the solution to cool before attempting to use the filter. ";
+        content.text = "Slowly pour the solution into the filter apparatus and watch as the liquid filters to the bottom and the solid remains at the top. Remove the paper cone and glass funnel when you are finished.";
         while (!nextButtonClicked){
             yield return null;
         }
@@ -491,7 +476,7 @@ public class progessTracker : MonoBehaviour
         yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        content.text = "Good work! The filtering looks like it went well. Next, you need to add 30 mL of Sulfuric Acid (H2SO4) to the solution. Use the stir rod to accelerate and ensure a complete reaction. Since the flasks are too narrow for stirring, you may want to transfer the solution to a beaker first.";
+        content.text = "Good work! The filtering looks like it went well. Now, measure out 30 mL of sulfuric acid or H2SO4 into a graduated cylinder as you did in step 2 and add this to an empty beaker. Add your filtered solution to this same beaker. Then, you will need to stir the solution to break down solids and drive it further. ";
         while (!nextButtonClicked){
             yield return null;
         }
@@ -553,11 +538,6 @@ public class progessTracker : MonoBehaviour
             yield return null;
         }
         nextButtonClicked = false;
-        content.text = "Once you are finished, Pour the waste in the Buchner flask into the waste bucket in the hood.";
-        while (!nextButtonClicked){
-            yield return null;
-        }
-        nextButtonClicked = false;
         popUpPanel.SetActive(false);
         GetComponent<multihandler>().ToggleCursor();
     }
@@ -566,7 +546,7 @@ public class progessTracker : MonoBehaviour
         yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        content.text = "Good Job! Pour the contents of the paper cone onto a paper towel to dry the crystals further. Once they are dry move them to a beaker to show off your final product!";
+        content.text = "Good Job! Tare out a beaker on the scale and then pour the contents from the paper cone into the tared beaker. This is the mass of your final product. Then, take the solution to Walter and press 'C' to turn it in and have him analyze it. ";
         while (!nextButtonClicked){
             yield return null;
         }
