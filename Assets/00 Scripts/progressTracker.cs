@@ -326,10 +326,11 @@ public class progessTracker : MonoBehaviour
 
             case LabState.Step10:
                 // GameObject[] liquidHolders9 = GameObject.FindGameObjectsWithTag("LiquidHolder");
+                bool playerHoldingLiquidCont = player.GetComponent<pickUpObjects>().other && player.GetComponent<pickUpObjects>().other.tag == "LiquidHolder";
 
-                giveWalterSolutionText.SetActive(Vector3.Distance(player.transform.position, teacher.transform.position) < 10f);
+                giveWalterSolutionText.SetActive(Vector3.Distance(player.transform.position, teacher.transform.position) < 10f && playerHoldingLiquidCont);
 
-                if (Vector3.Distance(player.transform.position, teacher.transform.position) < 10f){
+                if (Vector3.Distance(player.transform.position, teacher.transform.position) < 10f && playerHoldingLiquidCont){
                     
                     if (Input.GetKeyDown(KeyCode.H)){
                         print("Check solution");
