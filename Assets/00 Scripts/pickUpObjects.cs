@@ -482,7 +482,7 @@ public class pickUpObjects : MonoBehaviour
 
             if (hitObject.name == "Capilary tube")
             {
-                if (GetComponent<doCertainThingWith>().CapilaryAttached == true)
+                if (hitObject.GetComponent<liquidScript>().CapilaryAttached == true)
                 {
                     return;
                 }

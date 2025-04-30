@@ -147,7 +147,7 @@ public class liquidScript : MonoBehaviour
     public GameObject buchnerFaucet;
 
     public bool InDrawer = false;
-
+    public bool CapilaryAttached;
 
     // Use this for initialization
     void Start()

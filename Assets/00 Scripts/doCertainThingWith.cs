@@ -68,7 +68,6 @@ public class doCertainThingWith : MonoBehaviour
     public GameObject meltingPointBeaker;
     public bool IsNearIronMesh { get; private set; }
     public GameObject currentCanvas;
-    public bool CapilaryAttached;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -951,7 +950,7 @@ public class doCertainThingWith : MonoBehaviour
                 capillaryTube.transform.localScale = Vector3.one;
                 capillaryTube.GetComponent<CapsuleCollider>().isTrigger = true;
                 capillaryTube.GetComponent<Rigidbody>().isKinematic = true;
-                CapilaryAttached = true;
+                capillaryTube.GetComponent<liquidScript>().CapilaryAttached = true;
 
             }
             else
