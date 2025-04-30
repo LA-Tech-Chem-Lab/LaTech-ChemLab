@@ -539,6 +539,9 @@ public class doCertainThingWith : MonoBehaviour
         while (LS.isPouring)
         {
             // Check if target container is still within range
+            if(!targetContainer){
+                yield break;
+            }
             float distance = Vector3.Distance(pickUpScript.other.transform.position, targetContainer.position);
 
             if (distance > maxPourDistance) // Stop pouring if too far
