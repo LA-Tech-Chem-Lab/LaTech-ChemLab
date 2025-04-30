@@ -40,6 +40,8 @@ public class progessTracker : MonoBehaviour
     public float mp;
     public bool foundMP = false;
     public multihandler theMULTIHANDLER;
+    public GameObject giveWalterSolutionText;
+    public GameObject teacher;
 
     // Initialize the first state
     private void Start()
@@ -62,6 +64,8 @@ public class progessTracker : MonoBehaviour
         currentState = LabState.safetyCheck;
         DisplayCurrentState();
         StartCoroutine(Intro());
+
+
     }
 
     // Transition to the next state
@@ -321,15 +325,18 @@ public class progessTracker : MonoBehaviour
                 break;
 
             case LabState.Step10:
-                GameObject[] liquidHolders9 = GameObject.FindGameObjectsWithTag("LiquidHolder");
+                // GameObject[] liquidHolders9 = GameObject.FindGameObjectsWithTag("LiquidHolder");
 
-                foreach (GameObject obj in liquidHolders9)
-                {
-                    if (obj.GetComponent<liquidScript>().percentAlum > 0.95f && obj.GetComponent<liquidScript>().currentVolume_mL > 10f){ 
-                        step1Erlenmeyer = obj;
-                        StartCoroutine(waitBeforeTransitioning());
+                giveWalterSolutionText.SetActive(Vector3.Distance(player.transform.position, teacher.transform.position) < 10f);
+
+                if (Vector3.Distance(player.transform.position, teacher.transform.position) < 10f){
+                    
+                    if (Input.GetKeyDown(KeyCode.H)){
+                        print("Check solution");
+                        TransitionToNextState();
                     }
                 }
+
                 break;
 
             case LabState.Finished:
@@ -476,7 +483,7 @@ public class progessTracker : MonoBehaviour
         yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        content.text = "Good work! The filtering looks like it went well. Now, measure out 30 mL of sulfuric acid or H2SO4 into a graduated cylinder as you did in step 2 and add this to an empty beaker. Add your filtered solution to this same beaker. Then, you will need to stir the solution to break down solids and drive it further. ";
+        content.text = "Good work! The filtering looks like it went well. Now, measure out 30 mL of sulfuric acid or H2SO4 into a graduated cylinder as you did in step 2 and add this to an empty beaker. Add your filtered solution to this same beaker. Then, you can stir the solution to break down solids and drive it faster. ";
         while (!nextButtonClicked){
             yield return null;
         }
@@ -546,7 +553,7 @@ public class progessTracker : MonoBehaviour
         yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        content.text = "Good Job! Tare out a beaker on the scale and then pour the contents from the paper cone into the tared beaker. This is the mass of your final product. Then, take the solution to Walter and press 'C' to turn it in and have him analyze it. ";
+        content.text = "Good Job! Tare out a beaker on the scale and then pour the contents from the paper cone into the tared beaker. This is the mass of your final product. Then, take the solution to Walter and press 'H' to turn it in and have him analyze it. ";
         while (!nextButtonClicked){
             yield return null;
         }
