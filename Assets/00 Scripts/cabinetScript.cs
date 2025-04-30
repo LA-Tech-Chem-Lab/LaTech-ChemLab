@@ -26,6 +26,10 @@ public class cabinetScript : MonoBehaviour
 
     private Vector3 targetPosition;
 
+    public liquidScript liquid;
+
+    private HashSet<liquidScript> previouslyContainedLiquids = new HashSet<liquidScript>();
+
     void Start()
     {
         initialPosition = transform.localPosition;
@@ -76,6 +80,7 @@ public class cabinetScript : MonoBehaviour
         Collider[] colliders = Physics.OverlapBox(boxCenter, boxSize / 2, transform.rotation);
 
         HashSet<GameObject> uniqueObjects = new HashSet<GameObject>();
+        HashSet<liquidScript> currentContainedLiquids = new HashSet<liquidScript>();
 
         foreach (Collider collider in colliders)
         {
@@ -85,14 +90,36 @@ public class cabinetScript : MonoBehaviour
                 !collider.transform.IsChildOf(transform.parent.parent) &&
                 !collider.transform.IsChildOf(roomMesh.transform))
             {
-                uniqueObjects.Add(obj); // Only add each GameObject once
+                uniqueObjects.Add(obj);
             }
         }
 
         foreach (GameObject obj in uniqueObjects)
         {
+            objectsInArea.Add(obj);
             obj.transform.Translate(cabinetVel, Space.World);
+
+            if (obj.CompareTag("LiquidHolder"))
+            {
+                var l = obj.GetComponent<liquidScript>();
+                if (l != null)
+                {
+                    l.InDrawer = true;
+                    currentContainedLiquids.Add(l);
+                }
+            }
         }
+
+        // Set InDrawer = false for liquids no longer in the drawer
+        foreach (var l in previouslyContainedLiquids)
+        {
+            if (!currentContainedLiquids.Contains(l))
+            {
+                l.InDrawer = false;
+            }
+        }
+
+        previouslyContainedLiquids = currentContainedLiquids;
     }
 
     void OnDrawGizmosSelected()

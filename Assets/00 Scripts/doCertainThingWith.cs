@@ -454,7 +454,6 @@ public class doCertainThingWith : MonoBehaviour
 
         Debug.Log("ispouring");
         LS.isPouring = true;
-        //GameObject closestBeakerOrFlask = findClosestItemWithTag("LiquidHolder", pickUpScript.other);
 
         float minDist = Mathf.Infinity;
         GameObject closestBeakerOrFlask = null;
@@ -463,9 +462,17 @@ public class doCertainThingWith : MonoBehaviour
         {
             if ((currentObject.tag == "LiquidHolder" || currentObject.name.StartsWith("Paper Towel") || currentObject.name.StartsWith("Weigh Boat")) && currentObject != pickUpScript.other)
             {
+                // Retrieve the Liquid script attached to the current object
+                liquidScript liquidScriptComponent = currentObject.GetComponent<liquidScript>();
 
-                var pipetteTip = pickUpScript.other.transform.position; pipetteTip.y = 0f;
-                var beakerOrFlask = currentObject.transform.position; beakerOrFlask.y = 0f;
+                // Skip objects that are in the drawer
+                if (liquidScriptComponent != null && liquidScriptComponent.InDrawer)
+                    continue;
+
+                var pipetteTip = pickUpScript.other.transform.position;
+                pipetteTip.y = 0f;
+                var beakerOrFlask = currentObject.transform.position;
+                beakerOrFlask.y = 0f;
 
                 float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
 
@@ -491,32 +498,34 @@ public class doCertainThingWith : MonoBehaviour
             return; // Exit the function
         }
 
-        if (closestBeakerOrFlask.name.StartsWith("Paper Towel") || closestBeakerOrFlask.name.StartsWith("Weigh Boat")){
-            if (LS.liquidPercent < 0.2f){
+        if (closestBeakerOrFlask.name.StartsWith("Paper Towel") || closestBeakerOrFlask.name.StartsWith("Weigh Boat"))
+        {
+            if (LS.liquidPercent < 0.2f)
+            {
                 pickUpScript.other.transform.rotation = Quaternion.Euler(90f, 0f, 0f); // Keep beaker tilted
                 Debug.Log(closestBeakerOrFlask.transform.name);
                 pouringCoroutine = StartCoroutine(PourToWeighBoatContinuously(LS, closestBeakerOrFlask.transform));
             }
-            else{
+            else
+            {
                 tryingToPourLiquidOnPaperTowel = true;
             }
         }
-        else{
+        else
+        {
             Transform pourPos = closestBeakerOrFlask.transform.Find("pourPos");
             pickUpScript.other.transform.position = pourPos.position;
 
-            pickUpScript.other.transform.localRotation =  pourPos.transform.localRotation;
+            pickUpScript.other.transform.localRotation = pourPos.transform.localRotation;
             pickUpScript.other.transform.rotation = Quaternion.Euler(90f, 90f, 0f); // Keep beaker tilted
-            
-            //pickUpScript.other.GetComponent<MeshCollider>().isTrigger = true;
 
-            //pickUpScript.other.transform.eulerAngles = new Vector3(90f, 0f, 0f);
             Debug.Log("Pouring into: " + closestBeakerOrFlask.name);
 
             // Store the coroutine reference
             pouringCoroutine = StartCoroutine(PourContinuously(LS, closestBeakerOrFlask.transform));
         }
     }
+
 
     void stopPour()
     {
@@ -1393,15 +1402,18 @@ public class doCertainThingWith : MonoBehaviour
     void lightUpBeaker()
     {
         GameObject pipetteEnd = pickUpScript.other;
-        if (pickUpScript.other.name == "Pipette" || pickUpScript.other.name == "Scoopula"){
+        if (pickUpScript.other.name == "Pipette" || pickUpScript.other.name == "Scoopula")
+        {
             pipetteEnd = pickUpScript.other.transform.Find("Tip")?.gameObject;
         }
+
         GameObject closestBeakerOrFlask = findClosestItemWithTag("LiquidHolder", pipetteEnd);
         if (closestBeakerOrFlask == null) return;
 
         // Get positions and zero out Y-axis
         Vector3 pipetteTip = pickUpScript.other.transform.position;
-        if (pickUpScript.other.name == "Pipette" || pickUpScript.other.name == "Scoopula"){
+        if (pickUpScript.other.name == "Pipette" || pickUpScript.other.name == "Scoopula")
+        {
             pipetteTip = pickUpScript.other.transform.Find("Tip").position;
         }
         pipetteTip.y = 0f;
@@ -1410,17 +1422,22 @@ public class doCertainThingWith : MonoBehaviour
 
         float distFromTip = Vector3.Distance(pipetteTip, beakerOrFlask);
 
-
         // Find "allLiquidHolders" object
         GameObject allLiquidHolders = GameObject.Find("allLiquidHolders");
         if (allLiquidHolders == null) return; // Avoid errors if it's missing
 
         float distanceAllowed = PIPETTE_GRAB_DISTANCE;
-        if (pickUpScript.other.name != "Pipette"){
+        if (pickUpScript.other.name != "Pipette")
+        {
             distanceAllowed = distanceAllowed * 5f;
         }
+
         foreach (Transform liquidHolder in allLiquidHolders.transform)
         {
+            // Retrieve the Liquid script to check the Indrawer flag
+            liquidScript liquidScript = liquidHolder.GetComponent<liquidScript>();
+            if (liquidScript != null && liquidScript.InDrawer) continue; // Skip if the liquid holder is in the drawer
+
             if (liquidHolder.name.StartsWith("Erlenmeyer Flask"))
             {
                 foreach (Transform flaskChild in liquidHolder.transform)
@@ -1439,6 +1456,7 @@ public class doCertainThingWith : MonoBehaviour
                     }
                 }
             }
+
             if (liquidHolder.name.StartsWith("Buchner Flask"))
             {
                 foreach (Transform flaskChild in liquidHolder.transform)
@@ -1457,6 +1475,7 @@ public class doCertainThingWith : MonoBehaviour
                     }
                 }
             }
+
             if (liquidHolder.childCount > 0) // Ensure it has children
             {
                 GameObject whiteOutline = liquidHolder.GetChild(0).gameObject;
@@ -2096,7 +2115,9 @@ public class doCertainThingWith : MonoBehaviour
     }
 
     IEnumerator extinguishFiresConstantly(){
-        for(int i = 0; i < 80; i++)
+        if (!pickUpScript.other)
+            yield break;
+        for (int i = 0; i < 80; i++)
         {
             ExtinguishFires(pickUpScript.other.transform);
             yield return new WaitForSeconds(0.1f);
