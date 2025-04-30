@@ -1899,7 +1899,7 @@ void CalculateHeat()
                     List<string> products = new List<string> { "Alum" };
                     List<float> Rratio = new List<float> { 1 };
                     List<float> Pratio = new List<float> { 1 };
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 0.1f, "none", 0, false));
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 0.5f, "none", 0, false));
                     isCrystalizedAlum = true;
                 }
             }
