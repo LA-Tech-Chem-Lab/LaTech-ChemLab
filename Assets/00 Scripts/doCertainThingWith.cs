@@ -561,7 +561,9 @@ public class doCertainThingWith : MonoBehaviour
             if(targetContainer.GetComponent<liquidScript>().currentVolume_mL + 1f < targetContainer.GetComponent<liquidScript>().totalVolume_mL){
                 LS.filterSolution(LS.solutionMakeup, 150 * Time.deltaTime, targetContainer); // Pour 1 unit per frame
             }
+            targetContainer.GetComponent<Rigidbody>().AddForce(Vector3.up * 0.0001f, ForceMode.Impulse);
             yield return new WaitForSeconds(0.1f); // Controls pour speed
+
         }
     }
 
