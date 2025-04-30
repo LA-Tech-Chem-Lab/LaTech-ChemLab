@@ -159,8 +159,9 @@ public class progessTracker : MonoBehaviour
 
             case LabState.Finished:
                 Debug.Log("Lab is complete!");
+                StartCoroutine(foundMeltingPoint());
                 currentState = LabState.meltingPoint;
-                return; // Do not transition further
+                break; // Do not transition further
             
             case LabState.meltingPoint:
                 return;
@@ -333,10 +334,15 @@ public class progessTracker : MonoBehaviour
 
             case LabState.Finished:
                 // Mark the lab as completed, maybe show results or feedback
+                Debug.Log("checking melting point.");
                 if (player.GetComponent<doCertainThingWith>().meltingPointToolPlaced == true){
+                    Debug.Log("melting point is assembleddd");
                     GameObject mpBeaker = player.GetComponent<doCertainThingWith>().meltingPointBeaker;
-                    Debug.Log("Melting Point Beaker" + mpBeaker.transform.name);
-                    if (mpBeaker.GetComponent<liquidScript>().liquidTemperature >= mpBeaker.GetComponent<liquidScript>().GetMeltingPoint()){
+                    GameObject mpTool = mpBeaker.transform.Find("Melting Point Tool").gameObject;
+                    GameObject capTube = mpTool.transform.Find("Capilary tube").gameObject;
+                    GameObject realCapTube = capTube.transform.Find("Capilary tube").gameObject;
+                    Debug.Log("Melting Point Beaker" + realCapTube.GetComponent<liquidScript>().GetMeltingPoint());
+                    if (mpBeaker.GetComponent<liquidScript>().liquidTemperature >= realCapTube.GetComponent<liquidScript>().GetMeltingPoint()){
                         TransitionToNextState();
                         if (!foundMP){
                             mp = mpBeaker.GetComponent<liquidScript>().liquidTemperature;
