@@ -1833,7 +1833,7 @@ void CalculateHeat()
                 // - **Reaction Speed:** Moderate (3/30 scale), occurs within seconds to minutes
                 // CORRECT PATH
                 if (percentAlOH3 > 0.02f){
-                    if (player.GetComponent<doCertainThingWith>().beginStirring == true){
+                    if (player.GetComponent<doCertainThingWith>().beginStirring == true || player.GetComponent<doCertainThingWith>().beginStirring2 == true || player.GetComponent<doCertainThingWith>().beginStirring3 == true || player.GetComponent<doCertainThingWith>().beginStirring4 == true){
                         currReactionID = 3;
                         step3Done = true;
                         List<string> reactants = new List<string> {"Al(OH)<sub>3</sub>", "H<sub>2</sub>SO<sub>4</sub>"};
