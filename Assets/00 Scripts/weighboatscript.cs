@@ -24,6 +24,9 @@ public class weighboatscript : MonoBehaviour
         GameObject player = GameObject.Find("Player");
         doCertainThingWithScript = player.GetComponent<doCertainThingWith>();
         Debug.Log("solution makeup length" + solutionMakeup.Count);
+        compoundNames = new List<string> {
+        "H<sub>2</sub>SO<sub>4</sub>", "KOH", "H<sub>2</sub>O", "K<sub>2</sub>SO<sub>4</sub>", "Al", "KAl(OH)<sub>4</sub>", "Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub>", "Alum", "Al(OH)<sub>3</sub>", "KAl(SO<sub>4</sub>)<sub>2</sub>*12H<sub>2</sub>O", "KAlO<sub>2</sub>", "CH<sub>3</sub>CH<sub>2</sub>OH"
+    };
     }
 
     void Update()

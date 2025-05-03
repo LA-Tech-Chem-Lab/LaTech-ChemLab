@@ -49,10 +49,22 @@ public class doCertainThingWith : MonoBehaviour
 
     public bool isRodInBeaker = false;
     public bool isSmallRodInBeaker = false;
+    public bool isSmallRodInBeaker2 = false;
+    public bool isSmallRodInBeaker3 = false;
+    public bool isSmallRodInBeaker4 = false;
     public GameObject rodInBeaker = null;
+    public GameObject rodInBeaker2 = null;
+    public GameObject rodInBeaker3 = null;
+    public GameObject rodInBeaker4 = null;
     public bool beginStirring = false;
+    public bool beginStirring2 = false;
+    public bool beginStirring3 = false; 
+    public bool beginStirring4 = false;
     //public Animator stirAnimator;
-    public Animator smallStirAnimator;                       
+    public Animator smallStirAnimator;  
+    public Animator smallStirAnimator2;
+    public Animator smallStirAnimator3;
+    public Animator smallStirAnimator4;                     
 
     public bool tryingToPipetteSolid = false;
     public bool MeshSnapped = false;
@@ -80,6 +92,15 @@ public class doCertainThingWith : MonoBehaviour
 
         smallStirAnimator = GameObject.Find("Small Stir Rod").GetComponent<Animator>();
         smallStirAnimator.enabled = false;
+
+        smallStirAnimator2 = GameObject.Find("Small Stir Rod 2").GetComponent<Animator>();
+        smallStirAnimator2.enabled = false;
+
+        smallStirAnimator3 = GameObject.Find("Small Stir Rod 3").GetComponent<Animator>();
+        smallStirAnimator3.enabled = false;
+
+        smallStirAnimator4 = GameObject.Find("Small Stir Rod 4").GetComponent<Animator>();
+        smallStirAnimator4.enabled = false;
 
         ironMesh = GameObject.Find("Iron Mesh");
         Rigidbody rb = ironMesh.GetComponent<Rigidbody>();
@@ -202,7 +223,7 @@ public class doCertainThingWith : MonoBehaviour
             //if (obj.name == "Buchner Paper Cone")
             //    insertBuchnerFilter(obj);
 
-            if (obj.name == "Small Stir Rod")
+            if (obj.name.StartsWith("Small Stir Rod"))
                 putStirRodInBeaker(obj);
 
             if (obj.name == "Capilary tube")
@@ -216,12 +237,27 @@ public class doCertainThingWith : MonoBehaviour
     void findObjectAndPerformHeldAction()  // Held right click
     {
         if (beginStirring == false) {
-            if (isRodInBeaker) {
-                //beginStirring = true;
-                //handleBigStirringAnims();
-            } else if (isSmallRodInBeaker) {
+            if (isSmallRodInBeaker) {
                 beginStirring = true;
                 handleSmallStirringAnims();
+            }
+        }
+        if (beginStirring2 == false) {
+            if (isSmallRodInBeaker2) {
+                beginStirring2 = true;
+                handleSmallStirringAnims2();
+            }
+        }
+        if (beginStirring3 == false) {
+            if (isSmallRodInBeaker3) {
+                beginStirring3 = true;
+                handleSmallStirringAnims3();
+            }
+        }
+        if (beginStirring4 == false) {
+            if (isSmallRodInBeaker4) {
+                beginStirring4 = true;
+                handleSmallStirringAnims4();
             }
         }
 
@@ -314,6 +350,48 @@ public class doCertainThingWith : MonoBehaviour
                 smallStirAnimator.SetBool("is250", false);
                 smallStirAnimator.SetBool("is400", false);
                 smallStirAnimator.SetBool("is800", false);
+            }
+        }
+
+        if (isSmallRodInBeaker2 == true) {
+            beginStirring2 = false;
+            if (smallStirAnimator2 != null) {
+                smallStirAnimator2.enabled = false;
+                smallStirAnimator2.SetBool("currentlyStirring", false);
+                smallStirAnimator2.SetBool("is50", false);
+                smallStirAnimator2.SetBool("is100", false);
+                smallStirAnimator2.SetBool("is150", false);
+                smallStirAnimator2.SetBool("is250", false);
+                smallStirAnimator2.SetBool("is400", false);
+                smallStirAnimator2.SetBool("is800", false);
+            }
+        }
+
+        if (isSmallRodInBeaker3 == true) {
+            beginStirring3 = false;
+            if (smallStirAnimator3 != null) {
+                smallStirAnimator3.enabled = false;
+                smallStirAnimator3.SetBool("currentlyStirring", false);
+                smallStirAnimator3.SetBool("is50", false);
+                smallStirAnimator3.SetBool("is100", false);
+                smallStirAnimator3.SetBool("is150", false);
+                smallStirAnimator3.SetBool("is250", false);
+                smallStirAnimator3.SetBool("is400", false);
+                smallStirAnimator3.SetBool("is800", false);
+            }
+        }
+
+        if (isSmallRodInBeaker4 == true) {
+            beginStirring4 = false;
+            if (smallStirAnimator4 != null) {
+                smallStirAnimator4.enabled = false;
+                smallStirAnimator4.SetBool("currentlyStirring", false);
+                smallStirAnimator4.SetBool("is50", false);
+                smallStirAnimator4.SetBool("is100", false);
+                smallStirAnimator4.SetBool("is150", false);
+                smallStirAnimator4.SetBool("is250", false);
+                smallStirAnimator4.SetBool("is400", false);
+                smallStirAnimator4.SetBool("is800", false);
             }
         }
 
@@ -605,7 +683,7 @@ public class doCertainThingWith : MonoBehaviour
             return;
         }
 
-        float maxPourDistance = PIPETTE_GRAB_DISTANCE * 5f;
+        float maxPourDistance = PIPETTE_GRAB_DISTANCE * 8f;
         float distance = Vector3.Distance(pickUpScript.other.transform.position, closestBeakerOrFlask.transform.position);
 
         if (distance > maxPourDistance) // Stop pouring if too far
@@ -943,7 +1021,7 @@ public class doCertainThingWith : MonoBehaviour
             pickUpScript.DropItem();
             Destroy(thermometer);
             Destroy(rubberBand);
-            Transform capillaryTubeHolder = newApparatus.transform.Find("Capilary tube");
+            Transform capillaryTubeHolder = newApparatus.transform.Find("Capilary tube Prefab");
             if (capillaryTubeHolder != null)
             {
                 capillaryTube.transform.SetParent(capillaryTubeHolder, false);
@@ -1185,7 +1263,7 @@ public class doCertainThingWith : MonoBehaviour
                 Debug.Log("This is a larger beaker");
             } */
 
-            if (pickUpScript.other && pickUpScript.other.name == "Small Stir Rod" && (currentObject.name.StartsWith("Beaker"))) {
+            if (pickUpScript.other && pickUpScript.other.name.StartsWith("Small Stir Rod") && (currentObject.name.StartsWith("Beaker"))) {
                 float distFromBeaker = Vector3.Distance(stirRod.transform.position, currentObject.transform.position);
 
                 if (distFromBeaker < minDist) {
@@ -1223,9 +1301,30 @@ public class doCertainThingWith : MonoBehaviour
                 rb.isKinematic = true;
             }
 
-            rodInBeaker = closestBeaker;
-            rodInBeaker.tag = "Untagged";
-            isSmallRodInBeaker = true;
+            if (stirRod.transform.name == "Small Stir Rod")
+            {
+                rodInBeaker = closestBeaker;
+                rodInBeaker.tag = "Untagged";
+                isSmallRodInBeaker = true;
+            }
+            else if (stirRod.transform.name == "Small Stir Rod 2")
+            {
+                rodInBeaker2 = closestBeaker;
+                rodInBeaker2.tag = "Untagged";
+                isSmallRodInBeaker2 = true;
+            }
+            else if (stirRod.transform.name == "Small Stir Rod 3")
+            {
+                rodInBeaker3 = closestBeaker;
+                rodInBeaker3.tag = "Untagged";
+                isSmallRodInBeaker3 = true;
+            }
+            else if (stirRod.transform.name == "Small Stir Rod 4")
+            {
+                rodInBeaker4 = closestBeaker;
+                rodInBeaker4.tag = "Untagged";
+                isSmallRodInBeaker4 = true;
+            }
         }
     }
 
@@ -1233,18 +1332,52 @@ public class doCertainThingWith : MonoBehaviour
     {
         // Remove parent so it no longer follows the flask
         stirRod.transform.SetParent(null);
-
+        GameObject usedRodInBeaker = null;
+        if (stirRod.transform.name == "Small Stir Rod"){
+            usedRodInBeaker = rodInBeaker;
+        }
+        else if (stirRod.transform.name == "Small Stir Rod 2"){
+            usedRodInBeaker = rodInBeaker2;
+        }
+        else if (stirRod.transform.name == "Small Stir Rod 3"){
+            usedRodInBeaker = rodInBeaker3;
+        }
+        else if (stirRod.transform.name == "Small Stir Rod 4"){
+            usedRodInBeaker = rodInBeaker4;
+        }
         // Re-enable physics and collisions
-        Physics.IgnoreCollision(stirRod.GetComponent<Collider>(), rodInBeaker.GetComponent<Collider>(), false);
+        Physics.IgnoreCollision(stirRod.GetComponent<Collider>(), usedRodInBeaker.GetComponent<Collider>(), false);
 
         Rigidbody rb = stirRod.GetComponent<Rigidbody>();
         if (rb)
         {
             rb.isKinematic = false;
         }
-        rodInBeaker.tag = "LiquidHolder";
-        rodInBeaker = null;
-        isSmallRodInBeaker = false;
+
+        if (stirRod.transform.name == "Small Stir Rod")
+        {
+            rodInBeaker.tag = "LiquidHolder";
+            rodInBeaker = null;
+            isSmallRodInBeaker = false;
+        }
+        else if (stirRod.transform.name == "Small Stir Rod 2")
+        {
+            rodInBeaker2.tag = "LiquidHolder";
+            rodInBeaker2 = null;
+            isSmallRodInBeaker2 = false;
+        }
+        else if (stirRod.transform.name == "Small Stir Rod 3")
+        {
+            rodInBeaker3.tag = "LiquidHolder";
+            rodInBeaker3 = null;
+            isSmallRodInBeaker3 = false;
+        }
+        else if (stirRod.transform.name == "Small Stir Rod 4")
+        {
+            rodInBeaker4.tag = "LiquidHolder";
+            rodInBeaker4 = null;
+            isSmallRodInBeaker4 = false;
+        }
         Debug.Log("Because we're picking up small stir rod, boolean is set to false again");
     }
 
@@ -2237,6 +2370,159 @@ public class doCertainThingWith : MonoBehaviour
                 smallStirAnimator.SetBool("is400", false);
                 smallStirAnimator.SetBool("is800", false);
                 smallStirAnimator.SetBool("is50", true);
+            } else {
+                Debug.Log("Small stir animator is null");
+            }
+        }
+    }
+    public void handleSmallStirringAnims2() {
+        if (smallStirAnimator2 != null) {
+            smallStirAnimator2.enabled = true;
+            smallStirAnimator2.SetBool("currentlyStirring", true);
+            if (rodInBeaker2 != null && rodInBeaker2.name == "Beaker 800mL") {
+                smallStirAnimator2.SetBool("is50", false);
+                smallStirAnimator2.SetBool("is100", false);
+                smallStirAnimator2.SetBool("is150", false);
+                smallStirAnimator2.SetBool("is250", false);
+                smallStirAnimator2.SetBool("is400", false);
+                smallStirAnimator2.SetBool("is800", true);
+            } else if (rodInBeaker2 != null && rodInBeaker2.name == "Beaker 400mL") {
+                smallStirAnimator2.SetBool("is50", false);
+                smallStirAnimator2.SetBool("is100", false);
+                smallStirAnimator2.SetBool("is150", false);
+                smallStirAnimator2.SetBool("is250", false);
+                smallStirAnimator2.SetBool("is800", false);
+                smallStirAnimator2.SetBool("is400", true);
+            } else if (rodInBeaker2 != null && rodInBeaker2.name == "Beaker 250mL") {
+                smallStirAnimator2.SetBool("is50", false);
+                smallStirAnimator2.SetBool("is100", false);
+                smallStirAnimator2.SetBool("is150", false);
+                smallStirAnimator2.SetBool("is400", false);
+                smallStirAnimator2.SetBool("is800", false);
+                smallStirAnimator2.SetBool("is250", true);
+            } else if (rodInBeaker2 != null && rodInBeaker2.name == "Beaker 150mL") {
+                smallStirAnimator2.SetBool("is50", false);
+                smallStirAnimator2.SetBool("is100", false);
+                smallStirAnimator2.SetBool("is250", false);
+                smallStirAnimator2.SetBool("is400", false);
+                smallStirAnimator2.SetBool("is800", false);
+                smallStirAnimator2.SetBool("is150", true);
+            } else if (rodInBeaker2 != null && rodInBeaker2.name == "Beaker 100mL") {
+                smallStirAnimator2.SetBool("is50", false);
+                smallStirAnimator2.SetBool("is150", false);
+                smallStirAnimator2.SetBool("is250", false);
+                smallStirAnimator2.SetBool("is400", false);
+                smallStirAnimator2.SetBool("is800", false);
+                smallStirAnimator2.SetBool("is100", true);
+            } else if (rodInBeaker2 != null && rodInBeaker2.name == "Beaker 50mL") {
+                smallStirAnimator2.SetBool("is100", false);
+                smallStirAnimator2.SetBool("is150", false);
+                smallStirAnimator2.SetBool("is250", false);
+                smallStirAnimator2.SetBool("is400", false);
+                smallStirAnimator2.SetBool("is800", false);
+                smallStirAnimator2.SetBool("is50", true);
+            } else {
+                Debug.Log("Small stir animator is null");
+            }
+        }
+    }
+    public void handleSmallStirringAnims3() {
+        if (smallStirAnimator3 != null) {
+            smallStirAnimator3.enabled = true;
+            smallStirAnimator3.SetBool("currentlyStirring", true);
+            if (rodInBeaker3 != null && rodInBeaker3.name == "Beaker 800mL") {
+                smallStirAnimator3.SetBool("is50", false);
+                smallStirAnimator3.SetBool("is100", false);
+                smallStirAnimator3.SetBool("is150", false);
+                smallStirAnimator3.SetBool("is250", false);
+                smallStirAnimator3.SetBool("is400", false);
+                smallStirAnimator3.SetBool("is800", true);
+            } else if (rodInBeaker3 != null && rodInBeaker3.name == "Beaker 400mL") {
+                smallStirAnimator3.SetBool("is50", false);
+                smallStirAnimator3.SetBool("is100", false);
+                smallStirAnimator3.SetBool("is150", false);
+                smallStirAnimator3.SetBool("is250", false);
+                smallStirAnimator3.SetBool("is800", false);
+                smallStirAnimator3.SetBool("is400", true);
+            } else if (rodInBeaker3 != null && rodInBeaker3.name == "Beaker 250mL") {
+                smallStirAnimator3.SetBool("is50", false);
+                smallStirAnimator3.SetBool("is100", false);
+                smallStirAnimator3.SetBool("is150", false);
+                smallStirAnimator3.SetBool("is400", false);
+                smallStirAnimator3.SetBool("is800", false);
+                smallStirAnimator3.SetBool("is250", true);
+            } else if (rodInBeaker3 != null && rodInBeaker3.name == "Beaker 150mL") {
+                smallStirAnimator3.SetBool("is50", false);
+                smallStirAnimator3.SetBool("is100", false);
+                smallStirAnimator3.SetBool("is250", false);
+                smallStirAnimator3.SetBool("is400", false);
+                smallStirAnimator3.SetBool("is800", false);
+                smallStirAnimator3.SetBool("is150", true);
+            } else if (rodInBeaker3 != null && rodInBeaker3.name == "Beaker 100mL") {
+                smallStirAnimator3.SetBool("is50", false);
+                smallStirAnimator3.SetBool("is150", false);
+                smallStirAnimator3.SetBool("is250", false);
+                smallStirAnimator3.SetBool("is400", false);
+                smallStirAnimator3.SetBool("is800", false);
+                smallStirAnimator3.SetBool("is100", true);
+            } else if (rodInBeaker3 != null && rodInBeaker3.name == "Beaker 50mL") {
+                smallStirAnimator3.SetBool("is100", false);
+                smallStirAnimator3.SetBool("is150", false);
+                smallStirAnimator3.SetBool("is250", false);
+                smallStirAnimator3.SetBool("is400", false);
+                smallStirAnimator3.SetBool("is800", false);
+                smallStirAnimator3.SetBool("is50", true);
+            } else {
+                Debug.Log("Small stir animator is null");
+            }
+        }
+    }
+    public void handleSmallStirringAnims4() {
+        if (smallStirAnimator4 != null) {
+            smallStirAnimator4.enabled = true;
+            smallStirAnimator4.SetBool("currentlyStirring", true);
+            if (rodInBeaker4 != null && rodInBeaker4.name == "Beaker 800mL") {
+                smallStirAnimator4.SetBool("is50", false);
+                smallStirAnimator4.SetBool("is100", false);
+                smallStirAnimator4.SetBool("is150", false);
+                smallStirAnimator4.SetBool("is250", false);
+                smallStirAnimator4.SetBool("is400", false);
+                smallStirAnimator4.SetBool("is800", true);
+            } else if (rodInBeaker4 != null && rodInBeaker4.name == "Beaker 400mL") {
+                smallStirAnimator4.SetBool("is50", false);
+                smallStirAnimator4.SetBool("is100", false);
+                smallStirAnimator4.SetBool("is150", false);
+                smallStirAnimator4.SetBool("is250", false);
+                smallStirAnimator4.SetBool("is800", false);
+                smallStirAnimator4.SetBool("is400", true);
+            } else if (rodInBeaker4 != null && rodInBeaker4.name == "Beaker 250mL") {
+                smallStirAnimator4.SetBool("is50", false);
+                smallStirAnimator4.SetBool("is100", false);
+                smallStirAnimator4.SetBool("is150", false);
+                smallStirAnimator4.SetBool("is400", false);
+                smallStirAnimator4.SetBool("is800", false);
+                smallStirAnimator4.SetBool("is250", true);
+            } else if (rodInBeaker4 != null && rodInBeaker4.name == "Beaker 150mL") {
+                smallStirAnimator4.SetBool("is50", false);
+                smallStirAnimator4.SetBool("is100", false);
+                smallStirAnimator4.SetBool("is250", false);
+                smallStirAnimator4.SetBool("is400", false);
+                smallStirAnimator4.SetBool("is800", false);
+                smallStirAnimator4.SetBool("is150", true);
+            } else if (rodInBeaker4 != null && rodInBeaker4.name == "Beaker 100mL") {
+                smallStirAnimator4.SetBool("is50", false);
+                smallStirAnimator4.SetBool("is150", false);
+                smallStirAnimator4.SetBool("is250", false);
+                smallStirAnimator4.SetBool("is400", false);
+                smallStirAnimator4.SetBool("is800", false);
+                smallStirAnimator4.SetBool("is100", true);
+            } else if (rodInBeaker4 != null && rodInBeaker4.name == "Beaker 50mL") {
+                smallStirAnimator4.SetBool("is100", false);
+                smallStirAnimator4.SetBool("is150", false);
+                smallStirAnimator4.SetBool("is250", false);
+                smallStirAnimator4.SetBool("is400", false);
+                smallStirAnimator4.SetBool("is800", false);
+                smallStirAnimator4.SetBool("is50", true);
             } else {
                 Debug.Log("Small stir animator is null");
             }

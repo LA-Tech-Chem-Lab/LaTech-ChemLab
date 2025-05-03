@@ -175,7 +175,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 7e68e29a4dcb6e543bfc13899615a715,
         type: 3}
       propertyPath: m_Name
-      value: Capilary tube
+      value: Capilary tube LS
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -382,6 +382,7 @@ MonoBehaviour:
   isCrystalizedAlum: 0
   crystallizationPrefab: {fileID: 0}
   liquidCrystalPrefab: {fileID: 0}
+  liquidCrystalPrefab1: {fileID: 0}
   solidinliquideffect: {fileID: 0}
   hasSpawnedSolid: 0
   newSolid: {fileID: 0}
@@ -397,8 +398,10 @@ MonoBehaviour:
   isViolent: 0
   player: {fileID: 0}
   stuffInEyesFilter: {fileID: 0}
-  placeholderFaucet: {fileID: 0}
   startedBoiling: 0
+  buchnerFaucet: {fileID: 0}
+  InDrawer: 0
+  CapilaryAttached: 0
 --- !u!136 &6730225362079330991
 CapsuleCollider:
   m_ObjectHideFlags: 0

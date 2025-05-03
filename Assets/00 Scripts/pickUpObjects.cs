@@ -161,6 +161,10 @@ public class pickUpObjects : MonoBehaviour
                 canRotateItem = false;
             }
 
+            if (other.name == "Capillary tube"){
+                initialHoldingDistance = 3f;
+            }
+
             if (other.name == "Bunsen Burner")
                 initialHoldingDistance = 1.8f;
 
@@ -189,6 +193,24 @@ public class pickUpObjects : MonoBehaviour
             if (other.name == "Small Stir Rod") {
                 initialHoldingDistance = 1.3f;
                 if (GetComponent<doCertainThingWith>().isSmallRodInBeaker == true)
+                    GetComponent<doCertainThingWith>().removeStirRod(other);
+            }
+
+            if (other.name == "Small Stir Rod 2") {
+                initialHoldingDistance = 1.3f;
+                if (GetComponent<doCertainThingWith>().isSmallRodInBeaker2 == true)
+                    GetComponent<doCertainThingWith>().removeStirRod(other);
+            }
+
+            if (other.name == "Small Stir Rod 3") {
+                initialHoldingDistance = 1.3f;
+                if (GetComponent<doCertainThingWith>().isSmallRodInBeaker3 == true)
+                    GetComponent<doCertainThingWith>().removeStirRod(other);
+            }
+
+            if (other.name == "Small Stir Rod 4") {
+                initialHoldingDistance = 1.3f;
+                if (GetComponent<doCertainThingWith>().isSmallRodInBeaker4 == true)
                     GetComponent<doCertainThingWith>().removeStirRod(other);
             }
 
@@ -256,7 +278,7 @@ public class pickUpObjects : MonoBehaviour
         if (other.name == "Aluminum Container")     multiHandlerScript.setHelpText("This is a container of aluminum pellets. Use the scoopula to scoop the pellets into a weigh boat.");
         if (other.name == "Melting Point Tool")     multiHandlerScript.setHelpText("This tool allows you to measure the melting point of the substance in capillary tube. To use it right click next to a beaker of pure water to place it in then boil.");
         if (other.name == "Capilary tube")          multiHandlerScript.setHelpText("Right-click containers to fill the capillary tube. Right-click near the rubber band and thermometer to combine them. Fill it first with the substance you want to measure.");
-        if (other.name == "Small Stir Rod")         multiHandlerScript.setHelpText("This is a Stir Rod. Right click near a beaker to place, and hold right click to stir.");
+        if (other.name.StartsWith("Small Stir Rod"))         multiHandlerScript.setHelpText("This is a Stir Rod. Right click near a beaker to place, and hold right click to stir.");
 
     }
 
@@ -363,6 +385,7 @@ public class pickUpObjects : MonoBehaviour
                     if (LS.solutionMakeup[i] > 0.001)
                     {
                         helpText += LS.compoundNames[i];
+                        //Debug.Log(LS.compoundNames[i]);
                         helpText += ": ";
                         helpText += (solutionMols[i]).ToString("F2");
                         helpText += " M\n";
@@ -383,8 +406,13 @@ public class pickUpObjects : MonoBehaviour
                     {
                         string beakerHelpText = $"This is a {other.GetComponent<liquidScript>().totalVolume_mL} mL beaker. Hold right click to observe its contents. You can also hold P to pour into another container. ";
 
-                        if (other.transform.Find("Small Stir Rod") != null) {
-                            beakerHelpText += "This solution can be stirred by holding right click.";
+                        
+                        foreach (Transform child in other.transform)
+                        {
+                            if (child.name.StartsWith("Small Stir Rod"))
+                            {
+                                beakerHelpText += "This solution can be stirred by holding right click.";
+                            }
                         }
                         
                         multiHandlerScript.setHelpText(beakerHelpText);

@@ -396,7 +396,7 @@ public class progessTracker : MonoBehaviour
             yield return null;
         }
         nextButtonClicked = false;
-        content.text = "You can use left click to pick up or drop objects or right click to use the objects in your hand.";
+        content.text = "You can use left click to pick up or drop objects or right click to use the objects in your hand. Most of the equipment and glassware you need can be found in the drawers in the desks.";
         while (!nextButtonClicked){
             yield return null;
         }
@@ -414,7 +414,7 @@ public class progessTracker : MonoBehaviour
         yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        content.text = "Congratulations! Your eyes are now protected from hazardous chemicals. Now to begin the experiment. Weigh out about 1 g of aluminum metal onto a weigh boat by placing the weigh boat on the scale and clicking the tare button to set the scale to zero. Then grab the scoopula and right click near the jar of aluminum pellets and pour the aluminum from the weigh boar into the 250 mL Erlenmeyer flask.  ";
+        content.text = "Congratulations! Your eyes are now protected from hazardous chemicals. Now to begin the experiment. Weigh out about 1 g of aluminum metal onto a weigh boat by placing the weigh boat on the scale and clicking the tare button to set the scale to zero. Then grab the scoopula and right click near the jar of aluminum pellets and pour the aluminum from the weigh boar into the 250 mL Erlenmeyer flask. The flasks can be found in the drawers of the desks. ";
         while (!nextButtonClicked){
             yield return null;
         }
@@ -503,7 +503,7 @@ public class progessTracker : MonoBehaviour
         yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        content.text = "Good work! The filtering looks like it went well. Now, measure out 30 mL of sulfuric acid or H2SO4 into a graduated cylinder as you did in step 2 and add this to an empty beaker. Add your filtered solution to this same beaker. Then, you can stir the solution to break down solids and drive it faster. ";
+        content.text = "Good work! The filtering looks like it went well. Now, measure out 30 mL of sulfuric acid or H<sub>2</sub>SO<sub>4</sub> into a graduated cylinder as you did in step 2 and add this to an empty beaker. Add your filtered solution to this same beaker. Then, you can stir the solution to break down solids and drive it faster. ";
         while (!nextButtonClicked){
             yield return null;
         }
@@ -613,13 +613,13 @@ public class progessTracker : MonoBehaviour
 
     IEnumerator foundMeltingPoint(){
         yield return new WaitForSeconds(1f);
-        //popUpPanel.SetActive(true);
-        //GetComponent<multihandler>().ToggleCursor();
-        //content.text = "Congrats! You found your melting point! It is " + mp + " Kelvin. That's a pretty pure product!";
-        //while (!nextButtonClicked){
-        //    yield return null;
-        //}
-        //nextButtonClicked = false;
+        popUpPanel.SetActive(true);
+        GetComponent<multihandler>().ToggleCursor();
+        content.text = "Congrats! You found your melting point! It is " + mp + " Kelvin. That's a pretty pure product!";
+        while (!nextButtonClicked){
+            yield return null;
+        }
+        nextButtonClicked = false;
         popUpPanel.SetActive(false);
         completionScreen.ShowCompletionScreen();
         GetComponent<multihandler>().ToggleCursor();

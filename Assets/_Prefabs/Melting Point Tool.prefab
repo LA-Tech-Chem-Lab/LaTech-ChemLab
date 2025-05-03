@@ -203,7 +203,7 @@ PrefabInstance:
     - target: {fileID: 1160419208218151221, guid: 0ace7f795aa723d4292d178442de3516,
         type: 3}
       propertyPath: m_Name
-      value: Capilary tube
+      value: Capilary tube Prefab
       objectReference: {fileID: 0}
     - target: {fileID: 1968481727774086031, guid: 0ace7f795aa723d4292d178442de3516,
         type: 3}
