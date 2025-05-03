@@ -75,7 +75,7 @@ public class liquidScript : MonoBehaviour
         2257000f, 2000000f, 2257000f, 2500000f, 2920000f, 2200000f, 2500000f, 2400000f, 2300000f, 2300000f, 2400000f, 846000f 
     };
 
-    List<Color> liquidColors = new List<Color> {Color.red, Color.green, Color.white, Color.yellow, new Color(0.6f, 0.6f, 0.6f), Color.yellow, Color.red, Color.white, Color.yellow, Color.green, Color.blue, Color.blue};
+    List<Color> liquidColors = new List<Color> {Color.red, Color.green, Color.blue, Color.yellow, new Color(0.6f, 0.6f, 0.6f), Color.yellow, Color.red, Color.white, Color.yellow, Color.green, Color.blue, Color.white};
     public List<char> compoundStates = new List<char> { 'a', 'a', 'l', 'a', 's', 'a', 's', 's', 's', 'a', 's', 'l' };
 
     //                                            H2SO4       KOH              H20        K2SO4              Al                  KAl(OH)4
@@ -191,6 +191,7 @@ public class liquidScript : MonoBehaviour
         compoundNames = new List<string> {
         "H<sub>2</sub>SO<sub>4</sub>", "KOH", "H<sub>2</sub>O", "K<sub>2</sub>SO<sub>4</sub>", "Al", "KAl(OH)<sub>4</sub>", "Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub>", "Alum", "Al(OH)<sub>3</sub>", "KAl(SO<sub>4</sub>)<sub>2</sub>*12H<sub>2</sub>O", "KAlO<sub>2</sub>", "CH<sub>3</sub>CH<sub>2</sub>OH"
         };
+        liquidColors = new List<Color> {Color.red, Color.green, Color.blue, Color.yellow, new Color(0.6f, 0.6f, 0.6f), Color.yellow, Color.red, Color.white, Color.yellow, Color.green, Color.blue, Color.white};
     }
 
     private void Update()
