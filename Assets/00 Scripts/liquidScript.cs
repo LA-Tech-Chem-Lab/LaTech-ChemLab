@@ -1893,7 +1893,7 @@ void CalculateHeat()
                     currReactionID = 4;
                     step4Done = true;
                     List<string> reactants = new List<string> {"Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub>", "K<sub>2</sub>SO<sub>4</sub>", "H<sub>2</sub>O"};
-                    List<string> products = new List<string> {"KAl(SO<sub>4</sub>)2*12H<sub>2</sub>O"};
+                    List<string> products = new List<string> {"KAl(SO<sub>4</sub>)<sub>2</sub>*12H<sub>2</sub>O"};
                     List<float> Rratio = new List<float> {1, 1, 24};
                     List<float> Pratio = new List<float> {4};
                     StartCoroutine(react(reactants, Rratio, products, Pratio, 8f, "none", 0, false));

@@ -12,12 +12,16 @@ public class CompletionScreen : MonoBehaviour
     public RawImage completionImage;         
     public TextMeshProUGUI completionCodeText;        // random code
     public TextMeshProUGUI completionTimeText;        // time completed
+    public TextMeshProUGUI percentYieldText;
+    public TextMeshProUGUI meltingPointText;
 
     [Header("Settings")]
     public int codeLength = 32;             // Length
 
     private string completionCode;
     private string completionTime;
+    public float percentYield;
+    public float meltingPoint;
 
     void Start()
     {
@@ -42,6 +46,14 @@ public class CompletionScreen : MonoBehaviour
 
             if (completionTimeText != null)
                 completionTimeText.text = "Completed On: " + completionTime;
+
+            if (percentYield != null){
+                percentYieldText.text = "Percent Yield: " + percentYield + " %";
+            }
+
+            if (meltingPoint != null){
+                meltingPointText.text = "Melting Point: " + meltingPoint + " C";
+            }
         }
     }
 

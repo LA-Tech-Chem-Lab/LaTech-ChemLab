@@ -260,7 +260,7 @@ public class progessTracker : MonoBehaviour
                 foreach (GameObject obj in liquidHolders3)
                 {
                     if (obj.transform.name.StartsWith("Erlenmeyer Flask")){
-                        if (obj.GetComponent<liquidScript>().liquidTemperature <= 295.15f && obj.GetComponent<liquidScript>().currentVolume_mL > 18f && obj.GetComponent<liquidScript>().percentKAlOH4 > 0.43f && obj.GetComponent<liquidScript>().percentAl <= 0.01f){
+                        if (obj.GetComponent<liquidScript>().liquidTemperature <= 295.15f && obj.GetComponent<liquidScript>().currentVolume_mL > 15f && obj.GetComponent<liquidScript>().percentKAlOH4 > 0.43f && obj.GetComponent<liquidScript>().percentAl <= 0.01f){
                             step1Erlenmeyer = obj;
                             TransitionToNextState();
                         }
@@ -275,7 +275,7 @@ public class progessTracker : MonoBehaviour
 
                 foreach (GameObject obj in liquidHolders4)
                 {
-                    if (obj.GetComponent<liquidScript>().currentVolume_mL > 45f && obj.GetComponent<liquidScript>().percentKAlSO42 > 0.15f){ //&& player.GetComponent<doCertainThingWith>().beginStirring add this when stirring is good to go
+                    if (obj.GetComponent<liquidScript>().currentVolume_mL > 35f && obj.GetComponent<liquidScript>().percentKAlSO42 > 0.15f){ //&& player.GetComponent<doCertainThingWith>().beginStirring add this when stirring is good to go
                         step1Erlenmeyer = obj;
                         TransitionToNextState();
                     }
@@ -366,7 +366,7 @@ public class progessTracker : MonoBehaviour
                     Debug.Log("melting point is assembleddd");
                     GameObject mpBeaker = player.GetComponent<doCertainThingWith>().meltingPointBeaker;
                     GameObject mpTool = mpBeaker.transform.Find("Melting Point Tool").gameObject;
-                    GameObject capTube = mpTool.transform.Find("Capilary tube").gameObject;
+                    GameObject capTube = mpTool.transform.Find("Capilary tube Prefab").gameObject;
                     GameObject realCapTube = capTube.transform.Find("Capilary tube").gameObject;
                     Debug.Log("Melting Point Beaker" + realCapTube.GetComponent<liquidScript>().GetMeltingPoint());
                     if (mpBeaker.GetComponent<liquidScript>().liquidTemperature >= realCapTube.GetComponent<liquidScript>().GetMeltingPoint()){
@@ -414,7 +414,7 @@ public class progessTracker : MonoBehaviour
         yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        content.text = "Congratulations! Your eyes are now protected from hazardous chemicals. Now to begin the experiment. Weigh out about 1 g of aluminum metal onto a weigh boat by placing the weigh boat on the scale and clicking the tare button to set the scale to zero. Then grab the scoopula and right click near the jar of aluminum pellets and pour the aluminum from the weigh boar into the 250 mL Erlenmeyer flask. The flasks can be found in the drawers of the desks. ";
+        content.text = "Congratulations! Your eyes are now protected from hazardous chemicals. Now to begin the experiment. Weigh out about 1 g of aluminum metal onto a weigh boat by placing the weigh boat on the scale and clicking the tare button to set the scale to zero. Then grab the scoopula and right click near the jar of aluminum pellets and pour the aluminum from the weigh boat into the 250 mL Erlenmeyer flask. The flasks can be found in the drawers of the desks. ";
         while (!nextButtonClicked){
             yield return null;
         }
@@ -589,10 +589,11 @@ public class progessTracker : MonoBehaviour
         GameObject finalBeaker = player.GetComponent<pickUpObjects>().other;
         float highestProductAmount = finalBeaker.GetComponent<liquidScript>().currentVolume_mL * finalBeaker.GetComponent<liquidScript>().percentAlum;
         float AlMols = 1 / 26.98f;
-        float massAlumTheoretical = 50f;
+        float massAlumTheoretical = 40f;
         float percentYield = highestProductAmount / massAlumTheoretical * 100f;
+        completionScreen.percentYield = percentYield;
         Debug.Log(massAlumTheoretical);
-        content.text = "You did it! You have succesfully synthesized Alum! Your percent yeild is " + percentYield + "% !";
+        content.text = "You did it! You have succesfully synthesized Alum! Your percent yield is " + percentYield + "% !";
         while (!nextButtonClicked){
             yield return null;
         }
@@ -615,7 +616,9 @@ public class progessTracker : MonoBehaviour
         yield return new WaitForSeconds(1f);
         popUpPanel.SetActive(true);
         GetComponent<multihandler>().ToggleCursor();
-        content.text = "Congrats! You found your melting point! It is " + mp + " Kelvin. That's a pretty pure product!";
+        float mpc = mp - 273.15f;
+        completionScreen.meltingPoint = mpc;
+        content.text = "Congrats! You found your melting point! It is " + mpc + " Celcius. That's a pretty pure product!";
         while (!nextButtonClicked){
             yield return null;
         }
