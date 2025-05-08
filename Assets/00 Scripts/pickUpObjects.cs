@@ -888,7 +888,7 @@ public class pickUpObjects : MonoBehaviour
     {
         // Example logic for detaching the LiquidHolder
         // You might want to reset some properties or just drop it
-  
+
         Rigidbody rb = liquidHolder.GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -896,7 +896,11 @@ public class pickUpObjects : MonoBehaviour
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
         }
-        liquidHolder.transform.SetParent(null); // Detach it from its parent
+        GameObject allLiquidHolders = GameObject.Find("allLiquidHolders");
+        if (allLiquidHolders != null)
+        {
+            liquidHolder.transform.SetParent(allLiquidHolders.transform);
+        }
         Debug.Log("LiquidHolder detached: " + liquidHolder.name);
     }
 
