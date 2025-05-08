@@ -124,14 +124,24 @@ public class progessTracker : MonoBehaviour
             case LabState.Step6:
                 GameObject title6 = scrollContent.transform.Find("Step 6 Title").gameObject;
                 GameObject check6 = title6.transform.Find("Check").gameObject;
+                GameObject title7 = scrollContent.transform.Find("Step 7 Title").gameObject;
+                GameObject check7 = title7.transform.Find("Check").gameObject;
                 check6.SetActive(true);
-                StartCoroutine(Step7());
-                currentState = LabState.Step7;
+                if (step1Erlenmeyer.GetComponent<liquidScript>().liquidPercent > 0.95f){
+                    check7.SetActive(true);
+                    Debug.Log("Skipping step 7");
+                    StartCoroutine(Step8());
+                    currentState = LabState.Step8;
+                }
+                else{
+                    StartCoroutine(Step7());
+                    currentState = LabState.Step7;
+                }
                 break;
 
             case LabState.Step7:
-                GameObject title7 = scrollContent.transform.Find("Step 7 Title").gameObject;
-                GameObject check7 = title7.transform.Find("Check").gameObject;
+                title7 = scrollContent.transform.Find("Step 7 Title").gameObject;
+                check7 = title7.transform.Find("Check").gameObject;
                 check7.SetActive(true);
                 StartCoroutine(Step8());
                 currentState = LabState.Step8;
@@ -244,7 +254,7 @@ public class progessTracker : MonoBehaviour
                 foreach (GameObject obj in liquidHolders2)
                 {
                     if (obj.transform.name.StartsWith("Erlenmeyer Flask 250")){
-                        if (obj.GetComponent<liquidScript>().liquidTemperature > 343.15f && obj.GetComponent<liquidScript>().currentVolume_mL > 24f && obj.GetComponent<liquidScript>().percentKAlOH4 > 0.3f){
+                        if (obj.GetComponent<liquidScript>().liquidTemperature > 343.15f && obj.GetComponent<liquidScript>().currentVolume_mL > 20f && obj.GetComponent<liquidScript>().percentKAlOH4 > 0.3f){
                             step1Erlenmeyer = obj;
                             TransitionToNextState();
                         }

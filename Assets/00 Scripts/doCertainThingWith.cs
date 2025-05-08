@@ -659,12 +659,12 @@ public class doCertainThingWith : MonoBehaviour
                 stopPour();
                 yield break; // Exit the coroutine
             }
-            if (LS.currentVolume_mL > 0.2f){
+            if (LS.currentVolume_mL > 0.4f){
                 LS.currentVolume_mL -= 0.1852f;
                 targetContainer.GetComponent<weighboatscript>().addScoop(LS.solutionMakeup);
             }
         
-            yield return new WaitForSeconds(0.2f); // Controls pour speed
+            yield return new WaitForSeconds(0.1f); // Controls pour speed
         }
     }
 
@@ -732,8 +732,9 @@ public class doCertainThingWith : MonoBehaviour
                 WBS.removeScoop();
                 Debug.Log("Made it after remove scoop");
                 targetContainer.GetComponent<liquidScript>().addSolution(new List<float> { 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f }, 0.1852f);
+                
             }
-            yield return new WaitForSeconds(0.5f); // Controls pour speed
+            yield return new WaitForSeconds(0.1f); // Controls pour speed
         }
     }
 

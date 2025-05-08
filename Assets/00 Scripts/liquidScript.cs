@@ -1833,15 +1833,13 @@ void CalculateHeat()
                 // - **Reaction Speed:** Moderate (3/30 scale), occurs within seconds to minutes
                 // CORRECT PATH
                 if (percentAlOH3 > 0.02f){
-                    if (player.GetComponent<doCertainThingWith>().beginStirring == true || player.GetComponent<doCertainThingWith>().beginStirring2 == true || player.GetComponent<doCertainThingWith>().beginStirring3 == true || player.GetComponent<doCertainThingWith>().beginStirring4 == true){
-                        currReactionID = 3;
-                        step3Done = true;
-                        List<string> reactants = new List<string> {"Al(OH)<sub>3</sub>", "H<sub>2</sub>SO<sub>4</sub>"};
-                        List<string> products = new List<string> {"Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub>", "H<sub>2</sub>O"};
-                        List<float> Rratio = new List<float> {2, 3};
-                        List<float> Pratio = new List<float> {1, 6};
-                        StartCoroutine(react(reactants, Rratio, products, Pratio, 3f, "none", 0, false)); 
-                    }
+                    currReactionID = 3;
+                    step3Done = true;
+                    List<string> reactants = new List<string> {"Al(OH)<sub>3</sub>", "H<sub>2</sub>SO<sub>4</sub>"};
+                    List<string> products = new List<string> {"Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub>", "H<sub>2</sub>O"};
+                    List<float> Rratio = new List<float> {2, 3};
+                    List<float> Pratio = new List<float> {1, 6};
+                    StartCoroutine(react(reactants, Rratio, products, Pratio, 3f, "none", 0, false)); 
                 }
             }
             if (percentKOH > 0.02f){
@@ -1890,13 +1888,15 @@ void CalculateHeat()
                 if (percentAl2SO43 > 0.02f && percentH2O > 0.24f){
                     //CORRECT PATH
                     // GOAL PRODUCT
-                    currReactionID = 4;
-                    step4Done = true;
-                    List<string> reactants = new List<string> {"Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub>", "K<sub>2</sub>SO<sub>4</sub>", "H<sub>2</sub>O"};
-                    List<string> products = new List<string> {"KAl(SO<sub>4</sub>)<sub>2</sub>*12H<sub>2</sub>O"};
-                    List<float> Rratio = new List<float> {1, 1, 24};
-                    List<float> Pratio = new List<float> {4};
-                    StartCoroutine(react(reactants, Rratio, products, Pratio, 8f, "none", 0, false));
+                    if (player.GetComponent<doCertainThingWith>().beginStirring == true || player.GetComponent<doCertainThingWith>().beginStirring2 == true || player.GetComponent<doCertainThingWith>().beginStirring3 == true || player.GetComponent<doCertainThingWith>().beginStirring4 == true){
+                        currReactionID = 4;
+                        step4Done = true;
+                        List<string> reactants = new List<string> {"Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub>", "K<sub>2</sub>SO<sub>4</sub>", "H<sub>2</sub>O"};
+                        List<string> products = new List<string> {"KAl(SO<sub>4</sub>)<sub>2</sub>*12H<sub>2</sub>O"};
+                        List<float> Rratio = new List<float> {1, 1, 24};
+                        List<float> Pratio = new List<float> {4};
+                        StartCoroutine(react(reactants, Rratio, products, Pratio, 8f, "none", 0, false));
+                    }
                 }
             }
             if (liquidTemperature < 273.15f)
